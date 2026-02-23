@@ -11,7 +11,7 @@ const TRANSLATIONS = {
     logout:'Ausloggen', login:'Login', register:'Registrieren',
     barLogin:'Bar Login', email:'Email', password:'Passwort',
     loginBtn:'Einloggen', registerBar:'Bar registrieren',
-    barName:'Bar-Name *', city:'Stadt *', address:'Adresse', phone:'Telefon',
+    barName:'Bar-Name *', city:'Stadt *', address:'Adresse *', phone:'Telefon',
     passwordMin:'Passwort (mind. 8 Zeichen) *', privacyPolicy:'Datenschutzerklärung',
     registerBtn:'Registrieren', pendingNote:'Nach der Registrierung wird dein Account von BarSclusive freigeschaltet.',
     tabOverview:'Übersicht', tabNewDeal:'Neuer Deal', tabMyDeals:'Meine Deals',
@@ -38,7 +38,7 @@ const TRANSLATIONS = {
     logout:'Logout', login:'Login', register:'Register',
     barLogin:'Bar Login', email:'Email', password:'Password',
     loginBtn:'Login', registerBar:'Register Bar',
-    barName:'Bar Name *', city:'City *', address:'Address', phone:'Phone',
+    barName:'Bar Name *', city:'City *', address:'Address *', phone:'Phone',
     passwordMin:'Password (min. 8 chars) *', privacyPolicy:'Privacy Policy',
     registerBtn:'Register', pendingNote:'After registration your account will be activated by BarSclusive.',
     tabOverview:'Overview', tabNewDeal:'New Deal', tabMyDeals:'My Deals',
@@ -142,7 +142,7 @@ async function doBarRegister() {
   const consent = document.getElementById('regConsent').checked;
   const err     = document.getElementById('regErr');
   err.textContent = '';
-  if (!name || !city || !email || !pass) { err.textContent = 'Pflichtfelder ausfüllen.'; return; }
+  if (!name || !city || !address || !email || !pass) { err.textContent = 'Pflichtfelder ausfüllen.'; return; }
   if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
   if (!consent) { err.textContent = 'Datenschutz akzeptieren.'; return; }
   try {
