@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarSclusive – Bar-Portal</title>
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src https://script.google.com https://script.googleusercontent.com; img-src 'self' data: https:; frame-src 'none'; object-src 'none';">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#000;color:#fff;min-height:100vh}
+    .header{background:#111;padding:18px 24px;border-bottom:1px solid #1f1f1f;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo{font-size:20px;font-weight:700}
+    .header-right{display:flex;align-items:center;gap:10px}
+    .lang-btn{background:#2a2a2a;border:1px solid #3a3a3a;color:#aaa;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+    .lang-btn.active{color:#fff;border-color:#FF3366;background:#1a0a12}
+    .btn-logout{background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:8px 16px;border-radius:10px;cursor:pointer;font-size:13px}
+    .container{max-width:960px;margin:0 auto;padding:30px 20px}
+    .tabs{display:flex;gap:0;border-bottom:1px solid #222;margin-bottom:30px;overflow-x:auto}
+    .tab{padding:12px 18px;cursor:pointer;font-size:13px;font-weight:500;color:#888;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+    .tab.active{color:#fff;border-bottom-color:#FF3366}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:28px;max-width:540px;margin:0 auto}
+    .card h2{font-size:22px;margin-bottom:22px}
+    .form-group{margin-bottom:18px}
+    .form-label{display:block;margin-bottom:7px;font-size:14px;font-weight:600}
+    .form-input{width:100%;padding:12px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:10px;color:#fff;font-size:14px}
+    .form-check{display:flex;align-items:start;gap:10px;font-size:13px;margin-bottom:16px}
+    .btn-pink{width:100%;background:#FF3366;color:#fff;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+    .btn-pink:hover{background:#e02255}
+    .btn-ghost{width:100%;background:#2a2a2a;color:#fff;border:1px solid #3a3a3a;padding:13px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:28px}
+    .stat-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:18px}
+    .stat-label{font-size:12px;color:#999;margin-bottom:6px}
+    .stat-value{font-size:22px;font-weight:700}
+    .deal-list{display:flex;flex-direction:column;gap:14px}
+    .deal-item{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .deal-item-title{font-size:15px;font-weight:600}
+    .deal-item-meta{font-size:13px;color:#999;margin-top:4px}
+    .deal-actions{display:flex;gap:8px;flex-shrink:0}
+    .btn-sm{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none}
+    .btn-green{background:#4CAF50;color:#fff}.btn-orange{background:#FF9800;color:#000}
+    .btn-red{background:#EF4444;color:#fff}.btn-blue{background:#2196F3;color:#fff}
+    .btn-sm:hover{opacity:.85}
+    .cats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:8px}
+    .cat-check{display:flex;align-items:center;gap:8px;padding:10px;background:#2a2a2a;border-radius:8px;font-size:13px;cursor:pointer}
+    .cat-check input{cursor:pointer}
+    .validity-toggle{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+    .validity-opt{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+    #singleFields{display:none;margin-top:14px;padding:14px;background:#2a2a2a;border-radius:10px}
+    .weekdays{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .wd-btn{padding:7px 12px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:8px;color:#fff;font-size:13px;cursor:pointer;user-select:none}
+    .wd-btn.selected{background:#FF3366;border-color:#FF3366}
+    .voucher-table{width:100%;border-collapse:collapse;font-size:13px}
+    .voucher-table th{text-align:left;padding:10px 12px;color:#999;border-bottom:1px solid #222;font-weight:500}
+    .voucher-table td{padding:10px 12px;border-bottom:1px solid #1a1a1a;vertical-align:middle}
+    .badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600}
+    .b-sent{background:#2196F3;color:#fff}.b-redeemed{background:#9C27B0;color:#fff}
+    .b-issued{background:#FF9800;color:#000}.b-active{background:#4CAF50;color:#fff}.b-inactive{background:#555;color:#fff}
+    .redeem-box{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:32px;max-width:480px;margin:0 auto;text-align:center}
+    .redeem-box h2{margin-bottom:24px;font-size:22px}
+    .code-display{background:#0a2a0a;border:2px solid #4CAF50;border-radius:14px;padding:24px;margin:20px 0}
+    .code-title{font-size:13px;color:#4CAF50;margin-bottom:8px;font-weight:600}
+    .code-val{font-size:24px;font-weight:700;letter-spacing:2px}
+    .toast{position:fixed;top:20px;right:20px;padding:13px 20px;border-radius:11px;font-size:14px;font-weight:600;display:none;z-index:500;max-width:300px}
+    .toast.show{display:block}
+    .toast-ok{background:#fff;color:#000}.toast-err{background:#EF4444;color:#fff}
+    .err-msg{color:#EF4444;font-size:13px;margin-bottom:12px;min-height:18px}
+    .text-link{color:#FF3366;cursor:pointer;text-decoration:underline}
+    .text-link:hover{color:#ff5588}
+    #loginScreen{padding:60px 20px}
+    #barDashboard{display:none}
+    .empty{color:#555;text-align:center;padding:40px;font-size:14px}
+    .overflow-x{overflow-x:auto}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;align-items:center;justify-content:center;padding:20px}
+    .modal.active{display:flex}
+    .modal-box{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:28px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto}
+    .modal-title{font-size:20px;font-weight:700;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+    .modal-close{background:none;border:none;color:#aaa;font-size:22px;cursor:pointer;line-height:1;flex-shrink:0}
+  </style>
+</head>
+<body>
+<div id="toast" class="toast" role="alert"></div>
+
+<div class="header">
+  <div class="logo" style="display:flex;align-items:center;gap:8px">
+    <img src="logo.png" alt="BarSclusive" style="height:40px">
+    <span>Bar-Portal</span>
+  </div>
+  <div class="header-right">
+    <button class="lang-btn active" id="langDE">DE</button>
+    <button class="lang-btn" id="langEN">EN</button>
+    <button class="btn-logout" id="btnLogout" style="display:none" data-i18n="logout">Ausloggen</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" data-auth-tab="login" data-i18n="login">Login</button>
+      <button class="tab" data-auth-tab="register" data-i18n="register">Registrieren</button>
+    </div>
+    <div id="loginForm" class="tab-content active">
+      <div class="card">
+        <h2>🔑 <span data-i18n="barLogin">Bar Login</span></h2>
+        <div class="err-msg" id="loginErr" aria-live="polite"></div>
+        <div class="form-group">
+          <label class="form-label" for="loginEmail" data-i18n="email">Email</label>
+          <input type="email" class="form-input" id="loginEmail" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassword" data-i18n="password">Passwort</label>
+          <input type="password" class="form-input" id="loginPassword" autocomplete="current-password">
+        </div>
+        <button class="btn-pink" id="btnBarLogin" data-i18n="loginBtn">Einloggen</button>
+        <p style="margin-top:16px;text-align:center;color:#999;font-size:14px">
+          <span class="text-link" id="linkBarForgotPassword">Passwort vergessen?</span>
+        </p>
+      </div>
+    </div>
+    <div id="registerForm" class="tab-content">
+      <div class="card">
+        <h2>✨ <span data-i18n="registerBar">Bar registrieren</span></h2>
+        <div class="err-msg" id="regErr" aria-live="polite"></div>
+        <div class="form-group">
+          <label class="form-label" for="regBarName" data-i18n="barName">Bar-Name *</label>
+          <input type="text" class="form-input" id="regBarName">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regCity" data-i18n="city">Stadt *</label>
+          <input type="text" class="form-input" id="regCity">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regAddress" data-i18n="address">Adresse</label>
+          <input type="text" class="form-input" id="regAddress">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regPhone" data-i18n="phone">Telefon</label>
+          <input type="tel" class="form-input" id="regPhone">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regBarEmail" data-i18n="email">Email *</label>
+          <input type="email" class="form-input" id="regBarEmail" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regBarPass" data-i18n="passwordMin">Passwort (mind. 8 Zeichen) *</label>
+          <input type="password" class="form-input" id="regBarPass" autocomplete="new-password">
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="regConsent">
+          <label for="regConsent">Ich akzeptiere die <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366" data-i18n="privacyPolicy">Datenschutzerklärung</a></label>
+        </div>
+        <button class="btn-pink" id="btnBarRegister" data-i18n="registerBtn">Registrieren</button>
+        <p style="margin-top:16px;font-size:13px;color:#999;text-align:center" data-i18n="pendingNote">
+          Nach der Registrierung wird dein Account von BarSclusive freigeschaltet.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="barDashboard">
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" data-dash-tab="overview">📊 <span data-i18n="tabOverview">Übersicht</span></button>
+      <button class="tab" data-dash-tab="newdeal">➕ <span data-i18n="tabNewDeal">Neuer Deal</span></button>
+      <button class="tab" data-dash-tab="mydeals">🎫 <span data-i18n="tabMyDeals">Meine Deals</span></button>
+      <button class="tab" data-dash-tab="vouchers">🎟️ <span data-i18n="tabVouchers">Gutscheine</span></button>
+      <button class="tab" data-dash-tab="redeem">🔑 <span data-i18n="tabRedeem">Einlösen</span></button>
+      <button class="tab" data-dash-tab="settings">⚙️ <span data-i18n="tabSettings">Einstellungen</span></button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div id="dashOverview" class="tab-content active">
+      <div class="stats-grid" id="statsGrid"></div>
+      <div style="color:#999;font-size:14px"><span data-i18n="loggedInAs">Eingeloggt als:</span> <span id="barNameDisplay"></span></div>
+    </div>
+
+    <!-- NEW DEAL -->
+    <div id="dashNewdeal" class="tab-content">
+      <div class="card" style="max-width:720px">
+        <h2>➕ <span data-i18n="tabNewDeal">Neuer Deal</span></h2>
+        <div class="form-group">
+          <label class="form-label" for="dealTitle" data-i18n="dealTitleLbl">Titel *</label>
+          <input type="text" class="form-input" id="dealTitle" placeholder="z.B. 2 Cocktails für 1">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dealDesc" data-i18n="dealDescLbl">Beschreibung</label>
+          <input type="text" class="form-input" id="dealDesc">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="form-group">
+            <label class="form-label" for="dealOrigPrice" data-i18n="origPrice">Originalpreis (CHF)</label>
+            <input type="number" class="form-input" id="dealOrigPrice" min="0" step="0.50">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dealPrice" data-i18n="dealPriceLbl">Deal-Preis (CHF) *</label>
+            <input type="number" class="form-input" id="dealPrice" min="0" step="0.50">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dealQty" data-i18n="maxQty">Max. Anzahl (0 = unbegrenzt)</label>
+          <input type="number" class="form-input" id="dealQty" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="dealImageUrl">Bild-URL (optional)</label>
+          <input type="url" class="form-input" id="dealImageUrl" placeholder="https://i.imgur.com/beispiel.jpg">
+          <small style="color:#999;font-size:12px">Lade dein Bild bei imgur.com hoch und füge die URL hier ein</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="categoriesLbl">Kategorien * (mind. 1)</label>
+          <div class="cats-grid">
+            <label class="cat-check"><input type="checkbox" name="cat" value="breakfast"> 🥐 Breakfast</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="lunch"> 🍽️ Lunch</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="validityLbl">Gültigkeitsdauer *</label>
+          <div class="validity-toggle">
+            <label class="validity-opt">
+              <input type="radio" name="validType" value="recurring" checked id="vTypeRecurring">
+              <span data-i18n="recurring">Wiederkehrend</span>
+            </label>
+            <label class="validity-opt">
+              <input type="radio" name="validType" value="single" id="vTypeSingle">
+              <span data-i18n="singleDate">Einmaliges Datum</span>
+            </label>
+          </div>
+          <div id="recurringFields" style="margin-top:14px">
+            <label class="form-label" style="margin-top:10px" data-i18n="weekdaysLbl">Wochentage</label>
+            <div class="weekdays" id="weekdays">
+              <div class="wd-btn" data-weekday="Mo">Mo</div>
+              <div class="wd-btn" data-weekday="Di">Di</div>
+              <div class="wd-btn" data-weekday="Mi">Mi</div>
+              <div class="wd-btn" data-weekday="Do">Do</div>
+              <div class="wd-btn" data-weekday="Fr">Fr</div>
+              <div class="wd-btn" data-weekday="Sa">Sa</div>
+              <div class="wd-btn" data-weekday="So">So</div>
+            </div>
+          </div>
+          <div id="singleFields">
+            <div class="form-group">
+              <label class="form-label" for="singleDate" data-i18n="dateLbl">Datum</label>
+              <input type="date" class="form-input" id="singleDate">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+            <div class="form-group">
+              <label class="form-label" for="timeFrom" data-i18n="fromLbl">Von</label>
+              <input type="time" class="form-input" id="timeFrom">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="timeTo" data-i18n="toLbl">Bis</label>
+              <input type="time" class="form-input" id="timeTo">
+            </div>
+          </div>
+        </div>
+        <div class="form-check">
+          <input type="checkbox" id="dealActive" checked>
+          <label for="dealActive" data-i18n="dealActiveLabel">Deal sofort aktiv</label>
+        </div>
+        <button class="btn-pink" id="btnCreateDeal" data-i18n="createDeal">Deal erstellen</button>
+      </div>
+    </div>
+
+    <!-- MY DEALS -->
+    <div id="dashMydeals" class="tab-content">
+      <div class="deal-list" id="dealList"></div>
+    </div>
+
+    <!-- VOUCHERS -->
+    <div id="dashVouchers" class="tab-content">
+      <div class="overflow-x">
+        <table class="voucher-table">
+          <thead>
+            <tr>
+              <th data-i18n="codeLbl">Code</th>
+              <th data-i18n="dealLbl">Deal</th>
+              <th data-i18n="priceLbl">Preis</th>
+              <th>Status</th>
+              <th data-i18n="createdLbl">Erstellt</th>
+              <th data-i18n="redeemedLbl">Eingelöst</th>
+            </tr>
+          </thead>
+          <tbody id="voucherBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REDEEM -->
+    <div id="dashRedeem" class="tab-content">
+      <div class="redeem-box">
+        <h2>🔑 <span data-i18n="redeemTitle">Gutschein einlösen</span></h2>
+        <p style="color:#999;font-size:14px;margin-bottom:20px" data-i18n="redeemHint">Gutschein-Code des Kunden eingeben</p>
+        <div class="form-group">
+          <input type="text" class="form-input" id="redeemCode"
+                 placeholder="XXXX-XXXX-XXXX"
+                 style="text-align:center;font-size:20px;letter-spacing:2px;font-weight:700;text-transform:uppercase">
+        </div>
+        <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
+        <div id="redeemResult" style="display:none;margin-top:20px" class="code-display">
+          <div class="code-title" data-i18n="redeemSuccess">✅ Gutschein eingelöst!</div>
+          <div class="code-val" id="redeemDeal"></div>
+        </div>
+        <div id="redeemErr" class="err-msg" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="dashSettings" class="tab-content">
+      <div class="card">
+        <h2>⚙️ <span data-i18n="tabSettings">Einstellungen</span></h2>
+        <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="changePassword">Passwort ändern</h3>
+        <div class="err-msg" id="pwErr" aria-live="polite"></div>
+        <div class="form-group">
+          <label class="form-label" for="pwOld" data-i18n="oldPassword">Altes Passwort</label>
+          <input type="password" class="form-input" id="pwOld" autocomplete="current-password">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pwNew" data-i18n="newPasswordLbl">Neues Passwort (mind. 8 Zeichen)</label>
+          <input type="password" class="form-input" id="pwNew" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pwConfirm" data-i18n="confirmPassword">Passwort bestätigen</label>
+          <input type="password" class="form-input" id="pwConfirm" autocomplete="new-password">
+        </div>
+        <button class="btn-pink" id="btnChangePassword" data-i18n="changePasswordBtn">Passwort ändern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT DEAL MODAL -->
+<div id="editModal" class="modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-title">
+      ✏️ <span data-i18n="editDeal">Deal bearbeiten</span>
+      <button class="modal-close" id="btnCloseEditModal">✕</button>
+    </div>
+    <input type="hidden" id="editDealId">
+    <div class="form-group">
+      <label class="form-label" data-i18n="dealTitleLbl">Titel *</label>
+      <input type="text" class="form-input" id="editTitle">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="dealDescLbl">Beschreibung</label>
+      <input type="text" class="form-input" id="editDesc">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label class="form-label" data-i18n="origPrice">Originalpreis (CHF)</label>
+        <input type="number" class="form-input" id="editOrigPrice" min="0" step="0.50">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="dealPriceLbl">Deal-Preis (CHF) *</label>
+        <input type="number" class="form-input" id="editDealPrice" min="0" step="0.50">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="maxQty">Max. Anzahl (0 = unbegrenzt)</label>
+      <input type="number" class="form-input" id="editQty" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Bild-URL (optional)</label>
+      <input type="url" class="form-input" id="editImageUrl" placeholder="https://i.imgur.com/beispiel.jpg">
+    </div>
+    <div class="form-check" style="margin-bottom:20px">
+      <input type="checkbox" id="editActive">
+      <label for="editActive" data-i18n="dealActiveLabel">Deal aktiv</label>
+    </div>
+    <button class="btn-pink" id="btnSaveEdit" data-i18n="saveLbl">Speichern</button>
+    <button class="btn-ghost" id="btnCancelEdit" data-i18n="cancelLbl">Abbrechen</button>
+  </div>
+</div>
+
+<!-- PASSWORD RESET MODAL -->
+<div id="barResetPasswordModal" class="modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-title">
+      🔑 <span data-i18n="resetPasswordTitle">Passwort zurücksetzen</span>
+      <button class="modal-close" id="btnCloseBarResetModal">✕</button>
+    </div>
+    
+    <!-- Step 1: Email eingeben -->
+    <div id="barResetStep1">
+      <p style="color:#999;margin-bottom:16px">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
+      <div class="form-group">
+        <label class="form-label" for="barResetEmail" data-i18n="email">Email</label>
+        <input type="email" class="form-input" id="barResetEmail" autocomplete="email">
+      </div>
+      <button class="btn-pink" id="btnBarSendResetCode">Code senden</button>
+      <button class="btn-ghost" id="btnBarCancelReset1">Abbrechen</button>
+    </div>
+    
+    <!-- Step 2: Code + neues Passwort -->
+    <div id="barResetStep2" style="display:none">
+      <p style="color:#999;margin-bottom:16px">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
+      <div class="form-group">
+        <label class="form-label" for="barResetCode">Code (6-stellig)</label>
+        <input type="text" class="form-input" id="barResetCode" maxlength="6" placeholder="123456">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="barResetNewPassword" data-i18n="newPassword">Neues Passwort (mind. 8 Zeichen)</label>
+        <input type="password" class="form-input" id="barResetNewPassword" autocomplete="new-password">
+      </div>
+      <button class="btn-pink" id="btnBarResetPassword">Passwort ändern</button>
+      <button class="btn-ghost" id="btnBarBackToStep1">Zurück</button>
+    </div>
+  </div>
+</div>
+
+<script src="bar-app.js"></script>
+</body>
+</html>

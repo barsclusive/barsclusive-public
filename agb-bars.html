@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGB für Bars - BarSclusive</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #FF3366;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo img { height: 40px; }
+    .back-btn {
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .back-btn:hover { background: #444; }
+    .content {
+      background: #2a2a2a;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #FF3366;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+    .subtitle {
+      color: #999;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    h2 {
+      color: #FF3366;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+    h3 {
+      color: #FF5588;
+      margin-top: 25px;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+    p {
+      margin-bottom: 15px;
+      color: #ddd;
+    }
+    ul, ol {
+      margin-left: 25px;
+      margin-bottom: 15px;
+      color: #ddd;
+    }
+    li { margin-bottom: 8px; }
+    .highlight {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #FF3366;
+      margin: 20px 0;
+    }
+    .highlight strong { color: #FF3366; }
+    strong { color: #fff; }
+    a { color: #FF3366; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .section { margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="logo.png" alt="BarSclusive">
+      </div>
+      <a href="bar-portal.html" class="back-btn">← Zurück zum Portal</a>
+    </div>
+
+    <div class="content">
+      <h1>AGB für Partnerbars</h1>
+      <p class="subtitle">BarSclusive | Stand: Februar 2026</p>
+
+      <div class="section">
+        <h2>1. Geltungsbereich</h2>
+        <p>Diese AGB gelten für alle Partnerbars, die Deals auf der BarSclusive Plattform anbieten.</p>
+      </div>
+
+      <div class="section">
+        <h2>2. Leistungen von BarSclusive</h2>
+        <ul>
+          <li>Bereitstellung einer Plattform zur Veröffentlichung von Deals</li>
+          <li>Abwicklung von Zahlungen mit Kunden</li>
+          <li>Auszahlung nach erfolgreicher Einlösung (bei Fix-Preis Deals)</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>3. Deal-Typen</h2>
+        
+        <h3>3.1 Fix-Preis Deals</h3>
+        <p>Sie bieten einen Deal zu einem festgelegten Preis an (z.B. "Aperitif für 25 CHF").</p>
+        <div class="highlight">
+          <p><strong>Auszahlung:</strong> Sie erhalten den Deal-Preis minus 10% Provision <strong>NACH Einlösung</strong> durch den Kunden.</p>
+          <p><strong>Mindest-Provision:</strong> 2 CHF</p>
+          <p><strong>Beispiel:</strong> Deal 25 CHF → Sie erhalten 22.50 CHF nach Einlösung</p>
+        </div>
+
+        <h3>3.2 Pauschalgutscheine</h3>
+        <p>Sie bieten einen prozentualen Rabatt an (z.B. "10% auf Getränke").</p>
+        <div class="highlight">
+          <p><strong>Auszahlung:</strong> Sie erhalten <strong>KEINE Auszahlung</strong> von BarSclusive.</p>
+          <p><strong>Sie geben:</strong> Den Rabatt direkt beim Konsum an den Kunden</p>
+        </div>
+        <p><strong>Pflicht-Einstellungen für Pauschalgutscheine:</strong></p>
+        <ul>
+          <li>Mindestbestellwert: <strong>Minimum 40 CHF</strong></li>
+          <li>Rabatt: <strong>Minimum 15%</strong></li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>4. Ihre Pflichten</h2>
+        
+        <h3>4.1 Deal-Erstellung</h3>
+        <ul>
+          <li>Sie stellen korrekte und vollständige Informationen bereit</li>
+          <li>Sie verpflichten sich zur Einhaltung der angebotenen Konditionen</li>
+          <li>Bilder und Beschreibungen müssen wahrheitsgemäß sein</li>
+        </ul>
+
+        <h3>4.2 Einlösung</h3>
+        <ul>
+          <li>Sie lösen gültige Gutscheine ein</li>
+          <li>Sie scannen den Code im Bar-Portal unter "Einlösen"</li>
+          <li>Codes sind nur einmalig einlösbar</li>
+          <li>Sie prüfen die Gültigkeit des Codes</li>
+        </ul>
+
+        <h3>4.3 Statistik</h3>
+        <p>Sie können in Ihrem Portal einsehen:</p>
+        <ul>
+          <li>Anzahl verkaufter Gutscheine (zur Planung)</li>
+          <li>Anzahl eingelöster Gutscheine</li>
+          <li>Ihre Auszahlungen (nur bei Fix-Preis Deals)</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>5. Provision und Auszahlung</h2>
+        
+        <h3>5.1 Fix-Preis Deals</h3>
+        <ul>
+          <li>Provision: 10% des Deal-Preises</li>
+          <li>Mindest-Provision: 2 CHF</li>
+          <li><strong>Auszahlung erfolgt NUR nach Einlösung</strong></li>
+          <li>Nicht eingelöste Gutscheine = Keine Auszahlung</li>
+        </ul>
+
+        <h3>5.2 Pauschalgutscheine</h3>
+        <ul>
+          <li><strong>Keine Provision</strong></li>
+          <li><strong>Keine Auszahlung</strong></li>
+          <li>Sie gewähren Rabatt direkt beim Konsum</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>6. Haftung</h2>
+        <p>Sie haften für:</p>
+        <ul>
+          <li>Richtigkeit Ihrer Deal-Angaben</li>
+          <li>Einhaltung der angebotenen Konditionen</li>
+          <li>Qualität Ihrer Leistungen</li>
+        </ul>
+        
+        <p>BarSclusive haftet nicht für:</p>
+        <ul>
+          <li>Streitigkeiten mit Kunden</li>
+          <li>Technische Probleme</li>
+          <li>Zahlungsausfälle von Kunden (diese zahlen an BarSclusive, nicht an Sie)</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>7. Registrierung</h2>
+        <p><strong>Pflichtfelder:</strong></p>
+        <ul>
+          <li>Bar-Name</li>
+          <li>Stadt</li>
+          <li>Adresse (vollständig)</li>
+          <li>PLZ</li>
+          <li>Email</li>
+          <li>Telefon</li>
+          <li>Passwort (min. 8 Zeichen)</li>
+        </ul>
+        <p><strong>Optional für Auszahlungen:</strong> IBAN, Twint-Nummer</p>
+      </div>
+
+      <div class="section">
+        <h2>8. Freischaltung</h2>
+        <p>Nach Registrierung prüft BarSclusive Ihre Angaben. Sie werden per Email informiert, sobald Ihr Account freigeschaltet ist. Erst dann können Sie Deals erstellen.</p>
+      </div>
+
+      <div class="section">
+        <h2>9. Datenschutz</h2>
+        <p>Siehe separate <a href="datenschutz-bars.html">Datenschutzerklärung für Bars</a>.</p>
+      </div>
+
+      <div class="section">
+        <h2>10. Schlussbestimmungen</h2>
+        <p><strong>Anwendbares Recht:</strong> Schweizer Recht</p>
+        <p><strong>Gerichtsstand:</strong> Basel, Schweiz</p>
+        <p><strong>Änderungen:</strong> BarSclusive behält sich vor, diese AGB jederzeit zu ändern. Sie werden per Email informiert.</p>
+      </div>
+
+      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+        <h2>Kontakt</h2>
+        <p><strong>BarSclusive</strong><br>
+        Email: <a href="/cdn-cgi/l/email-protection#8fedeefdfcece3fafce6f9eacfe8e2eee6e3a1ece0e2"><span class="__cf_email__" data-cfemail="680a091a1b0b041d1b011e0d280f05090104460b0705">[email&#160;protected]</span></a></p>
+        <p style="margin-top:20px; color:#999; font-size:14px;">
+   

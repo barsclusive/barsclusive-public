@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarSclusive – Exclusive Bar Deals</title>
+
+  <!--
+    CSP NOTE: GitHub Pages does not allow HTTP response headers.
+    This meta-CSP covers most injection vectors but NOT frame-ancestors.
+    'unsafe-inline' is required because GitHub Pages serves static files
+    with no nonce-injection capability. Ideal fix: move to a server that
+    can inject nonces. Current CSP still blocks external script injection.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 script-src 'self';
+                 style-src 'self' 'unsafe-inline';
+                 connect-src https://script.google.com https://script.googleusercontent.com;
+                 img-src 'self' data: https:;
+                 frame-src 'none';
+                 object-src 'none';">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#000;color:#fff;min-height:100vh}
+    .header{background:#000;padding:20px;border-bottom:1px solid #222;position:sticky;top:0;z-index:100}
+    .nav{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-size:20px;font-weight:700}
+    .nav-links{display:flex;gap:20px;align-items:center}
+    .nav-link{color:#999;text-decoration:none;font-size:14px;cursor:pointer;transition:color .2s;background:none;border:none}
+    .nav-link:hover,.nav-link.active{color:#fff}
+    .user-menu{position:relative}
+    .user-button{background:#1a1a1a;border:1px solid #2a2a2a;padding:8px 16px;border-radius:20px;color:#fff;cursor:pointer;font-size:14px}
+    .user-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;min-width:160px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+    .user-dropdown.show{display:block}
+    .dropdown-item{padding:12px 16px;cursor:pointer;font-size:14px}
+    .dropdown-item:hover{background:#2a2a2a}
+    .hero{padding:60px 20px;text-align:center;background:linear-gradient(135deg,#1a1a1a,#000)}
+    .hero h1{font-size:42px;font-weight:700;margin-bottom:15px}
+    .hero p{font-size:16px;color:#999;max-width:600px;margin:0 auto}
+    .filter-wrap{max-width:1200px;margin:30px auto;padding:0 20px}
+    .filter-bar{background:#1a1a1a;padding:20px;border-radius:15px;border:1px solid #2a2a2a}
+    .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+    .filter-row:last-child{margin-bottom:0}
+    .filter-label{font-size:12px;color:#999;min-width:70px}
+    .filter-btn{padding:8px 16px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:20px;color:#fff;font-size:13px;cursor:pointer;transition:all .2s}
+    .filter-btn:hover{background:#333}
+    .filter-btn.active{background:#FF3366;border-color:#FF3366}
+    .date-input{padding:8px 12px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:8px;color:#fff;font-size:13px}
+    .container{max-width:1200px;margin:0 auto;padding:30px 20px}
+    .deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+    .deal-card{background:#1a1a1a;border-radius:20px;overflow:hidden;border:1px solid #2a2a2a;transition:transform .2s}
+    .deal-card:hover{transform:translateY(-4px)}
+    .deal-image{width:100%;height:200px;background:#2a2a2a;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .deal-image img{width:100%;height:100%;object-fit:cover}
+    .badge-discount{position:absolute;top:15px;right:15px;background:#FF3366;color:#fff;padding:6px 12px;border-radius:15px;font-weight:700;font-size:13px}
+    .badge-cat{position:absolute;top:15px;left:15px;background:rgba(0,0,0,.7);color:#fff;padding:6px 12px;border-radius:15px;font-size:12px;backdrop-filter:blur(10px)}
+    .badge-dist{position:absolute;bottom:15px;left:15px;background:#4CAF50;color:#fff;padding:6px 12px;border-radius:15px;font-size:12px;font-weight:600}
+    .deal-content{padding:20px}
+    .deal-title{font-size:20px;font-weight:700;margin-bottom:8px}
+    .deal-bar{color:#999;font-size:14px;margin-bottom:12px}
+    .deal-desc{color:#ccc;font-size:14px;margin-bottom:15px;line-height:1.5}
+    .deal-price{display:flex;align-items:center;gap:10px;margin-bottom:15px}
+    .price-new{font-size:24px;font-weight:700}
+    .price-old{font-size:16px;color:#666;text-decoration:line-through}
+    .deal-validity{color:#999;font-size:13px;margin-bottom:15px}
+    .btn-buy{width:100%;background:#fff;color:#000;border:none;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+    .btn-buy:hover{background:#f0f0f0}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;align-items:center;justify-content:center;padding:20px}
+    .modal.active{display:flex}
+    .modal-box{background:#1a1a1a;border-radius:20px;padding:30px;max-width:500px;width:100%;border:1px solid #2a2a2a;max-height:90vh;overflow-y:auto}
+    .modal-title{font-size:24px;font-weight:700;margin-bottom:20px}
+    .form-group{margin-bottom:18px}
+    .form-label{display:block;margin-bottom:7px;font-size:14px;font-weight:600}
+    .form-input{width:100%;padding:12px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:10px;color:#fff;font-size:14px}
+    .form-check{display:flex;align-items:start;gap:10px;font-size:13px}
+    .btn-pink{width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:6px}
+    .btn-ghost{width:100%;background:#2a2a2a;color:#fff;border:1px solid #3a3a3a;padding:14px;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
+    .text-muted{text-align:center;margin-top:14px;font-size:14px;color:#999}
+    .text-link{color:#FF3366;cursor:pointer}
+    .order-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:15px;padding:20px;margin-bottom:18px}
+    .order-head{display:flex;justify-content:space-between;margin-bottom:12px;gap:10px}
+    .order-title{font-size:17px;font-weight:600}
+    .status-pill{padding:5px 12px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap}
+    .s-pending{background:#FFC107;color:#000}
+    .s-paid{background:#4CAF50;color:#fff}
+    .s-redeemed{background:#9C27B0;color:#fff}
+    .s-refund{background:#FF5722;color:#fff}
+    .voucher-box{background:#2a2a2a;padding:15px;border-radius:10px;margin:14px 0;text-align:center}
+    .voucher-code{font-size:20px;font-weight:700;letter-spacing:2px;color:#FF3366}
+    .btn-refund{background:#EF4444;color:#fff;border:none;padding:10px 20px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;margin-top:10px}
+    .refund-hint{color:#999;font-size:12px;margin-top:5px}
+    .empty{text-align:center;padding:80px 20px;color:#666}
+    .empty h3{font-size:22px;margin-bottom:10px}
+    .toast{position:fixed;top:20px;right:20px;padding:14px 22px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.4);display:none;z-index:2000;font-size:14px;font-weight:600;max-width:320px}
+    .toast.show{display:block}
+    .toast-ok{background:#fff;color:#000}
+    .toast-err{background:#EF4444;color:#fff}
+    .footer{background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;margin-top:60px;border-top:1px solid #2a2a2a}
+    .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
+    @media(max-width:768px){
+      .hero h1{font-size:28px}
+      .deals-grid{grid-template-columns:1fr}
+      .nav-links{gap:10px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+<!-- NAVIGATION -->
+<div class="header">
+  <div class="nav">
+    <div class="logo" style="display:flex;align-items:center;gap:8px">
+      <img src="logo.png" alt="BarSclusive" style="height:40px">
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" id="btnDeals">🏠 Deals</button>
+      <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="nav-link" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
+        <button class="nav-link" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
+      </div>
+      <div class="user-menu">
+        <button class="user-button" id="userBtn">👤 Login</button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
+          <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🍹 Die besten Bar-Deals deiner Stadt</h1>
+  <p>Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-wrap">
+  <div class="filter-bar">
+    <div class="filter-row">
+      <span class="filter-label" data-i18n="datum">📅 Datum</span>
+      <button class="filter-btn active" data-filter-date="all" data-i18n="alle">Alle</button>
+      <button class="filter-btn" data-filter-date="today" data-i18n="heute">Heute</button>
+      <button class="filter-btn" data-filter-date="tomorrow" data-i18n="morgen">Morgen</button>
+      <input type="date" id="customDate" class="date-input" onchange="setCustomDate(this.value)">
+    </div>
+    <div class="filter-row">
+      <span class="filter-label" data-i18n="uhrzeit">🕐 Uhrzeit</span>
+      <button class="filter-btn active" data-filter-time="all" data-i18n="alle">Alle</button>
+      <button class="filter-btn" data-filter-time="now">Jetzt</button>
+      <button class="filter-btn" data-filter-time="lunch">Mittag</button>
+      <button class="filter-btn" data-filter-time="evening">Abend</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label" data-i18n="kategorie">🍹 Kategorie</span>
+      <button class="filter-btn active" data-filter-cat="all" data-i18n="alle">Alle</button>
+      <button class="filter-btn" data-filter-cat="breakfast">🥐 Breakfast</button>
+      <button class="filter-btn" data-filter-cat="lunch">🍽️ Lunch</button>
+      <button class="filter-btn" data-filter-cat="aperitif">🍹 Aperitif</button>
+      <button class="filter-btn" data-filter-cat="dinner">🍷 Dinner</button>
+      <button class="filter-btn" data-filter-cat="events">🎉 Events</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label" data-i18n="standort">📍 Standort</span>
+      <button class="filter-btn" id="btnLocation">In meiner Nähe</button>
+      <button class="filter-btn" id="btnSortDist" style="display:none">📏 Nach Entfernung</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+  <div id="dealsView">
+    <div id="dealsList" class="deals-grid"></div>
+  </div>
+  <div id="ordersView" style="display:none">
+    <h2 style="margin-bottom:24px">📦 Meine Bestellungen</h2>
+    <div id="ordersList"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>© 2026 BarSclusive</p>
+  <p style="margin-top:12px">
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+    <a href="kontakt.html">Kontakt</a>
+  </p>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-label="Anmelden">
+  <div class="modal-box">
+    <div class="modal-title">🔐 Anmelden</div>
+    <div class="form-group">
+      <label class="form-label" for="loginEmail">Email</label>
+      <input type="email" class="form-input" id="loginEmail" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="loginPassword">Passwort</label>
+      <input type="password" class="form-input" id="loginPassword" autocomplete="current-password">
+    </div>
+    <button class="btn-pink" id="btnLoginSubmit">Einloggen</button>
+    <button class="btn-ghost" data-close-modal="loginModal">Abbrechen</button>
+    <p class="text-muted">Noch kein Konto? <span class="text-link" id="linkToRegister">Registrieren</span></p>
+    <p class="text-muted" style="margin-top:8px"><span class="text-link" id="linkForgotPassword">Passwort vergessen?</span></p>
+  </div>
+</div>
+
+<!-- PASSWORD RESET MODAL -->
+<div id="resetPasswordModal" class="modal" role="dialog" aria-modal="true" aria-label="Passwort zurücksetzen">
+  <div class="modal-box">
+    <div class="modal-title">🔑 Passwort zurücksetzen</div>
+    
+    <!-- Step 1: Email eingeben -->
+    <div id="resetStep1">
+      <p style="color:#999;margin-bottom:16px">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
+      <div class="form-group">
+        <label class="form-label" for="resetEmail">Email</label>
+        <input type="email" class="form-input" id="resetEmail" autocomplete="email">
+      </div>
+      <button class="btn-pink" id="btnSendResetCode">Code senden</button>
+      <button class="btn-ghost" data-close-modal="resetPasswordModal">Abbrechen</button>
+    </div>
+    
+    <!-- Step 2: Code + neues Passwort -->
+    <div id="resetStep2" style="display:none">
+      <p style="color:#999;margin-bottom:16px">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
+      <div class="form-group">
+        <label class="form-label" for="resetCode">Code (6-stellig)</label>
+        <input type="text" class="form-input" id="resetCode" maxlength="6" placeholder="123456">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="resetNewPassword">Neues Passwort (mind. 8 Zeichen)</label>
+        <input type="password" class="form-input" id="resetNewPassword" autocomplete="new-password">
+      </div>
+      <button class="btn-pink" id="btnResetPassword">Passwort ändern</button>
+      <button class="btn-ghost" id="btnBackToStep1">Zurück</button>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div id="registerModal" class="modal" role="dialog" aria-modal="true" aria-label="Registrieren">
+  <div class="modal-box">
+    <div class="modal-title">✨ Registrieren</div>
+    <div class="form-group">
+      <label class="form-label" for="regName">Name</label>
+      <input type="text" class="form-input" id="regName" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="regEmail">Email</label>
+      <input type="email" class="form-input" id="regEmail" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="regPassword">Passwort (mind. 8 Zeichen)</label>
+      <input type="password" class="form-input" id="regPassword" autocomplete="new-password">
+    </div>
+    <div class="form-check" style="margin-bottom:16px">
+      <input type="checkbox" id="regConsent">
+      <label for="regConsent">Ich akzeptiere die <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutzerklärung</a></label>
+    </div>
+    <button class="btn-pink" id="btnRegisterSubmit">Registrieren</button>
+    <button class="btn-ghost" data-close-modal="registerModal">Abbrechen</button>
+    <p class="text-muted">Schon registriert? <span class="text-link" id="linkToLogin">Zum Login</span></p>
+  </div>
+</div>
+
+<!-- BUY MODAL -->
+<div id="buyModal" class="modal" role="dialog" aria-modal="true" aria-label="Deal kaufen">
+  <div class="modal-box">
+    <div class="modal-title" id="buyModalTitle">Deal kaufen</div>
+    <div id="buyModalInfo" style="background:#2a2a2a;padding:14px;border-radius:10px;margin-bottom:18px"></div>
+    <div class="form-group">
+      <label class="form-label" for="buyName">Name</label>
+      <input type="text" class="form-input" id="buyName" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="buyEmail">Email</label>
+      <input type="email" class="form-input" id="buyEmail" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="buyPhone">Telefon</label>
+      <input type="tel" class="form-input" id="buyPhone" autocomplete="tel">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="buyDelivery">Versand</label>
+      <select class="form-input" id="buyDelivery">
+        <option value="whatsapp">WhatsApp</option>
+        <option value="email">Email</option>
+      </select>
+    </div>
+    <div class="form-check" style="margin-bottom:16px">
+      <input type="checkbox" id="buyConsent">
+      <label for="buyConsent">Ich akzeptiere <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">AGB & Datenschutz</a></label>
+    </div>
+    <button class="btn-pink" id="btnBuySubmit">Bestellen</button>
+    <button class="btn-ghost" data-close-modal="buyModal">Abbrechen</button>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div id="changePwModal" class="modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <span style="font-size:20px;font-weight:700">🔑 Passwort ändern</span>
+      <button id="btnClosePwModal" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <div id="cpwErr" style="color:#EF4444;font-size:13px;margin-bottom:12px;min-height:18px"></div>
+    <div class="form-group">
+      <label class="form-label" for="cpwOld">Altes Passwort</label>
+      <input type="password" class="form-input" id="cpwOld" autocomplete="current-password">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="cpwNew">Neues Passwort (mind. 8 Zeichen)</label>
+      <input type="password" class="form-input" id="cpwNew" autocomplete="new-password">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="cpwConfirm">Passwort bestätigen</label>
+      <input type="password" class="form-input" id="cpwConfirm" autocomplete="new-password">
+    </div>
+    <button class="btn-pink" id="btnSavePassword">Speichern</button>
+    <button class="btn-ghost" id="btnCancelPwModal" style="margin-top:8px">Abbrechen</button>
+  </div>
+</div>
+
+<script src="shop-app.js"></script>
+</body>
+</html>

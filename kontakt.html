@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontakt - BarSclusive</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #FF3366;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo img {
+      height: 40px;
+    }
+    .back-btn {
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .back-btn:hover {
+      background: #444;
+    }
+    .content {
+      background: #2a2a2a;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #FF3366;
+      margin-bottom: 30px;
+      font-size: 32px;
+    }
+    .contact-section {
+      margin: 30px 0;
+    }
+    .contact-section h2 {
+      color: #FF3366;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: #1a1a1a;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .contact-icon {
+      font-size: 24px;
+      width: 40px;
+      text-align: center;
+    }
+    .contact-text {
+      flex: 1;
+    }
+    .contact-text strong {
+      display: block;
+      color: #FF3366;
+      margin-bottom: 5px;
+    }
+    .contact-text a {
+      color: #fff;
+      text-decoration: none;
+    }
+    .contact-text a:hover {
+      color: #FF3366;
+    }
+    .info-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #FF3366;
+      margin: 20px 0;
+    }
+    .info-box p {
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .info-box p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="logo.png" alt="BarSclusive">
+      </div>
+      <a href="shop.html" class="back-btn">← Zurück zum Shop</a>
+    </div>
+
+    <div class="content">
+      <h1>📞 Kontakt</h1>
+
+      <div class="contact-section">
+        <h2>Allgemeine Anfragen</h2>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-text">
+            <strong>Email</strong>
+            <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2>🍸 Für Bars & Partner</h2>
+        <div class="info-box">
+          <p><strong>Du betreibst eine Bar und möchtest dabei sein?</strong></p>
+          <p>Registriere dich direkt im <a href="bar-portal.html" style="color:#FF3366">Bar-Portal</a> oder schreib uns eine Email an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
+          <p>Wir melden uns innerhalb von 24 Stunden bei dir!</p>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2>🛒 Für Kunden</h2>
+        <div class="info-box">
+          <p><strong>Fragen zu deiner Bestellung?</strong></p>
+          <p>Schreib uns an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> mit deiner Bestellnummer.</p>
+          <p><strong>Problem mit einem Gutschein?</strong></p>
+          <p>Kontaktiere uns mit deinem Gutschein-Code und wir helfen dir weiter!</p>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2>⏰ Antwortzeit</h2>
+        <div class="info-box">
+          <p>📅 <strong>Montag - Freitag:</strong> Antwort innerhalb von 24 Stunden</p>
+          <p>📅 <strong>Wochenende:</strong> Antwort am nächsten Werktag</p>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2>🌐 Social Media</h2>
+        <div class="info-box">
+          <p>Folge uns für Updates, neue Deals und exklusive Angebote!</p>
+          <p><em>(Links folgen bald)</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
