@@ -8,9 +8,6 @@ const WA_NUMBER    = '41765924391';
 
 // =============================================
 // SESSION — in-memory only
-// Rationale: sessionStorage/localStorage are readable by any JS on the page
-// (XSS). In-memory variable is cleared on tab close, limits exposure window.
-// Tradeoff: user must re-login on page refresh. TTL = 90 min matches backend.
 // =============================================
 let _session = null; // { token, name, email, role, expiresAt }
 
@@ -63,14 +60,13 @@ function setText(el, val) {
 // =============================================
 let allDeals = [];
 let filters  = { date: 'all', time: 'all', cat: 'all', customDate: null };
-let userLocation  = null; // { lat, lng } — never sent to backend (GDPR)
+let userLocation  = null;
 let locationOn    = false;
 
 window.addEventListener('load', () => { loadDeals(); });
 
 function setFilter(type, val, btn) {
   filters[type] = val;
-  // Deselect all buttons in this filter group
   const attr = { date: 'data-filter-date', time: 'data-filter-time', cat: 'data-filter-cat' }[type];
   if (attr) {
     document.querySelectorAll('.filter-btn[' + attr + ']').forEach(b => b.classList.remove('active'));
@@ -82,6 +78,8 @@ function setFilter(type, val, btn) {
 function setCustomDate(val) {
   filters.date = 'custom';
   filters.customDate = val;
+  // Deactivate all date buttons when custom date is selected
+  document.querySelectorAll('.filter-btn[data-filter-date]').forEach(b => b.classList.remove('active'));
   renderDeals();
 }
 
@@ -90,7 +88,6 @@ function toggleLocation() {
     if (!navigator.geolocation) { showToast('Geolocation nicht verfügbar', true); return; }
     navigator.geolocation.getCurrentPosition(
       pos => {
-        // GPS stays client-only — never sent to backend
         userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         locationOn   = true;
         setText('btnLocation', '✅ Standort aktiv');
@@ -112,8 +109,6 @@ function toggleLocation() {
 }
 
 function attachDistances() {
-  // Bars would need lat/lng in deal data for real calculation.
-  // Currently placeholder — use Haversine when bar coordinates are in DB.
   allDeals.forEach(d => {
     if (d.bar_lat && d.bar_lng && userLocation) {
       d._dist = haversine(userLocation.lat, userLocation.lng, d.bar_lat, d.bar_lng);
@@ -137,12 +132,10 @@ function sortByDistance() {
 // =============================================
 // DEALS
 // =============================================
-// Cache deals to reduce backend calls
 let dealsCache = { data: null, timestamp: 0 };
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 async function loadDeals(forceRefresh = false) {
-  // Use cache if recent and not forcing refresh
   const now = Date.now();
   if (!forceRefresh && dealsCache.data && (now - dealsCache.timestamp) < CACHE_DURATION) {
     allDeals = dealsCache.data;
@@ -166,33 +159,64 @@ async function loadDeals(forceRefresh = false) {
   }
 }
 
-function matchDate(deal) {
-  const today    = new Date(); today.setHours(0,0,0,0);
-  const tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
+// FIX BUG 3: Datum-Filter — parst Datumstrings ohne Timezone-Problem
+// "2026-03-15" → { year:2026, month:3, day:15 } direkt aus String
+function parseDateString(str) {
+  if (!str) return null;
+  // Handle ISO strings like "2026-03-15" or "2026-03-15T00:00:00.000Z"
+  const m = String(str).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return null;
+  return { year: parseInt(m[1]), month: parseInt(m[2]), day: parseInt(m[3]) };
+}
 
+function dateToYMD(d) {
+  return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+}
+
+function ymdEqual(a, b) {
+  if (!a || !b) return false;
+  return a.year === b.year && a.month === b.month && a.day === b.day;
+}
+
+function matchDate(deal) {
   if (filters.date === 'all') return true;
 
-  if (deal.validity_type === 'recurring') return true; // recurring always matches date filter
+  // Recurring deals always visible regardless of date filter
+  if (deal.validity_type === 'recurring') return true;
 
-  const dDate = new Date(deal.valid_single_date); dDate.setHours(0,0,0,0);
+  const dealDateYMD = parseDateString(deal.valid_single_date);
+  if (!dealDateYMD) return false;
 
-  if (filters.date === 'today')    return dDate.getTime() === today.getTime();
-  if (filters.date === 'tomorrow') return dDate.getTime() === tomorrow.getTime();
+  const today = new Date();
+  const todayYMD = dateToYMD(today);
+
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowYMD = dateToYMD(tomorrow);
+
+  if (filters.date === 'today')    return ymdEqual(dealDateYMD, todayYMD);
+  if (filters.date === 'tomorrow') return ymdEqual(dealDateYMD, tomorrowYMD);
   if (filters.date === 'custom' && filters.customDate) {
-    const sel = new Date(filters.customDate); sel.setHours(0,0,0,0);
-    return dDate.getTime() === sel.getTime();
+    const selYMD = parseDateString(filters.customDate);
+    return ymdEqual(dealDateYMD, selYMD);
   }
   return true;
 }
 
 function matchTime(deal) {
-  if (filters.time === 'all' || !deal.valid_from_time || !deal.valid_to_time) return true;
-  const from = parseInt(deal.valid_from_time);
-  const to   = parseInt(deal.valid_to_time);
-  const h    = new Date().getHours();
-  if (filters.time === 'now')     return h >= from && h < to;
-  if (filters.time === 'lunch')   return from <= 11 && to >= 14 || (from >= 11 && from <= 14);
-  if (filters.time === 'evening') return from <= 17 && to >= 23 || (from >= 17 && from <= 23);
+  if (filters.time === 'all') return true;
+  if (!deal.valid_from_time || !deal.valid_to_time) return true;
+
+  // FIX: Parse "HH:MM" format correctly
+  const fromParts = String(deal.valid_from_time).split(':');
+  const toParts   = String(deal.valid_to_time).split(':');
+  const fromH = parseInt(fromParts[0]);
+  const toH   = parseInt(toParts[0]);
+  const h     = new Date().getHours();
+
+  if (filters.time === 'now')     return h >= fromH && h < toH;
+  if (filters.time === 'lunch')   return (fromH <= 11 && toH >= 14) || (fromH >= 11 && fromH <= 14);
+  if (filters.time === 'evening') return (fromH <= 17 && toH >= 23) || (fromH >= 17 && fromH <= 23);
   return true;
 }
 
@@ -221,11 +245,14 @@ function buildDealCard(deal) {
   const card = document.createElement('div');
   card.className = 'deal-card';
 
+  const isPauschal = (deal.categories || []).includes('pauschalgutscheine');
+
   const discount = deal.original_price > deal.deal_price
     ? Math.round((1 - deal.deal_price / deal.original_price) * 100) : 0;
 
-  const CAT_EMOJI = { breakfast:'🥐', lunch:'🍽️', aperitif:'🍹', dinner:'🍷', events:'🎉' };
-  const CAT_NAME  = { breakfast:'Breakfast', lunch:'Lunch', aperitif:'Aperitif', dinner:'Dinner', events:'Events' };
+  // FIX BUG 5: Pauschalgutscheine hinzugefügt
+  const CAT_EMOJI = { breakfast:'🥐', lunch:'🍽️', aperitif:'🍹', dinner:'🍷', events:'🎉', pauschalgutscheine:'🏷️' };
+  const CAT_NAME  = { breakfast:'Breakfast', lunch:'Lunch', aperitif:'Aperitif', dinner:'Dinner', events:'Events', pauschalgutscheine:'Rabatt-Gutschein' };
   const mainCat   = (deal.categories || [])[0];
 
   // Image area
@@ -234,11 +261,11 @@ function buildDealCard(deal) {
 
   if (deal.image_url) {
     const img = document.createElement('img');
-    img.src = deal.image_url;                   // URL from backend; no untrusted HTML
-    img.alt = escHtml(deal.title);              // alt is set as text attribute
+    img.src = deal.image_url;
+    img.alt = escHtml(deal.title);
     imgDiv.appendChild(img);
   } else {
-    imgDiv.textContent = '🍹';
+    imgDiv.textContent = isPauschal ? '🏷️' : '🍹';
     imgDiv.style.fontSize = '48px';
   }
 
@@ -246,6 +273,13 @@ function buildDealCard(deal) {
     const b = document.createElement('div');
     b.className = 'badge-discount';
     b.textContent = '-' + discount + '%';
+    imgDiv.appendChild(b);
+  }
+  // For Pauschalgutscheine show discount percentage badge
+  if (isPauschal && deal.discount_percent) {
+    const b = document.createElement('div');
+    b.className = 'badge-discount';
+    b.textContent = '-' + deal.discount_percent + '%';
     imgDiv.appendChild(b);
   }
   if (mainCat) {
@@ -261,7 +295,7 @@ function buildDealCard(deal) {
     imgDiv.appendChild(b);
   }
 
-  // Content area — all user-supplied strings go through textContent
+  // Content area
   const content = document.createElement('div');
   content.className = 'deal-content';
 
@@ -279,7 +313,14 @@ function buildDealCard(deal) {
   pNew.className = 'price-new';
   pNew.textContent = Number(deal.deal_price).toFixed(2) + ' CHF';
   priceDiv.appendChild(pNew);
-  if (deal.original_price > deal.deal_price) {
+
+  if (isPauschal) {
+    // Show what customer gets for 2.50 CHF
+    const infoSpan = document.createElement('span');
+    infoSpan.style.cssText = 'font-size:13px;color:#999;';
+    infoSpan.textContent = deal.discount_percent + '% Rabatt ab ' + deal.min_order + ' CHF';
+    priceDiv.appendChild(infoSpan);
+  } else if (deal.original_price > deal.deal_price) {
     const pOld = document.createElement('span');
     pOld.className = 'price-old';
     pOld.textContent = Number(deal.original_price).toFixed(2) + ' CHF';
@@ -289,16 +330,27 @@ function buildDealCard(deal) {
   const validity = document.createElement('div');
   validity.className = 'deal-validity';
   if (deal.validity_type === 'single' && deal.valid_single_date) {
-    const d = new Date(deal.valid_single_date).toLocaleDateString('de-CH');
-    validity.textContent = '📅 Nur am ' + d
-      + (deal.valid_from_time && deal.valid_to_time ? ' · ' + deal.valid_from_time + '–' + deal.valid_to_time : '');
+    const dateParts = parseDateString(deal.valid_single_date);
+    if (dateParts) {
+      const d = dateParts.day + '.' + dateParts.month + '.' + dateParts.year;
+      validity.textContent = '📅 Nur am ' + d
+        + (deal.valid_from_time && deal.valid_to_time ? ' · ' + deal.valid_from_time + '–' + deal.valid_to_time : '');
+    }
   } else if (deal.valid_from_time && deal.valid_to_time) {
     validity.textContent = '🕐 ' + deal.valid_from_time + '–' + deal.valid_to_time;
   }
 
+  if (isPauschal && deal.applies_to) {
+    const applies = document.createElement('div');
+    applies.style.cssText = 'color:#aaa;font-size:12px;margin-bottom:8px';
+    const applyMap = { drinks: 'Getränke', food: 'Essen', all: 'Alles' };
+    applies.textContent = '✅ Gilt für: ' + (applyMap[deal.applies_to] || deal.applies_to);
+    content.appendChild(applies);
+  }
+
   const btn = document.createElement('button');
   btn.className = 'btn-buy';
-  btn.textContent = 'Kaufen';
+  btn.textContent = isPauschal ? 'Gutschein kaufen (2.50 CHF)' : 'Kaufen';
   btn.addEventListener('click', () => openBuyModal(deal));
 
   content.append(title, bar, priceDiv, validity, btn);
@@ -367,7 +419,7 @@ async function doBuy() {
     }
 
     closeModal('buyModal');
-    showToast('✅ Bestellung aufgegeben!');
+    showToast('✅ Bestellung aufgegeben! Zahlung per Twint, dann erhältst du deinen Code per Email.');
     document.getElementById('buyConsent').checked = false;
     if (!s) {
       document.getElementById('buyName').value  = '';
@@ -418,7 +470,7 @@ function buildOrderCard(o) {
   head.className = 'order-head';
   const titleEl = document.createElement('div');
   titleEl.className = 'order-title';
-  titleEl.textContent = o.deal_title;   // textContent — safe
+  titleEl.textContent = o.deal_title;
 
   const STATUS_CLASS = { pending:'s-pending', paid:'s-paid', redeemed:'s-redeemed' };
   const STATUS_TEXT  = { pending:'⏳ Ausstehend', paid:'✅ Bezahlt', redeemed:'🎉 Eingelöst' };
@@ -446,7 +498,7 @@ function buildOrderCard(o) {
     label.textContent = 'Gutschein-Code:';
     const code = document.createElement('div');
     code.className = 'voucher-code';
-    code.textContent = o.voucher_code;   // textContent — safe
+    code.textContent = o.voucher_code;
     box.append(label, code);
     card.appendChild(box);
   }
@@ -557,39 +609,43 @@ function showView(view) {
   document.getElementById('btnOrders').classList.toggle('active', view === 'orders');
   if (view === 'orders') loadOrders();
   
-  // Support browser back button
+  // Support browser back button — only for view changes, NOT modals
   history.pushState({ view }, '', '#' + view);
 }
 
 // =============================================
 // MODAL HELPERS
+// FIX BUG 4: openModal() kein pushState mehr — verhindert Doppelklick-Problem
+// Das pushState in openModal() hat sofort einen popstate-Event getriggert,
+// welcher alle Modals wieder geschlossen hat → erster Klick hatte keine Wirkung.
 // =============================================
 function openModal(id) {
   document.getElementById(id).classList.add('active');
-  // Add modal to history so back button closes it
-  history.pushState({ modal: id }, '');
+  // NOTE: No history.pushState here — it caused the double-click bug.
+  // The popstate handler was closing the modal immediately after opening.
 }
 
 function closeModal(id) {
   document.getElementById(id).classList.remove('active');
-  // Remove from history when closing
-  if (history.state && history.state.modal === id) {
-    history.back();
-  }
 }
 
-// Handle browser back button
+// Handle browser back button — only closes open modals, doesn't mess with them
 window.addEventListener('popstate', (e) => {
-  // Close any open modals first
-  document.querySelectorAll('.modal.active').forEach(modal => {
-    modal.classList.remove('active');
-  });
+  // If any modals are open, close them first
+  const openModals = document.querySelectorAll('.modal.active');
+  if (openModals.length > 0) {
+    openModals.forEach(modal => modal.classList.remove('active'));
+    return;
+  }
   
-  // Then handle view changes
+  // Handle view changes
   if (e.state && e.state.view) {
-    showView(e.state.view);
-  } else if (e.state && e.state.modal) {
-    openModal(e.state.modal);
+    const view = e.state.view;
+    document.getElementById('dealsView').style.display  = view === 'deals'  ? 'block' : 'none';
+    document.getElementById('ordersView').style.display = view === 'orders' ? 'block' : 'none';
+    document.getElementById('btnDeals').classList.toggle('active',  view === 'deals');
+    document.getElementById('btnOrders').classList.toggle('active', view === 'orders');
+    if (view === 'orders') loadOrders();
   }
 });
 
@@ -617,7 +673,7 @@ async function api(body) {
 let _toastTimer = null;
 function showToast(msg, isError) {
   const el = document.getElementById('toast');
-  el.textContent = msg;               // textContent — safe
+  el.textContent = msg;
   el.className   = 'toast show ' + (isError ? 'toast-err' : 'toast-ok');
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
@@ -674,7 +730,6 @@ async function resetPasswordSubmit() {
     if (r.success) {
       showToast('✅ Passwort geändert!');
       closeModal('resetPasswordModal');
-      // Reset form
       document.getElementById('resetEmail').value = '';
       document.getElementById('resetCode').value = '';
       document.getElementById('resetNewPassword').value = '';
@@ -702,8 +757,6 @@ function backToResetStep1() {
 
 // =============================================
 // BIND ALL INLINE EVENT HANDLERS
-// Replaces onclick= attributes in HTML.
-// Required for CSP: script-src 'self' (no unsafe-inline).
 // =============================================
 document.addEventListener('DOMContentLoaded', () => {
   // Navigation
@@ -721,13 +774,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (dropdownLogout) {
     dropdownLogout.addEventListener('click', doLogout);
   } else {
-    // fallback for old HTML
     document.querySelectorAll('.dropdown-item').forEach(el => {
       if (el.textContent.includes('Ausloggen')) el.addEventListener('click', doLogout);
     });
   }
 
-  // Also bind cancel pw button
+  // Cancel pw button
   const btnCancelPw = document.getElementById('btnCancelPwModal');
   if (btnCancelPw) btnCancelPw.addEventListener('click', closeChangePwModal);
 
@@ -746,7 +798,11 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', function() { setFilter('cat', this.dataset.filterCat, this); });
   });
 
-  // Modal close buttons (data-close attribute)
+  // Custom date input — bind via JS (CSP-konform, kein inline onchange)
+  const customDateInput = document.getElementById('customDate');
+  if (customDateInput) customDateInput.addEventListener('change', function() { setCustomDate(this.value); });
+
+  // Modal close buttons
   document.querySelectorAll('[data-close-modal]').forEach(btn => {
     btn.addEventListener('click', () => closeModal(btn.dataset.closeModal));
   });
@@ -764,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnBuy) btnBuy.addEventListener('click', doBuy);
 });
 
-// Additional event bindings for modal switches and location buttons
+// Modal switches and location buttons
 document.addEventListener('DOMContentLoaded', () => {
   const linkToRegister = document.getElementById('linkToRegister');
   if (linkToRegister) linkToRegister.addEventListener('click', () => {
@@ -832,7 +888,6 @@ let shopLang = 'de';
 function st(key) { return SHOP_TRANSLATIONS[shopLang][key] || SHOP_TRANSLATIONS.de[key] || key; }
 
 function setShopLang(lang) {
-  console.log('[Shop] Switching language to:', lang);
   shopLang = lang;
   document.documentElement.lang = lang;
   const btnDE = document.getElementById('shopLangDE');
@@ -846,7 +901,6 @@ function setShopLang(lang) {
     if (lang === 'en') btnEN.classList.add('active');
   }
   applyShopTranslations();
-  console.log('[Shop] Language switched. Translations applied.');
 }
 
 function applyShopTranslations() {
@@ -858,7 +912,6 @@ function applyShopTranslations() {
   if (btnDeals) btnDeals.textContent = '🏠 ' + st('deals');
   const btnOrders = document.getElementById('btnOrders');
   if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
-  // Re-render deals to update "Kaufen" buttons
   renderDeals();
 }
 
@@ -904,22 +957,8 @@ async function doChangePassword() {
 document.addEventListener('DOMContentLoaded', () => {
   const langDE = document.getElementById('shopLangDE');
   const langEN = document.getElementById('shopLangEN');
-  if (langDE) {
-    langDE.addEventListener('click', function() {
-      console.log('[Shop] DE clicked');
-      setShopLang('de');
-    });
-  } else {
-    console.error('[Shop] shopLangDE button not found');
-  }
-  if (langEN) {
-    langEN.addEventListener('click', function() {
-      console.log('[Shop] EN clicked');
-      setShopLang('en');
-    });
-  } else {
-    console.error('[Shop] shopLangEN button not found');
-  }
+  if (langDE) langDE.addEventListener('click', () => setShopLang('de'));
+  if (langEN) langEN.addEventListener('click', () => setShopLang('en'));
 
   const changePwBtn = document.getElementById('dropdownChangePw');
   if (changePwBtn) changePwBtn.addEventListener('click', openChangePwModal);
@@ -930,7 +969,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSavePw = document.getElementById('btnSavePassword');
   if (btnSavePw) btnSavePw.addEventListener('click', doChangePassword);
 
-  // Close modal on backdrop click
   const cpwModal = document.getElementById('changePwModal');
   if (cpwModal) cpwModal.addEventListener('click', function(e) {
     if (e.target === this) closeChangePwModal();
