@@ -90,7 +90,7 @@ function toggleLocation() {
       pos => {
         userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         locationOn   = true;
-        setText('btnLocation', '✅ Standort aktiv');
+        setText('btnLocation', st('locationActive'));
         document.getElementById('btnSortDist').style.display = 'block';
         attachDistances();
         renderDeals();
@@ -102,7 +102,7 @@ function toggleLocation() {
     locationOn   = false;
     userLocation = null;
     allDeals.forEach(d => delete d._dist);
-    setText('btnLocation', 'In meiner Nähe');
+    setText('btnLocation', st('nearMe'));
     document.getElementById('btnSortDist').style.display = 'none';
     renderDeals();
   }
@@ -178,6 +178,34 @@ function ymdEqual(a, b) {
   return a.year === b.year && a.month === b.month && a.day === b.day;
 }
 
+// =============================================
+// TIME PARSING HELPERS
+// Google Sheets returns time as ISO datetime: "1899-12-30T13:45:00.000Z"
+// or as "HH:MM" string. These helpers handle both formats.
+// =============================================
+function parseTimeString(str) {
+  if (!str) return null;
+  str = String(str).trim();
+  // Try "HH:MM" format first
+  const hmMatch = str.match(/^(\d{1,2}):(\d{2})$/);
+  if (hmMatch) return { h: parseInt(hmMatch[1]), m: parseInt(hmMatch[2]) };
+  // Try ISO datetime format "...T14:30:00.000Z" or "...T14:30:00Z"
+  const isoMatch = str.match(/T(\d{2}):(\d{2})/);
+  if (isoMatch) return { h: parseInt(isoMatch[1]), m: parseInt(isoMatch[2]) };
+  return null;
+}
+
+function parseTimeToHour(str) {
+  const t = parseTimeString(str);
+  return t ? t.h : null;
+}
+
+function formatTime(str) {
+  const t = parseTimeString(str);
+  if (!t) return '';
+  return String(t.h).padStart(2, '0') + ':' + String(t.m).padStart(2, '0');
+}
+
 function matchDate(deal) {
   if (filters.date === 'all') return true;
 
@@ -207,11 +235,10 @@ function matchTime(deal) {
   if (filters.time === 'all') return true;
   if (!deal.valid_from_time || !deal.valid_to_time) return true;
 
-  // FIX: Parse "HH:MM" format correctly
-  const fromParts = String(deal.valid_from_time).split(':');
-  const toParts   = String(deal.valid_to_time).split(':');
-  const fromH = parseInt(fromParts[0]);
-  const toH   = parseInt(toParts[0]);
+  // FIX: Parse time - handles both "HH:MM" and ISO datetime "1899-12-30T13:45:00.000Z"
+  const fromH = parseTimeToHour(deal.valid_from_time);
+  const toH   = parseTimeToHour(deal.valid_to_time);
+  if (fromH === null || toH === null) return true;
   const h     = new Date().getHours();
 
   if (filters.time === 'now')     return h >= fromH && h < toH;
@@ -232,7 +259,11 @@ function renderDeals() {
     el.innerHTML = '';
     const div = document.createElement('div');
     div.className = 'empty';
-    div.innerHTML = '<h3>Keine Deals gefunden</h3><p>Andere Filter versuchen</p>';
+    const h3 = document.createElement('h3');
+    h3.textContent = st('noDeals');
+    const p = document.createElement('p');
+    p.textContent = st('tryOther');
+    div.append(h3, p);
     el.appendChild(div);
     return;
   }
@@ -318,7 +349,7 @@ function buildDealCard(deal) {
     // Show what customer gets for 2.50 CHF
     const infoSpan = document.createElement('span');
     infoSpan.style.cssText = 'font-size:13px;color:#999;';
-    infoSpan.textContent = deal.discount_percent + '% Rabatt ab ' + deal.min_order + ' CHF';
+    infoSpan.textContent = deal.discount_percent + '% ' + st('discountOff') + ' ' + deal.min_order + ' CHF';
     priceDiv.appendChild(infoSpan);
   } else if (deal.original_price > deal.deal_price) {
     const pOld = document.createElement('span');
@@ -329,15 +360,17 @@ function buildDealCard(deal) {
 
   const validity = document.createElement('div');
   validity.className = 'deal-validity';
+  const fromTimeStr = formatTime(deal.valid_from_time);
+  const toTimeStr   = formatTime(deal.valid_to_time);
   if (deal.validity_type === 'single' && deal.valid_single_date) {
     const dateParts = parseDateString(deal.valid_single_date);
     if (dateParts) {
-      const d = dateParts.day + '.' + dateParts.month + '.' + dateParts.year;
-      validity.textContent = '📅 Nur am ' + d
-        + (deal.valid_from_time && deal.valid_to_time ? ' · ' + deal.valid_from_time + '–' + deal.valid_to_time : '');
+      const d = String(dateParts.day).padStart(2,'0') + '.' + String(dateParts.month).padStart(2,'0') + '.' + dateParts.year;
+      validity.textContent = '📅 ' + (shopLang === 'en' ? 'Only on ' : 'Nur am ') + d
+        + (fromTimeStr && toTimeStr ? ' · ' + fromTimeStr + '–' + toTimeStr : '');
     }
-  } else if (deal.valid_from_time && deal.valid_to_time) {
-    validity.textContent = '🕐 ' + deal.valid_from_time + '–' + deal.valid_to_time;
+  } else if (fromTimeStr && toTimeStr) {
+    validity.textContent = '🕐 ' + fromTimeStr + '–' + toTimeStr;
   }
 
   if (isPauschal && deal.applies_to) {
@@ -350,7 +383,7 @@ function buildDealCard(deal) {
 
   const btn = document.createElement('button');
   btn.className = 'btn-buy';
-  btn.textContent = isPauschal ? 'Gutschein kaufen (2.50 CHF)' : 'Kaufen';
+  btn.textContent = isPauschal ? st('pauschalBuyBtn') : st('buyBtn');
   btn.addEventListener('click', () => openBuyModal(deal));
 
   content.append(title, bar, priceDiv, validity, btn);
@@ -454,7 +487,11 @@ function renderOrders(orders) {
   if (!orders.length) {
     const div = document.createElement('div');
     div.className = 'empty';
-    div.innerHTML = '<h3>Keine Bestellungen</h3><p>Du hast noch nichts bestellt</p>';
+    const h3 = document.createElement('h3');
+    h3.textContent = st('noOrders');
+    const p = document.createElement('p');
+    p.textContent = st('noOrdersSub');
+    div.append(h3, p);
     el.appendChild(div);
     return;
   }
@@ -473,7 +510,7 @@ function buildOrderCard(o) {
   titleEl.textContent = o.deal_title;
 
   const STATUS_CLASS = { pending:'s-pending', paid:'s-paid', redeemed:'s-redeemed' };
-  const STATUS_TEXT  = { pending:'⏳ Ausstehend', paid:'✅ Bezahlt', redeemed:'🎉 Eingelöst' };
+  const STATUS_TEXT  = { pending: st('orderPending'), paid: st('orderPaid'), redeemed: st('orderRedeemed') };
   const pill = document.createElement('div');
   pill.className = 'status-pill ' + (STATUS_CLASS[o.status] || 's-pending');
   pill.textContent = STATUS_TEXT[o.status] || o.status;
@@ -486,7 +523,7 @@ function buildOrderCard(o) {
 
   const date = document.createElement('div');
   date.style.cssText = 'color:#666;font-size:12px;margin-bottom:12px';
-  date.textContent = 'Bestellt: ' + new Date(o.created_at).toLocaleString('de-CH');
+  date.textContent = st('ordered') + ' ' + new Date(o.created_at).toLocaleString(shopLang === 'en' ? 'en-CH' : 'de-CH');
 
   card.append(head, details, date);
 
@@ -495,7 +532,7 @@ function buildOrderCard(o) {
     box.className = 'voucher-box';
     const label = document.createElement('div');
     label.style.cssText = 'font-size:12px;color:#999;margin-bottom:6px';
-    label.textContent = 'Gutschein-Code:';
+    label.textContent = st('voucherCode');
     const code = document.createElement('div');
     code.className = 'voucher-code';
     code.textContent = o.voucher_code;
@@ -506,21 +543,21 @@ function buildOrderCard(o) {
   if (o.refund_status === 'requested') {
     const info = document.createElement('div');
     info.style.cssText = 'color:#FFC107;margin-top:12px;font-size:14px';
-    info.textContent = '⏳ Rückerstattung angefordert';
+    info.textContent = st('refundRequested');
     card.appendChild(info);
   } else if (o.refund_status === 'completed') {
     const info = document.createElement('div');
     info.style.cssText = 'color:#4CAF50;margin-top:12px;font-size:14px';
-    info.textContent = '↩️ Rückerstattet';
+    info.textContent = st('refundCompleted');
     card.appendChild(info);
   } else if (o.can_refund) {
     const btn = document.createElement('button');
     btn.className = 'btn-refund';
-    btn.textContent = '💰 Rückerstattung anfordern';
+    btn.textContent = st('requestRefund');
     btn.addEventListener('click', () => doRefund(o.id));
     const hint = document.createElement('div');
     hint.className = 'refund-hint';
-    hint.textContent = 'Noch ' + o.hours_left + 'h verbleibend';
+    hint.textContent = (shopLang === 'en' ? 'Still ' : 'Noch ') + o.hours_left + st('hoursLeft');
     card.append(btn, hint);
   }
 
@@ -528,7 +565,7 @@ function buildOrderCard(o) {
 }
 
 async function doRefund(orderId) {
-  if (!confirm('Rückerstattung anfordern?\nDer Gutschein wird ungültig.')) return;
+  if (!confirm(st('refundConfirm'))) return;
   const s = sessionGet();
   if (!s) { showToast('Nicht eingeloggt', true); return; }
 
@@ -862,12 +899,41 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Meine Bestellungen', changePw:'Passwort ändern',
     heroTitle:'🍹 Die besten Bar-Deals deiner Stadt',
     heroSub:'Exklusive Angebote für Breakfast, Brunch, Aperitif und Events',
-    buyBtn:'Deal kaufen', changePasswordTitle:'Passwort ändern',
-    oldPassword:'Altes Passwort', newPassword:'Neues Passwort',
+    buyBtn:'Kaufen', pauschalBuyBtn:'Gutschein kaufen (2.50 CHF)',
+    changePasswordTitle:'Passwort ändern',
+    oldPassword:'Altes Passwort', newPassword:'Neues Passwort (mind. 8 Zeichen)',
     confirmPassword:'Passwort bestätigen', savePw:'Speichern',
     cancelBtn:'Abbrechen',
-    datum:'Datum', uhrzeit:'Uhrzeit', kategorie:'Kategorie', standort:'Standort',
+    datum:'📅 Datum', uhrzeit:'🕐 Uhrzeit', kategorie:'🍹 Kategorie', standort:'📍 Standort',
     alle:'Alle', heute:'Heute', morgen:'Morgen',
+    jetzt:'Jetzt', mittag:'Mittag', abend:'Abend',
+    nearMe:'In meiner Nähe', locationActive:'✅ Standort aktiv', sortDistance:'📏 Nach Entfernung',
+    noDeals:'Keine Deals gefunden', tryOther:'Andere Filter versuchen',
+    noOrders:'Keine Bestellungen', noOrdersSub:'Du hast noch nichts bestellt',
+    loginTitle:'🔐 Anmelden', registerTitle:'✨ Registrieren',
+    emailLabel:'Email', passwordLabel:'Passwort', nameLabel:'Name',
+    passwordMinLabel:'Passwort (mind. 8 Zeichen)',
+    loginSubmit:'Einloggen', registerSubmit:'Registrieren',
+    noAccount:'Noch kein Konto?', registerLink:'Registrieren',
+    hasAccount:'Schon registriert?', loginLink:'Zum Login',
+    forgotPw:'Passwort vergessen?',
+    resetPwTitle:'🔑 Passwort zurücksetzen',
+    resetPwHint:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.',
+    sendCode:'Code senden',
+    resetStep2Hint:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.',
+    codeLabel:'Code (6-stellig)', resetSubmit:'Passwort ändern', back:'Zurück',
+    buyTitle:'Deal kaufen', phoneLabel:'Telefon', deliveryLabel:'Versand',
+    deliveryWA:'WhatsApp', deliveryEmail:'Email',
+    acceptPrivacy:'Ich akzeptiere', agbPrivacy:'AGB & Datenschutz',
+    orderSubmit:'Bestellen',
+    orderPending:'⏳ Ausstehend', orderPaid:'✅ Bezahlt', orderRedeemed:'🎉 Eingelöst',
+    ordered:'Bestellt:', voucherCode:'Gutschein-Code:',
+    refundRequested:'⏳ Rückerstattung angefordert', refundCompleted:'↩️ Rückerstattet',
+    requestRefund:'💰 Rückerstattung anfordern', hoursLeft:'h verbleibend',
+    refundConfirm:'Rückerstattung anfordern?\nDer Gutschein wird ungültig.',
+    onlyOn:'Nur am', discountOff:'Rabatt ab',
+    impressum:'Impressum', datenschutz:'Datenschutz', kontakt:'Kontakt',
+    privacyAccept:'Ich akzeptiere die', privacyLink:'Datenschutzerklärung',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -875,12 +941,41 @@ const SHOP_TRANSLATIONS = {
     myOrders:'My Orders', changePw:'Change Password',
     heroTitle:'🍹 The best bar deals in your city',
     heroSub:'Exclusive offers for Breakfast, Brunch, Aperitif and Events',
-    buyBtn:'Buy Deal', changePasswordTitle:'Change Password',
-    oldPassword:'Old Password', newPassword:'New Password',
+    buyBtn:'Buy', pauschalBuyBtn:'Buy voucher (2.50 CHF)',
+    changePasswordTitle:'Change Password',
+    oldPassword:'Old Password', newPassword:'New Password (min. 8 chars)',
     confirmPassword:'Confirm Password', savePw:'Save',
     cancelBtn:'Cancel',
-    datum:'Date', uhrzeit:'Time', kategorie:'Category', standort:'Location',
+    datum:'📅 Date', uhrzeit:'🕐 Time', kategorie:'🍹 Category', standort:'📍 Location',
     alle:'All', heute:'Today', morgen:'Tomorrow',
+    jetzt:'Now', mittag:'Lunch', abend:'Evening',
+    nearMe:'Near me', locationActive:'✅ Location active', sortDistance:'📏 By distance',
+    noDeals:'No deals found', tryOther:'Try other filters',
+    noOrders:'No orders', noOrdersSub:'You have not ordered anything yet',
+    loginTitle:'🔐 Sign In', registerTitle:'✨ Register',
+    emailLabel:'Email', passwordLabel:'Password', nameLabel:'Name',
+    passwordMinLabel:'Password (min. 8 chars)',
+    loginSubmit:'Sign In', registerSubmit:'Register',
+    noAccount:'No account yet?', registerLink:'Register',
+    hasAccount:'Already registered?', loginLink:'Sign In',
+    forgotPw:'Forgot password?',
+    resetPwTitle:'🔑 Reset Password',
+    resetPwHint:'Enter your email address. We will send you a 6-digit code.',
+    sendCode:'Send Code',
+    resetStep2Hint:'Enter the 6-digit code from your email and choose a new password.',
+    codeLabel:'Code (6-digit)', resetSubmit:'Change Password', back:'Back',
+    buyTitle:'Buy Deal', phoneLabel:'Phone', deliveryLabel:'Delivery',
+    deliveryWA:'WhatsApp', deliveryEmail:'Email',
+    acceptPrivacy:'I accept the', agbPrivacy:'Terms & Privacy',
+    orderSubmit:'Order',
+    orderPending:'⏳ Pending', orderPaid:'✅ Paid', orderRedeemed:'🎉 Redeemed',
+    ordered:'Ordered:', voucherCode:'Voucher Code:',
+    refundRequested:'⏳ Refund requested', refundCompleted:'↩️ Refunded',
+    requestRefund:'💰 Request Refund', hoursLeft:'h remaining',
+    refundConfirm:'Request refund?\nThe voucher will be invalidated.',
+    onlyOn:'Only on', discountOff:'discount from',
+    impressum:'Imprint', datenschutz:'Privacy', kontakt:'Contact',
+    privacyAccept:'I accept the', privacyLink:'Privacy Policy',
   }
 };
 
@@ -893,25 +988,164 @@ function setShopLang(lang) {
   const btnDE = document.getElementById('shopLangDE');
   const btnEN = document.getElementById('shopLangEN');
   if (btnDE) {
-    btnDE.classList.remove('active');
-    if (lang === 'de') btnDE.classList.add('active');
+    if (lang === 'de') {
+      btnDE.style.borderColor = '#FF3366';
+      btnDE.style.color = '#fff';
+    } else {
+      btnDE.style.borderColor = '#333';
+      btnDE.style.color = '#888';
+    }
   }
   if (btnEN) {
-    btnEN.classList.remove('active');
-    if (lang === 'en') btnEN.classList.add('active');
+    if (lang === 'en') {
+      btnEN.style.borderColor = '#FF3366';
+      btnEN.style.color = '#fff';
+    } else {
+      btnEN.style.borderColor = '#333';
+      btnEN.style.color = '#888';
+    }
   }
   applyShopTranslations();
 }
 
 function applyShopTranslations() {
+  // Hero
   const heroTitle = document.querySelector('.hero h1');
   const heroSub   = document.querySelector('.hero p');
   if (heroTitle) heroTitle.textContent = st('heroTitle');
   if (heroSub)   heroSub.textContent   = st('heroSub');
+
+  // Nav buttons
   const btnDeals  = document.getElementById('btnDeals');
   if (btnDeals) btnDeals.textContent = '🏠 ' + st('deals');
   const btnOrders = document.getElementById('btnOrders');
   if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
+
+  // User button (if not logged in)
+  if (!sessionGet()) {
+    const userBtn = document.getElementById('userBtn');
+    if (userBtn) userBtn.textContent = '👤 Login';
+  }
+
+  // Dropdown
+  const ddChangePw = document.getElementById('dropdownChangePw');
+  if (ddChangePw) ddChangePw.textContent = '🔑 ' + st('changePw');
+  const ddLogout = document.getElementById('dropdownLogout');
+  if (ddLogout) ddLogout.textContent = st('logoutBtn');
+
+  // Filter labels
+  document.querySelectorAll('.filter-label').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (key) el.textContent = st(key);
+  });
+
+  // Filter date buttons
+  const dateMap = { all: 'alle', today: 'heute', tomorrow: 'morgen' };
+  document.querySelectorAll('.filter-btn[data-filter-date]').forEach(btn => {
+    const val = btn.getAttribute('data-filter-date');
+    if (dateMap[val]) btn.textContent = st(dateMap[val]);
+  });
+
+  // Filter time buttons
+  const timeMap = { all: 'alle', now: 'jetzt', lunch: 'mittag', evening: 'abend' };
+  document.querySelectorAll('.filter-btn[data-filter-time]').forEach(btn => {
+    const val = btn.getAttribute('data-filter-time');
+    if (timeMap[val]) btn.textContent = st(timeMap[val]);
+  });
+
+  // Location button
+  const btnLoc = document.getElementById('btnLocation');
+  if (btnLoc) btnLoc.textContent = locationOn ? st('locationActive') : st('nearMe');
+  const btnSort = document.getElementById('btnSortDist');
+  if (btnSort) btnSort.textContent = st('sortDistance');
+
+  // Login modal
+  const loginTitle = document.querySelector('#loginModal .modal-title');
+  if (loginTitle) loginTitle.textContent = st('loginTitle');
+  const loginEmailLabel = document.querySelector('label[for="loginEmail"]');
+  if (loginEmailLabel) loginEmailLabel.textContent = st('emailLabel');
+  const loginPwLabel = document.querySelector('label[for="loginPassword"]');
+  if (loginPwLabel) loginPwLabel.textContent = st('passwordLabel');
+  const btnLoginSubmit = document.getElementById('btnLoginSubmit');
+  if (btnLoginSubmit) btnLoginSubmit.textContent = st('loginSubmit');
+  const linkToRegister = document.getElementById('linkToRegister');
+  if (linkToRegister) linkToRegister.textContent = st('registerLink');
+  const linkForgotPw = document.getElementById('linkForgotPassword');
+  if (linkForgotPw) linkForgotPw.textContent = st('forgotPw');
+
+  // Register modal
+  const regTitle = document.querySelector('#registerModal .modal-title');
+  if (regTitle) regTitle.textContent = st('registerTitle');
+  const regNameLabel = document.querySelector('label[for="regName"]');
+  if (regNameLabel) regNameLabel.textContent = st('nameLabel');
+  const regEmailLabel = document.querySelector('label[for="regEmail"]');
+  if (regEmailLabel) regEmailLabel.textContent = st('emailLabel');
+  const regPwLabel = document.querySelector('label[for="regPassword"]');
+  if (regPwLabel) regPwLabel.textContent = st('passwordMinLabel');
+  const btnRegSubmit = document.getElementById('btnRegisterSubmit');
+  if (btnRegSubmit) btnRegSubmit.textContent = st('registerSubmit');
+  const linkToLogin = document.getElementById('linkToLogin');
+  if (linkToLogin) linkToLogin.textContent = st('loginLink');
+
+  // Password reset modal
+  const resetTitle = document.querySelector('#resetPasswordModal .modal-title');
+  if (resetTitle) resetTitle.textContent = st('resetPwTitle');
+  const resetHint = document.querySelector('#resetStep1 p');
+  if (resetHint) resetHint.textContent = st('resetPwHint');
+  const btnSendCode = document.getElementById('btnSendResetCode');
+  if (btnSendCode) btnSendCode.textContent = st('sendCode');
+  const resetStep2Hint = document.querySelector('#resetStep2 p');
+  if (resetStep2Hint) resetStep2Hint.textContent = st('resetStep2Hint');
+  const btnResetPw = document.getElementById('btnResetPassword');
+  if (btnResetPw) btnResetPw.textContent = st('resetSubmit');
+  const btnBack = document.getElementById('btnBackToStep1');
+  if (btnBack) btnBack.textContent = st('back');
+
+  // Buy modal
+  const buyNameLabel = document.querySelector('label[for="buyName"]');
+  if (buyNameLabel) buyNameLabel.textContent = st('nameLabel');
+  const buyEmailLabel = document.querySelector('label[for="buyEmail"]');
+  if (buyEmailLabel) buyEmailLabel.textContent = st('emailLabel');
+  const buyPhoneLabel = document.querySelector('label[for="buyPhone"]');
+  if (buyPhoneLabel) buyPhoneLabel.textContent = st('phoneLabel');
+  const buyDeliveryLabel = document.querySelector('label[for="buyDelivery"]');
+  if (buyDeliveryLabel) buyDeliveryLabel.textContent = st('deliveryLabel');
+  const btnBuySubmit = document.getElementById('btnBuySubmit');
+  if (btnBuySubmit) btnBuySubmit.textContent = st('orderSubmit');
+
+  // Change password modal
+  const cpwTitle = document.querySelector('#changePwModal span');
+  if (cpwTitle) cpwTitle.textContent = '🔑 ' + st('changePw');
+  const cpwOldLabel = document.querySelector('label[for="cpwOld"]');
+  if (cpwOldLabel) cpwOldLabel.textContent = st('oldPassword');
+  const cpwNewLabel = document.querySelector('label[for="cpwNew"]');
+  if (cpwNewLabel) cpwNewLabel.textContent = st('newPassword');
+  const cpwConfLabel = document.querySelector('label[for="cpwConfirm"]');
+  if (cpwConfLabel) cpwConfLabel.textContent = st('confirmPassword');
+  const btnSavePw = document.getElementById('btnSavePassword');
+  if (btnSavePw) btnSavePw.textContent = st('savePw');
+  const btnCancelPw = document.getElementById('btnCancelPwModal');
+  if (btnCancelPw) btnCancelPw.textContent = st('cancelBtn');
+
+  // All cancel/close buttons with data-close-modal
+  document.querySelectorAll('[data-close-modal]').forEach(btn => {
+    if (btn.tagName === 'BUTTON' && btn.className.includes('btn-ghost')) {
+      btn.textContent = st('cancelBtn');
+    }
+  });
+
+  // Orders view title
+  const ordersTitle = document.querySelector('#ordersView h2');
+  if (ordersTitle) ordersTitle.textContent = '📦 ' + st('myOrders');
+
+  // Footer
+  const footerLinks = document.querySelectorAll('.footer a');
+  const footerMap = ['impressum', 'datenschutz', 'kontakt'];
+  footerLinks.forEach((a, i) => {
+    if (footerMap[i]) a.textContent = st(footerMap[i]);
+  });
+
+  // Re-render deals with new language
   renderDeals();
 }
 
