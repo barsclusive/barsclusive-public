@@ -1,7 +1,7 @@
 // =============================================
 // CONFIG
 // =============================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbztRaubL2hd-Z9yE2M-_Pc_BBn9u5p0xOalAZyMm13uc2wNN1WMZ2gZKYos87otUCN-gw/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycby6P3WY_O9vxwINASX0hFIqXWQbBurm7A7FNB3e49A_kTiTP6nWudfdMCACG9PFTTXk8Q/exec';
 
 // =============================================
 // i18n
@@ -330,17 +330,6 @@ async function updateBarStatus(barId, status) {
     const r = await api({ action: 'updateBarStatus', token: _token, bar_id: barId, status });
     if (r.success) { 
       showToast('✅ Status geändert'); 
-      
-      // Auto-Email wenn Bar freigeschaltet wird
-      if (status === 'active') {
-        try {
-          await api({ action: 'sendBarActivationEmail', token: _token, bar_id: barId });
-          showToast('📧 Freischaltungs-Email versendet');
-        } catch (emailErr) {
-          console.warn('Email konnte nicht versendet werden:', emailErr);
-        }
-      }
-      
       loadBars(); 
     }
     else showToast(r.error || 'Fehler', true);
