@@ -1,7 +1,7 @@
 // =============================================
 // CONFIGURATION
 // =============================================
-const BACKEND_URL  = 'https://script.google.com/macros/s/AKfycbztRaubL2hd-Z9yE2M-_Pc_BBn9u5p0xOalAZyMm13uc2wNN1WMZ2gZKYos87otUCN-gw/exec';
+const BACKEND_URL  = 'https://script.google.com/macros/s/AKfycby6P3WY_O9vxwINASX0hFIqXWQbBurm7A7FNB3e49A_kTiTP6nWudfdMCACG9PFTTXk8Q/exec';
 const WA_NUMBER    = '41765924391';
 
 // No API key: a key in frontend JS is public and provides no auth.
