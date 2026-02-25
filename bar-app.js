@@ -1,7 +1,7 @@
 // =============================================
 // CONFIGURATION
 // =============================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycby6P3WY_O9vxwINASX0hFIqXWQbBurm7A7FNB3e49A_kTiTP6nWudfdMCACG9PFTTXk8Q/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzQv_aEnFWV0TAPKyvBeuiJfQnPynUU7ptfj87x-HXJnUanh6s15V_WIXoBBTIbOp8nCQ/exec';
 
 // =============================================
 // i18n — DE / EN
@@ -136,7 +136,6 @@ async function doBarRegister() {
   const name    = document.getElementById('regBarName').value.trim();
   const city    = document.getElementById('regCity').value.trim();
   const address = document.getElementById('regAddress').value.trim();
-  const zip     = document.getElementById('regZip') ? document.getElementById('regZip').value.trim() : '';
   const phone   = document.getElementById('regPhone').value.trim();
   const email   = document.getElementById('regBarEmail').value.trim();
   const pass    = document.getElementById('regBarPass').value;
@@ -147,7 +146,7 @@ async function doBarRegister() {
   if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
   if (!consent) { err.textContent = 'Datenschutz akzeptieren.'; return; }
   try {
-    const r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass });
+    const r = await api({ action: 'barRegister', name, city, address, phone, email, password: pass });
     if (r.success) {
       showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
       document.getElementById('regBarPass').value = '';
@@ -421,15 +420,6 @@ async function doCreateDeal() {
   if (isNaN(price)) { showToast('Deal-Preis ist Pflichtfeld', true); return; }
   if (!cats.length) { showToast('Mind. 1 Kategorie wählen', true); return; }
 
-  // Pauschalgutschein extra data
-  const isPauschal = cats.includes('pauschalgutscheine');
-  let discountPercent = 0, minOrder = 0, appliesTo = 'all';
-  if (isPauschal) {
-    discountPercent = parseInt(document.getElementById('discountPercent').value) || 0;
-    minOrder = parseInt(document.getElementById('minOrder').value) || 0;
-    appliesTo = document.getElementById('appliesTo').value;
-  }
-
   const validType  = document.querySelector('input[name="validType"]:checked').value;
   const weekdays   = Array.from(document.querySelectorAll('.wd-btn.selected')).map(b => b.textContent);
   const singleDate = document.getElementById('singleDate').value;
@@ -445,10 +435,7 @@ async function doCreateDeal() {
       image_url: imageUrl,
       validity_type: validType, valid_weekdays: weekdays,
       valid_from_time: fromT, valid_to_time: toT,
-      valid_single_date: singleDate, active,
-      discount_percent: isPauschal ? discountPercent : 0,
-      min_order: isPauschal ? minOrder : 0,
-      applies_to: isPauschal ? appliesTo : ''
+      valid_single_date: singleDate, active
     });
     if (r.success) {
       showToast('✅ Deal erstellt!');
@@ -632,15 +619,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-weekday]').forEach(div => {
     div.addEventListener('click', function() { this.classList.toggle('selected'); });
   });
-
-  // Pauschalgutschein toggle — show/hide extra fields
-  const catPauschal = document.getElementById('catPauschal');
-  if (catPauschal) {
-    catPauschal.addEventListener('change', function() {
-      const pf = document.getElementById('pauschalFields');
-      if (pf) pf.style.display = this.checked ? 'block' : 'none';
-    });
-  }
 
   // Validity toggle
   document.querySelectorAll('input[name="validType"]').forEach(radio => {
