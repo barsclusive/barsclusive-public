@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarSclusive Gutschein</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#0a0a0a; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .voucher { background:#1a1a1a; border-radius:20px; max-width:420px; width:100%; overflow:hidden; border:2px solid #FF3366; }
+    .voucher-header { background:linear-gradient(135deg,#FF3366,#ff6b8a); padding:24px; text-align:center; }
+    .voucher-header img { height:40px; margin-bottom:8px; }
+    .voucher-header h1 { font-size:20px; font-weight:700; }
+    .voucher-header p { font-size:13px; opacity:0.9; margin-top:4px; }
+    .voucher-body { padding:24px; }
+    .voucher-field { margin-bottom:16px; }
+    .voucher-field .label { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+    .voucher-field .value { font-size:16px; font-weight:600; }
+    .voucher-code { background:#0a0a0a; border:2px dashed #FF3366; border-radius:12px; padding:16px; text-align:center; margin:20px 0; }
+    .voucher-code .code { font-size:28px; font-weight:800; letter-spacing:4px; color:#FF3366; }
+    .voucher-code .hint { font-size:12px; color:#999; margin-top:8px; }
+    .qr-wrap { text-align:center; margin:20px 0; }
+    .qr-wrap canvas, .qr-wrap img { border-radius:8px; }
+    .discount-badge { display:inline-block; background:#FF3366; color:#fff; padding:8px 16px; border-radius:20px; font-size:22px; font-weight:800; margin:12px 0; }
+    .voucher-info { background:#2a2a2a; border-radius:10px; padding:14px; margin-top:16px; font-size:13px; color:#ccc; }
+    .status-valid { color:#22c55e; }
+    .status-redeemed { color:#f59e0b; }
+    .status-expired { color:#ef4444; }
+    .loading { text-align:center; padding:60px; }
+    .loading p { color:#999; margin-top:12px; }
+    .error { text-align:center; padding:60px; color:#ef4444; }
+    @media print {
+      body { background:#fff; color:#000; }
+      .voucher { border-color:#000; }
+      .voucher-body { color:#000; }
+      .voucher-field .value { color:#000; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="voucher" id="voucherCard" style="display:none">
+  <div class="voucher-header">
+    <img src="logo.png" alt="BarSclusive" onerror="this.style.display='none'">
+    <h1>🎫 Dein Gutschein</h1>
+    <p id="vBarName"></p>
+  </div>
+  <div class="voucher-body">
+    <div id="vDiscountBadge" style="text-align:center;display:none">
+      <div class="discount-badge" id="vDiscount"></div>
+    </div>
+
+    <div class="voucher-field">
+      <div class="label">Deal</div>
+      <div class="value" id="vDealTitle"></div>
+    </div>
+
+    <div class="voucher-field" id="vMinOrderWrap" style="display:none">
+      <div class="label">Mindestbestellung</div>
+      <div class="value" id="vMinOrder"></div>
+    </div>
+
+    <div class="voucher-field" id="vAppliesToWrap" style="display:none">
+      <div class="label">Gilt für</div>
+      <div class="value" id="vAppliesTo"></div>
+    </div>
+
+    <div class="voucher-field">
+      <div class="label">Bezahlt</div>
+      <div class="value" id="vPrice"></div>
+    </div>
+
+    <div class="voucher-field">
+      <div class="label">Status</div>
+      <div class="value" id="vStatus"></div>
+    </div>
+
+    <div class="voucher-code">
+      <div class="code" id="vCode"></div>
+      <div class="hint">Zeige diesen Code in der Bar vor</div>
+    </div>
+
+    <div class="qr-wrap" id="qrCode"></div>
+
+    <div class="voucher-info">
+      💡 Zeige diesen Gutschein dem Personal in der Bar. Der Code kann gescannt oder manuell eingegeben werden.
+    </div>
+  </div>
+</div>
+
+<div class="loading" id="loadingState">
+  <div style="font-size:40px">🎫</div>
+  <p>Gutschein wird geladen...</p>
+</div>
+
+<div class="error" id="errorState" style="display:none">
+  <div style="font-size:40px">❌</div>
+  <p id="errorMsg">Gutschein nicht gefunden</p>
+  <a href="shop.html" style="color:#FF3366;margin-top:16px;display:inline-block">← Zurück zum Shop</a>
+</div>
+
+<script>
+const BACKEND_URL = 'https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzQv_aEnFWV0TAPKyvBeuiJfQnPynUU7ptfj87x-HXJnUanh6s15V_WIXoBBTIbOp8nCQ/exec/exec';
+
+const APPLIES_MAP = { all:'Alles', drinks:'Nur Getränke', food:'Nur Essen' };
+const STATUS_MAP  = { issued:'Gültig ✅', sent:'Gültig ✅', redeemed:'Eingelöst ⚠️', expired:'Abgelaufen ❌' };
+const STATUS_CLASS = { issued:'status-valid', sent:'status-valid', redeemed:'status-redeemed', expired:'status-expired' };
+
+async function loadVoucher() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code') || params.get('v');
+  if (!code) { showError('Kein Gutschein-Code angegeben.'); return; }
+
+  try {
+    const resp = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'getVoucherByCode', code })
+    });
+    const data = await resp.json();
+
+    if (!data.success || !data.voucher) {
+      showError(data.error || 'Gutschein nicht gefunden.');
+      return;
+    }
+
+    const v = data.voucher;
+
+    document.getElementById('vBarName').textContent = v.bar_name;
+    document.getElementById('vDealTitle').textContent = v.deal_title;
+    document.getElementById('vPrice').textContent = Number(v.price_paid).toFixed(2) + ' CHF';
+    document.getElementById('vCode').textContent = v.code;
+
+    const statusEl = document.getElementById('vStatus');
+    statusEl.textContent = STATUS_MAP[v.status] || v.status;
+    statusEl.className = 'value ' + (STATUS_CLASS[v.status] || '');
+
+    // Pauschalgutschein info
+    if (v.discount_percent > 0) {
+      document.getElementById('vDiscountBadge').style.display = 'block';
+      document.getElementById('vDiscount').textContent = '-' + v.discount_percent + '%';
+    }
+    if (v.min_order > 0) {
+      document.getElementById('vMinOrderWrap').style.display = 'block';
+      document.getElementById('vMinOrder').textContent = v.min_order + ' CHF';
+    }
+    if (v.applies_to && v.applies_to !== 'all') {
+      document.getElementById('vAppliesToWrap').style.display = 'block';
+      document.getElementById('vAppliesTo').textContent = APPLIES_MAP[v.applies_to] || v.applies_to;
+    }
+
+    // QR Code
+    try {
+      new QRCode(document.getElementById('qrCode'), {
+        text: v.code,
+        width: 180, height: 180,
+        colorDark: '#FF3366', colorLight: '#0a0a0a'
+      });
+    } catch(e) {
+      document.getElementById('qrCode').textContent = '';
+    }
+
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('voucherCard').style.display = 'block';
+
+  } catch (e) {
+    showError('Verbindungsfehler. Bitte erneut versuchen.');
+  }
+}
+
+function showError(msg) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = 'block';
+  document.getElementById('errorMsg').textContent = msg;
+}
+
+loadVoucher();
+</script>
+</body>
+</html>
