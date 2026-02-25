@@ -401,7 +401,7 @@ function toggleValidity() {
   document.getElementById('singleFields').style.display    = isRecurring ? 'none'  : 'block';
 }
 
-async function doCreateDeal() {
+async async function doCreateDeal() {
   const s = sessionGet();
   if (!s) { doLogout(); return; }
 
@@ -416,8 +416,21 @@ async function doCreateDeal() {
   const toT    = document.getElementById('timeTo').value;
   const cats   = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(c => c.value);
 
-  if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
-  if (isNaN(price)) { showToast('Deal-Preis ist Pflichtfeld', true); return; }
+  const dealKindEl = document.getElementById('dealKind');
+  const dealKind = dealKindEl ? dealKindEl.value : 'normal';
+  const discEl = document.getElementById('dealDiscountPercent');
+  const minEl  = document.getElementById('dealMinOrder');
+  const discountPercent = discEl ? (parseFloat(discEl.value) || 0) : 0;
+  const minOrder = minEl ? (parseFloat(minEl.value) || 0) : 0;
+
+  
+  if (dealKind === 'pauschal') {
+    // Pauschalgutschein rules: min 15% discount and min 40 CHF minimum order value
+    if (discountPercent < 15) { showToast('Rabatt muss mindestens 15% sein', true); return; }
+    if (minOrder < 40) { showToast('Mindestbestellwert muss mindestens 40 CHF sein', true); return; }
+  }
+if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
+  if (dealKind !== 'pauschal' && isNaN(price)) { showToast('Deal-Preis ist Pflichtfeld', true); return; }
   if (!cats.length) { showToast('Mind. 1 Kategorie wählen', true); return; }
 
   const validType  = document.querySelector('input[name="validType"]:checked').value;
@@ -430,8 +443,11 @@ async function doCreateDeal() {
       action: 'createDeal', token: s.token,
       bar_id: s.barId, bar_name: s.barName,
       title, description: desc,
-      original_price: origP, deal_price: price,
+      original_price: (dealKind === 'pauschal' ? 0 : origP), deal_price: (dealKind === 'pauschal' ? 2.5 : price),
       max_quantity: qty, categories: cats,
+      deal_type: dealKind,
+      discount_percent: (dealKind === 'pauschal' ? discountPercent : ''),
+      min_order: (dealKind === 'pauschal' ? minOrder : ''),
       image_url: imageUrl,
       validity_type: validType, valid_weekdays: weekdays,
       valid_from_time: fromT, valid_to_time: toT,
@@ -439,7 +455,7 @@ async function doCreateDeal() {
     });
     if (r.success) {
       showToast('✅ Deal erstellt!');
-      ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo']
+      ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo','dealDiscountPercent','dealMinOrder']
         .forEach(id => { document.getElementById(id).value = ''; });
       document.querySelectorAll('input[name="cat"]').forEach(c => c.checked = false);
       document.querySelectorAll('.wd-btn').forEach(b => b.classList.remove('selected'));
