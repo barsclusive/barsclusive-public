@@ -146,10 +146,11 @@ async function loadVoucher() {
       document.getElementById('vAppliesTo').textContent = APPLIES_MAP[v.applies_to] || v.applies_to;
     }
 
-    // QR Code
+    // QR Code - links to redeem page for bars to scan
     try {
+      var redeemUrl = window.location.href.replace(/voucher\.html.*/, 'redeem.html?code=' + v.code);
       new QRCode(document.getElementById('qrCode'), {
-        text: v.code,
+        text: redeemUrl,
         width: 180, height: 180,
         colorDark: '#FF3366', colorLight: '#0a0a0a'
       });
