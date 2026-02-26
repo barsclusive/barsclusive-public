@@ -362,7 +362,7 @@ function buildDealCard(deal) {
 
   const btn = document.createElement('button');
   btn.className = 'btn-buy';
-  btn.textContent = isPauschal ? 'Profitiere jetzt! (2.50 CHF)' : 'Profitiere jetzt!';
+  btn.textContent = 'Profitiere jetzt!';
   btn.addEventListener('click', () => openBuyModal(deal));
 
   // Time slots display
