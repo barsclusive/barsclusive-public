@@ -97,6 +97,18 @@
     .toast.show{display:block}
     .toast-ok{background:#fff;color:#000}
     .toast-err{background:#EF4444;color:#fff}
+    .skeleton-card{background:#1a1a1a;border-radius:20px;overflow:hidden;border:1px solid #2a2a2a;animation:pulse 1.5s ease infinite}
+    .skeleton-card .sk-img{height:200px;background:#2a2a2a}
+    .skeleton-card .sk-body{padding:20px}
+    .skeleton-card .sk-line{height:14px;background:#2a2a2a;border-radius:6px;margin-bottom:10px}
+    .skeleton-card .sk-line.w80{width:80%}
+    .skeleton-card .sk-line.w60{width:60%}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .search-wrap{position:relative;flex:1;max-width:300px}
+    .search-input{width:100%;padding:8px 14px 8px 32px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:20px;color:#fff;font-size:13px;outline:none}
+    .search-input:focus{border-color:#FF3366}
+    .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#999;pointer-events:none}
+    .fav-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:2px}
     .footer{background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;margin-top:60px;border-top:1px solid #2a2a2a}
     .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
     @media(max-width:768px){
@@ -117,7 +129,12 @@
       <img src="logo.png" alt="BarSclusive" style="height:40px">
     </div>
     <div class="nav-links">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="shopSearch" placeholder="Bar oder Deal suchen...">
+      </div>
       <button class="nav-link active" id="btnDeals">🏠 Deals</button>
+      <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
       <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
       <div style="display:flex;align-items:center;gap:8px">
         <button class="nav-link" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
@@ -136,8 +153,13 @@
 
 <!-- HERO -->
 <div class="hero">
-  <h1>🍹 Die besten Bar-Deals deiner Stadt</h1>
-  <p>Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+    <img src="logo.png" alt="BarSclusive" style="height:90px">
+    <div>
+      <h1 style="text-align:left">Die besten Bar-Deals deiner Stadt</h1>
+      <p style="text-align:left">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
+    </div>
+  </div>
 </div>
 
 <!-- FILTER BAR -->
@@ -169,8 +191,9 @@
     </div>
     <div class="filter-row">
       <span class="filter-label" data-i18n="standort">📍 Standort</span>
-      <button class="filter-btn" id="btnLocation">In meiner Nähe</button>
-      <button class="filter-btn" id="btnSortDist" style="display:none">📏 Nach Entfernung</button>
+      <input type="text" class="form-input" id="locationInput" placeholder="Ort oder PLZ..." style="flex:1;max-width:220px;padding:8px 12px;font-size:13px;border-radius:20px">
+      <button class="filter-btn" id="btnApplyLocation">Suchen</button>
+      <button class="filter-btn" id="btnClearLocation" style="display:none">✕</button>
     </div>
   </div>
 </div>
@@ -178,7 +201,16 @@
 <!-- MAIN -->
 <div class="container">
   <div id="dealsView">
-    <div id="dealsList" class="deals-grid"></div>
+    <div id="dealsLoading" class="deals-grid">
+      <div class="skeleton-card"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div></div></div>
+      <div class="skeleton-card"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div></div></div>
+      <div class="skeleton-card"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div></div></div>
+    </div>
+    <div id="dealsList" class="deals-grid" style="display:none"></div>
+  </div>
+  <div id="favoritesView" style="display:none">
+    <h2 style="margin-bottom:24px">❤️ Meine Favoriten</h2>
+    <div id="favoritesList" class="deals-grid"></div>
   </div>
   <div id="ordersView" style="display:none">
     <h2 style="margin-bottom:24px">📦 Meine Bestellungen</h2>
@@ -287,10 +319,7 @@
       <label class="form-label" for="buyEmail">Email</label>
       <input type="email" class="form-input" id="buyEmail" autocomplete="email">
     </div>
-    <div class="form-group">
-      <label class="form-label" for="buyPhone">Telefon</label>
-      <input type="tel" class="form-input" id="buyPhone" autocomplete="tel">
-    </div>
+
     <div class="form-group">
       <label class="form-label" for="buyDelivery">Versand</label>
       <select class="form-input" id="buyDelivery">
@@ -300,9 +329,9 @@
     </div>
     <div class="form-check" style="margin-bottom:16px">
       <input type="checkbox" id="buyConsent">
-      <label for="buyConsent">Ich akzeptiere <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">AGB & Datenschutz</a></label>
+      <label for="buyConsent">Ich akzeptiere die <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">AGB</a> &amp; <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutz</a></label>
     </div>
-    <button class="btn-pink" id="btnBuySubmit">Bestellen</button>
+    <button class="btn-pink" id="btnBuySubmit">💳 Jetzt bezahlen</button>
     <button class="btn-ghost" data-close-modal="buyModal">Abbrechen</button>
   </div>
 </div>
@@ -332,6 +361,6 @@
   </div>
 </div>
 
-<script src="shop-app.js?v=20260225"></script>
+<script src="shop-app.js"></script>
 </body>
 </html>
