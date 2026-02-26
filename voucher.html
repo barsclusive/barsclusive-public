@@ -101,7 +101,7 @@
 </div>
 
 <script>
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzQv_aEnFWV0TAPKyvBeuiJfQnPynUU7ptfj87x-HXJnUanh6s15V_WIXoBBTIbOp8nCQ/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwVoFI8ZpENpf2KM6pzGAvyfmL0x0YWJkbDEjT2EapWh1sEKkUWEGay8wEb6pk2UxHp/exec';
 
 const APPLIES_MAP = { all:'Alles', drinks:'Nur Getränke', food:'Nur Essen' };
 const STATUS_MAP  = { issued:'Gültig ✅', sent:'Gültig ✅', redeemed:'Eingelöst ⚠️', expired:'Abgelaufen ❌' };
@@ -113,11 +113,7 @@ async function loadVoucher() {
   if (!code) { showError('Kein Gutschein-Code angegeben.'); return; }
 
   try {
-    const resp = await fetch(BACKEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'getVoucherByCode', code })
-    });
+    const resp = await fetch(BACKEND_URL + '?action=getVoucherByCode&code=' + encodeURIComponent(code));
     const data = await resp.json();
 
     if (!data.success || !data.voucher) {
