@@ -132,8 +132,12 @@
           <input type="text" class="form-input" id="regCity">
         </div>
         <div class="form-group">
-          <label class="form-label" for="regAddress" data-i18n="address">Adresse</label>
-          <input type="text" class="form-input" id="regAddress">
+          <label class="form-label" for="regAddress" data-i18n="address">Adresse *</label>
+          <input type="text" class="form-input" id="regAddress" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regZip">PLZ *</label>
+          <input type="text" class="form-input" id="regZip" maxlength="10">
         </div>
         <div class="form-group">
           <label class="form-label" for="regPhone" data-i18n="phone">Telefon</label>
@@ -149,7 +153,7 @@
         </div>
         <div class="form-check">
           <input type="checkbox" id="regConsent">
-          <label for="regConsent">Ich akzeptiere die <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366" data-i18n="privacyPolicy">Datenschutzerklärung</a></label>
+          <label for="regConsent">Ich akzeptiere die <a href="agb-bars.html" target="_blank" rel="noopener" style="color:#FF3366">AGB</a> &amp; <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutz</a></label>
         </div>
         <button class="btn-pink" id="btnBarRegister" data-i18n="registerBtn">Registrieren</button>
         <p style="margin-top:16px;font-size:13px;color:#999;text-align:center" data-i18n="pendingNote">
@@ -199,38 +203,17 @@
             <label class="form-label" for="dealPrice" data-i18n="dealPriceLbl">Deal-Preis (CHF) *</label>
             <input type="number" class="form-input" id="dealPrice" min="0" step="0.50">
           </div>
-        
-        <div class="form-group">
-          <label class="form-label" for="dealKind">Deal-Typ *</label>
-          <select class="form-input" id="dealKind">
-            <option value="normal">Normaler Deal</option>
-            <option value="pauschal">Pauschalgutschein (Dealpreis fix 2.50 CHF)</option>
-          </select>
-          <div style="font-size:12px;opacity:0.8;margin-top:6px">
-            Beim Pauschalgutschein gilt: mindestens 15% Rabatt und mindestens 40 CHF Mindestbestellwert.
-          </div>
         </div>
-
-        <div id="pauschalFields" style="display:none;grid-template-columns:1fr 1fr;gap:14px" class="pauschal-grid">
-          <div class="form-group">
-            <label class="form-label" for="dealDiscountPercent">Rabatt in % (min. 15) *</label>
-            <input type="number" class="form-input" id="dealDiscountPercent" min="15" step="1" placeholder="z.B. 20">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="dealMinOrder">Mindestbestellwert in CHF (min. 40) *</label>
-            <input type="number" class="form-input" id="dealMinOrder" min="40" step="1" placeholder="z.B. 40">
-          </div>
-        </div>
-
-</div>
         <div class="form-group">
           <label class="form-label" for="dealQty" data-i18n="maxQty">Max. Anzahl (0 = unbegrenzt)</label>
           <input type="number" class="form-input" id="dealQty" min="0" value="0">
         </div>
         <div class="form-group">
-          <label class="form-label" for="dealImageUrl">Bild-URL (optional)</label>
-          <input type="url" class="form-input" id="dealImageUrl" placeholder="https://i.imgur.com/beispiel.jpg">
-          <small style="color:#999;font-size:12px">Lade dein Bild bei imgur.com hoch und füge die URL hier ein</small>
+          <label class="form-label">Bild (optional)</label>
+          <input type="file" class="form-input" id="dealImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
+          <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 2 MB</small>
+          <div id="imagePreview" style="margin-top:8px;display:none"><img id="imagePreviewImg" style="max-width:200px;border-radius:8px" alt="Vorschau"></div>
+          <input type="hidden" id="dealImageUrl">
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="categoriesLbl">Kategorien * (mind. 1)</label>
@@ -240,7 +223,31 @@
             <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
             <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
             <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ Pauschalgutschein</label>
           </div>
+        </div>
+        <!-- Pauschalgutschein fields -->
+        <div id="pauschalFields" style="display:none;background:#2a2a2a;padding:16px;border-radius:10px;margin-bottom:18px;border:1px solid #FF3366">
+          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="discountPercent">Rabatt % (mind. 15%)</label>
+              <input type="number" class="form-input" id="discountPercent" min="15" max="100" value="15">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="minOrder">Mindestbestellung CHF (mind. 40)</label>
+              <input type="number" class="form-input" id="minOrder" min="40" value="40">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:12px;margin-bottom:0">
+            <label class="form-label" for="appliesTo">Gilt für</label>
+            <select class="form-input" id="appliesTo" style="background:#1a1a1a;color:#fff">
+              <option value="all">Alles</option>
+              <option value="drinks">Nur Getränke</option>
+              <option value="food">Nur Essen</option>
+            </select>
+          </div>
+          <p style="color:#999;font-size:12px;margin-top:10px">💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.</p>
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="validityLbl">Gültigkeitsdauer *</label>
@@ -272,7 +279,16 @@
               <input type="date" class="form-input" id="singleDate">
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+          <div style="margin-top:14px">
+            <label class="form-label">Zeitfenster (optional)</label>
+            <div class="cats-grid" style="margin-bottom:10px">
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> 🌅 Morgen (06–12h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> ☀️ Mittag (11–17h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> 🌙 Abend (16–00h)</label>
+            </div>
+            <small style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
             <div class="form-group">
               <label class="form-label" for="timeFrom" data-i18n="fromLbl">Von</label>
               <input type="time" class="form-input" id="timeFrom">
@@ -438,26 +454,5 @@
 </div>
 
 <script src="bar-app.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const kind = document.getElementById('dealKind');
-  const pf = document.getElementById('pauschalFields');
-  const price = document.getElementById('dealPrice');
-  const orig = document.getElementById('dealOrigPrice');
-  const toggle = () => {
-    const isP = kind && kind.value === 'pauschal';
-    if (pf) pf.style.display = isP ? 'grid' : 'none';
-    if (price) {
-      price.disabled = isP;
-      if (isP) price.value = '2.50';
-    }
-    if (orig && isP) orig.value = '0';
-  };
-  if (kind) kind.addEventListener('change', toggle);
-  toggle();
-});
-</script>
-
 </body>
 </html>
