@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gutschein einlösen – BarSclusive</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#0a0a0a; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    .card { background:#1a1a1a; border-radius:20px; max-width:440px; width:100%; padding:40px; text-align:center; border:1px solid #2a2a2a; }
+    .icon { font-size:60px; margin-bottom:16px; }
+    h1 { font-size:22px; margin-bottom:8px; }
+    h2 { font-size:18px; margin-bottom:16px; color:#ccc; }
+    p { color:#999; font-size:14px; line-height:1.6; margin-bottom:16px; }
+    .spinner { display:inline-block; width:40px; height:40px; border:3px solid #333; border-top-color:#FF3366; border-radius:50%; animation:spin .8s linear infinite; margin:20px 0; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .code { font-size:28px; font-weight:800; letter-spacing:4px; color:#FF3366; margin:16px 0; }
+    .deal-info { background:#2a2a2a; border-radius:12px; padding:16px; margin:16px 0; text-align:left; }
+    .deal-info .row { display:flex; justify-content:space-between; margin-bottom:6px; color:#ccc; font-size:14px; }
+    .deal-info .row:last-child { margin-bottom:0; }
+    .deal-info .label { color:#999; }
+    .success-box { background:#052e16; border:2px solid #22c55e; border-radius:12px; padding:20px; margin:16px 0; }
+    .success-box h2 { color:#22c55e; margin-bottom:4px; }
+    .error-box { background:#2a0a0a; border:2px solid #ef4444; border-radius:12px; padding:20px; margin:16px 0; }
+    .error-box h2 { color:#ef4444; margin-bottom:4px; }
+    .already-box { background:#1a1400; border:2px solid #f59e0b; border-radius:12px; padding:20px; margin:16px 0; }
+    .already-box h2 { color:#f59e0b; margin-bottom:4px; }
+    .btn { display:inline-block; background:#FF3366; color:#fff; padding:14px 28px; border-radius:12px; text-decoration:none; font-weight:700; font-size:15px; margin-top:12px; border:none; cursor:pointer; }
+    .btn:hover { background:#e6295a; }
+    .btn-ghost { display:inline-block; color:#999; padding:10px 20px; text-decoration:none; font-size:13px; margin-top:8px; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- Loading -->
+  <div id="stateLoading">
+    <div class="icon">🔄</div>
+    <h1>Gutschein wird eingelöst...</h1>
+    <div class="spinner"></div>
+    <p>Bitte warte einen Moment.</p>
+  </div>
+
+  <!-- Not logged in -->
+  <div id="stateLogin" style="display:none">
+    <div class="icon">🔐</div>
+    <h1>Bar-Login erforderlich</h1>
+    <p>Du musst als Bar eingeloggt sein, um Gutscheine einzulösen.</p>
+    <div class="code" id="showCode"></div>
+    <a href="bar-portal.html" class="btn">Zum Bar-Portal</a>
+    <p style="margin-top:16px;font-size:12px;color:#666">Nach dem Login kannst du den Code im Tab "Einlösen" manuell eingeben.</p>
+  </div>
+
+  <!-- Success -->
+  <div id="stateSuccess" style="display:none">
+    <div class="icon">✅</div>
+    <div class="success-box">
+      <h2>Erfolgreich eingelöst!</h2>
+      <p style="color:#86efac;margin:0">Der Gutschein wurde soeben eingelöst.</p>
+    </div>
+    <div class="code" id="successCode"></div>
+    <div class="deal-info" id="dealInfo"></div>
+    <a href="bar-portal.html" class="btn-ghost">← Zurück zum Bar-Portal</a>
+  </div>
+
+  <!-- Already redeemed -->
+  <div id="stateAlready" style="display:none">
+    <div class="icon">⚠️</div>
+    <div class="already-box">
+      <h2>Bereits eingelöst</h2>
+      <p style="color:#fcd34d;margin:0">Dieser Gutschein wurde bereits eingelöst.</p>
+    </div>
+    <div class="code" id="alreadyCode"></div>
+    <a href="bar-portal.html" class="btn-ghost">← Zurück zum Bar-Portal</a>
+  </div>
+
+  <!-- Error -->
+  <div id="stateError" style="display:none">
+    <div class="icon">❌</div>
+    <div class="error-box">
+      <h2>Fehler</h2>
+      <p style="color:#fca5a5;margin:0" id="errorMsg"></p>
+    </div>
+    <a href="bar-portal.html" class="btn">Zum Bar-Portal</a>
+  </div>
+</div>
+
+<script>
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
+
+async function redeemVoucher() {
+  var params = new URLSearchParams(window.location.search);
+  var code = (params.get('code') || '').trim().toUpperCase();
+
+  if (!code) {
+    showError('Kein Gutschein-Code angegeben.');
+    return;
+  }
+
+  // Check if bar is logged in
+  var session = null;
+  try {
+    var stored = localStorage.getItem('barsclusive_bar_session');
+    if (stored) {
+      session = JSON.parse(stored);
+      if (session.expiresAt && Date.now() > session.expiresAt) session = null;
+    }
+  } catch(e) {}
+
+  if (!session || !session.token) {
+    document.getElementById('stateLoading').style.display = 'none';
+    document.getElementById('stateLogin').style.display = 'block';
+    document.getElementById('showCode').textContent = code;
+    return;
+  }
+
+  // Try to redeem
+  try {
+    var resp = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'redeemVoucher',
+        token: session.token,
+        code: code
+      })
+    });
+    var data = await resp.json();
+
+    document.getElementById('stateLoading').style.display = 'none';
+
+    if (data.success) {
+      document.getElementById('stateSuccess').style.display = 'block';
+      document.getElementById('successCode').textContent = code;
+      var info = document.getElementById('dealInfo');
+      info.innerHTML = '<div class="row"><span class="label">Deal</span><span>' + (data.deal_title || '-') + '</span></div>';
+    } else if (data.error && data.error.indexOf('eingelöst') !== -1) {
+      document.getElementById('stateAlready').style.display = 'block';
+      document.getElementById('alreadyCode').textContent = code;
+    } else {
+      showError(data.error || 'Einlösung fehlgeschlagen.');
+    }
+  } catch(e) {
+    showError('Verbindungsfehler. Bitte erneut versuchen.');
+  }
+}
+
+function showError(msg) {
+  document.getElementById('stateLoading').style.display = 'none';
+  document.getElementById('stateError').style.display = 'block';
+  document.getElementById('errorMsg').textContent = msg;
+}
+
+redeemVoucher();
+</script>
+
+</body>
+</html>
