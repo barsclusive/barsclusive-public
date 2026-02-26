@@ -50,7 +50,7 @@
 </div>
 
 <script>
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzQv_aEnFWV0TAPKyvBeuiJfQnPynUU7ptfj87x-HXJnUanh6s15V_WIXoBBTIbOp8nCQ/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwVoFI8ZpENpf2KM6pzGAvyfmL0x0YWJkbDEjT2EapWh1sEKkUWEGay8wEb6pk2UxHp/exec';
 
 async function confirmPayment() {
   const params = new URLSearchParams(window.location.search);
@@ -62,15 +62,7 @@ async function confirmPayment() {
   }
 
   try {
-    const resp = await fetch(BACKEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'confirmStripePayment',
-        session_id: sessionId,
-        site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '')
-      })
-    });
+    const resp = await fetch(BACKEND_URL + '?action=confirmStripePayment&session_id=' + encodeURIComponent(sessionId));
     const data = await resp.json();
 
     if (!data.success) {
