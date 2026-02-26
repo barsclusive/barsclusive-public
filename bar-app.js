@@ -1,7 +1,7 @@
 // =============================================
 // CONFIGURATION
 // =============================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwVoFI8ZpENpf2KM6pzGAvyfmL0x0YWJkbDEjT2EapWh1sEKkUWEGay8wEb6pk2UxHp/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
 
 // =============================================
 // i18n — DE / EN
