@@ -1,8 +1,8 @@
 // =============================================
 // CONFIGURATION
 // =============================================
-const BACKEND_URL  = 'https://script.google.com/macros/s/AKfycbzQv_aEnFWV0TAPKyvBeuiJfQnPynUU7ptfj87x-HXJnUanh6s15V_WIXoBBTIbOp8nCQ/exec';
-const WA_NUMBER    = '41765924391';
+const BACKEND_URL  = 'https://script.google.com/macros/s/AKfycbwVoFI8ZpENpf2KM6pzGAvyfmL0x0YWJkbDEjT2EapWh1sEKkUWEGay8wEb6pk2UxHp/exec';
+// WhatsApp removed - Stripe only
 
 // No API key: a key in frontend JS is public and provides no auth.
 
@@ -21,6 +21,7 @@ function sessionSet(token, name, email, role) {
   };
   document.getElementById('userBtn').textContent = '👤 ' + escHtml(name);
   document.getElementById('btnOrders').style.display = 'block';
+  var bf = document.getElementById('btnFavorites'); if(bf) bf.style.display = 'block';
 }
 
 function sessionGet() {
@@ -33,6 +34,8 @@ function sessionClear() {
   _session = null;
   document.getElementById('userBtn').textContent = '👤 Login';
   document.getElementById('btnOrders').style.display = 'none';
+  var bf2 = document.getElementById('btnFavorites'); if(bf2) bf2.style.display = 'none';
+  _favorites = [];
   document.getElementById('userDropdown').classList.remove('show');
 }
 
@@ -59,7 +62,8 @@ function setText(el, val) {
 // FILTERS & STATE
 // =============================================
 let allDeals = [];
-let filters  = { date: 'all', time: 'all', cat: 'all', customDate: null };
+let filters  = { date: 'all', time: 'all', cat: 'all', customDate: null, search: '', city: '' };
+var _favorites = [];
 let userLocation  = null;
 let locationOn    = false;
 
@@ -83,29 +87,18 @@ function setCustomDate(val) {
   renderDeals();
 }
 
-function toggleLocation() {
-  if (!locationOn) {
-    if (!navigator.geolocation) { showToast('Geolocation nicht verfügbar', true); return; }
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        locationOn   = true;
-        setText('btnLocation', '✅ Standort aktiv');
-        document.getElementById('btnSortDist').style.display = 'block';
-        attachDistances();
-        renderDeals();
-        showToast('Standort aktiviert');
-      },
-      () => showToast('Standort-Zugriff verweigert', true)
-    );
-  } else {
-    locationOn   = false;
-    userLocation = null;
-    allDeals.forEach(d => delete d._dist);
-    setText('btnLocation', 'In meiner Nähe');
-    document.getElementById('btnSortDist').style.display = 'none';
-    renderDeals();
-  }
+function applyLocation() {
+  var val = (document.getElementById('locationInput').value || '').trim().toLowerCase();
+  if (!val) { clearLocation(); return; }
+  filters.city = val;
+  document.getElementById('btnClearLocation').style.display = 'inline-block';
+  renderDeals();
+}
+function clearLocation() {
+  filters.city = '';
+  document.getElementById('locationInput').value = '';
+  document.getElementById('btnClearLocation').style.display = 'none';
+  renderDeals();
 }
 
 function attachDistances() {
@@ -150,6 +143,8 @@ async function loadDeals(forceRefresh = false) {
     if (d.success) {
       allDeals = d.deals;
       dealsCache = { data: d.deals, timestamp: now };
+      var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
+      var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
       renderDeals();
     } else {
       showToast('Fehler beim Laden der Deals', true);
@@ -223,10 +218,27 @@ function matchTime(deal) {
 function renderDeals() {
   const el = document.getElementById('dealsList');
 
-  const visible = allDeals.filter(d =>
-    (filters.cat === 'all' || (d.categories || []).includes(filters.cat)) &&
-    matchDate(d) && matchTime(d)
-  );
+  const visible = allDeals.filter(d => {
+    if (filters.cat !== 'all' && !(d.categories || []).includes(filters.cat)) return false;
+    if (!matchDate(d)) return false;
+    if (!matchTime(d)) return false;
+    if (filters.search) {
+      var hay = ((d.title||'') + ' ' + (d.bar_name||'') + ' ' + (d.bar_city||'') + ' ' + (d.description||'')).toLowerCase();
+      if (!hay.includes(filters.search)) return false;
+    }
+    if (filters.city) {
+      var ch = ((d.bar_city||'')).toLowerCase();
+      if (!ch.includes(filters.city)) return false;
+    }
+    return true;
+  });
+
+  // Sort by highest discount first
+  visible.sort(function(a,b) {
+    var dA = a.original_price > 0 ? (1 - a.deal_price/a.original_price) : 0;
+    var dB = b.original_price > 0 ? (1 - b.deal_price/b.original_price) : 0;
+    return dB - dA;
+  });
 
   if (!visible.length) {
     el.innerHTML = '';
@@ -350,10 +362,34 @@ function buildDealCard(deal) {
 
   const btn = document.createElement('button');
   btn.className = 'btn-buy';
-  btn.textContent = isPauschal ? 'Gutschein kaufen (2.50 CHF)' : 'Kaufen';
+  btn.textContent = isPauschal ? 'Profitiere jetzt! (2.50 CHF)' : 'Profitiere jetzt!';
   btn.addEventListener('click', () => openBuyModal(deal));
 
-  content.append(title, bar, priceDiv, validity, btn);
+  // Time slots display
+  var tsContainer = document.createElement('div');
+  if (deal.time_slots && deal.time_slots.length > 0) {
+    tsContainer.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px';
+    var tsLabels = {morning:'\u{1F305} Morgen', midday:'\u2600\uFE0F Mittag', evening:'\u{1F319} Abend'};
+    deal.time_slots.forEach(function(slot) {
+      var sp = document.createElement('span');
+      sp.style.cssText = 'background:#2a2a2a;padding:3px 8px;border-radius:8px;font-size:11px;color:#ccc';
+      sp.textContent = tsLabels[slot] || slot;
+      tsContainer.appendChild(sp);
+    });
+  }
+
+  // Favorite button
+  var favBtn = document.createElement('button');
+  favBtn.className = 'fav-btn';
+  favBtn.textContent = (_favorites.indexOf(deal.bar_id) !== -1) ? '\u2764\uFE0F' : '\u{1F90D}';
+  favBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleFavorite(deal.bar_id, favBtn); });
+
+  var btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;align-items:center;gap:8px';
+  btnRow.appendChild(btn);
+  btnRow.appendChild(favBtn);
+
+  content.append(title, bar, priceDiv, tsContainer, validity, btnRow);
   card.append(imgDiv, content);
   return card;
 }
@@ -383,51 +419,34 @@ function openBuyModal(deal) {
 }
 
 async function doBuy() {
-  const name     = document.getElementById('buyName').value.trim();
-  const email    = document.getElementById('buyEmail').value.trim();
-  const phone    = document.getElementById('buyPhone').value.trim();
-  const delivery = document.getElementById('buyDelivery').value;
-  const consent  = document.getElementById('buyConsent').checked;
-  const deal     = window._currentDeal;
-
+  var name = document.getElementById('buyName').value.trim();
+  var email = document.getElementById('buyEmail').value.trim();
+  var consent = document.getElementById('buyConsent').checked;
+  var deal = window._currentDeal;
   if (!name || !email) { showToast('Name und Email sind Pflichtfelder', true); return; }
-  if (!consent)         { showToast('Bitte Datenschutz akzeptieren', true); return; }
-  if (!deal)            return;
-
-  const s = sessionGet();
-  const body = {
-    action: 'createOrder',
-    token: s ? s.token : null,
-    deal_id: deal.id, bar_id: deal.bar_id,
-    deal_title: deal.title, bar_name: deal.bar_name,
-    buyer_name: name, buyer_email: email, buyer_phone: phone,
-    price: deal.deal_price, delivery_method: delivery
-  };
-
+  if (!consent) { showToast('Bitte AGB & Datenschutz akzeptieren', true); return; }
+  if (!deal) return;
+  var btn = document.getElementById('btnBuySubmit');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Weiterleitung...'; }
+  var s = sessionGet();
   try {
-    const r = await api(body);
-    if (!r.success) { showToast(r.error || 'Fehler', true); return; }
-
-    if (delivery === 'whatsapp') {
-      const msg = 'BarSclusive Bestellung\n\nDeal: ' + deal.title
-        + '\nBar: ' + deal.bar_name
-        + '\nPreis: ' + Number(deal.deal_price).toFixed(2) + ' CHF'
-        + '\n\nName: ' + name + '\nEmail: ' + email
-        + '\n\nBitte per Twint bezahlen an: +41 76 592 43 91'
-        + '\nBetreff: ' + r.order_id;
-      window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+    var r = await api({
+      action: 'createCheckoutSession',
+      token: s ? s.token : null,
+      deal_id: deal.id,
+      buyer_name: name, buyer_email: email,
+      customer_id: s ? s.token : '',
+      site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '')
+    });
+    if (!r.success) {
+      showToast(r.error || 'Fehler', true);
+      if (btn) { btn.disabled = false; btn.textContent = '💳 Jetzt bezahlen'; }
+      return;
     }
-
-    closeModal('buyModal');
-    showToast('✅ Bestellung aufgegeben! Zahlung per Twint, dann erhältst du deinen Code per Email.');
-    document.getElementById('buyConsent').checked = false;
-    if (!s) {
-      document.getElementById('buyName').value  = '';
-      document.getElementById('buyEmail').value = '';
-    }
-    document.getElementById('buyPhone').value = '';
-  } catch (e) {
+    if (r.checkout_url) { window.location.href = r.checkout_url; }
+  } catch(e) {
     showToast('Verbindungsfehler', true);
+    if (btn) { btn.disabled = false; btn.textContent = '💳 Jetzt bezahlen'; }
   }
 }
 
@@ -605,9 +624,12 @@ async function doLogout() {
 function showView(view) {
   document.getElementById('dealsView').style.display  = view === 'deals'  ? 'block' : 'none';
   document.getElementById('ordersView').style.display = view === 'orders' ? 'block' : 'none';
+  var fv = document.getElementById('favoritesView'); if(fv) fv.style.display = view === 'favorites' ? 'block' : 'none';
   document.getElementById('btnDeals').classList.toggle('active',  view === 'deals');
   document.getElementById('btnOrders').classList.toggle('active', view === 'orders');
+  var bf3 = document.getElementById('btnFavorites'); if(bf3) bf3.classList.toggle('active', view === 'favorites');
   if (view === 'orders') loadOrders();
+  if (view === 'favorites') showFavorites();
   
   // Support browser back button — only for view changes, NOT modals
   history.pushState({ view }, '', '#' + view);
@@ -845,11 +867,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnBackToStep1 = document.getElementById('btnBackToStep1');
   if (btnBackToStep1) btnBackToStep1.addEventListener('click', backToResetStep1);
 
-  const btnLocation = document.getElementById('btnLocation');
-  if (btnLocation) btnLocation.addEventListener('click', toggleLocation);
+  // Location: now manual input via locationInput
 
-  const btnSortDist = document.getElementById('btnSortDist');
-  if (btnSortDist) btnSortDist.addEventListener('click', sortByDistance);
+  // Sort by distance: removed (manual location)
 });
 
 // =============================================
@@ -974,3 +994,64 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === this) closeChangePwModal();
   });
 });
+
+
+// =============================================
+// SEARCH (works without login)
+// =============================================
+var _searchTimer = null;
+document.addEventListener('DOMContentLoaded', function() {
+  var si = document.getElementById('shopSearch');
+  if (si) si.addEventListener('input', function() {
+    clearTimeout(_searchTimer);
+    var v = this.value.toLowerCase();
+    _searchTimer = setTimeout(function() { filters.search = v; renderDeals(); }, 250);
+  });
+  var btnFav = document.getElementById('btnFavorites');
+  if (btnFav) btnFav.addEventListener('click', function() { showView('favorites'); });
+  var btnApplyLoc = document.getElementById('btnApplyLocation');
+  if (btnApplyLoc) btnApplyLoc.addEventListener('click', applyLocation);
+  var btnClearLoc = document.getElementById('btnClearLocation');
+  if (btnClearLoc) btnClearLoc.addEventListener('click', clearLocation);
+  var locInput = document.getElementById('locationInput');
+  if (locInput) locInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') applyLocation(); });
+});
+
+// =============================================
+// FAVORITES
+// =============================================
+async function loadFavorites() {
+  var s = sessionGet();
+  if (!s) return;
+  try {
+    var r = await api({ action: 'getFavorites', token: s.token });
+    if (r.success) _favorites = r.bar_ids || [];
+  } catch(e) {}
+}
+
+async function toggleFavorite(barId, btn) {
+  var s = sessionGet();
+  if (!s) { showToast('Bitte einloggen', true); return; }
+  var isFav = _favorites.indexOf(barId) !== -1;
+  try {
+    var r = await api({ action: isFav ? 'removeFavorite' : 'addFavorite', token: s.token, bar_id: barId });
+    if (r.success) {
+      if (isFav) _favorites = _favorites.filter(function(id) { return id !== barId; });
+      else _favorites.push(barId);
+      btn.textContent = isFav ? '\u{1F90D}' : '\u2764\uFE0F';
+    }
+  } catch(e) {}
+}
+
+function showFavorites() {
+  var el = document.getElementById('favoritesList');
+  if (!el) return;
+  el.innerHTML = '';
+  if (!_favorites.length) { el.innerHTML = '<div class="empty"><h3>Noch keine Favoriten</h3><p>Klicke \u2764\uFE0F bei einem Deal</p></div>'; return; }
+  var favDeals = allDeals.filter(function(d) { return _favorites.indexOf(d.bar_id) !== -1; });
+  if (!favDeals.length) { el.innerHTML = '<div class="empty"><h3>Keine aktiven Deals von Favoriten</h3></div>'; return; }
+  favDeals.forEach(function(d) { el.appendChild(buildDealCard(d)); });
+}
+
+// Load favorites on page load if logged in
+window.addEventListener('load', function() { loadFavorites(); });
