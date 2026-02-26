@@ -95,19 +95,24 @@ function setLang(lang) {
 let _session = null; // { token, barId, barName, expiresAt }
 
 function sessionSet(token, barId, barName) {
-  _session = { token, barId, barName, expiresAt: Date.now() + 90 * 60 * 1000 };
+  _session = { token, barId, barName, role: 'bar', expiresAt: Date.now() + 90 * 60 * 1000 };
+  try { localStorage.setItem('barsclusive_bar_session', JSON.stringify(_session)); } catch(e) {}
   document.getElementById('btnLogout').style.display = 'block';
   const el = document.getElementById('barNameDisplay');
   if (el) el.textContent = barName;
 }
 
 function sessionGet() {
-  if (!_session || Date.now() > _session.expiresAt) { _session = null; return null; }
+  if (!_session) {
+    try { var s = localStorage.getItem('barsclusive_bar_session'); if (s) _session = JSON.parse(s); } catch(e) {}
+  }
+  if (!_session || Date.now() > _session.expiresAt) { _session = null; try { localStorage.removeItem('barsclusive_bar_session'); } catch(e) {} return null; }
   return _session;
 }
 
 function sessionClear() {
   _session = null;
+  try { localStorage.removeItem('barsclusive_bar_session'); } catch(e) {}
   document.getElementById('btnLogout').style.display = 'none';
 }
 
