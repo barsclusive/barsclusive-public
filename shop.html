@@ -137,8 +137,10 @@
       <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
       <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
       <div style="display:flex;align-items:center;gap:8px">
-        <button class="nav-link" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
-        <button class="nav-link" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
+        <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
+        <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
+        <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
+        <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">FR</button>
       </div>
       <div class="user-menu">
         <button class="user-button" id="userBtn">👤 Login</button>
@@ -191,7 +193,7 @@
     </div>
     <div class="filter-row">
       <span class="filter-label" data-i18n="standort">📍 Standort</span>
-      <input type="text" class="form-input" id="locationInput" placeholder="Ort oder PLZ..." style="flex:1;max-width:220px;padding:8px 12px;font-size:13px;border-radius:20px">
+      <input type="text" class="form-input" id="locationInput" placeholder="PLZ oder Ort..." style="flex:1;max-width:220px;padding:8px 12px;font-size:13px;border-radius:20px">
       <button class="filter-btn" id="btnApplyLocation">Suchen</button>
       <button class="filter-btn" id="btnClearLocation" style="display:none">✕</button>
     </div>
