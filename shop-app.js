@@ -126,6 +126,23 @@ function sortByDistance() {
 // DEALS
 // =============================================
 let dealsCache = { data: null, timestamp: 0 };
+
+// Performance: load cached deals from localStorage instantly
+try {
+  var _stored = localStorage.getItem('barsclusive_deals_cache');
+  if (_stored) {
+    var _parsed = JSON.parse(_stored);
+    if (_parsed.data && (Date.now() - _parsed.timestamp) < 30 * 60 * 1000) {
+      dealsCache = _parsed;
+      allDeals = _parsed.data;
+      setTimeout(function() {
+        var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
+        var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
+        renderDeals();
+      }, 50);
+    }
+  }
+} catch(e) {}
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 async function loadDeals(forceRefresh = false) {
@@ -143,6 +160,7 @@ async function loadDeals(forceRefresh = false) {
     if (d.success) {
       allDeals = d.deals;
       dealsCache = { data: d.deals, timestamp: now };
+      try { localStorage.setItem('barsclusive_deals_cache', JSON.stringify(dealsCache)); } catch(e) {}
       var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
       var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
       renderDeals();
@@ -227,8 +245,15 @@ function renderDeals() {
       if (!hay.includes(filters.search)) return false;
     }
     if (filters.city) {
-      var ch = ((d.bar_city||'')).toLowerCase();
-      if (!ch.includes(filters.city)) return false;
+      var q = filters.city;
+      var haystack = ((d.bar_city||'') + ' ' + (d.bar_zip||'')).toLowerCase();
+      // PLZ proximity: if user enters a number, match first 2 digits (same region)
+      if (/^\d+$/.test(q)) {
+        var prefix = q.length >= 2 ? q.substring(0,2) : q;
+        if (!(d.bar_zip||'').startsWith(prefix)) return false;
+      } else {
+        if (!haystack.includes(q)) return false;
+      }
     }
     return true;
   });
@@ -901,6 +926,30 @@ const SHOP_TRANSLATIONS = {
     cancelBtn:'Cancel',
     datum:'Date', uhrzeit:'Time', kategorie:'Category', standort:'Location',
     alle:'All', heute:'Today', morgen:'Tomorrow',
+  },
+  it: {
+    deals:'Deals', orders:'Ordini',
+    loginBtn:'Login / Registrati', logoutBtn:'Esci',
+    myOrders:'I miei ordini', changePw:'Cambia Password',
+    heroTitle:'🍹 Le migliori offerte bar della tua città',
+    heroSub:'Offerte esclusive per colazione, brunch, aperitivo ed eventi',
+    buyBtn:'Acquista Deal', changePasswordTitle:'Cambia Password',
+    oldPassword:'Vecchia Password', newPassword:'Nuova Password',
+    confirmPassword:'Conferma Password', savePw:'Salva', cancelBtn:'Annulla',
+    datum:'Data', uhrzeit:'Ora', kategorie:'Categoria', standort:'Posizione',
+    alle:'Tutti', heute:'Oggi', morgen:'Domani',
+  },
+  fr: {
+    deals:'Deals', orders:'Commandes',
+    loginBtn:'Connexion / Inscription', logoutBtn:'Déconnexion',
+    myOrders:'Mes commandes', changePw:'Changer mot de passe',
+    heroTitle:'🍹 Les meilleures offres bar de ta ville',
+    heroSub:'Offres exclusives pour petit-déjeuner, brunch, apéritif et événements',
+    buyBtn:'Acheter Deal', changePasswordTitle:'Changer mot de passe',
+    oldPassword:'Ancien mot de passe', newPassword:'Nouveau mot de passe',
+    confirmPassword:'Confirmer', savePw:'Enregistrer', cancelBtn:'Annuler',
+    datum:'Date', uhrzeit:'Heure', kategorie:'Catégorie', standort:'Lieu',
+    alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
   }
 };
 
@@ -910,16 +959,9 @@ function st(key) { return SHOP_TRANSLATIONS[shopLang][key] || SHOP_TRANSLATIONS.
 function setShopLang(lang) {
   shopLang = lang;
   document.documentElement.lang = lang;
-  const btnDE = document.getElementById('shopLangDE');
-  const btnEN = document.getElementById('shopLangEN');
-  if (btnDE) {
-    btnDE.classList.remove('active');
-    if (lang === 'de') btnDE.classList.add('active');
-  }
-  if (btnEN) {
-    btnEN.classList.remove('active');
-    if (lang === 'en') btnEN.classList.add('active');
-  }
+  document.querySelectorAll('.shop-lang-btn').forEach(function(b) { b.classList.remove('active'); b.style.borderColor = '#333'; b.style.color = '#888'; });
+  var activeBtn = document.getElementById('shopLang' + lang.toUpperCase());
+  if (activeBtn) { activeBtn.classList.add('active'); activeBtn.style.borderColor = '#FF3366'; activeBtn.style.color = '#fff'; }
   applyShopTranslations();
 }
 
@@ -975,10 +1017,14 @@ async function doChangePassword() {
 
 // Bind lang + password change on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-  const langDE = document.getElementById('shopLangDE');
-  const langEN = document.getElementById('shopLangEN');
-  if (langDE) langDE.addEventListener('click', () => setShopLang('de'));
-  if (langEN) langEN.addEventListener('click', () => setShopLang('en'));
+  var langDE = document.getElementById('shopLangDE');
+  var langEN = document.getElementById('shopLangEN');
+  var langIT = document.getElementById('shopLangIT');
+  var langFR = document.getElementById('shopLangFR');
+  if (langDE) langDE.addEventListener('click', function(){setShopLang('de')});
+  if (langEN) langEN.addEventListener('click', function(){setShopLang('en')});
+  if (langIT) langIT.addEventListener('click', function(){setShopLang('it')});
+  if (langFR) langFR.addEventListener('click', function(){setShopLang('fr')});
 
   const changePwBtn = document.getElementById('dropdownChangePw');
   if (changePwBtn) changePwBtn.addEventListener('click', openChangePwModal);
