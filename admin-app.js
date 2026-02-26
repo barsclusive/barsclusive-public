@@ -1,7 +1,7 @@
 // =============================================
 // CONFIG
 // =============================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzQv_aEnFWV0TAPKyvBeuiJfQnPynUU7ptfj87x-HXJnUanh6s15V_WIXoBBTIbOp8nCQ/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwVoFI8ZpENpf2KM6pzGAvyfmL0x0YWJkbDEjT2EapWh1sEKkUWEGay8wEb6pk2UxHp/exec';
 
 // =============================================
 // i18n
@@ -115,7 +115,7 @@ function switchTab(name, btn) {
   document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
   document.getElementById('tab' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
   btn.classList.add('active');
-  const loaders = { orders: loadOrders, vouchers: loadVouchers, bars: loadBars, deals: loadDeals, stats: loadStats };
+  const loaders = { orders: loadOrders, vouchers: loadVouchers, bars: loadBars, customers: loadCustomers, deals: loadDeals, stats: loadStats };
   if (loaders[name]) loaders[name]();
 }
 
@@ -485,4 +485,37 @@ document.addEventListener('DOMContentLoaded', () => {
       setLang('en');
     });
   }
+});
+
+
+// =============================================
+// CUSTOMERS
+// =============================================
+var _allCustomers = [];
+async function loadCustomers() {
+  if (!hasSession()) { doLogout(); return; }
+  try {
+    var r = await api({ action: 'getCustomers', token: _token });
+    if (!r.success) { showToast(r.error, true); return; }
+    _allCustomers = r.customers || [];
+    renderCustomers(_allCustomers);
+  } catch(e) { showToast('Ladefehler', true); }
+}
+function renderCustomers(customers) {
+  var tbody = document.getElementById('customersBody');
+  tbody.innerHTML = '';
+  if (!customers.length) { tbody.innerHTML = '<tr><td colspan="3" class="no-data">Keine Kund:innen</td></tr>'; return; }
+  customers.forEach(function(c) {
+    var tr = document.createElement('tr');
+    var d = c.created_at ? new Date(c.created_at) : null;
+    tr.innerHTML = '<td>' + esc(c.name||'-') + '</td><td>' + esc(c.email) + '</td><td>' + (d ? d.toLocaleDateString('de-CH') : '-') + '</td>';
+    tbody.appendChild(tr);
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var cs = document.getElementById('customerSearch');
+  if (cs) cs.addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    renderCustomers(_allCustomers.filter(function(c) { return (c.name||'').toLowerCase().includes(q) || (c.email||'').toLowerCase().includes(q); }));
+  });
 });
