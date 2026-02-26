@@ -87,6 +87,7 @@
     <button class="tab active" data-tab="orders">📦 Bestellungen</button>
     <button class="tab" data-tab="vouchers">🎫 Gutscheine</button>
     <button class="tab" data-tab="bars">🏪 Bars</button>
+    <button class="tab" data-tab="customers">👥 Kund:innen</button>
     <button class="tab" data-tab="deals">🎯 Deals</button>
     <button class="tab" data-tab="stats">📊 Statistik</button>
   </div>
@@ -110,6 +111,14 @@
     <div class="overflow-x"><table><thead><tr>
       <th>Name</th><th>Stadt</th><th>Email</th><th>Status</th><th>Deals</th><th>Provision %</th><th>Aktion</th>
     </tr></thead><tbody id="barsBody"></tbody></table></div>
+  </div>
+
+  <div id="tabCustomers" class="tab-content">
+    <div class="section-title">Kund:innen</div>
+    <input type="text" class="form-input" id="customerSearch" placeholder="Suchen..." style="max-width:250px;margin-bottom:16px;padding:8px 12px;font-size:13px">
+    <div class="overflow-x"><table><thead><tr>
+      <th>Name</th><th>Email</th><th>Registriert</th>
+    </tr></thead><tbody id="customersBody"></tbody></table></div>
   </div>
 
   <div id="tabDeals" class="tab-content">
