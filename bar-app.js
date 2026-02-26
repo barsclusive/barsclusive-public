@@ -1,7 +1,7 @@
 // =============================================
 // CONFIGURATION
 // =============================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzQv_aEnFWV0TAPKyvBeuiJfQnPynUU7ptfj87x-HXJnUanh6s15V_WIXoBBTIbOp8nCQ/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwVoFI8ZpENpf2KM6pzGAvyfmL0x0YWJkbDEjT2EapWh1sEKkUWEGay8wEb6pk2UxHp/exec';
 
 // =============================================
 // i18n — DE / EN
@@ -136,24 +136,28 @@ async function doBarRegister() {
   const name    = document.getElementById('regBarName').value.trim();
   const city    = document.getElementById('regCity').value.trim();
   const address = document.getElementById('regAddress').value.trim();
+  const zip     = document.getElementById('regZip') ? document.getElementById('regZip').value.trim() : '';
   const phone   = document.getElementById('regPhone').value.trim();
   const email   = document.getElementById('regBarEmail').value.trim();
   const pass    = document.getElementById('regBarPass').value;
   const consent = document.getElementById('regConsent').checked;
   const err     = document.getElementById('regErr');
   err.textContent = '';
-  if (!name || !city || !email || !pass) { err.textContent = 'Pflichtfelder ausfüllen.'; return; }
+  if (!name || !city || !address || !zip || !email || !pass) { err.textContent = 'Alle Pflichtfelder ausfüllen (Name, Stadt, Adresse, PLZ, Email, Passwort).'; return; }
   if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
-  if (!consent) { err.textContent = 'Datenschutz akzeptieren.'; return; }
+  if (!consent) { err.textContent = 'Bitte AGB & Datenschutz akzeptieren.'; return; }
   try {
-    const r = await api({ action: 'barRegister', name, city, address, phone, email, password: pass });
+    var btn = document.getElementById('btnBarRegister');
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft...'; }
+    const r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass });
     if (r.success) {
       showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
       document.getElementById('regBarPass').value = '';
     } else {
       err.textContent = r.error || 'Fehler bei der Registrierung.';
     }
-  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Registrieren'; }
+  } catch (e) { err.textContent = 'Verbindungsfehler.'; if (btn) { btn.disabled = false; btn.textContent = 'Registrieren'; } }
 }
 
 async function doLogout() {
@@ -401,7 +405,7 @@ function toggleValidity() {
   document.getElementById('singleFields').style.display    = isRecurring ? 'none'  : 'block';
 }
 
-async async function doCreateDeal() {
+async function doCreateDeal() {
   const s = sessionGet();
   if (!s) { doLogout(); return; }
 
@@ -415,22 +419,13 @@ async async function doCreateDeal() {
   const fromT  = document.getElementById('timeFrom').value;
   const toT    = document.getElementById('timeTo').value;
   const cats   = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(c => c.value);
+  const isPauschal = cats.includes('pauschalgutscheine');
 
-  const dealKindEl = document.getElementById('dealKind');
-  const dealKind = dealKindEl ? dealKindEl.value : 'normal';
-  const discEl = document.getElementById('dealDiscountPercent');
-  const minEl  = document.getElementById('dealMinOrder');
-  const discountPercent = discEl ? (parseFloat(discEl.value) || 0) : 0;
-  const minOrder = minEl ? (parseFloat(minEl.value) || 0) : 0;
-
-  
-  if (dealKind === 'pauschal') {
-    // Pauschalgutschein rules: min 15% discount and min 40 CHF minimum order value
-    if (discountPercent < 15) { showToast('Rabatt muss mindestens 15% sein', true); return; }
-    if (minOrder < 40) { showToast('Mindestbestellwert muss mindestens 40 CHF sein', true); return; }
-  }
-if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
-  if (dealKind !== 'pauschal' && isNaN(price)) { showToast('Deal-Preis ist Pflichtfeld', true); return; }
+  if (isPauschal) { price = 2.50; }
+  if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
+  if (isNaN(price)) { showToast('Deal-Preis ist Pflichtfeld', true); return; }
+  if (isPauschal && (parseInt(document.getElementById('discountPercent').value)||0) < 15) { showToast('Rabatt mind. 15%', true); return; }
+  if (isPauschal && (parseInt(document.getElementById('minOrder').value)||0) > 0 && (parseInt(document.getElementById('minOrder').value)||0) < 40) { showToast('Mindestbestellung mind. 40 CHF', true); return; }
   if (!cats.length) { showToast('Mind. 1 Kategorie wählen', true); return; }
 
   const validType  = document.querySelector('input[name="validType"]:checked').value;
@@ -440,14 +435,27 @@ if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
 
   try {
     const r = await api({
+    // Upload image if file selected
+    var imageUrl = document.getElementById('dealImageUrl') ? document.getElementById('dealImageUrl').value : '';
+    var imgF = document.getElementById('dealImageFile');
+    if (imgF && imgF.files.length > 0) {
+      try {
+        var b64 = await fileToBase64(imgF.files[0]);
+        var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: imgF.files[0].name });
+        if (uR.success) imageUrl = uR.url;
+      } catch(e) {}
+    }
+
+    const r = await api({
       action: 'createDeal', token: s.token,
+      time_slots: Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(function(c){return c.value}),
+      discount_percent: isPauschal ? (parseInt(document.getElementById('discountPercent').value)||0) : 0,
+      min_order: isPauschal ? (parseInt(document.getElementById('minOrder').value)||0) : 0,
+      applies_to: isPauschal ? document.getElementById('appliesTo').value : '',
       bar_id: s.barId, bar_name: s.barName,
       title, description: desc,
-      original_price: (dealKind === 'pauschal' ? 0 : origP), deal_price: (dealKind === 'pauschal' ? 2.5 : price),
+      original_price: origP, deal_price: price,
       max_quantity: qty, categories: cats,
-      deal_type: dealKind,
-      discount_percent: (dealKind === 'pauschal' ? discountPercent : ''),
-      min_order: (dealKind === 'pauschal' ? minOrder : ''),
       image_url: imageUrl,
       validity_type: validType, valid_weekdays: weekdays,
       valid_from_time: fromT, valid_to_time: toT,
@@ -455,8 +463,12 @@ if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
     });
     if (r.success) {
       showToast('✅ Deal erstellt!');
-      ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo','dealDiscountPercent','dealMinOrder']
+      ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo']
         .forEach(id => { document.getElementById(id).value = ''; });
+      var imgEl = document.getElementById('dealImageFile'); if(imgEl) imgEl.value = '';
+      var pvEl = document.getElementById('imagePreview'); if(pvEl) pvEl.style.display = 'none';
+      document.querySelectorAll('input[name="timeSlot"]').forEach(function(c){c.checked=false});
+      var pf = document.getElementById('pauschalFields'); if(pf) pf.style.display = 'none';
       document.querySelectorAll('input[name="cat"]').forEach(c => c.checked = false);
       document.querySelectorAll('.wd-btn').forEach(b => b.classList.remove('selected'));
       document.getElementById('dealQty').value = '0';
@@ -690,3 +702,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnBarCancelReset1 = document.getElementById('btnBarCancelReset1');
   if (btnBarCancelReset1) btnBarCancelReset1.addEventListener('click', closeBarResetModal);
 });
+
+
+// =============================================
+// IMAGE UPLOAD PREVIEW
+// =============================================
+document.addEventListener('DOMContentLoaded', function() {
+  var imgFile = document.getElementById('dealImageFile');
+  if (imgFile) {
+    imgFile.addEventListener('change', function() {
+      var preview = document.getElementById('imagePreview');
+      var img = document.getElementById('imagePreviewImg');
+      if (this.files.length > 0) {
+        var file = this.files[0];
+        if (file.size > 2*1024*1024) { showToast('Bild max. 2 MB', true); this.value=''; return; }
+        var reader = new FileReader();
+        reader.onload = function(e) { img.src = e.target.result; preview.style.display='block'; };
+        reader.readAsDataURL(file);
+      } else { preview.style.display='none'; }
+    });
+  }
+  // Pauschalgutschein toggle
+  var cp = document.getElementById('catPauschal');
+  if (cp) {
+    cp.addEventListener('change', function() {
+      var pf = document.getElementById('pauschalFields');
+      if (pf) pf.style.display = this.checked ? 'block' : 'none';
+    });
+  }
+});
+
+function fileToBase64(file) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function() { resolve(reader.result.split(',')[1]); };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
