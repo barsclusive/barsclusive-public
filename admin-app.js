@@ -10,24 +10,62 @@ const TRANSLATIONS = {
   de: {
     logout:'Ausloggen', loginBtn:'Einloggen',
     tabOrders:'Bestellungen', tabVouchers:'Gutscheine', tabBars:'Bars',
-    tabDeals:'Deals', tabStats:'Statistik',
+    tabCustomers:'Kund:innen', tabDeals:'Deals', tabStats:'Statistik',
     activate:'Freischalten', deactivate:'Sperren', delete:'🗑️',
     markPaid:'✓ Bezahlt', markPayout:'✓ Ausgezahlt', refundBtn:'↩️ Erstatten',
     activateDeal:'Aktivieren', deactivateDeal:'Deaktivieren',
     commissionSave:'Speichern',
     noOrders:'Keine Bestellungen', noVouchers:'Keine Gutscheine',
-    noBars:'Keine Bars', noDeals:'Keine Deals',
+    noBars:'Keine Bars', noDeals:'Keine Deals', noCustomers:'Keine Kund:innen',
+    searchPlaceholder:'Suchen...',
+    sOrders:'Bestellungen', sVouchers:'Gutscheine', sBars:'Bars',
+    sRevenue:'Umsatz', sCommission:'Provision', sPending:'Ausstehend',
+    sRedeemed:'Eingelöst', sCustomers:'Kund:innen',
   },
   en: {
     logout:'Logout', loginBtn:'Login',
     tabOrders:'Orders', tabVouchers:'Vouchers', tabBars:'Bars',
-    tabDeals:'Deals', tabStats:'Statistics',
+    tabCustomers:'Customers', tabDeals:'Deals', tabStats:'Statistics',
     activate:'Activate', deactivate:'Block', delete:'🗑️',
     markPaid:'✓ Paid', markPayout:'✓ Payout done', refundBtn:'↩️ Refund',
     activateDeal:'Activate', deactivateDeal:'Deactivate',
     commissionSave:'Save',
     noOrders:'No orders', noVouchers:'No vouchers',
-    noBars:'No bars', noDeals:'No deals',
+    noBars:'No bars', noDeals:'No deals', noCustomers:'No customers',
+    searchPlaceholder:'Search...',
+    sOrders:'Orders', sVouchers:'Vouchers', sBars:'Bars',
+    sRevenue:'Revenue', sCommission:'Commission', sPending:'Pending',
+    sRedeemed:'Redeemed', sCustomers:'Customers',
+  },
+  it: {
+    logout:'Disconnettersi', loginBtn:'Accedere',
+    tabOrders:'Ordini', tabVouchers:'Buoni', tabBars:'Bar',
+    tabCustomers:'Clienti', tabDeals:'Offerte', tabStats:'Statistiche',
+    activate:'Attivare', deactivate:'Bloccare', delete:'🗑️',
+    markPaid:'✓ Pagato', markPayout:'✓ Pagamento', refundBtn:'↩️ Rimborso',
+    activateDeal:'Attivare', deactivateDeal:'Disattivare',
+    commissionSave:'Salvare',
+    noOrders:'Nessun ordine', noVouchers:'Nessun buono',
+    noBars:'Nessun bar', noDeals:'Nessuna offerta', noCustomers:'Nessun cliente',
+    searchPlaceholder:'Cercare...',
+    sOrders:'Ordini', sVouchers:'Buoni', sBars:'Bar',
+    sRevenue:'Fatturato', sCommission:'Commissione', sPending:'In sospeso',
+    sRedeemed:'Riscattato', sCustomers:'Clienti',
+  },
+  fr: {
+    logout:'Déconnexion', loginBtn:'Connexion',
+    tabOrders:'Commandes', tabVouchers:'Bons', tabBars:'Bars',
+    tabCustomers:'Clients', tabDeals:'Offres', tabStats:'Statistiques',
+    activate:'Activer', deactivate:'Bloquer', delete:'🗑️',
+    markPaid:'✓ Payé', markPayout:'✓ Versé', refundBtn:'↩️ Rembourser',
+    activateDeal:'Activer', deactivateDeal:'Désactiver',
+    commissionSave:'Sauvegarder',
+    noOrders:'Aucune commande', noVouchers:'Aucun bon',
+    noBars:'Aucun bar', noDeals:'Aucune offre', noCustomers:'Aucun client',
+    searchPlaceholder:'Rechercher...',
+    sOrders:'Commandes', sVouchers:'Bons', sBars:'Bars',
+    sRevenue:'Chiffre d\'affaires', sCommission:'Commission', sPending:'En attente',
+    sRedeemed:'Échangé', sCustomers:'Clients',
   }
 };
 let currentLang = 'de';
@@ -35,18 +73,25 @@ function t(key) { return TRANSLATIONS[currentLang][key] || TRANSLATIONS.de[key] 
 function setLang(lang) {
   console.log('[Admin] Switching language to:', lang);
   currentLang = lang;
-  const btnDE = document.getElementById('langDE');
-  const btnEN = document.getElementById('langEN');
-  if (btnDE) {
-    btnDE.classList.remove('active');
-    if (lang === 'de') btnDE.classList.add('active');
-  }
-  if (btnEN) {
-    btnEN.classList.remove('active');
-    if (lang === 'en') btnEN.classList.add('active');
-  }
-  const btnLogout = document.getElementById('btnLogout');
+  ['DE','EN','IT','FR'].forEach(function(l) {
+    var btn = document.getElementById('lang' + l);
+    if (btn) {
+      btn.classList.remove('active');
+      if (lang === l.toLowerCase()) btn.classList.add('active');
+    }
+  });
+  var btnLogout = document.getElementById('btnLogout');
   if (btnLogout) btnLogout.textContent = t('logout');
+  // Update tab labels
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    var key = tab.getAttribute('data-tab');
+    var map = {orders:'tabOrders',vouchers:'tabVouchers',bars:'tabBars',customers:'tabCustomers',deals:'tabDeals',stats:'tabStats'};
+    var icon = tab.textContent.split(' ')[0]; // preserve emoji
+    if (map[key]) tab.textContent = icon + ' ' + t(map[key]);
+  });
+  // Update search placeholder
+  var cs = document.getElementById('customerSearch');
+  if (cs) cs.placeholder = t('searchPlaceholder');
   console.log('[Admin] Language switched to:', lang);
 }
 
@@ -68,6 +113,16 @@ function setSession(token) {
 // =============================================
 // XSS
 // =============================================
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function td(val) {
   const cell = document.createElement('td');
   cell.textContent = String(val ?? '');
@@ -423,16 +478,23 @@ async function loadStats() {
 function renderStats(s) {
   const grid = document.getElementById('statsGrid');
   grid.innerHTML = '';
-  [
+  var stats = [
     ['Bestellungen', s.total_orders],
     ['Bezahlt', s.paid_orders],
-    ['Umsatz', Number(s.total_revenue).toFixed(2) + ' CHF'],
-    ['Provision', Number(s.total_fees).toFixed(2) + ' CHF'],
-    ['Ausstehend', Number(s.pending_payout).toFixed(2) + ' CHF'],
-  ].forEach(([label, val]) => {
-    const card = document.createElement('div'); card.className = 'stat-card';
-    const lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = label;
-    const vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(val);
+    ['Umsatz', Number(s.total_revenue || 0).toFixed(2) + ' CHF'],
+    ['Provision', Number(s.total_fees || 0).toFixed(2) + ' CHF'],
+    ['Ausstehend', Number(s.pending_payout || 0).toFixed(2) + ' CHF'],
+    ['Aktive Bars', s.active_bars],
+    ['Aktive Deals', s.active_deals],
+    ['Gutscheine eingelöst', s.redeemed_vouchers],
+    ['Kund:innen', s.total_customers],
+    ['Rückerstattungen', Number(s.total_refunds || 0).toFixed(2) + ' CHF'],
+  ];
+  stats.forEach(function([label, val]) {
+    if (val === undefined || val === null) return;
+    var card = document.createElement('div'); card.className = 'stat-card';
+    var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = label;
+    var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(val);
     card.append(lEl, vEl); grid.appendChild(card);
   });
 }
@@ -473,18 +535,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const langDE = document.getElementById('langDE');
   const langEN = document.getElementById('langEN');
-  if (langDE) {
-    langDE.addEventListener('click', function() {
-      console.log('[Admin] DE clicked');
-      setLang('de');
-    });
-  }
-  if (langEN) {
-    langEN.addEventListener('click', function() {
-      console.log('[Admin] EN clicked');
-      setLang('en');
-    });
-  }
+  const langIT = document.getElementById('langIT');
+  const langFR = document.getElementById('langFR');
+  if (langDE) langDE.addEventListener('click', function() { setLang('de'); });
+  if (langEN) langEN.addEventListener('click', function() { setLang('en'); });
+  if (langIT) langIT.addEventListener('click', function() { setLang('it'); });
+  if (langFR) langFR.addEventListener('click', function() { setLang('fr'); });
 });
 
 
@@ -508,7 +564,11 @@ function renderCustomers(customers) {
   customers.forEach(function(c) {
     var tr = document.createElement('tr');
     var d = c.created_at ? new Date(c.created_at) : null;
-    tr.innerHTML = '<td>' + esc(c.name||'-') + '</td><td>' + esc(c.email) + '</td><td>' + (d ? d.toLocaleDateString('de-CH') : '-') + '</td>';
+    tr.append(
+      td(c.name || '-'),
+      td(c.email),
+      td(d ? d.toLocaleDateString('de-CH') : '-')
+    );
     tbody.appendChild(tr);
   });
 }
