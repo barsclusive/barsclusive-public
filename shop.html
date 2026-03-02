@@ -112,9 +112,34 @@
     .footer{background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;margin-top:60px;border-top:1px solid #2a2a2a}
     .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
     @media(max-width:768px){
-      .hero h1{font-size:28px}
+      .hero h1{font-size:24px}
+      .hero p{font-size:14px}
+      .hero{padding:30px 15px}
       .deals-grid{grid-template-columns:1fr}
-      .nav-links{gap:10px}
+      .nav{flex-wrap:wrap;gap:8px;padding:0 10px}
+      .nav-links{gap:6px;flex-wrap:wrap;justify-content:center}
+      .nav-link{font-size:12px;padding:6px 8px}
+      .header{padding:12px 10px}
+      .filter-wrap{padding:0 10px;margin:15px auto}
+      .filter-bar{flex-direction:column;gap:10px;padding:12px}
+      .filter-label{min-width:auto}
+      .search-wrap{max-width:100%}
+      .container{padding:15px 10px}
+      .modal-box{padding:20px 15px;margin:10px;max-width:calc(100vw - 20px);border-radius:14px}
+      .form-input{font-size:14px;padding:11px}
+      .footer{padding:25px 15px}
+      .footer a{margin:0 6px;font-size:12px}
+      .stat-card{padding:14px}
+      .stat-value{font-size:22px}
+      .deal-card{border-radius:14px}
+      .deal-img{height:160px}
+      .deal-body{padding:14px}
+      .deal-title{font-size:16px}
+    }
+    @media(max-width:480px){
+      .hero h1{font-size:20px}
+      .nav-links .shop-lang-btn{padding:3px 6px!important;font-size:10px!important}
+      .modal-box{padding:16px 12px}
     }
   </style>
 </head>
@@ -224,10 +249,15 @@
 <div class="footer">
   <p>© 2026 BarSclusive</p>
   <p style="margin-top:12px">
+    <a href="ueber-uns.html">Über uns</a>
+    <a href="so-funktionierts.html">So funktioniert's</a>
+    <a href="so-funktionierts.html">So funktioniert's</a>
     <a href="impressum.html">Impressum</a>
     <a href="datenschutz.html">Datenschutz</a>
+    <a href="agb.html">AGB</a>
     <a href="kontakt.html">Kontakt</a>
   </p>
+  <p style="margin-top:8px"><a href="bar-portal.html">Für Bars → Bar-Portal</a></p>
 </div>
 
 <!-- LOGIN MODAL -->
