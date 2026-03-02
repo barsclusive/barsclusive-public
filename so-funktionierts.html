@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>So funktioniert's – BarSclusive</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);color:#fff;line-height:1.6;padding:20px}
+    .container{max-width:900px;margin:0 auto;padding:40px 20px}
+    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #FF3366}
+    .logo img{height:40px}
+    .back-btn{background:#333;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
+    .back-btn:hover{background:#444}
+    .content{background:#2a2a2a;padding:40px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+    h1{color:#FF3366;margin-bottom:10px;font-size:32px}
+    .subtitle{color:#999;margin-bottom:30px;font-size:14px}
+    h2{color:#FF3366;margin-top:40px;margin-bottom:15px;font-size:24px}
+    h3{color:#FF5588;margin-top:25px;margin-bottom:12px;font-size:18px}
+    p{margin-bottom:15px;color:#ddd}
+    .highlight{background:#1a1a1a;padding:20px;border-radius:8px;border-left:4px solid #FF3366;margin:20px 0}
+    .highlight strong{color:#FF3366}
+    strong{color:#fff}
+    a{color:#FF3366;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .section{margin-bottom:30px}
+    .steps{display:grid;gap:20px;margin-top:20px}
+    .step{background:#1a1a1a;padding:24px;border-radius:12px;display:flex;gap:20px;align-items:flex-start}
+    .step-num{background:#FF3366;color:#fff;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+    .step-text h3{color:#fff;margin:0 0 8px 0;font-size:18px}
+    .step-text p{margin:0;color:#ccc;font-size:14px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+    .info-box{background:#1a1a1a;padding:24px;border-radius:12px}
+    .info-box h3{color:#FF3366;font-size:18px;margin-bottom:12px}
+    .info-box p{font-size:14px;color:#ccc;margin-bottom:8px}
+    .info-box p:last-child{margin-bottom:0}
+    .faq{margin-top:20px}
+    .faq-item{background:#1a1a1a;padding:20px;border-radius:12px;margin-bottom:12px}
+    .faq-item h3{color:#fff;font-size:16px;margin:0 0 8px 0}
+    .faq-item p{margin:0;font-size:14px;color:#ccc}
+    .footer{text-align:center;padding:40px 20px;color:#999;font-size:13px;margin-top:40px;border-top:1px solid #333}
+    .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
+    @media(max-width:768px){.two-col{grid-template-columns:1fr}.step{flex-direction:column;text-align:center;align-items:center}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo"><img src="logo.png" alt="BarSclusive"></div>
+      <a href="shop.html" class="back-btn">← Zurück zum Shop</a>
+    </div>
+    <div class="content">
+      <h1>So funktioniert's</h1>
+      <p class="subtitle">In 3 einfachen Schritten zum besten Bar-Deal</p>
+
+      <div class="section">
+        <h2>🛒 Für Kunden</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <h3>Deal entdecken</h3>
+              <p>Durchstöbere aktuelle Bar-Deals in deiner Stadt. Filtere nach Kategorie (Breakfast, Lunch, Aperitif, Dinner), Datum oder Standort.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <h3>Online bezahlen</h3>
+              <p>Kaufe deinen Deal sicher mit Kreditkarte oder Twint über Stripe. Du erhältst sofort einen Gutschein-Code per Email.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <h3>In der Bar einlösen</h3>
+              <p>Zeige deinen Gutschein-Code oder QR-Code in der Bar vor. Das Personal scannt oder tippt ihn ein — fertig!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🎫 Unsere Deal-Typen</h2>
+        <div class="two-col">
+          <div class="info-box">
+            <h3>🍹 Fix-Preis Deals</h3>
+            <p><strong>Was:</strong> Ein konkretes Angebot zu einem festen Preis (z.B. "Aperitif für 2 – 25 CHF")</p>
+            <p><strong>Wie:</strong> Du bezahlst den Deal-Preis und erhältst das Angebot in der Bar.</p>
+            <p><strong>Beispiel:</strong> Originalpreis 50 CHF → Deal-Preis 25 CHF = 50% gespart!</p>
+          </div>
+          <div class="info-box">
+            <h3>🏷️ Rabatt-Gutscheine</h3>
+            <p><strong>Was:</strong> Ein prozentualer Rabatt auf deine Bestellung in der Bar.</p>
+            <p><strong>Wie:</strong> Du kaufst den Gutschein für 2.50 CHF und erhältst z.B. 15% Rabatt.</p>
+            <p><strong>Bedingung:</strong> Mindestbestellwert beachten (z.B. ab 40 CHF).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🏪 Für Bars</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <h3>Registrieren</h3>
+              <p>Melde deine Bar kostenlos im <a href="bar-portal.html">Bar-Portal</a> an. Nach einer kurzen Prüfung wirst du freigeschaltet.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <h3>Deals erstellen</h3>
+              <p>Erstelle attraktive Deals mit Kategorien, Zeitfenstern und Bildern. Wähle zwischen Fix-Preis oder Rabatt-Gutscheinen.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <h3>Gäste empfangen</h3>
+              <p>Kunden kommen mit ihrem Gutschein. Scanne den QR-Code oder gib den Code ein. Bei Fix-Preis Deals erhältst du 90% des Preises nach Einlösung.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>❓ Häufige Fragen</h2>
+        <div class="faq">
+          <div class="faq-item">
+            <h3>Was kostet BarSclusive für Bars?</h3>
+            <p>Die Registrierung ist kostenlos. Bei Fix-Preis Deals behalten wir 10% Provision (min. 2 CHF) nach Einlösung. Bei Rabatt-Gutscheinen fallen keine Kosten an.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Wie sicher ist die Bezahlung?</h3>
+            <p>Alle Zahlungen laufen über Stripe, einen der weltweit führenden Zahlungsanbieter. Wir speichern keine Kreditkartendaten.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Kann ich einen Gutschein zurückgeben?</h3>
+            <p>Ja, innerhalb von 48 Stunden nach Kauf, sofern der Gutschein noch nicht eingelöst wurde. Kontaktiere uns per Email.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Wie löse ich einen Gutschein ein?</h3>
+            <p>Zeige deinen QR-Code oder Gutschein-Code dem Barpersonal. Sie scannen ihn oder geben ihn im System ein.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="text-align:center;margin-top:40px">
+        <p style="font-size:18px;color:#fff;margin-bottom:16px"><strong>Bereit für deinen ersten Deal?</strong></p>
+        <a href="shop.html" style="background:#FF3366;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px">🍹 Deals entdecken</a>
+        <span style="display:inline-block;margin:0 12px;color:#666">oder</span>
+        <a href="bar-portal.html" style="background:#2a2a2a;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px;border:1px solid #FF3366">🏪 Bar registrieren</a>
+      </div>
+    </div>
+    <div class="footer">
+      <p>© 2026 BarSclusive</p>
+      <p style="margin-top:12px">
+        <a href="shop.html">Shop</a>
+        <a href="ueber-uns.html">Über uns</a>
+        <a href="kontakt.html">Kontakt</a>
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+        <a href="agb.html">AGB</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
