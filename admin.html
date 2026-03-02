@@ -53,6 +53,26 @@
     .refund-row{background:#1a0a00!important}
     .overflow-x{overflow-x:auto}
     .comm-input{width:70px;padding:5px 8px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:6px;color:#fff;font-size:13px;text-align:center}
+    @media(max-width:768px){
+      .header{flex-wrap:wrap;gap:10px;padding:12px 15px}
+      .header h1{font-size:16px}
+      .header-right{flex-wrap:wrap;gap:6px}
+      .tabs{padding:0 10px}
+      .tab{padding:10px 12px;font-size:12px}
+      .tab-content{padding:15px 10px}
+      #loginScreen{padding:30px 15px}
+      .login-box{padding:24px 18px}
+      table{font-size:12px}
+      th,td{padding:8px 6px}
+      .btn-sm{padding:5px 10px;font-size:11px}
+      .stats-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+      .stat-card{padding:14px}
+      .stat-value{font-size:22px}
+    }
+    @media(max-width:480px){
+      .tabs{gap:0}
+      .tab{padding:8px 8px;font-size:11px}
+    }
   </style>
 </head>
 <body>
@@ -79,6 +99,8 @@
     <div class="header-right">
       <button class="lang-btn active" id="langDE">DE</button>
       <button class="lang-btn" id="langEN">EN</button>
+      <button class="lang-btn" id="langIT">IT</button>
+      <button class="lang-btn" id="langFR">FR</button>
       <button class="btn-logout" id="btnLogout">Ausloggen</button>
     </div>
   </div>
