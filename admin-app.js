@@ -433,15 +433,40 @@ async function loadBarStatsAdmin(barId) {
     const r = await api({ action: 'getBarStats', token: _token, bar_id: barId });
     if (r.success && r.stats) {
       const s = r.stats;
-      el.innerHTML = '<strong style="color:#FF3366">Statistik</strong>'
-        + '<p style="margin:6px 0;color:#ccc">Deals: ' + (s.active_deals||0) + ' aktiv / ' + (s.total_deals||0) + ' total</p>'
-        + '<p style="margin:6px 0;color:#ccc">Gutscheine verkauft: ' + (s.vouchers_sold||0) + '</p>'
-        + '<p style="margin:6px 0;color:#ccc">Eingeloest: ' + (s.vouchers_redeemed||0) + '</p>'
-        + '<p style="margin:6px 0;color:#ccc">Umsatz: ' + Number(s.total_revenue||0).toFixed(2) + ' CHF</p>'
-        + '<p style="margin:6px 0;color:#ccc">Ausstehend: <strong>' + Number(s.pending_payout||0).toFixed(2) + ' CHF</strong></p>'
-        + '<p style="margin:6px 0;color:#ccc">Ausgezahlt: ' + Number(s.paid_out||0).toFixed(2) + ' CHF</p>';
+      const pending = Number(s.pending_payout||0);
+      const paid = Number(s.paid_out||0);
+      const comm = Number(s.our_commission||0);
+      var html = '<strong style="color:#FF3366">Statistik</strong>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">'
+        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Verkauft</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_sold||0) + '</div></div>'
+        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Eingelöst</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_redeemed||0) + '</div></div>'
+        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Offen</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_not_redeemed||0) + '</div></div>'
+        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Unsere Provision</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + comm.toFixed(2) + ' CHF</div></div>'
+        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Schuld an Bar</div><div style="color:' + (pending > 0 ? '#ef4444' : '#22c55e') + ';font-size:18px;font-weight:700">' + pending.toFixed(2) + ' CHF</div></div>'
+        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Ausgezahlt</div><div style="color:#3b82f6;font-size:18px;font-weight:700">' + paid.toFixed(2) + ' CHF</div></div>'
+        + '</div>';
+      if (pending > 0) {
+        html += '<button id="payBtn_' + barId + '" style="margin-top:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;width:100%">💸 Auszahlung: ' + pending.toFixed(2) + ' CHF</button>';
+      }
+      el.innerHTML = html;
+      var payBtn = document.getElementById('payBtn_' + barId);
+      if (payBtn) payBtn.addEventListener('click', function() { payoutBar(barId); });
     }
   } catch(e) { el.innerHTML = '<p style="color:#ef4444">Fehler</p>'; }
+}
+
+async function payoutBar(barId) {
+  if (!confirm('Auszahlung an diese Bar durchführen? Die Bar erhält eine Bestätigungs-Email.')) return;
+  try {
+    const r = await api({ action: 'payoutBar', token: _token, bar_id: barId });
+    if (r.success) {
+      showToast('✅ ' + r.message);
+      loadBarStatsAdmin(barId);
+      loadStats();
+    } else {
+      showToast(r.error || 'Fehler', true);
+    }
+  } catch(e) { showToast('Verbindungsfehler', true); }
 }
 
 async function updateCommission(barId, rate) {
@@ -556,8 +581,9 @@ function renderStats(s) {
     ['Bestellungen', s.total_orders],
     ['Bezahlt', s.paid_orders],
     ['Umsatz', Number(s.total_revenue || 0).toFixed(2) + ' CHF'],
-    ['Provision', Number(s.total_fees || 0).toFixed(2) + ' CHF'],
-    ['Ausstehend', Number(s.pending_payout || 0).toFixed(2) + ' CHF'],
+    ['Provision (Einnahmen)', Number(s.total_fees || 0).toFixed(2) + ' CHF'],
+    ['Schuld an Bars', Number(s.pending_payout || 0).toFixed(2) + ' CHF'],
+    ['Ausgezahlt an Bars', Number(s.total_paid_out || 0).toFixed(2) + ' CHF'],
     ['Aktive Bars', s.active_bars],
     ['Aktive Deals', s.active_deals],
     ['Gutscheine eingelöst', s.redeemed_vouchers],
