@@ -25,7 +25,7 @@ de: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Preis', createdLbl:'Erstellt', redeemedLbl:'Eingelöst',
   redeemTitle:'Gutschein einlösen', redeemHint:'Gutschein-Code des Kunden eingeben',
   redeemBtn:'Einlösen', redeemSuccess:'✅ Gutschein eingelöst!',
-  changePassword:'Passwort ändern', oldPassword:'Altes Passwort',
+  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', soldCount:'Verkauft', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?',
   newPasswordLbl:'Neues Passwort (mind. 8 Zeichen)', confirmPassword:'Passwort bestätigen',
   changePasswordBtn:'Passwort ändern', editDeal:'Deal bearbeiten',
   saveLbl:'Speichern', cancelLbl:'Abbrechen',
@@ -54,7 +54,7 @@ en: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Price', createdLbl:'Created', redeemedLbl:'Redeemed',
   redeemTitle:'Redeem Voucher', redeemHint:"Enter the customer's voucher code",
   redeemBtn:'Redeem', redeemSuccess:'✅ Voucher redeemed!',
-  changePassword:'Change Password', oldPassword:'Old Password',
+  changePassword:'Change Password', oldPassword:'Old Password', soldCount:'Sold', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?',
   newPasswordLbl:'New Password (min. 8 chars)', confirmPassword:'Confirm Password',
   changePasswordBtn:'Change Password', editDeal:'Edit Deal',
   saveLbl:'Save', cancelLbl:'Cancel',
@@ -83,7 +83,7 @@ it: {
   codeLbl:'Codice', dealLbl:'Deal', priceLbl:'Prezzo', createdLbl:'Creato', redeemedLbl:'Riscattato',
   redeemTitle:'Riscatta Voucher', redeemHint:'Inserisci il codice voucher del cliente',
   redeemBtn:'Riscatta', redeemSuccess:'✅ Voucher riscattato!',
-  changePassword:'Cambia Password', oldPassword:'Vecchia Password',
+  changePassword:'Cambia Password', oldPassword:'Vecchia Password', soldCount:'Venduti', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?',
   newPasswordLbl:'Nuova Password (min. 8 car.)', confirmPassword:'Conferma Password',
   changePasswordBtn:'Cambia Password', editDeal:'Modifica Deal',
   saveLbl:'Salva', cancelLbl:'Annulla',
@@ -112,7 +112,7 @@ fr: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Prix', createdLbl:'Créé', redeemedLbl:'Échangé',
   redeemTitle:'Échanger Bon', redeemHint:'Entrez le code du bon client',
   redeemBtn:'Échanger', redeemSuccess:'✅ Bon échangé!',
-  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe',
+  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', soldCount:'Vendus', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?',
   newPasswordLbl:'Nouveau mot de passe (min. 8 car.)', confirmPassword:'Confirmer',
   changePasswordBtn:'Changer', editDeal:'Modifier Deal',
   saveLbl:'Enregistrer', cancelLbl:'Annuler',
@@ -179,7 +179,9 @@ async function doBarLogin() {
   err.textContent = '';
   if (!email || !pass) { err.textContent = 'Bitte alle Felder ausfüllen.'; return; }
   try {
+    document.getElementById('btnBarLogin').disabled = true; document.getElementById('btnBarLogin').textContent = '⏳...';
     var r = await api({ action: 'barLogin', email, password: pass });
+    document.getElementById('btnBarLogin').disabled = false; document.getElementById('btnBarLogin').textContent = t('loginBtn') || 'Einloggen';
     if (r.success) {
       sessionSet(r.token, r.bar.id, r.bar.name);
       document.getElementById('loginPassword').value = '';
@@ -200,16 +202,17 @@ async function doBarRegister() {
   var phone   = document.getElementById('regPhone').value.trim();
   var email   = document.getElementById('regBarEmail').value.trim();
   var pass    = document.getElementById('regBarPass').value;
+  var iban    = document.getElementById('regIban') ? document.getElementById('regIban').value.trim() : '';
   var consent = document.getElementById('regConsent').checked;
   var err     = document.getElementById('regErr');
   err.textContent = '';
-  if (!name || !city || !address || !zip || !email || !pass) { err.textContent = 'Alle Pflichtfelder ausfüllen (Name, Stadt, Adresse, PLZ, Email, Passwort).'; return; }
+  if (!name || !city || !address || !zip || !email || !pass || !iban) { err.textContent = 'Alle Pflichtfelder ausfüllen (Name, Stadt, Adresse, PLZ, Email, Passwort, IBAN).'; return; }
   if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
   if (!consent) { err.textContent = 'Bitte AGB & Datenschutz akzeptieren.'; return; }
   var btn = document.getElementById('btnBarRegister');
   try {
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
-    var r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass });
+    var r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass, iban });
     if (r.success) {
       showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
       document.getElementById('regBarPass').value = '';
@@ -232,6 +235,18 @@ function showAuthScreen(show) {
   document.getElementById('barDashboard').style.display = show ? 'none'  : 'block';
 }
 
+
+async function deleteDeal(dealId) {
+  if (!confirm(t('deleteDealConfirm'))) return;
+  var s = sessionGet();
+  if (!s) { doLogout(); return; }
+  try {
+    var r = await api({ action: 'deleteDeal', token: s.token, deal_id: dealId });
+    if (r.success) { showToast(r.message || 'Deal gelöscht'); loadMyDeals(); }
+    else showToast(r.error || 'Fehler', true);
+  } catch (e) { showToast('Verbindungsfehler', true); }
+}
+
 // ── OVERVIEW ─────────────────────────────────────────────────────────────
 async function loadBarStats() {
   var s = sessionGet();
@@ -239,11 +254,14 @@ async function loadBarStats() {
   try {
     var r = await api({ action: 'getBarStats', token: s.token, bar_id: s.barId });
     if (!r.success) return;
+    var st = r.stats || {};
     var grid = document.getElementById('statsGrid');
     grid.innerHTML = '';
     [
-      [t('tabMyDeals') + ' ' + t('soldCount'), r.total_sold],
-      ['Einnahmen', Number(r.total_earned).toFixed(2) + ' CHF'],
+      [t('soldCount') || 'Verkauft', st.vouchers_sold || 0],
+      [t('earnings') || 'Einnahmen', Number(st.total_revenue || 0).toFixed(2) + ' CHF'],
+      [t('redeemed') || 'Eingelöst', st.vouchers_redeemed || 0],
+      [t('pendingPayout') || 'Ausstehend', Number(st.pending_payout || 0).toFixed(2) + ' CHF'],
     ].forEach(function([label, val]) {
       var card = document.createElement('div'); card.className = 'stat-card';
       var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = label;
@@ -295,7 +313,12 @@ function renderMyDeals(deals) {
     btnEdit.textContent = t('editBtn');
     btnEdit.addEventListener('click', function() { openEditModal(d); });
 
-    actions.append(btnToggle, btnEdit);
+    var btnDel = document.createElement('button');
+    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#2a2a2a;color:#ef4444;border:1px solid #ef4444;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
+    btnDel.textContent = t('deleteDealBtn') || 'Löschen';
+    (function(dealId) { btnDel.addEventListener('click', function() { deleteDeal(dealId); }); })(d.id);
+
+    actions.append(btnToggle, btnEdit, btnDel);
     item.append(info, actions);
     el.appendChild(item);
   });
@@ -320,6 +343,15 @@ function openEditModal(deal) {
   document.getElementById('editDealPrice').value    = deal.deal_price || '';
   document.getElementById('editQty').value          = deal.max_quantity || 0;
   document.getElementById('editImageUrl').value     = deal.image_url || '';
+    // Show current image preview if exists
+    var editPreview = document.getElementById('editImagePreview');
+    var editPreviewImg = document.getElementById('editImagePreviewImg');
+    if (editPreview && editPreviewImg && deal.image_url) {
+      editPreviewImg.src = deal.image_url; editPreview.style.display = 'block';
+    } else if (editPreview) { editPreview.style.display = 'none'; }
+    // Reset file input
+    var editFile = document.getElementById('editImageFile');
+    if (editFile) editFile.value = '';
   document.getElementById('editActive').checked     = !!deal.active;
   document.getElementById('editModal').classList.add('active');
 }
@@ -343,11 +375,26 @@ async function saveEditDeal() {
     original_price: parseFloat(document.getElementById('editOrigPrice').value) || 0,
     deal_price:     price,
     max_quantity:   parseInt(document.getElementById('editQty').value) || 0,
-    image_url:      document.getElementById('editImageUrl').value.trim(),
+    image_url:      document.getElementById('editImageUrl').value.trim(), // may be overridden by file upload below
     active:         document.getElementById('editActive').checked,
   };
 
   try {
+    // Handle image file upload for edit
+    var editImgFile = document.getElementById('editImageFile');
+    if (editImgFile && editImgFile.files && editImgFile.files[0]) {
+      var file = editImgFile.files[0];
+      if (file.size <= 5*1024*1024) {
+        var b64 = await new Promise(function(resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function() { resolve(reader.result.split(',')[1]); };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: file.name });
+        if (uR.success) payload.image_url = uR.url;
+      }
+    }
     var r = await api(payload);
     if (r.success) {
       showToast('✅ ' + t('saveLbl'));
@@ -733,7 +780,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var img = document.getElementById('imagePreviewImg');
       if (this.files.length > 0) {
         var file = this.files[0];
-        if (file.size > 2*1024*1024) { showToast('Bild max. 2 MB', true); this.value=''; return; }
+        if (file.size > 5*1024*1024) { showToast('Bild max. 5 MB', true); this.value=''; return; }
         var reader = new FileReader();
         reader.onload = function(e) { img.src = e.target.result; preview.style.display='block'; };
         reader.readAsDataURL(file);
