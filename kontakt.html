@@ -5,155 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kontakt - BarSclusive</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-      color: #fff;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #FF3366;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo img {
-      height: 40px;
-    }
-    .back-btn {
-      background: #333;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .back-btn:hover {
-      background: #444;
-    }
-    .content {
-      background: #2a2a2a;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    }
-    h1 {
-      color: #FF3366;
-      margin-bottom: 30px;
-      font-size: 32px;
-    }
-    .contact-section {
-      margin: 30px 0;
-    }
-    .contact-section h2 {
-      color: #FF3366;
-      font-size: 20px;
-      margin-bottom: 15px;
-    }
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px;
-      background: #1a1a1a;
-      border-radius: 8px;
-      margin-bottom: 15px;
-    }
-    .contact-icon {
-      font-size: 24px;
-      width: 40px;
-      text-align: center;
-    }
-    .contact-text {
-      flex: 1;
-    }
-    .contact-text strong {
-      display: block;
-      color: #FF3366;
-      margin-bottom: 5px;
-    }
-    .contact-text a {
-      color: #fff;
-      text-decoration: none;
-    }
-    .contact-text a:hover {
-      color: #FF3366;
-    }
-    .info-box {
-      background: #1a1a1a;
-      padding: 20px;
-      border-radius: 8px;
-      border-left: 4px solid #FF3366;
-      margin: 20px 0;
-    }
-    .info-box p {
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
-    .info-box p:last-child {
-      margin-bottom: 0;
-    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);color:#fff;min-height:100vh;padding:20px}
+    .container{max-width:800px;margin:0 auto;padding:40px 20px}
+    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #FF3366;flex-wrap:wrap;gap:12px}
+    .logo img{height:60px}
+    .header-right{display:flex;align-items:center;gap:12px}
+    .back-btn{background:#333;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block;font-size:14px}
+    .back-btn:hover{background:#444}
+    .content{background:#2a2a2a;padding:40px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+    h1{color:#FF3366;margin-bottom:30px;font-size:32px}
+    .contact-section{margin:30px 0}
+    .contact-section h2{color:#FF3366;font-size:20px;margin-bottom:15px}
+    .contact-item{display:flex;align-items:center;gap:15px;padding:15px;background:#1a1a1a;border-radius:8px;margin-bottom:15px}
+    .contact-icon{font-size:24px;width:40px;text-align:center}
+    .contact-text{flex:1}
+    .contact-text strong{display:block;color:#FF3366;margin-bottom:5px}
+    .contact-text a{color:#fff;text-decoration:none}
+    .contact-text a:hover{color:#FF3366}
+    .info-box{background:#1a1a1a;padding:20px;border-radius:8px;border-left:4px solid #FF3366;margin:20px 0}
+    .info-box p{line-height:1.6;margin-bottom:10px}
+    .info-box p:last-child{margin-bottom:0}
+    .footer{text-align:center;padding:40px 20px;color:#999;font-size:13px;margin-top:40px;border-top:1px solid #333}
+    .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
+    .lang-switch{display:flex;gap:6px}
+    .lang-switch button{background:#333;color:#ccc;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+    .lang-switch button.active{background:#FF3366;color:#fff}
+    @media(max-width:600px){.content{padding:24px 16px}}
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">
-        <img src="logo.png" alt="BarSclusive">
+      <div class="logo"><img src="logo.png" alt="BarSclusive"></div>
+      <div class="header-right">
+        <div class="lang-switch">
+          <button onclick="setLang('de')" id="langDe" class="active">DE</button>
+          <button onclick="setLang('en')" id="langEn">EN</button>
+          <button onclick="setLang('it')" id="langIt">IT</button>
+          <button onclick="setLang('fr')" id="langFr">FR</button>
+        </div>
+        <a href="shop.html" class="back-btn" data-i18n="back">&larr; Zurück zum Shop</a>
       </div>
-      <a href="shop.html" class="back-btn">← Zurück zum Shop</a>
     </div>
-
     <div class="content">
-      <h1>📞 Kontakt</h1>
-
+      <h1 data-i18n="title">&#128222; Kontakt</h1>
       <div class="contact-section">
-        <h2>Allgemeine Anfragen</h2>
+        <h2 data-i18n="generalTitle">Allgemeine Anfragen</h2>
         <div class="contact-item">
-          <div class="contact-icon">📧</div>
+          <div class="contact-icon">&#128231;</div>
           <div class="contact-text">
             <strong>Email</strong>
-            <a href="/cdn-cgi/l/email-protection#93f1f2e1e0f0ffe6e0fae5f6d3f4fef2faffbdf0fcfe"><span class="__cf_email__" data-cfemail="82e0e3f0f1e1eef7f1ebf4e7c2e5efe3ebeeace1edef">[email&#160;protected]</span></a>
+            <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
           </div>
         </div>
       </div>
-
       <div class="contact-section">
-        <h2>🍸 Für Bars & Partner</h2>
+        <h2 data-i18n="barTitle">&#127864; Für Bars &amp; Partner</h2>
         <div class="info-box">
-          <p><strong>Du betreibst eine Bar und möchtest dabei sein?</strong></p>
-          <p>Registriere dich direkt im <a href="bar-portal.html" style="color:#FF3366">Bar-Portal</a> oder schreib uns eine Email an <a href="/cdn-cgi/l/email-protection#8ae8ebf8f9e9e6fff9e3fcefcaede7ebe3e6a4e9e5e7" style="color:#FF3366"><span class="__cf_email__" data-cfemail="2b494a595848475e58425d4e6b4c464a424705484446">[email&#160;protected]</span></a></p>
-          <p>Wir melden uns innerhalb von 24 Stunden bei dir!</p>
+          <p data-i18n="barText1"><strong>Du betreibst eine Bar und möchtest dabei sein?</strong></p>
+          <p data-i18n="barText2">Registriere dich direkt im <a href="bar-portal.html" style="color:#FF3366">Bar-Portal</a> oder schreib uns eine Email an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
+          <p data-i18n="barText3">Wir melden uns innerhalb von 24 Stunden bei dir!</p>
         </div>
       </div>
-
       <div class="contact-section">
-        <h2>🛒 Für Kunden</h2>
+        <h2 data-i18n="custTitle">&#128722; Für Kunden</h2>
         <div class="info-box">
-          <p><strong>Fragen zu deiner Bestellung?</strong></p>
-          <p>Schreib uns an <a href="/cdn-cgi/l/email-protection#5a383b282939362f29332c3f1a3d373b333674393537" style="color:#FF3366"><span class="__cf_email__" data-cfemail="92f0f3e0e1f1fee7e1fbe4f7d2f5fff3fbfebcf1fdff">[email&#160;protected]</span></a> mit deiner Bestellnummer.</p>
-          <p><strong>Problem mit einem Gutschein?</strong></p>
-          <p>Kontaktiere uns mit deinem Gutschein-Code und wir helfen dir weiter!</p>
+          <p data-i18n="custText1"><strong>Fragen zu deiner Bestellung?</strong></p>
+          <p data-i18n="custText2">Schreib uns an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> mit deiner Bestellnummer.</p>
+          <p data-i18n="custText3"><strong>Problem mit einem Gutschein?</strong></p>
+          <p data-i18n="custText4">Kontaktiere uns mit deinem Gutschein-Code und wir helfen dir weiter!</p>
         </div>
       </div>
-
       <div class="contact-section">
-        <h2>⏰ Antwortzeit</h2>
+        <h2 data-i18n="timeTitle">&#9200; Antwortzeit</h2>
         <div class="info-box">
-          <p>📅 <strong>Montag - Freitag:</strong> Antwort innerhalb
+          <p data-i18n="timeText1">&#128197; <strong>Montag - Freitag:</strong> Antwort innerhalb von 24 Stunden</p>
+          <p data-i18n="timeText2">&#127793; <strong>Wochenende:</strong> Antwort am nächsten Werktag</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <p>&copy; 2026 BarSclusive</p>
+      <p style="margin-top:12px">
+        <a href="shop.html">Shop</a>
+        <a href="so-funktionierts.html" data-i18n="fHow">So funktionierts</a>
+        <a href="ueber-uns.html" data-i18n="fAbout">Über uns</a>
+        <a href="impressum.html" data-i18n="fImprint">Impressum</a>
+        <a href="datenschutz.html" data-i18n="fPrivacy">Datenschutz</a>
+        <a href="agb.html" data-i18n="fTerms">AGB</a>
+      </p>
+    </div>
+  </div>
+<script>
+var T={
+de:{back:'\u2190 Zurück zum Shop',title:'\ud83d\udcde Kontakt',generalTitle:'Allgemeine Anfragen',barTitle:'\ud83c\udf78 Für Bars & Partner',barText1:'<strong>Du betreibst eine Bar und möchtest dabei sein?</strong>',barText2:'Registriere dich direkt im <a href="bar-portal.html" style="color:#FF3366">Bar-Portal</a> oder schreib uns eine Email an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>',barText3:'Wir melden uns innerhalb von 24 Stunden bei dir!',custTitle:'\ud83d\uded2 Für Kunden',custText1:'<strong>Fragen zu deiner Bestellung?</strong>',custText2:'Schreib uns an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> mit deiner Bestellnummer.',custText3:'<strong>Problem mit einem Gutschein?</strong>',custText4:'Kontaktiere uns mit deinem Gutschein-Code und wir helfen dir weiter!',timeTitle:'\u23f0 Antwortzeit',timeText1:'\ud83d\udcc5 <strong>Montag - Freitag:</strong> Antwort innerhalb von 24 Stunden',timeText2:'\ud83c\udf31 <strong>Wochenende:</strong> Antwort am nächsten Werktag',fHow:"So funktionierts",fAbout:'Über uns',fImprint:'Impressum',fPrivacy:'Datenschutz',fTerms:'AGB'},
+en:{back:'\u2190 Back to Shop',title:'\ud83d\udcde Contact',generalTitle:'General Inquiries',barTitle:'\ud83c\udf78 For Bars & Partners',barText1:'<strong>Do you run a bar and want to join?</strong>',barText2:'Register directly in the <a href="bar-portal.html" style="color:#FF3366">Bar Portal</a> or email us at <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>',barText3:'We\'ll get back to you within 24 hours!',custTitle:'\ud83d\uded2 For Customers',custText1:'<strong>Questions about your order?</strong>',custText2:'Email us at <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> with your order number.',custText3:'<strong>Problem with a voucher?</strong>',custText4:'Contact us with your voucher code and we\'ll help you!',timeTitle:'\u23f0 Response Time',timeText1:'\ud83d\udcc5 <strong>Monday - Friday:</strong> Response within 24 hours',timeText2:'\ud83c\udf31 <strong>Weekend:</strong> Response on the next business day',fHow:'How It Works',fAbout:'About Us',fImprint:'Legal Notice',fPrivacy:'Privacy',fTerms:'Terms'},
+it:{back:'\u2190 Torna al negozio',title:'\ud83d\udcde Contatto',generalTitle:'Richieste generali',barTitle:'\ud83c\udf78 Per bar e partner',barText1:'<strong>Gestisci un bar e vuoi partecipare?</strong>',barText2:'Registrati direttamente nel <a href="bar-portal.html" style="color:#FF3366">Portale Bar</a> o scrivici a <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>',barText3:'Ti rispondiamo entro 24 ore!',custTitle:'\ud83d\uded2 Per i clienti',custText1:'<strong>Domande sul tuo ordine?</strong>',custText2:'Scrivici a <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> con il tuo numero d\'ordine.',custText3:'<strong>Problema con un voucher?</strong>',custText4:'Contattaci con il tuo codice voucher e ti aiuteremo!',timeTitle:'\u23f0 Tempi di risposta',timeText1:'\ud83d\udcc5 <strong>Lunedì - Venerdì:</strong> Risposta entro 24 ore',timeText2:'\ud83c\udf31 <strong>Weekend:</strong> Risposta il prossimo giorno lavorativo',fHow:'Come funziona',fAbout:'Chi siamo',fImprint:'Impressum',fPrivacy:'Privacy',fTerms:'Condizioni'},
+fr:{back:'\u2190 Retour à la boutique',title:'\ud83d\udcde Contact',generalTitle:'Demandes générales',barTitle:'\ud83c\udf78 Pour bars et partenaires',barText1:'<strong>Tu gères un bar et veux nous rejoindre ?</strong>',barText2:'Inscris-toi directement dans le <a href="bar-portal.html" style="color:#FF3366">Portail Bar</a> ou écris-nous à <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>',barText3:'Nous te répondrons dans les 24 heures !',custTitle:'\ud83d\uded2 Pour les clients',custText1:'<strong>Questions sur ta commande ?</strong>',custText2:'Écris-nous à <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> avec ton numéro de commande.',custText3:'<strong>Problème avec un bon ?</strong>',custText4:'Contacte-nous avec ton code bon et nous t\'aiderons !',timeTitle:'\u23f0 Délai de réponse',timeText1:'\ud83d\udcc5 <strong>Lundi - Vendredi :</strong> Réponse sous 24 heures',timeText2:'\ud83c\udf31 <strong>Weekend :</strong> Réponse le prochain jour ouvrable',fHow:'Comment ça marche',fAbout:'À propos',fImprint:'Mentions légales',fPrivacy:'Confidentialité',fTerms:'CGV'}
+};
+function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=T[l]||T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
+(function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
+</script>
+</body>
+</html>
