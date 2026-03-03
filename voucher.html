@@ -7,10 +7,10 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:#0a0a0a; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+    body { background:#0a0a0a; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; }
     .voucher { background:#1a1a1a; border-radius:20px; max-width:420px; width:100%; overflow:hidden; border:2px solid #FF3366; }
     .voucher-header { background:linear-gradient(135deg,#FF3366,#ff6b8a); padding:24px; text-align:center; }
-    .voucher-header img { height:40px; margin-bottom:8px; }
+    .voucher-header img { height:60px; margin-bottom:8px; }
     .voucher-header h1 { font-size:20px; font-weight:700; }
     .voucher-header p { font-size:13px; opacity:0.9; margin-top:4px; }
     .voucher-body { padding:24px; }
@@ -36,9 +36,18 @@
       .voucher-body { color:#000; }
       .voucher-field .value { color:#000; }
     }
+    .lang-switch{display:flex;gap:6px;position:absolute;top:20px;right:20px}
+    .lang-switch button{background:rgba(255,255,255,0.1);color:#ccc;border:none;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:11px}
+    .lang-switch button.active{background:#FF3366;color:#fff}
   </style>
 </head>
 <body>
+  <div class="lang-switch" style="position:fixed;top:12px;right:12px;z-index:99">
+    <button onclick="setLang('de')" id="langDe" class="active">DE</button>
+    <button onclick="setLang('en')" id="langEn">EN</button>
+    <button onclick="setLang('it')" id="langIt">IT</button>
+    <button onclick="setLang('fr')" id="langFr">FR</button>
+  </div>
 
 <div class="voucher" id="voucherCard" style="display:none">
   <div class="voucher-header">
@@ -52,33 +61,33 @@
     </div>
 
     <div class="voucher-field">
-      <div class="label">Deal</div>
+      <div class="label" data-i18n="lDeal">Deal</div>
       <div class="value" id="vDealTitle"></div>
     </div>
 
     <div class="voucher-field" id="vMinOrderWrap" style="display:none">
-      <div class="label">Mindestbestellung</div>
+      <div class="label" data-i18n="lMin">Mindestbestellung</div>
       <div class="value" id="vMinOrder"></div>
     </div>
 
     <div class="voucher-field" id="vAppliesToWrap" style="display:none">
-      <div class="label">Gilt für</div>
+      <div class="label" data-i18n="lApplies">Gilt für</div>
       <div class="value" id="vAppliesTo"></div>
     </div>
 
     <div class="voucher-field">
-      <div class="label">Bezahlt</div>
+      <div class="label" data-i18n="lPaid">Bezahlt</div>
       <div class="value" id="vPrice"></div>
     </div>
 
     <div class="voucher-field">
-      <div class="label">Status</div>
+      <div class="label" data-i18n="lStatus">Status</div>
       <div class="value" id="vStatus"></div>
     </div>
 
     <div class="voucher-code">
       <div class="code" id="vCode"></div>
-      <div class="hint">Zeige diesen Code in der Bar vor</div>
+      <div class="hint" data-i18n="hint">Zeige diesen Code in der Bar vor</div>
     </div>
 
     <div class="qr-wrap" id="qrCode"></div>
@@ -91,12 +100,12 @@
 
 <div class="loading" id="loadingState">
   <div style="font-size:40px">🎫</div>
-  <p>Gutschein wird geladen...</p>
+  <p data-i18n="loading">Gutschein wird geladen...</p>
 </div>
 
 <div class="error" id="errorState" style="display:none">
   <div style="font-size:40px">❌</div>
-  <p id="errorMsg">Gutschein nicht gefunden</p>
+  <p id="errorMsg" data-i18n="notFound">Gutschein nicht gefunden</p>
   <a href="shop.html" style="color:#FF3366;margin-top:16px;display:inline-block">← Zurück zum Shop</a>
 </div>
 
@@ -175,7 +184,7 @@ function showError(msg) {
 loadVoucher();
 </script>
 <!-- FOOTER -->
-<div style="background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;font-size:13px;margin-top:40px;border-top:1px solid #333">
+<div style="background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;font-size:13px;margin-top:auto;border-top:1px solid #333;width:100%;max-width:420px">
   <p>&copy; 2026 BarSclusive</p>
   <p style="margin-top:12px">
     <a href="shop.html" style="color:#FF3366;text-decoration:none;margin:0 12px">Shop</a>
@@ -183,5 +192,15 @@ loadVoucher();
     <a href="kontakt.html" style="color:#FF3366;text-decoration:none;margin:0 12px">Kontakt</a>
   </p>
 </div>
+<script>
+var _T={
+de:{lDeal:'Deal',lMin:'Mindestbestellung',lApplies:'Gilt für',lPaid:'Bezahlt',lStatus:'Status',hint:'Zeige diesen Code in der Bar vor',loading:'Gutschein wird geladen...',notFound:'Gutschein nicht gefunden'},
+en:{lDeal:'Deal',lMin:'Minimum order',lApplies:'Applies to',lPaid:'Paid',lStatus:'Status',hint:'Show this code at the bar',loading:'Loading voucher...',notFound:'Voucher not found'},
+it:{lDeal:'Offerta',lMin:'Ordine minimo',lApplies:'Valido per',lPaid:'Pagato',lStatus:'Stato',hint:'Mostra questo codice al bar',loading:'Caricamento voucher...',notFound:'Voucher non trovato'},
+fr:{lDeal:'Offre',lMin:'Commande minimum',lApplies:'Valable pour',lPaid:'Payé',lStatus:'Statut',hint:'Montre ce code au bar',loading:'Chargement du bon...',notFound:'Bon non trouvé'}
+};
+function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=_T[l]||_T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
+(function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
+</script>
 </body>
 </html>
