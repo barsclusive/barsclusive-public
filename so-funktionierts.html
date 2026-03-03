@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>So funktioniert's – BarSclusive</title>
+  <title>So funktionierts – BarSclusive</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);color:#fff;line-height:1.6;padding:20px}
     .container{max-width:900px;margin:0 auto;padding:40px 20px}
-    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #FF3366}
-    .logo img{height:40px}
-    .back-btn{background:#333;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
+    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #FF3366;flex-wrap:wrap;gap:12px}
+    .logo img{height:60px}
+    .header-right{display:flex;align-items:center;gap:12px}
+    .back-btn{background:#333;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block;font-size:14px}
     .back-btn:hover{background:#444}
     .content{background:#2a2a2a;padding:40px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
     h1{color:#FF3366;margin-bottom:10px;font-size:32px}
     .subtitle{color:#999;margin-bottom:30px;font-size:14px}
     h2{color:#FF3366;margin-top:40px;margin-bottom:15px;font-size:24px}
-    h3{color:#FF5588;margin-top:25px;margin-bottom:12px;font-size:18px}
     p{margin-bottom:15px;color:#ddd}
     .highlight{background:#1a1a1a;padding:20px;border-radius:8px;border-left:4px solid #FF3366;margin:20px 0}
     .highlight strong{color:#FF3366}
@@ -40,131 +40,122 @@
     .faq-item p{margin:0;font-size:14px;color:#ccc}
     .footer{text-align:center;padding:40px 20px;color:#999;font-size:13px;margin-top:40px;border-top:1px solid #333}
     .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
-    @media(max-width:768px){.two-col{grid-template-columns:1fr}.step{flex-direction:column;text-align:center;align-items:center}}
+    .lang-switch{display:flex;gap:6px}
+    .lang-switch button{background:#333;color:#ccc;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+    .lang-switch button.active{background:#FF3366;color:#fff}
+    @media(max-width:768px){.two-col{grid-template-columns:1fr}.step{flex-direction:column;text-align:center;align-items:center}.content{padding:24px 16px}}
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
       <div class="logo"><img src="logo.png" alt="BarSclusive"></div>
-      <a href="shop.html" class="back-btn">← Zurück zum Shop</a>
+      <div class="header-right">
+        <div class="lang-switch">
+          <button onclick="setLang('de')" id="langDe" class="active">DE</button>
+          <button onclick="setLang('en')" id="langEn">EN</button>
+          <button onclick="setLang('it')" id="langIt">IT</button>
+          <button onclick="setLang('fr')" id="langFr">FR</button>
+        </div>
+        <a href="shop.html" class="back-btn" data-i18n="back">&larr; Zurück zum Shop</a>
+      </div>
     </div>
     <div class="content">
-      <h1>So funktioniert's</h1>
-      <p class="subtitle">In 3 einfachen Schritten zum besten Bar-Deal</p>
+      <h1 data-i18n="title">So funktionierts</h1>
+      <p class="subtitle" data-i18n="subtitle">In 3 einfachen Schritten zum besten Bar-Deal</p>
 
       <div class="section">
-        <h2>🛒 Für Kunden</h2>
+        <h2 data-i18n="custTitle">&#128722; Für Kunden</h2>
         <div class="steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-text">
-              <h3>Deal entdecken</h3>
-              <p>Durchstöbere aktuelle Bar-Deals in deiner Stadt. Filtere nach Kategorie (Breakfast, Lunch, Aperitif, Dinner), Datum oder Standort.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-text">
-              <h3>Online bezahlen</h3>
-              <p>Kaufe deinen Deal sicher mit Kreditkarte oder Twint über Stripe. Du erhältst sofort einen Gutschein-Code per Email.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-text">
-              <h3>In der Bar einlösen</h3>
-              <p>Zeige deinen Gutschein-Code oder QR-Code in der Bar vor. Das Personal scannt oder tippt ihn ein — fertig!</p>
-            </div>
-          </div>
+          <div class="step"><div class="step-num">1</div><div class="step-text">
+            <h3 data-i18n="c1h">Deal entdecken</h3>
+            <p data-i18n="c1p">Durchstöbere aktuelle Bar-Deals in deiner Stadt. Filtere nach Kategorie (Breakfast, Lunch, Aperitif, Dinner), Datum oder Standort.</p>
+          </div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">
+            <h3 data-i18n="c2h">Online bezahlen</h3>
+            <p data-i18n="c2p">Kaufe deinen Deal sicher mit Kreditkarte oder Twint über Stripe. Du erhältst sofort einen Gutschein-Code per Email.</p>
+          </div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">
+            <h3 data-i18n="c3h">In der Bar einlösen</h3>
+            <p data-i18n="c3p">Zeige deinen Gutschein-Code oder QR-Code in der Bar vor. Das Personal scannt oder tippt ihn ein — fertig!</p>
+          </div></div>
         </div>
       </div>
 
       <div class="section">
-        <h2>🎫 Unsere Deal-Typen</h2>
+        <h2 data-i18n="typesTitle">&#127915; Unsere Deal-Typen</h2>
         <div class="two-col">
           <div class="info-box">
-            <h3>🍹 Fix-Preis Deals</h3>
-            <p><strong>Was:</strong> Ein konkretes Angebot zu einem festen Preis (z.B. "Aperitif für 2 – 25 CHF")</p>
-            <p><strong>Wie:</strong> Du bezahlst den Deal-Preis und erhältst das Angebot in der Bar.</p>
-            <p><strong>Beispiel:</strong> Originalpreis 50 CHF → Deal-Preis 25 CHF = 50% gespart!</p>
+            <h3 data-i18n="fixH">&#127865; Fix-Preis Deals</h3>
+            <p data-i18n="fixP1"><strong>Was:</strong> Ein konkretes Angebot zu einem festen Preis (z.B. "Aperitif für 2 – 25 CHF")</p>
+            <p data-i18n="fixP2"><strong>Wie:</strong> Du bezahlst den Deal-Preis und erhältst das Angebot in der Bar.</p>
+            <p data-i18n="fixP3"><strong>Beispiel:</strong> Originalpreis 50 CHF → Deal-Preis 25 CHF = 50% gespart!</p>
           </div>
           <div class="info-box">
-            <h3>🏷️ Rabatt-Gutscheine</h3>
-            <p><strong>Was:</strong> Ein prozentualer Rabatt auf deine Bestellung in der Bar.</p>
-            <p><strong>Wie:</strong> Du kaufst den Gutschein für 2.50 CHF und erhältst z.B. 15% Rabatt.</p>
-            <p><strong>Bedingung:</strong> Mindestbestellwert beachten (z.B. ab 40 CHF).</p>
+            <h3 data-i18n="discH">&#127991;&#65039; Rabatt-Gutscheine</h3>
+            <p data-i18n="discP1"><strong>Was:</strong> Ein prozentualer Rabatt auf deine Bestellung in der Bar.</p>
+            <p data-i18n="discP2"><strong>Wie:</strong> Du kaufst den Gutschein für 2.50 CHF und erhältst z.B. 15% Rabatt.</p>
+            <p data-i18n="discP3"><strong>Bedingung:</strong> Mindestbestellwert beachten (z.B. ab 40 CHF).</p>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <h2>🏪 Für Bars</h2>
+        <h2 data-i18n="barTitle">&#127978; Für Bars</h2>
         <div class="steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-text">
-              <h3>Registrieren</h3>
-              <p>Melde deine Bar kostenlos im <a href="bar-portal.html">Bar-Portal</a> an. Nach einer kurzen Prüfung wirst du freigeschaltet.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-text">
-              <h3>Deals erstellen</h3>
-              <p>Erstelle attraktive Deals mit Kategorien, Zeitfenstern und Bildern. Wähle zwischen Fix-Preis oder Rabatt-Gutscheinen.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-text">
-              <h3>Gäste empfangen</h3>
-              <p>Kunden kommen mit ihrem Gutschein. Scanne den QR-Code oder gib den Code ein. Bei Fix-Preis Deals erhältst du 90% des Preises nach Einlösung.</p>
-            </div>
-          </div>
+          <div class="step"><div class="step-num">1</div><div class="step-text">
+            <h3 data-i18n="b1h">Registrieren</h3>
+            <p data-i18n="b1p">Melde deine Bar kostenlos im <a href="bar-portal.html">Bar-Portal</a> an. Nach einer kurzen Prüfung wirst du freigeschaltet.</p>
+          </div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">
+            <h3 data-i18n="b2h">Deals erstellen</h3>
+            <p data-i18n="b2p">Erstelle attraktive Deals mit Kategorien, Zeitfenstern und Bildern. Wähle zwischen Fix-Preis oder Rabatt-Gutscheinen.</p>
+          </div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">
+            <h3 data-i18n="b3h">Gäste empfangen</h3>
+            <p data-i18n="b3p">Kunden kommen mit ihrem Gutschein. Scanne den QR-Code oder gib den Code ein. Bei Fix-Preis Deals erhältst du 90% des Preises nach Einlösung.</p>
+          </div></div>
         </div>
       </div>
 
       <div class="section">
-        <h2>❓ Häufige Fragen</h2>
+        <h2 data-i18n="faqTitle">&#10067; Häufige Fragen</h2>
         <div class="faq">
-          <div class="faq-item">
-            <h3>Was kostet BarSclusive für Bars?</h3>
-            <p>Die Registrierung ist kostenlos. Bei Fix-Preis Deals behalten wir 10% Provision (min. 2 CHF) nach Einlösung. Bei Rabatt-Gutscheinen fallen keine Kosten an.</p>
-          </div>
-          <div class="faq-item">
-            <h3>Wie sicher ist die Bezahlung?</h3>
-            <p>Alle Zahlungen laufen über Stripe, einen der weltweit führenden Zahlungsanbieter. Wir speichern keine Kreditkartendaten.</p>
-          </div>
-          <div class="faq-item">
-            <h3>Kann ich einen Gutschein zurückgeben?</h3>
-            <p>Ja, innerhalb von 48 Stunden nach Kauf, sofern der Gutschein noch nicht eingelöst wurde. Kontaktiere uns per Email.</p>
-          </div>
-          <div class="faq-item">
-            <h3>Wie löse ich einen Gutschein ein?</h3>
-            <p>Zeige deinen QR-Code oder Gutschein-Code dem Barpersonal. Sie scannen ihn oder geben ihn im System ein.</p>
-          </div>
+          <div class="faq-item"><h3 data-i18n="fq1h">Was kostet BarSclusive für Bars?</h3><p data-i18n="fq1p">Die Registrierung ist kostenlos. Bei Fix-Preis Deals behalten wir 10% Provision (min. 2 CHF) nach Einlösung. Bei Rabatt-Gutscheinen fallen keine Kosten an.</p></div>
+          <div class="faq-item"><h3 data-i18n="fq2h">Wie sicher ist die Bezahlung?</h3><p data-i18n="fq2p">Alle Zahlungen laufen über Stripe, einen der weltweit führenden Zahlungsanbieter. Wir speichern keine Kreditkartendaten.</p></div>
+          <div class="faq-item"><h3 data-i18n="fq3h">Kann ich einen Gutschein zurückgeben?</h3><p data-i18n="fq3p">Ja, innerhalb von 48 Stunden nach Kauf, sofern der Gutschein noch nicht eingelöst wurde. Kontaktiere uns per Email.</p></div>
+          <div class="faq-item"><h3 data-i18n="fq4h">Wie löse ich einen Gutschein ein?</h3><p data-i18n="fq4p">Zeige deinen QR-Code oder Gutschein-Code dem Barpersonal. Sie scannen ihn oder geben ihn im System ein.</p></div>
         </div>
       </div>
 
       <div class="section" style="text-align:center;margin-top:40px">
-        <p style="font-size:18px;color:#fff;margin-bottom:16px"><strong>Bereit für deinen ersten Deal?</strong></p>
-        <a href="shop.html" style="background:#FF3366;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px">🍹 Deals entdecken</a>
-        <span style="display:inline-block;margin:0 12px;color:#666">oder</span>
-        <a href="bar-portal.html" style="background:#2a2a2a;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px;border:1px solid #FF3366">🏪 Bar registrieren</a>
+        <p style="font-size:18px;color:#fff;margin-bottom:16px" data-i18n="ctaText"><strong>Bereit für deinen ersten Deal?</strong></p>
+        <a href="shop.html" style="background:#FF3366;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px" data-i18n="ctaShop">&#127865; Deals entdecken</a>
+        <span style="display:inline-block;margin:0 12px;color:#666" data-i18n="ctaOr">oder</span>
+        <a href="bar-portal.html" style="background:#2a2a2a;color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;font-size:16px;border:1px solid #FF3366" data-i18n="ctaBar">&#127978; Bar registrieren</a>
       </div>
     </div>
     <div class="footer">
-      <p>© 2026 BarSclusive</p>
+      <p>&copy; 2026 BarSclusive</p>
       <p style="margin-top:12px">
         <a href="shop.html">Shop</a>
-        <a href="ueber-uns.html">Über uns</a>
-        <a href="kontakt.html">Kontakt</a>
-        <a href="impressum.html">Impressum</a>
-        <a href="datenschutz.html">Datenschutz</a>
-        <a href="agb.html">AGB</a>
+        <a href="ueber-uns.html" data-i18n="fAbout">Über uns</a>
+        <a href="kontakt.html" data-i18n="fContact">Kontakt</a>
+        <a href="impressum.html" data-i18n="fImprint">Impressum</a>
+        <a href="datenschutz.html" data-i18n="fPrivacy">Datenschutz</a>
+        <a href="agb.html" data-i18n="fTerms">AGB</a>
       </p>
     </div>
   </div>
+<script>
+var T={
+de:{back:'\u2190 Zurück zum Shop',title:"So funktionierts",subtitle:'In 3 einfachen Schritten zum besten Bar-Deal',custTitle:'\ud83d\uded2 Für Kunden',c1h:'Deal entdecken',c1p:'Durchstöbere aktuelle Bar-Deals in deiner Stadt. Filtere nach Kategorie (Breakfast, Lunch, Aperitif, Dinner), Datum oder Standort.',c2h:'Online bezahlen',c2p:'Kaufe deinen Deal sicher mit Kreditkarte oder Twint über Stripe. Du erhältst sofort einen Gutschein-Code per Email.',c3h:'In der Bar einlösen',c3p:'Zeige deinen Gutschein-Code oder QR-Code in der Bar vor. Das Personal scannt oder tippt ihn ein \u2014 fertig!',typesTitle:'\ud83c\udfab Unsere Deal-Typen',fixH:'\ud83c\udf79 Fix-Preis Deals',fixP1:'<strong>Was:</strong> Ein konkretes Angebot zu einem festen Preis (z.B. "Aperitif für 2 \u2013 25 CHF")',fixP2:'<strong>Wie:</strong> Du bezahlst den Deal-Preis und erhältst das Angebot in der Bar.',fixP3:'<strong>Beispiel:</strong> Originalpreis 50 CHF \u2192 Deal-Preis 25 CHF = 50% gespart!',discH:'\ud83c\udff7\ufe0f Rabatt-Gutscheine',discP1:'<strong>Was:</strong> Ein prozentualer Rabatt auf deine Bestellung in der Bar.',discP2:'<strong>Wie:</strong> Du kaufst den Gutschein für 2.50 CHF und erhältst z.B. 15% Rabatt.',discP3:'<strong>Bedingung:</strong> Mindestbestellwert beachten (z.B. ab 40 CHF).',barTitle:'\ud83c\udfea Für Bars',b1h:'Registrieren',b1p:'Melde deine Bar kostenlos im <a href="bar-portal.html">Bar-Portal</a> an. Nach einer kurzen Prüfung wirst du freigeschaltet.',b2h:'Deals erstellen',b2p:'Erstelle attraktive Deals mit Kategorien, Zeitfenstern und Bildern. Wähle zwischen Fix-Preis oder Rabatt-Gutscheinen.',b3h:'Gäste empfangen',b3p:'Kunden kommen mit ihrem Gutschein. Scanne den QR-Code oder gib den Code ein. Bei Fix-Preis Deals erhältst du 90% des Preises nach Einlösung.',faqTitle:'\u2753 Häufige Fragen',fq1h:'Was kostet BarSclusive für Bars?',fq1p:'Die Registrierung ist kostenlos. Bei Fix-Preis Deals behalten wir 10% Provision (min. 2 CHF) nach Einlösung. Bei Rabatt-Gutscheinen fallen keine Kosten an.',fq2h:'Wie sicher ist die Bezahlung?',fq2p:'Alle Zahlungen laufen über Stripe, einen der weltweit führenden Zahlungsanbieter. Wir speichern keine Kreditkartendaten.',fq3h:'Kann ich einen Gutschein zurückgeben?',fq3p:'Ja, innerhalb von 48 Stunden nach Kauf, sofern der Gutschein noch nicht eingelöst wurde. Kontaktiere uns per Email.',fq4h:'Wie löse ich einen Gutschein ein?',fq4p:'Zeige deinen QR-Code oder Gutschein-Code dem Barpersonal. Sie scannen ihn oder geben ihn im System ein.',ctaText:'<strong>Bereit für deinen ersten Deal?</strong>',ctaShop:'\ud83c\udf79 Deals entdecken',ctaOr:'oder',ctaBar:'\ud83c\udfea Bar registrieren',fAbout:'Über uns',fContact:'Kontakt',fImprint:'Impressum',fPrivacy:'Datenschutz',fTerms:'AGB'},
+en:{back:'\u2190 Back to Shop',title:'How It Works',subtitle:'Get the best bar deal in 3 simple steps',custTitle:'\ud83d\uded2 For Customers',c1h:'Discover a Deal',c1p:'Browse current bar deals in your city. Filter by category (Breakfast, Lunch, Aperitif, Dinner), date, or location.',c2h:'Pay Online',c2p:'Purchase your deal securely via credit card or Twint through Stripe. You\'ll receive a voucher code by email instantly.',c3h:'Redeem at the Bar',c3p:'Show your voucher code or QR code at the bar. The staff scans or enters it \u2014 done!',typesTitle:'\ud83c\udfab Our Deal Types',fixH:'\ud83c\udf79 Fixed-Price Deals',fixP1:'<strong>What:</strong> A specific offer at a fixed price (e.g. "Aperitif for 2 \u2013 25 CHF")',fixP2:'<strong>How:</strong> You pay the deal price and receive the offer at the bar.',fixP3:'<strong>Example:</strong> Original price 50 CHF \u2192 Deal price 25 CHF = 50% saved!',discH:'\ud83c\udff7\ufe0f Discount Vouchers',discP1:'<strong>What:</strong> A percentage discount on your order at the bar.',discP2:'<strong>How:</strong> You buy the voucher for 2.50 CHF and get e.g. 15% off.',discP3:'<strong>Condition:</strong> Minimum order amount applies (e.g. from 40 CHF).',barTitle:'\ud83c\udfea For Bars',b1h:'Register',b1p:'Register your bar for free in the <a href="bar-portal.html">Bar Portal</a>. After a quick review, you\'ll be activated.',b2h:'Create Deals',b2p:'Create attractive deals with categories, time slots, and images. Choose between fixed-price or discount vouchers.',b3h:'Welcome Guests',b3p:'Customers come with their voucher. Scan the QR code or enter the code. For fixed-price deals, you receive 90% of the price after redemption.',faqTitle:'\u2753 FAQ',fq1h:'What does BarSclusive cost for bars?',fq1p:'Registration is free. For fixed-price deals, we keep 10% commission (min. 2 CHF) after redemption. Discount vouchers are free of charge.',fq2h:'How secure is the payment?',fq2p:'All payments go through Stripe, one of the world\'s leading payment providers. We don\'t store credit card data.',fq3h:'Can I return a voucher?',fq3p:'Yes, within 48 hours of purchase, as long as the voucher hasn\'t been redeemed. Contact us by email.',fq4h:'How do I redeem a voucher?',fq4p:'Show your QR code or voucher code to the bar staff. They scan it or enter it in the system.',ctaText:'<strong>Ready for your first deal?</strong>',ctaShop:'\ud83c\udf79 Discover Deals',ctaOr:'or',ctaBar:'\ud83c\udfea Register your Bar',fAbout:'About Us',fContact:'Contact',fImprint:'Legal Notice',fPrivacy:'Privacy',fTerms:'Terms'},
+it:{back:'\u2190 Torna al negozio',title:'Come funziona',subtitle:'Il miglior affare bar in 3 semplici passi',custTitle:'\ud83d\uded2 Per i clienti',c1h:'Scopri un\'offerta',c1p:'Sfoglia le offerte bar nella tua città. Filtra per categoria (colazione, pranzo, aperitivo, cena), data o posizione.',c2h:'Paga online',c2p:'Acquista la tua offerta in sicurezza con carta di credito o Twint tramite Stripe. Ricevi subito un codice voucher via email.',c3h:'Riscatta al bar',c3p:'Mostra il tuo codice voucher o QR code al bar. Il personale lo scansiona o lo inserisce \u2014 fatto!',typesTitle:'\ud83c\udfab I nostri tipi di offerta',fixH:'\ud83c\udf79 Offerte a prezzo fisso',fixP1:'<strong>Cosa:</strong> Un\'offerta concreta a prezzo fisso (es. "Aperitivo per 2 \u2013 25 CHF")',fixP2:'<strong>Come:</strong> Paghi il prezzo dell\'offerta e la ricevi al bar.',fixP3:'<strong>Esempio:</strong> Prezzo originale 50 CHF \u2192 Prezzo offerta 25 CHF = 50% risparmiato!',discH:'\ud83c\udff7\ufe0f Buoni sconto',discP1:'<strong>Cosa:</strong> Uno sconto percentuale sul tuo ordine al bar.',discP2:'<strong>Come:</strong> Compri il buono per 2.50 CHF e ricevi ad es. il 15% di sconto.',discP3:'<strong>Condizione:</strong> Ordine minimo richiesto (es. da 40 CHF).',barTitle:'\ud83c\udfea Per i bar',b1h:'Registrati',b1p:'Registra il tuo bar gratuitamente nel <a href="bar-portal.html">Portale Bar</a>. Dopo una breve verifica verrai attivato.',b2h:'Crea offerte',b2p:'Crea offerte attraenti con categorie, fasce orarie e immagini. Scegli tra prezzo fisso o buoni sconto.',b3h:'Accogli gli ospiti',b3p:'I clienti arrivano con il loro voucher. Scansiona il QR code o inserisci il codice. Per le offerte a prezzo fisso ricevi il 90% del prezzo.',faqTitle:'\u2753 Domande frequenti',fq1h:'Quanto costa BarSclusive per i bar?',fq1p:'La registrazione è gratuita. Per le offerte a prezzo fisso tratteniamo il 10% di commissione (min. 2 CHF). I buoni sconto sono gratuiti.',fq2h:'Quanto è sicuro il pagamento?',fq2p:'Tutti i pagamenti passano tramite Stripe. Non memorizziamo dati di carte di credito.',fq3h:'Posso restituire un voucher?',fq3p:'Sì, entro 48 ore dall\'acquisto, a condizione che il voucher non sia stato riscattato. Contattaci via email.',fq4h:'Come riscatto un voucher?',fq4p:'Mostra il tuo QR code o codice voucher al personale del bar. Lo scansionano o lo inseriscono nel sistema.',ctaText:'<strong>Pronto per la tua prima offerta?</strong>',ctaShop:'\ud83c\udf79 Scopri offerte',ctaOr:'o',ctaBar:'\ud83c\udfea Registra il tuo bar',fAbout:'Chi siamo',fContact:'Contatto',fImprint:'Impressum',fPrivacy:'Privacy',fTerms:'Condizioni'},
+fr:{back:'\u2190 Retour à la boutique',title:'Comment ça marche',subtitle:'La meilleure offre bar en 3 étapes simples',custTitle:'\ud83d\uded2 Pour les clients',c1h:'Découvre une offre',c1p:'Parcours les offres bar de ta ville. Filtre par catégorie (petit-déj, lunch, apéro, dîner), date ou lieu.',c2h:'Paye en ligne',c2p:'Achète ton offre en toute sécurité par carte de crédit ou Twint via Stripe. Tu reçois instantanément un code voucher par email.',c3h:'Échange au bar',c3p:'Montre ton code voucher ou QR code au bar. Le personnel le scanne ou le saisit \u2014 c\'est fait !',typesTitle:'\ud83c\udfab Nos types d\'offres',fixH:'\ud83c\udf79 Offres à prix fixe',fixP1:'<strong>Quoi :</strong> Une offre concrète à prix fixe (ex. "Apéro pour 2 \u2013 25 CHF")',fixP2:'<strong>Comment :</strong> Tu payes le prix de l\'offre et tu la reçois au bar.',fixP3:'<strong>Exemple :</strong> Prix original 50 CHF \u2192 Prix offre 25 CHF = 50% économisé !',discH:'\ud83c\udff7\ufe0f Bons de réduction',discP1:'<strong>Quoi :</strong> Une réduction en pourcentage sur ta commande au bar.',discP2:'<strong>Comment :</strong> Tu achètes le bon pour 2.50 CHF et obtiens par ex. 15% de réduction.',discP3:'<strong>Condition :</strong> Commande minimum à respecter (ex. dès 40 CHF).',barTitle:'\ud83c\udfea Pour les bars',b1h:'Inscription',b1p:'Inscris ton bar gratuitement dans le <a href="bar-portal.html">Portail Bar</a>. Après une vérification rapide, tu seras activé.',b2h:'Créer des offres',b2p:'Crée des offres attrayantes avec catégories, créneaux horaires et images. Choisis entre prix fixe ou bons de réduction.',b3h:'Accueillir les clients',b3p:'Les clients viennent avec leur voucher. Scanne le QR code ou entre le code. Pour les offres à prix fixe, tu reçois 90% du prix.',faqTitle:'\u2753 Questions fréquentes',fq1h:'Combien coûte BarSclusive pour les bars ?',fq1p:'L\'inscription est gratuite. Pour les offres à prix fixe, nous retenons 10% de commission (min. 2 CHF). Les bons de réduction sont gratuits.',fq2h:'Le paiement est-il sécurisé ?',fq2p:'Tous les paiements passent par Stripe. Nous ne stockons pas de données de carte de crédit.',fq3h:'Puis-je retourner un voucher ?',fq3p:'Oui, dans les 48 heures après l\'achat, à condition que le voucher n\'ait pas été utilisé. Contacte-nous par email.',fq4h:'Comment utiliser un voucher ?',fq4p:'Montre ton QR code ou code voucher au personnel du bar. Ils le scannent ou le saisissent dans le système.',ctaText:'<strong>Prêt pour ta première offre ?</strong>',ctaShop:'\ud83c\udf79 Découvrir les offres',ctaOr:'ou',ctaBar:'\ud83c\udfea Inscrire ton bar',fAbout:'À propos',fContact:'Contact',fImprint:'Mentions légales',fPrivacy:'Confidentialité',fTerms:'CGV'}
+};
+function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=T[l]||T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
+(function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
+</script>
 </body>
 </html>
