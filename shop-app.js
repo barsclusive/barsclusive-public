@@ -269,7 +269,7 @@ function renderDeals() {
     el.innerHTML = '';
     const div = document.createElement('div');
     div.className = 'empty';
-    div.innerHTML = '<h3>Keine Deals gefunden</h3><p>Andere Filter versuchen</p>';
+    div.innerHTML = '<h3>' + (shopT('keineDeals') || 'Keine Deals gefunden') + '</h3><p>' + (shopT('andereFilter') || 'Andere Filter versuchen') + '</p>';
     el.appendChild(div);
     return;
   }
@@ -344,24 +344,15 @@ function buildDealCard(deal) {
   bar.className = 'deal-bar';
   bar.textContent = deal.bar_name + (deal.bar_city ? ' · ' + deal.bar_city : '');
 
-  const priceDiv = document.createElement('div');
-  priceDiv.className = 'deal-price';
   const pNew = document.createElement('span');
   pNew.className = 'price-new';
   pNew.textContent = Number(deal.deal_price).toFixed(2) + ' CHF';
-  priceDiv.appendChild(pNew);
 
-  if (isPauschal) {
-    // Show what customer gets for 2.50 CHF
-    const infoSpan = document.createElement('span');
-    infoSpan.style.cssText = 'font-size:13px;color:#999;';
-    infoSpan.textContent = deal.discount_percent + '% Rabatt ab ' + deal.min_order + ' CHF';
-    priceDiv.appendChild(infoSpan);
-  } else if (deal.original_price > deal.deal_price) {
-    const pOld = document.createElement('span');
+  var pOld = null;
+  if (!isPauschal && deal.original_price > deal.deal_price) {
+    pOld = document.createElement('span');
     pOld.className = 'price-old';
     pOld.textContent = Number(deal.original_price).toFixed(2) + ' CHF';
-    priceDiv.appendChild(pOld);
   }
 
   const validity = document.createElement('div');
@@ -380,14 +371,14 @@ function buildDealCard(deal) {
   if (isPauschal && deal.applies_to) {
     const applies = document.createElement('div');
     applies.style.cssText = 'color:#aaa;font-size:12px;margin-bottom:8px';
-    const applyMap = { drinks: 'Getränke', food: 'Essen', all: 'Alles' };
+    const applyMap = { drinks: shopT('getraenke') || 'Getränke', food: shopT('essen') || 'Essen', all: shopT('alles') || 'Alles' };
     applies.textContent = '✅ Gilt für: ' + (applyMap[deal.applies_to] || deal.applies_to);
     content.appendChild(applies);
   }
 
   const btn = document.createElement('button');
   btn.className = 'btn-buy';
-  btn.textContent = 'Profitiere jetzt!';
+  btn.textContent = shopT('profitiere') || 'Profitiere jetzt!';
   btn.addEventListener('click', () => openBuyModal(deal));
 
   // Time slots display
@@ -409,12 +400,29 @@ function buildDealCard(deal) {
   favBtn.textContent = (_favorites.indexOf(deal.bar_id) !== -1) ? '\u2764\uFE0F' : '\u{1F90D}';
   favBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleFavorite(deal.bar_id, favBtn); });
 
-  var btnRow = document.createElement('div');
-  btnRow.style.cssText = 'display:flex;align-items:center;gap:8px';
-  btnRow.appendChild(btn);
-  btnRow.appendChild(favBtn);
+  // btnRow replaced by priceBtn in content.append
 
-  content.append(title, bar, priceDiv, tsContainer, validity, btnRow);
+  // Bar address line
+  var addrDiv = document.createElement('div');
+  addrDiv.style.cssText = 'color:#888;font-size:12px;margin-bottom:4px';
+  if (deal.bar_address) addrDiv.textContent = '📍 ' + deal.bar_address + (deal.bar_city ? ', ' + deal.bar_city : '');
+  else if (deal.bar_city) addrDiv.textContent = '📍 ' + deal.bar_city;
+
+  // Price next to button
+  var priceBtn = document.createElement('div');
+  priceBtn.style.cssText = 'display:flex;align-items:center;gap:10px;flex-wrap:wrap';
+  priceBtn.append(btn, pNew);
+  if (isPauschal) {
+    var infoLine = document.createElement('span');
+    infoLine.style.cssText = 'font-size:12px;color:#999';
+    infoLine.textContent = deal.discount_percent + '% ab ' + deal.min_order + ' CHF';
+    priceBtn.appendChild(infoLine);
+  } else if (deal.original_price > deal.deal_price) {
+    priceBtn.appendChild(pOld);
+  }
+  priceBtn.appendChild(favBtn);
+
+  content.append(title, bar, addrDiv, tsContainer, validity, priceBtn);
   card.append(imgDiv, content);
   return card;
 }
@@ -498,7 +506,7 @@ function renderOrders(orders) {
   if (!orders.length) {
     const div = document.createElement('div');
     div.className = 'empty';
-    div.innerHTML = '<h3>Keine Bestellungen</h3><p>Du hast noch nichts bestellt</p>';
+    div.innerHTML = '<h3>' + (shopT('keineBestellungen') || 'Keine Bestellungen') + '</h3><p>' + (shopT('nochNichts') || 'Du hast noch nichts bestellt') + '</p>';
     el.appendChild(div);
     return;
   }
@@ -516,8 +524,8 @@ function buildOrderCard(o) {
   titleEl.className = 'order-title';
   titleEl.textContent = o.deal_title;
 
-  const STATUS_CLASS = { pending:'s-pending', paid:'s-paid', redeemed:'s-redeemed' };
-  const STATUS_TEXT  = { pending:'⏳ Ausstehend', paid:'✅ Bezahlt', redeemed:'🎉 Eingelöst' };
+  const STATUS_CLASS = { pending:'s-pending', created:'s-pending', paid:'s-paid', redeemed:'s-redeemed' };
+  const STATUS_TEXT  = { pending:'⏳ Ausstehend', created:'⏳ Ausstehend', paid:'✅ Gekauft', redeemed:'🎉 Eingelöst' };
   const pill = document.createElement('div');
   pill.className = 'status-pill ' + (STATUS_CLASS[o.status] || 's-pending');
   pill.textContent = STATUS_TEXT[o.status] || o.status;
@@ -530,7 +538,7 @@ function buildOrderCard(o) {
 
   const date = document.createElement('div');
   date.style.cssText = 'color:#666;font-size:12px;margin-bottom:12px';
-  date.textContent = 'Bestellt: ' + new Date(o.created_at).toLocaleString('de-CH');
+  date.textContent = (shopT('bestellt') || 'Bestellt:') + ' ' + new Date(o.created_at).toLocaleString('de-CH');
 
   card.append(head, details, date);
 
@@ -539,7 +547,7 @@ function buildOrderCard(o) {
     box.className = 'voucher-box';
     const label = document.createElement('div');
     label.style.cssText = 'font-size:12px;color:#999;margin-bottom:6px';
-    label.textContent = 'Gutschein-Code:';
+    label.textContent = shopT('gutscheinCode') || 'Gutschein-Code:';
     const code = document.createElement('div');
     code.className = 'voucher-code';
     code.textContent = o.voucher_code;
@@ -595,7 +603,8 @@ async function doLogin() {
   const email    = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
   if (!email || !password) { showToast('Bitte Email und Passwort eingeben', true); return; }
-
+  var _loginBtn = document.getElementById('btnLoginSubmit');
+  if (_loginBtn) { _loginBtn.disabled = true; _loginBtn.textContent = '⏳...'; }
   try {
     const r = await api({ action: 'customerLogin', email, password });
     if (r.success) {
@@ -900,6 +909,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // =============================================
 // i18n — DE / EN
 // =============================================
+var _shopLang = 'de';
+function shopT(key) { return (SHOP_TRANSLATIONS[_shopLang] || {})[key] || (SHOP_TRANSLATIONS.de || {})[key] || ''; }
 const SHOP_TRANSLATIONS = {
   de: {
     deals:'Deals', orders:'Bestellungen',
@@ -912,7 +923,16 @@ const SHOP_TRANSLATIONS = {
     confirmPassword:'Passwort bestätigen', savePw:'Speichern',
     cancelBtn:'Abbrechen',
     datum:'Datum', uhrzeit:'Uhrzeit', kategorie:'Kategorie', standort:'Standort',
-    alle:'Alle', heute:'Heute', morgen:'Morgen',
+    alle:'Alle', heute:'Heute', morgen:'Morgen', jederzeit:'Jederzeit', jetzt:'Jetzt', mittag:'Mittag', abend:'Abend', suchen:'Suchen',
+    profitiere:'Profitiere jetzt!', bestellt:'Bestellt:', gutscheinCode:'Gutschein-Code:',
+    keineDeals:'Keine Deals gefunden', andereFilter:'Andere Filter versuchen',
+    keineBestellungen:'Keine Bestellungen', nochNichts:'Du hast noch nichts bestellt',
+    forgotPw:'Passwort vergessen?', sendCode:'Code senden', abbrechen:'Abbrechen',
+    code6:'Code (6-stellig)', neuesPw:'Neues Passwort (mind. 8 Zeichen)', pwAendern:'Passwort ändern',
+    nurAm:'Nur am', giltFuer:'Gilt für:', getraenke:'Getränke', essen:'Essen', alles:'Alles',
+    refundReq:'Rückerstattung anfordern', refundRequested:'Rückerstattung angefordert', refunded:'Rückerstattet',
+    remaining:'verbleibend', anmelden:'Anmelden', registrieren:'Registrieren',
+    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -925,7 +945,16 @@ const SHOP_TRANSLATIONS = {
     confirmPassword:'Confirm Password', savePw:'Save',
     cancelBtn:'Cancel',
     datum:'Date', uhrzeit:'Time', kategorie:'Category', standort:'Location',
-    alle:'All', heute:'Today', morgen:'Tomorrow',
+    alle:'All', heute:'Today', morgen:'Tomorrow', jederzeit:'Anytime', jetzt:'Now', mittag:'Midday', abend:'Evening', suchen:'Search',
+    profitiere:'Get this deal!', bestellt:'Ordered:', gutscheinCode:'Voucher code:',
+    keineDeals:'No deals found', andereFilter:'Try different filters',
+    keineBestellungen:'No orders', nochNichts:'You haven\'t ordered anything yet',
+    forgotPw:'Forgot password?', sendCode:'Send code', abbrechen:'Cancel',
+    code6:'Code (6 digits)', neuesPw:'New password (min. 8 characters)', pwAendern:'Change password',
+    nurAm:'Only on', giltFuer:'Applies to:', getraenke:'Drinks', essen:'Food', alles:'Everything',
+    refundReq:'Request refund', refundRequested:'Refund requested', refunded:'Refunded',
+    remaining:'remaining', anmelden:'Login', registrieren:'Register',
+    fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal',
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -937,7 +966,16 @@ const SHOP_TRANSLATIONS = {
     oldPassword:'Vecchia Password', newPassword:'Nuova Password',
     confirmPassword:'Conferma Password', savePw:'Salva', cancelBtn:'Annulla',
     datum:'Data', uhrzeit:'Ora', kategorie:'Categoria', standort:'Posizione',
-    alle:'Tutti', heute:'Oggi', morgen:'Domani',
+    alle:'Tutti', heute:'Oggi', morgen:'Domani', jederzeit:'Sempre', jetzt:'Adesso', mittag:'Pranzo', abend:'Sera', suchen:'Cerca',
+    profitiere:'Approfitta ora!', bestellt:'Ordinato:', gutscheinCode:'Codice voucher:',
+    keineDeals:'Nessun deal trovato', andereFilter:'Prova altri filtri',
+    keineBestellungen:'Nessun ordine', nochNichts:'Non hai ancora ordinato nulla',
+    forgotPw:'Password dimenticata?', sendCode:'Invia codice', abbrechen:'Annulla',
+    code6:'Codice (6 cifre)', neuesPw:'Nuova password (min. 8 caratteri)', pwAendern:'Cambia password',
+    nurAm:'Solo il', giltFuer:'Valido per:', getraenke:'Bevande', essen:'Cibo', alles:'Tutto',
+    refundReq:'Richiedi rimborso', refundRequested:'Rimborso richiesto', refunded:'Rimborsato',
+    remaining:'rimanenti', anmelden:'Accedi', registrieren:'Registrati',
+    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar',
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -948,7 +986,16 @@ const SHOP_TRANSLATIONS = {
     buyBtn:'Acheter Deal', changePasswordTitle:'Changer mot de passe',
     oldPassword:'Ancien mot de passe', newPassword:'Nouveau mot de passe',
     confirmPassword:'Confirmer', savePw:'Enregistrer', cancelBtn:'Annuler',
-    datum:'Date', uhrzeit:'Heure', kategorie:'Catégorie', standort:'Lieu',
+    datum:'Date', uhrzeit:'Heure', kategorie:'Catégorie', standort:'Lieu', jederzeit:'À tout moment',
+    profitiere:'Profite maintenant!', bestellt:'Commandé:', gutscheinCode:'Code bon:',
+    keineDeals:'Aucune offre trouvée', andereFilter:'Essaie d\'autres filtres',
+    keineBestellungen:'Aucune commande', nochNichts:'Tu n\'as encore rien commandé',
+    forgotPw:'Mot de passe oublié?', sendCode:'Envoyer le code', abbrechen:'Annuler',
+    code6:'Code (6 chiffres)', neuesPw:'Nouveau mot de passe (min. 8 caractères)', pwAendern:'Changer',
+    nurAm:'Uniquement le', giltFuer:'Valable pour:', getraenke:'Boissons', essen:'Nourriture', alles:'Tout',
+    refundReq:'Demander remboursement', refundRequested:'Remboursement demandé', refunded:'Remboursé',
+    remaining:'restant', anmelden:'Connexion', registrieren:'Inscription',
+    fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars \u2192 Portail Bar',
     alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
   }
 };
@@ -958,6 +1005,8 @@ function st(key) { return SHOP_TRANSLATIONS[shopLang][key] || SHOP_TRANSLATIONS.
 
 function setShopLang(lang) {
   shopLang = lang;
+  _shopLang = lang;
+  localStorage.setItem('barsclusive_lang', lang);
   document.documentElement.lang = lang;
   document.querySelectorAll('.shop-lang-btn').forEach(function(b) { b.classList.remove('active'); b.style.borderColor = '#333'; b.style.color = '#888'; });
   var activeBtn = document.getElementById('shopLang' + lang.toUpperCase());
@@ -974,6 +1023,18 @@ function applyShopTranslations() {
   if (btnDeals) btnDeals.textContent = '🏠 ' + st('deals');
   const btnOrders = document.getElementById('btnOrders');
   if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
+  // Translate footer links
+  document.querySelectorAll('[data-shop-i18n]').forEach(function(el) {
+    var k = el.getAttribute('data-shop-i18n');
+    var t = st(k);
+    if (t && t !== k) el.textContent = t;
+  });
+  // Translate data-i18n elements (filter labels etc)
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n');
+    var trans = (SHOP_TRANSLATIONS[shopLang] || {})[k];
+    if (trans) el.textContent = trans;
+  });
   renderDeals();
 }
 
@@ -1025,6 +1086,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (langEN) langEN.addEventListener('click', function(){setShopLang('en')});
   if (langIT) langIT.addEventListener('click', function(){setShopLang('it')});
   if (langFR) langFR.addEventListener('click', function(){setShopLang('fr')});
+  // Init from localStorage
+  var savedLang = localStorage.getItem('barsclusive_lang') || 'de';
+  setShopLang(savedLang);
 
   const changePwBtn = document.getElementById('dropdownChangePw');
   if (changePwBtn) changePwBtn.addEventListener('click', openChangePwModal);
