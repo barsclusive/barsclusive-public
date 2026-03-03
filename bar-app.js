@@ -25,7 +25,7 @@ de: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Preis', createdLbl:'Erstellt', redeemedLbl:'Eingelöst',
   redeemTitle:'Gutschein einlösen', redeemHint:'Gutschein-Code des Kunden eingeben',
   redeemBtn:'Einlösen', redeemSuccess:'✅ Gutschein eingelöst!',
-  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', soldCount:'Verkauft', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?',
+  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', soldCount:'Verkauft', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
   newPasswordLbl:'Neues Passwort (mind. 8 Zeichen)', confirmPassword:'Passwort bestätigen',
   changePasswordBtn:'Passwort ändern', editDeal:'Deal bearbeiten',
   saveLbl:'Speichern', cancelLbl:'Abbrechen',
@@ -54,7 +54,7 @@ en: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Price', createdLbl:'Created', redeemedLbl:'Redeemed',
   redeemTitle:'Redeem Voucher', redeemHint:"Enter the customer's voucher code",
   redeemBtn:'Redeem', redeemSuccess:'✅ Voucher redeemed!',
-  changePassword:'Change Password', oldPassword:'Old Password', soldCount:'Sold', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?',
+  changePassword:'Change Password', oldPassword:'Old Password', soldCount:'Sold', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?', shop:'Shop', aboutUs:'About Us', howItWorks:'How It Works', legalNotice:'Legal Notice', privacy:'Privacy', termsBars:'Terms Bars', contact:'Contact',
   newPasswordLbl:'New Password (min. 8 chars)', confirmPassword:'Confirm Password',
   changePasswordBtn:'Change Password', editDeal:'Edit Deal',
   saveLbl:'Save', cancelLbl:'Cancel',
@@ -83,7 +83,7 @@ it: {
   codeLbl:'Codice', dealLbl:'Deal', priceLbl:'Prezzo', createdLbl:'Creato', redeemedLbl:'Riscattato',
   redeemTitle:'Riscatta Voucher', redeemHint:'Inserisci il codice voucher del cliente',
   redeemBtn:'Riscatta', redeemSuccess:'✅ Voucher riscattato!',
-  changePassword:'Cambia Password', oldPassword:'Vecchia Password', soldCount:'Venduti', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?',
+  changePassword:'Cambia Password', oldPassword:'Vecchia Password', soldCount:'Venduti', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
   newPasswordLbl:'Nuova Password (min. 8 car.)', confirmPassword:'Conferma Password',
   changePasswordBtn:'Cambia Password', editDeal:'Modifica Deal',
   saveLbl:'Salva', cancelLbl:'Annulla',
@@ -112,7 +112,7 @@ fr: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Prix', createdLbl:'Créé', redeemedLbl:'Échangé',
   redeemTitle:'Échanger Bon', redeemHint:'Entrez le code du bon client',
   redeemBtn:'Échanger', redeemSuccess:'✅ Bon échangé!',
-  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', soldCount:'Vendus', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?',
+  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', soldCount:'Vendus', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
   newPasswordLbl:'Nouveau mot de passe (min. 8 car.)', confirmPassword:'Confirmer',
   changePasswordBtn:'Changer', editDeal:'Modifier Deal',
   saveLbl:'Enregistrer', cancelLbl:'Annuler',
@@ -380,6 +380,8 @@ async function saveEditDeal() {
   };
 
   try {
+    var _sBtn = document.getElementById('btnSaveEdit');
+    if (_sBtn) { _sBtn.disabled = true; _sBtn.textContent = '\u23F3...'; }
     // Handle image file upload for edit
     var editImgFile = document.getElementById('editImageFile');
     if (editImgFile && editImgFile.files && editImgFile.files[0]) {
@@ -547,6 +549,8 @@ async function doCreateDeal() {
       } catch(e) {}
     }
 
+    var _cBtn = document.getElementById('btnCreateDeal');
+    if (_cBtn) { _cBtn.disabled = true; _cBtn.textContent = '\u23F3 Wird erstellt...'; }
     var r = await api({
       action: 'createDeal', token: s.token,
       time_slots: Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(function(c){return c.value;}),
