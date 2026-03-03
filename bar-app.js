@@ -25,7 +25,7 @@ de: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Preis', createdLbl:'Erstellt', redeemedLbl:'Eingelöst',
   redeemTitle:'Gutschein einlösen', redeemHint:'Gutschein-Code des Kunden eingeben',
   redeemBtn:'Einlösen', redeemSuccess:'✅ Gutschein eingelöst!',
-  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', soldCount:'Verkauft', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
+  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Ausgezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
   newPasswordLbl:'Neues Passwort (mind. 8 Zeichen)', confirmPassword:'Passwort bestätigen',
   changePasswordBtn:'Passwort ändern', editDeal:'Deal bearbeiten',
   saveLbl:'Speichern', cancelLbl:'Abbrechen',
@@ -54,7 +54,7 @@ en: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Price', createdLbl:'Created', redeemedLbl:'Redeemed',
   redeemTitle:'Redeem Voucher', redeemHint:"Enter the customer's voucher code",
   redeemBtn:'Redeem', redeemSuccess:'✅ Voucher redeemed!',
-  changePassword:'Change Password', oldPassword:'Old Password', soldCount:'Sold', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?', shop:'Shop', aboutUs:'About Us', howItWorks:'How It Works', legalNotice:'Legal Notice', privacy:'Privacy', termsBars:'Terms Bars', contact:'Contact',
+  changePassword:'Change Password', oldPassword:'Old Password', soldCount:'Sold', notRedeemed:'Not redeemed', paidOut:'Paid out', activeDeals:'Active Deals', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?', shop:'Shop', aboutUs:'About Us', howItWorks:'How It Works', legalNotice:'Legal Notice', privacy:'Privacy', termsBars:'Terms Bars', contact:'Contact',
   newPasswordLbl:'New Password (min. 8 chars)', confirmPassword:'Confirm Password',
   changePasswordBtn:'Change Password', editDeal:'Edit Deal',
   saveLbl:'Save', cancelLbl:'Cancel',
@@ -83,7 +83,7 @@ it: {
   codeLbl:'Codice', dealLbl:'Deal', priceLbl:'Prezzo', createdLbl:'Creato', redeemedLbl:'Riscattato',
   redeemTitle:'Riscatta Voucher', redeemHint:'Inserisci il codice voucher del cliente',
   redeemBtn:'Riscatta', redeemSuccess:'✅ Voucher riscattato!',
-  changePassword:'Cambia Password', oldPassword:'Vecchia Password', soldCount:'Venduti', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
+  changePassword:'Cambia Password', oldPassword:'Vecchia Password', soldCount:'Venduti', notRedeemed:'Non riscattati', paidOut:'Pagato', activeDeals:'Deal attivi', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
   newPasswordLbl:'Nuova Password (min. 8 car.)', confirmPassword:'Conferma Password',
   changePasswordBtn:'Cambia Password', editDeal:'Modifica Deal',
   saveLbl:'Salva', cancelLbl:'Annulla',
@@ -112,7 +112,7 @@ fr: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Prix', createdLbl:'Créé', redeemedLbl:'Échangé',
   redeemTitle:'Échanger Bon', redeemHint:'Entrez le code du bon client',
   redeemBtn:'Échanger', redeemSuccess:'✅ Bon échangé!',
-  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', soldCount:'Vendus', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
+  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', soldCount:'Vendus', notRedeemed:'Non utilis\xe9s', paidOut:'Pay\xe9', activeDeals:'Offres actives', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
   newPasswordLbl:'Nouveau mot de passe (min. 8 car.)', confirmPassword:'Confirmer',
   changePasswordBtn:'Changer', editDeal:'Modifier Deal',
   saveLbl:'Enregistrer', cancelLbl:'Annuler',
@@ -259,17 +259,20 @@ async function loadBarStats() {
     var grid = document.getElementById('statsGrid');
     grid.innerHTML = '';
     [
-      [t('soldCount') || 'Verkauft', st.vouchers_sold || 0],
-      [t('earnings') || 'Einnahmen', Number(st.total_revenue || 0).toFixed(2) + ' CHF'],
-      [t('redeemed') || 'Eingelöst', st.vouchers_redeemed || 0],
-      [t('pendingPayout') || 'Ausstehend', Number(st.pending_payout || 0).toFixed(2) + ' CHF'],
-    ].forEach(function([label, val]) {
+      [t('soldCount') || 'Verkauft', st.vouchers_sold || 0, '#fff'],
+      [t('redeemed') || 'Eingel\xf6st', st.vouchers_redeemed || 0, '#22c55e'],
+      [t('notRedeemed') || 'Nicht eingel\xf6st', st.vouchers_not_redeemed || 0, '#f59e0b'],
+      [t('pendingPayout') || 'Gutschrift offen', Number(st.pending_payout || 0).toFixed(2) + ' CHF', '#ef4444'],
+      [t('paidOut') || 'Ausgezahlt', Number(st.paid_out || 0).toFixed(2) + ' CHF', '#3b82f6'],
+      [t('activeDeals') || 'Aktive Deals', st.active_deals || 0, '#fff'],
+    ].forEach(function([label, val, color]) {
       var card = document.createElement('div'); card.className = 'stat-card';
       var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = label;
       var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(val);
+      if (color) vEl.style.color = color;
       card.append(lEl, vEl); grid.appendChild(card);
     });
-  } catch (e) {}
+    } catch (e) {}
 }
 
 // ── MY DEALS ──────────────────────────────────────────────────────────────
@@ -294,7 +297,14 @@ function renderMyDeals(deals) {
   deals.forEach(function(d) {
     var item = document.createElement('div');
     item.className = 'deal-item';
-
+    if (d.image_url) {
+      var thumb = document.createElement('img');
+      var iUrl = d.image_url;
+      if (iUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var fid = iUrl.split('/d/')[1]; if (fid) iUrl = 'https://drive.google.com/thumbnail?id=' + fid + '&sz=w200'; }
+      thumb.src = iUrl;
+      thumb.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0';
+      item.appendChild(thumb);
+    }
     var info = document.createElement('div');
     var title = document.createElement('div'); title.className = 'deal-item-title'; title.textContent = d.title;
     var meta  = document.createElement('div'); meta.className  = 'deal-item-meta';
