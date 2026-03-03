@@ -138,6 +138,7 @@ function applyTranslations() {
 function setLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
+  try { localStorage.setItem('barsclusive_bar_lang', lang); } catch(e) {}
   document.querySelectorAll('.lang-btn').forEach(b => {
     b.classList.remove('active');
   });
@@ -681,8 +682,18 @@ window.addEventListener('load', function() {
   var s = sessionGet();
   if (s) {
     showAuthScreen(false);
+    // Restore bar name display and logout button
+    var el = document.getElementById('barNameDisplay');
+    if (el) el.textContent = s.barName || '';
+    var logBtn = document.getElementById('btnLogout');
+    if (logBtn) logBtn.style.display = 'block';
     loadBarStats();
+  } else {
+    showAuthScreen(true);
   }
+  // Apply language on load
+  var savedLang = localStorage.getItem('barsclusive_bar_lang') || 'de';
+  setLang(savedLang);
 });
 
 // ── INIT ──────────────────────────────────────────────────────────────────
