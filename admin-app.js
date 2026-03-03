@@ -180,27 +180,61 @@ function switchTab(name, btn) {
 async function loadOrders() {
   if (!hasSession()) { doLogout(); return; }
   try {
-    const r = await api({ action: 'getOrders', token: _token });
-    if (!r.success) { showToast(r.error, true); return; }
-    renderOrders(r.orders);
+    const [ordersRes, vouchersRes] = await Promise.all([
+      api({ action: 'getOrders', token: _token }),
+      api({ action: 'getVouchers', token: _token })
+    ]);
+    if (!ordersRes.success) { showToast(ordersRes.error, true); return; }
+    // Build voucher lookup by ID for quick cross-reference
+    const voucherMap = {};
+    if (vouchersRes.success && vouchersRes.vouchers) {
+      vouchersRes.vouchers.forEach(v => { voucherMap[v.id] = v; });
+    }
+    renderOrders(ordersRes.orders, voucherMap);
   } catch (e) { showToast('Ladefehler', true); }
 }
 
-function renderOrders(orders) {
+function renderOrders(orders, voucherMap) {
+  voucherMap = voucherMap || {};
   const tbody = document.getElementById('ordersBody');
   tbody.innerHTML = '';
   if (!orders.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="no-data">' + t('noOrders') + '</td></tr>'; return;
+    tbody.innerHTML = '<tr><td colspan="9" class="no-data">' + t('noOrders') + '</td></tr>'; return;
   }
+  // Sort: newest first
+  orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
   orders.forEach(o => {
     const tr = document.createElement('tr');
     if (o.refund_status === 'requested') tr.classList.add('refund-row');
 
+    // Payment status (automatic via Stripe)
     const statusBadge = document.createElement('span');
-    statusBadge.className = 'badge ' + (o.status === 'paid' ? 'b-paid' : 'b-pending');
-    statusBadge.textContent = o.status === 'paid' ? 'Bezahlt' : 'Ausstehend';
+    if (o.status === 'paid') { statusBadge.className = 'badge b-paid'; statusBadge.textContent = '✓ Bezahlt'; }
+    else if (o.status === 'pending_payment') { statusBadge.className = 'badge b-pending'; statusBadge.textContent = '⏳ Ausstehend'; }
+    else { statusBadge.className = 'badge b-inactive'; statusBadge.textContent = o.status; }
     const statusTd = document.createElement('td'); statusTd.appendChild(statusBadge);
 
+    // Voucher/Gutschein status column
+    const voucherTd = document.createElement('td');
+    const voucher = o.voucher_id ? voucherMap[o.voucher_id] : null;
+    if (voucher) {
+      const vBadge = document.createElement('span');
+      if (voucher.status === 'redeemed') {
+        vBadge.className = 'badge b-paid'; vBadge.textContent = '✓ Eingelöst';
+      } else if (voucher.status === 'sent' || voucher.status === 'issued') {
+        vBadge.className = 'badge b-active'; vBadge.textContent = '⏳ Offen';
+      } else {
+        vBadge.className = 'badge b-inactive'; vBadge.textContent = voucher.status;
+      }
+      voucherTd.appendChild(vBadge);
+    } else if (o.status === 'paid') {
+      voucherTd.textContent = '–';
+    } else {
+      voucherTd.textContent = '–';
+    }
+
+    // Refund column
     const refundTd = document.createElement('td');
     if (o.refund_status === 'requested') {
       refundTd.textContent = '⚠️ Angefordert'; refundTd.style.color = '#FFC107';
@@ -208,16 +242,11 @@ function renderOrders(orders) {
       refundTd.textContent = '↩️ Erstattet'; refundTd.style.color = '#4CAF50';
     } else { refundTd.textContent = '–'; }
 
+    // Action: only refund button
     const actionTd = document.createElement('td');
-    if (o.status === 'created') {
-      const btn = document.createElement('button');
-      btn.className = 'btn-sm btn-green'; btn.textContent = t('markPaid');
-      btn.addEventListener('click', () => markPaid(o.id));
-      actionTd.appendChild(btn);
-    }
     if (o.refund_status === 'requested') {
       const btn = document.createElement('button');
-      btn.className = 'btn-sm btn-red'; btn.style.marginLeft = '6px';
+      btn.className = 'btn-sm btn-red';
       btn.textContent = t('refundBtn');
       btn.addEventListener('click', () => processRefund(o.id));
       actionTd.appendChild(btn);
@@ -227,20 +256,13 @@ function renderOrders(orders) {
       td(new Date(o.created_at).toLocaleString('de-CH')),
       td(o.deal_title), td(o.bar_name), td(o.buyer_name),
       td(Number(o.price).toFixed(2) + ' CHF'),
-      statusTd, refundTd, actionTd
+      statusTd, voucherTd, refundTd, actionTd
     );
     tbody.appendChild(tr);
   });
 }
 
-async function markPaid(orderId) {
-  if (!hasSession()) { doLogout(); return; }
-  try {
-    const r = await api({ action: 'markOrderPaid', token: _token, order_id: orderId });
-    if (r.success) { showToast('✅ Als bezahlt markiert'); loadOrders(); }
-    else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast('Verbindungsfehler', true); }
-}
+// markPaid removed — Stripe auto-confirms payments via confirmStripePayment()
 
 async function processRefund(orderId) {
   if (!confirm('Rückerstattung als durchgeführt markieren?')) return;
