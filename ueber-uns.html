@@ -8,9 +8,10 @@
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);color:#fff;line-height:1.6;padding:20px}
     .container{max-width:900px;margin:0 auto;padding:40px 20px}
-    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #FF3366}
-    .logo img{height:40px}
-    .back-btn{background:#333;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block}
+    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #FF3366;flex-wrap:wrap;gap:12px}
+    .logo img{height:60px}
+    .header-right{display:flex;align-items:center;gap:12px}
+    .back-btn{background:#333;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-block;font-size:14px}
     .back-btn:hover{background:#444}
     .content{background:#2a2a2a;padding:40px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
     h1{color:#FF3366;margin-bottom:10px;font-size:32px}
@@ -28,77 +29,144 @@
     .value-card .emoji{font-size:32px;margin-bottom:10px}
     .value-card h3{font-size:16px;margin-bottom:8px;color:#FF3366}
     .value-card p{font-size:13px;color:#ccc;margin:0}
+    .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;margin-top:20px}
+    .team-card{background:#1a1a1a;padding:24px;border-radius:12px;text-align:center}
+    .team-card .avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#FF3366,#ff6b8a);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px;color:#fff;font-weight:700}
+    .team-card h3{font-size:16px;margin-bottom:4px;color:#fff}
+    .team-card .role{font-size:13px;color:#FF3366;margin-bottom:8px}
+    .team-card p{font-size:13px;color:#ccc;margin:0}
+    .dual-box{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+    .dual-box .box{background:#1a1a1a;padding:24px;border-radius:12px;border-top:3px solid #FF3366}
+    .dual-box .box h3{color:#FF3366;margin-bottom:10px;font-size:18px}
+    .dual-box .box p{font-size:14px;color:#ccc;margin:0}
+    @media(max-width:600px){.dual-box{grid-template-columns:1fr}.team-grid{grid-template-columns:1fr}.content{padding:24px 16px}}
     .footer{text-align:center;padding:40px 20px;color:#999;font-size:13px;margin-top:40px;border-top:1px solid #333}
     .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
+    .lang-switch{display:flex;gap:6px}
+    .lang-switch button{background:#333;color:#ccc;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+    .lang-switch button.active{background:#FF3366;color:#fff}
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
       <div class="logo"><img src="logo.png" alt="BarSclusive"></div>
-      <a href="shop.html" class="back-btn">← Zurück zum Shop</a>
+      <div class="header-right">
+        <div class="lang-switch">
+          <button onclick="setLang('de')" id="langDe" class="active">DE</button>
+          <button onclick="setLang('en')" id="langEn">EN</button>
+          <button onclick="setLang('it')" id="langIt">IT</button>
+          <button onclick="setLang('fr')" id="langFr">FR</button>
+        </div>
+        <a href="shop.html" class="back-btn" data-i18n="backToShop">&larr; Zurück zum Shop</a>
+      </div>
     </div>
     <div class="content">
-      <h1>Über BarSclusive</h1>
-      <p class="subtitle">Deine Plattform für exklusive Bar-Deals in der Schweiz</p>
+      <h1 data-i18n="aboutTitle">Über BarSclusive</h1>
+      <p class="subtitle" data-i18n="aboutSubtitle">Deine Plattform für exklusive Bar-Deals in der Schweiz</p>
 
       <div class="section">
-        <h2>🍸 Unsere Mission</h2>
-        <p>BarSclusive verbindet die besten Bars der Schweiz mit Menschen, die gerne ausgehen und dabei sparen möchten. Wir machen exklusive Bar-Erlebnisse für alle zugänglich — ob Breakfast, Brunch, Aperitif oder Dinner.</p>
+        <h2 data-i18n="missionTitle">&#127864; Unsere Mission</h2>
+        <p data-i18n="missionText">BarSclusive verbindet die besten Bars der Schweiz mit Menschen, die gerne ausgehen und dabei sparen möchten. Wir machen exklusive Bar-Erlebnisse für alle zugänglich — ob Breakfast, Brunch, Aperitif oder Dinner.</p>
         <div class="highlight">
-          <p><strong>Unser Ziel:</strong> Jeder soll die besten Bar-Deals seiner Stadt entdecken und geniessen können — einfach, schnell und fair.</p>
+          <p data-i18n="missionHighlight"><strong>Unser Ziel:</strong> Wir möchten nicht nur den Kunden helfen, tolle Deals zu entdecken — sondern auch den Bars, neue Gäste zu gewinnen und ihre Reichweite zu vergrössern. Gemeinsam stärken wir die lokale Bar-Szene.</p>
         </div>
       </div>
 
       <div class="section">
-        <h2>💡 Was uns ausmacht</h2>
+        <h2 data-i18n="dualTitle">&#129309; Für Kunden &amp; Bars</h2>
+        <div class="dual-box">
+          <div class="box">
+            <h3 data-i18n="forCustomers">Für Kunden</h3>
+            <p data-i18n="forCustomersText">Entdecke exklusive Deals bei den besten Bars deiner Stadt. Spare Geld und erlebe neue Orte — einfach, schnell und fair.</p>
+          </div>
+          <div class="box">
+            <h3 data-i18n="forBars">Für Bars</h3>
+            <p data-i18n="forBarsText">Erreiche neue Gäste ohne Werbebudget. Erstelle Deals, die Kunden anlocken — du bestimmst Preis, Anzahl und Zeitraum. Wir bringen die Gäste zu dir.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 data-i18n="teamTitle">&#128101; Unser Team</h2>
+        <p data-i18n="teamIntro">BarSclusive wurde von drei Studenten aus der Schweiz gegründet. Wir studieren an einer Fachhochschule (FH) bzw. Höheren Fachschule (HF) und haben BarSclusive als Startup neben dem Studium aufgebaut.</p>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="avatar">RS</div>
+            <h3>Roberto Santoro</h3>
+            <p class="role" data-i18n="roleRoberto">Co-Founder &amp; Tech</p>
+            <p data-i18n="descRoberto">Entwicklung &amp; Technik</p>
+          </div>
+          <div class="team-card">
+            <div class="avatar">LS</div>
+            <h3>Leandro Saccà</h3>
+            <p class="role" data-i18n="roleLeandro">Co-Founder</p>
+            <p data-i18n="descLeandro">Strategie &amp; Partnerschaften</p>
+          </div>
+          <div class="team-card">
+            <div class="avatar">MG</div>
+            <h3>Marco Giugno</h3>
+            <p class="role" data-i18n="roleMarco">Co-Founder</p>
+            <p data-i18n="descMarco">Marketing &amp; Vertrieb</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 data-i18n="valuesTitle">&#128161; Was uns ausmacht</h2>
         <div class="values-grid">
           <div class="value-card">
-            <div class="emoji">🤝</div>
-            <h3>Fair für alle</h3>
-            <p>Transparente Preise, keine versteckten Kosten. Bars profitieren von neuen Gästen, Kunden von tollen Deals.</p>
+            <div class="emoji">&#129309;</div>
+            <h3 data-i18n="valFair">Fair für alle</h3>
+            <p data-i18n="valFairText">Transparente Preise, keine versteckten Kosten. Bars profitieren von neuen Gästen, Kunden von tollen Deals.</p>
           </div>
           <div class="value-card">
-            <div class="emoji">🇨🇭</div>
-            <h3>Made in Switzerland</h3>
-            <p>Gegründet in Basel, für die ganze Schweiz. Wir kennen die lokale Bar-Szene.</p>
+            <div class="emoji">&#127464;&#127469;</div>
+            <h3 data-i18n="valSwiss">Made in Switzerland</h3>
+            <p data-i18n="valSwissText">Gegründet in Basel, für die ganze Schweiz. Von Studenten, die die lokale Bar-Szene kennen und lieben.</p>
           </div>
           <div class="value-card">
-            <div class="emoji">⚡</div>
-            <h3>Einfach & Schnell</h3>
-            <p>Deal kaufen, Gutschein erhalten, in der Bar einlösen. So einfach ist das.</p>
+            <div class="emoji">&#9889;</div>
+            <h3 data-i18n="valSimple">Einfach &amp; Schnell</h3>
+            <p data-i18n="valSimpleText">Deal kaufen, Gutschein erhalten, in der Bar einlösen. So einfach ist das.</p>
           </div>
           <div class="value-card">
-            <div class="emoji">🔒</div>
-            <h3>Sicher & Vertrauenswürdig</h3>
-            <p>Sichere Zahlung via Stripe. Daten werden nach Schweizer Standards geschützt.</p>
+            <div class="emoji">&#128274;</div>
+            <h3 data-i18n="valSecure">Sicher &amp; Vertrauenswürdig</h3>
+            <p data-i18n="valSecureText">Sichere Zahlung. Daten werden nach Schweizer Standards geschützt.</p>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <h2>📍 Wo wir sind</h2>
-        <p>BarSclusive hat seinen Sitz in <strong>Basel, Schweiz</strong> und ist in mehreren Schweizer Städten aktiv. Wir wachsen stetig und bringen bald noch mehr Bars auf die Plattform.</p>
+        <h2 data-i18n="locationTitle">&#128205; Wo wir sind</h2>
+        <p data-i18n="locationText">BarSclusive hat seinen Sitz in <strong>Basel, Schweiz</strong> und ist in mehreren Schweizer Städten aktiv. Als Studenten-Startup wachsen wir stetig und bringen bald noch mehr Bars auf die Plattform.</p>
       </div>
 
       <div class="section">
-        <h2>📬 Kontakt</h2>
-        <p>Fragen, Anregungen oder möchtest du mit deiner Bar dabei sein?</p>
+        <h2 data-i18n="contactTitle">&#128236; Kontakt</h2>
+        <p data-i18n="contactText">Fragen, Anregungen oder möchtest du mit deiner Bar dabei sein?</p>
         <p><strong>Email:</strong> <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
-        <p style="margin-top:16px"><a href="kontakt.html" style="background:#FF3366;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block">📞 Zur Kontaktseite</a></p>
+        <p style="margin-top:16px"><a href="kontakt.html" style="background:#FF3366;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block" data-i18n="contactBtn">Zur Kontaktseite</a></p>
       </div>
     </div>
     <div class="footer">
-      <p>© 2026 BarSclusive</p>
+      <p>&copy; 2026 BarSclusive</p>
       <p style="margin-top:12px">
         <a href="shop.html">Shop</a>
-        <a href="so-funktionierts.html">So funktioniert's</a>
-        <a href="kontakt.html">Kontakt</a>
-        <a href="impressum.html">Impressum</a>
-        <a href="datenschutz.html">Datenschutz</a>
-        <a href="agb.html">AGB</a>
+        <a href="so-funktionierts.html" data-i18n="footHow">So funktionierts</a>
+        <a href="ueber-uns.html" data-i18n="footAbout">Über uns</a>
+        <a href="kontakt.html" data-i18n="footContact">Kontakt</a>
+        <a href="impressum.html" data-i18n="footImprint">Impressum</a>
+        <a href="datenschutz.html" data-i18n="footPrivacy">Datenschutz</a>
+        <a href="agb.html" data-i18n="footTerms">AGB</a>
       </p>
     </div>
   </div>
+<script>
+var T={de:{backToShop:'\u2190 Zurück zum Shop',aboutTitle:'Über BarSclusive',aboutSubtitle:'Deine Plattform für exklusive Bar-Deals in der Schweiz',missionTitle:'\ud83c\udf78 Unsere Mission',missionText:'BarSclusive verbindet die besten Bars der Schweiz mit Menschen, die gerne ausgehen und dabei sparen möchten. Wir machen exklusive Bar-Erlebnisse für alle zugänglich \u2014 ob Breakfast, Brunch, Aperitif oder Dinner.',missionHighlight:'<strong>Unser Ziel:</strong> Wir möchten nicht nur den Kunden helfen, tolle Deals zu entdecken \u2014 sondern auch den Bars, neue Gäste zu gewinnen und ihre Reichweite zu vergrössern. Gemeinsam stärken wir die lokale Bar-Szene.',dualTitle:'\ud83e\udd1d Für Kunden & Bars',forCustomers:'Für Kunden',forCustomersText:'Entdecke exklusive Deals bei den besten Bars deiner Stadt. Spare Geld und erlebe neue Orte \u2014 einfach, schnell und fair.',forBars:'Für Bars',forBarsText:'Erreiche neue Gäste ohne Werbebudget. Erstelle Deals, die Kunden anlocken \u2014 du bestimmst Preis, Anzahl und Zeitraum. Wir bringen die Gäste zu dir.',teamTitle:'\ud83d\udc65 Unser Team',teamIntro:'BarSclusive wurde von drei Studenten aus der Schweiz gegründet. Wir studieren an einer Fachhochschule (FH) bzw. Höheren Fachschule (HF) und haben BarSclusive als Startup neben dem Studium aufgebaut.',roleRoberto:'Co-Founder & Tech',descRoberto:'Entwicklung & Technik',roleLeandro:'Co-Founder',descLeandro:'Strategie & Partnerschaften',roleMarco:'Co-Founder',descMarco:'Marketing & Vertrieb',valuesTitle:'\ud83d\udca1 Was uns ausmacht',valFair:'Fair für alle',valFairText:'Transparente Preise, keine versteckten Kosten. Bars profitieren von neuen Gästen, Kunden von tollen Deals.',valSwiss:'Made in Switzerland',valSwissText:'Gegründet in Basel, für die ganze Schweiz. Von Studenten, die die lokale Bar-Szene kennen und lieben.',valSimple:'Einfach & Schnell',valSimpleText:'Deal kaufen, Gutschein erhalten, in der Bar einlösen. So einfach ist das.',valSecure:'Sicher & Vertrauenswürdig',valSecureText:'Sichere Zahlung. Daten werden nach Schweizer Standards geschützt.',locationTitle:'\ud83d\udccd Wo wir sind',locationText:'BarSclusive hat seinen Sitz in <strong>Basel, Schweiz</strong> und ist in mehreren Schweizer Städten aktiv. Als Studenten-Startup wachsen wir stetig und bringen bald noch mehr Bars auf die Plattform.',contactTitle:'\ud83d\udcec Kontakt',contactText:'Fragen, Anregungen oder möchtest du mit deiner Bar dabei sein?',contactBtn:'Zur Kontaktseite',footHow:"So funktionierts",footAbout:'Über uns',footContact:'Kontakt',footImprint:'Impressum',footPrivacy:'Datenschutz',footTerms:'AGB'},en:{backToShop:'\u2190 Back to Shop',aboutTitle:'About BarSclusive',aboutSubtitle:'Your platform for exclusive bar deals in Switzerland',missionTitle:'\ud83c\udf78 Our Mission',missionText:'BarSclusive connects the best bars in Switzerland with people who love going out and saving money. We make exclusive bar experiences accessible to everyone \u2014 breakfast, brunch, aperitif, or dinner.',missionHighlight:'<strong>Our goal:</strong> We want to help not only customers discover great deals \u2014 but also help bars attract new guests and expand their reach. Together, we strengthen the local bar scene.',dualTitle:'\ud83e\udd1d For Customers & Bars',forCustomers:'For Customers',forCustomersText:'Discover exclusive deals at the best bars in your city. Save money and explore new places \u2014 simple, fast, and fair.',forBars:'For Bars',forBarsText:'Reach new guests without an ad budget. Create deals that attract customers \u2014 you set the price, quantity, and timeframe. We bring the guests to you.',teamTitle:'\ud83d\udc65 Our Team',teamIntro:'BarSclusive was founded by three students from Switzerland. We study at a University of Applied Sciences (FH) and a Higher Technical School (HF), and built BarSclusive as a startup alongside our studies.',roleRoberto:'Co-Founder & Tech',descRoberto:'Development & Technology',roleLeandro:'Co-Founder',descLeandro:'Strategy & Partnerships',roleMarco:'Co-Founder',descMarco:'Marketing & Sales',valuesTitle:'\ud83d\udca1 What Sets Us Apart',valFair:'Fair for Everyone',valFairText:'Transparent pricing, no hidden costs. Bars benefit from new guests, customers from great deals.',valSwiss:'Made in Switzerland',valSwissText:'Founded in Basel, for all of Switzerland. By students who know and love the local bar scene.',valSimple:'Simple & Fast',valSimpleText:'Buy a deal, get your voucher, redeem it at the bar. That simple.',valSecure:'Secure & Trustworthy',valSecureText:'Secure payment. Data protected by Swiss standards.',locationTitle:'\ud83d\udccd Where We Are',locationText:'BarSclusive is based in <strong>Basel, Switzerland</strong> and active in several Swiss cities. As a student startup, we\'re growing steadily.',contactTitle:'\ud83d\udcec Contact',contactText:'Questions, suggestions, or want to join with your bar?',contactBtn:'Contact Page',footHow:'How It Works',footAbout:'About Us',footContact:'Contact',footImprint:'Legal Notice',footPrivacy:'Privacy',footTerms:'Terms'},it:{backToShop:'\u2190 Torna al negozio',aboutTitle:'Chi siamo',aboutSubtitle:'La tua piattaforma per offerte bar esclusive in Svizzera',missionTitle:'\ud83c\udf78 La nostra missione',missionText:'BarSclusive collega i migliori bar della Svizzera con persone che amano uscire e risparmiare. Rendiamo le esperienze bar esclusive accessibili a tutti.',missionHighlight:'<strong>Il nostro obiettivo:</strong> Non vogliamo solo aiutare i clienti a scoprire offerte fantastiche, ma anche aiutare i bar ad attirare nuovi ospiti e ampliare la loro visibilità. Insieme rafforziamo la scena bar locale.',dualTitle:'\ud83e\udd1d Per clienti & bar',forCustomers:'Per i clienti',forCustomersText:'Scopri offerte esclusive nei migliori bar della tua città. Risparmia e scopri nuovi posti.',forBars:'Per i bar',forBarsText:'Raggiungi nuovi ospiti senza budget pubblicitario. Crea offerte che attraggono clienti \u2014 tu decidi prezzo, quantità e periodo.',teamTitle:'\ud83d\udc65 Il nostro team',teamIntro:'BarSclusive è stata fondata da tre studenti svizzeri. Studiamo presso una SUP (FH) e una SSS (HF) e abbiamo sviluppato BarSclusive come startup accanto agli studi.',roleRoberto:'Co-Fondatore & Tech',descRoberto:'Sviluppo e tecnologia',roleLeandro:'Co-Fondatore',descLeandro:'Strategia e partnership',roleMarco:'Co-Fondatore',descMarco:'Marketing e vendite',valuesTitle:'\ud83d\udca1 Cosa ci distingue',valFair:'Equo per tutti',valFairText:'Prezzi trasparenti, nessun costo nascosto.',valSwiss:'Made in Switzerland',valSwissText:'Fondato a Basilea, per tutta la Svizzera. Da studenti che amano la scena bar locale.',valSimple:'Semplice e veloce',valSimpleText:'Acquista un\'offerta, ricevi il voucher, riscattalo al bar.',valSecure:'Sicuro e affidabile',valSecureText:'Pagamento sicuro. Dati protetti secondo gli standard svizzeri.',locationTitle:'\ud83d\udccd Dove siamo',locationText:'BarSclusive ha sede a <strong>Basilea, Svizzera</strong> ed è attiva in diverse città svizzere.',contactTitle:'\ud83d\udcec Contatto',contactText:'Domande, suggerimenti o vuoi partecipare con il tuo bar?',contactBtn:'Pagina contatto',footHow:'Come funziona',footAbout:'Chi siamo',footContact:'Contatto',footImprint:'Impressum',footPrivacy:'Privacy',footTerms:'Condizioni'},fr:{backToShop:'\u2190 Retour à la boutique',aboutTitle:'À propos de BarSclusive',aboutSubtitle:'Ta plateforme pour des offres bar exclusives en Suisse',missionTitle:'\ud83c\udf78 Notre mission',missionText:'BarSclusive connecte les meilleurs bars de Suisse avec des personnes qui aiment sortir et économiser. Nous rendons les expériences bar exclusives accessibles à tous.',missionHighlight:'<strong>Notre objectif :</strong> Nous voulons aider les clients à découvrir de super offres, mais aussi aider les bars à attirer de nouveaux clients. Ensemble, nous renforçons la scène bar locale.',dualTitle:'\ud83e\udd1d Pour clients & bars',forCustomers:'Pour les clients',forCustomersText:'Découvre des offres exclusives dans les meilleurs bars de ta ville. Économise et découvre de nouveaux endroits.',forBars:'Pour les bars',forBarsText:'Atteins de nouveaux clients sans budget publicitaire. Crée des offres qui attirent les clients \u2014 tu décides du prix, de la quantité et de la période.',teamTitle:'\ud83d\udc65 Notre équipe',teamIntro:'BarSclusive a été fondée par trois étudiants suisses. Nous étudions dans une HES (FH) et une ES (HF) et avons développé BarSclusive comme startup en parallèle de nos études.',roleRoberto:'Co-Fondateur & Tech',descRoberto:'Développement et technologie',roleLeandro:'Co-Fondateur',descLeandro:'Stratégie et partenariats',roleMarco:'Co-Fondateur',descMarco:'Marketing et ventes',valuesTitle:'\ud83d\udca1 Ce qui nous distingue',valFair:'Équitable pour tous',valFairText:'Prix transparents, pas de coûts cachés.',valSwiss:'Made in Switzerland',valSwissText:'Fondé à Bâle, pour toute la Suisse. Par des étudiants qui aiment la scène bar locale.',valSimple:'Simple et rapide',valSimpleText:'Achète une offre, reçois ton bon, échange-le au bar.',valSecure:'Sûr et fiable',valSecureText:'Paiement sécurisé. Données protégées selon les normes suisses.',locationTitle:'\ud83d\udccd Où nous sommes',locationText:'BarSclusive est basée à <strong>Bâle, Suisse</strong> et active dans plusieurs villes suisses.',contactTitle:'\ud83d\udcec Contact',contactText:'Questions, suggestions ou tu veux rejoindre avec ton bar ?',contactBtn:'Page de contact',footHow:'Comment ça marche',footAbout:'À propos',footContact:'Contact',footImprint:'Mentions légales',footPrivacy:'Confidentialité',footTerms:'CGV'}};
+function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=T[l]||T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
+(function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
+</script>
 </body>
 </html>
