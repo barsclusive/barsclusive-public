@@ -306,6 +306,13 @@ function renderVouchers(vouchers) {
       btn.addEventListener('click', () => markVoucherPaid(v.id));
       actionTd.appendChild(btn);
     }
+    if (v.status === 'sent' || v.status === 'issued') {
+      const refBtn = document.createElement('button');
+      refBtn.className = 'btn-sm btn-red'; refBtn.style.marginLeft = '4px';
+      refBtn.textContent = t('refundBtn');
+      refBtn.addEventListener('click', () => refundVoucher(v.id, v.code));
+      actionTd.appendChild(refBtn);
+    }
 
     tr.append(
       td(v.code), td(v.deal_title), td(v.bar_name),
@@ -329,6 +336,16 @@ async function markVoucherPaid(voucherId) {
 
 // =============================================
 // BARS — with commission rate editing
+
+async function refundVoucher(voucherId, code) {
+  if (!confirm('Gutschein ' + (code||'') + ' erstatten? Kunde wird per Email benachrichtigt.')) return;
+  if (!hasSession()) { doLogout(); return; }
+  try {
+    const r = await api({ action: 'refundVoucher', token: _token, voucher_id: voucherId });
+    if (r.success) { showToast('Gutschein erstattet'); loadVouchers(); loadOrders(); }
+    else showToast(r.error || 'Fehler', true);
+  } catch (e) { showToast('Verbindungsfehler', true); }
+}
 // =============================================
 async function loadBars() {
   if (!hasSession()) { doLogout(); return; }
@@ -347,49 +364,84 @@ function renderBars(bars) {
   }
   bars.forEach(b => {
     const tr = document.createElement('tr');
-
+    tr.style.cursor = 'pointer';
     const statusBadge = document.createElement('span');
     statusBadge.className = 'badge ' + (b.status === 'active' ? 'b-paid' : 'b-pending');
     statusBadge.textContent = b.status;
     const statusTd = document.createElement('td'); statusTd.appendChild(statusBadge);
-
-    // Commission input
     const commTd = document.createElement('td');
     const commWrap = document.createElement('div');
-    commWrap.style.display = 'flex'; commWrap.style.alignItems = 'center'; commWrap.style.gap = '6px';
+    commWrap.style.cssText = 'display:flex;align-items:center;gap:6px';
     const commInput = document.createElement('input');
     commInput.type = 'number'; commInput.className = 'comm-input';
     commInput.value = b.commission_rate || 10; commInput.min = '0'; commInput.max = '100'; commInput.step = '1';
-    commInput.style.width = '60px'; commInput.style.padding = '5px 8px'; commInput.style.background = '#2a2a2a';
-    commInput.style.border = '1px solid #3a3a3a'; commInput.style.borderRadius = '6px';
-    commInput.style.color = '#fff'; commInput.style.fontSize = '13px';
+    commInput.style.cssText = 'width:60px;padding:5px 8px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:6px;color:#fff;font-size:13px';
+    commInput.addEventListener('click', e => e.stopPropagation());
     const commBtn = document.createElement('button');
     commBtn.className = 'btn-sm btn-blue'; commBtn.textContent = t('commissionSave');
-    commBtn.addEventListener('click', () => updateCommission(b.id, commInput.value));
-    commWrap.append(commInput, commBtn);
-    commTd.appendChild(commWrap);
-
+    commBtn.addEventListener('click', (e) => { e.stopPropagation(); updateCommission(b.id, commInput.value); });
+    commWrap.append(commInput, commBtn); commTd.appendChild(commWrap);
     const actionTd = document.createElement('td');
     if (b.status !== 'active') {
       const btnA = document.createElement('button');
       btnA.className = 'btn-sm btn-green'; btnA.textContent = t('activate');
-      btnA.addEventListener('click', () => updateBarStatus(b.id, 'active'));
+      btnA.addEventListener('click', (e) => { e.stopPropagation(); updateBarStatus(b.id, 'active'); });
       actionTd.appendChild(btnA);
     } else {
       const btnD = document.createElement('button');
       btnD.className = 'btn-sm btn-red'; btnD.textContent = t('deactivate');
-      btnD.addEventListener('click', () => updateBarStatus(b.id, 'inactive'));
+      btnD.addEventListener('click', (e) => { e.stopPropagation(); updateBarStatus(b.id, 'inactive'); });
       actionTd.appendChild(btnD);
     }
     const btnDel = document.createElement('button');
     btnDel.className = 'btn-sm btn-red'; btnDel.style.marginLeft = '6px';
     btnDel.textContent = t('delete');
-    btnDel.addEventListener('click', () => deleteBar(b.id, b.name));
+    btnDel.addEventListener('click', (e) => { e.stopPropagation(); deleteBar(b.id, b.name); });
     actionTd.appendChild(btnDel);
-
     tr.append(td(b.name), td(b.city), td(b.email), statusTd, td(b.deals_count || 0), commTd, actionTd);
     tbody.appendChild(tr);
+    // Expandable detail row
+    const detailTr = document.createElement('tr');
+    detailTr.style.display = 'none';
+    const detailTd = document.createElement('td');
+    detailTd.colSpan = 7;
+    detailTd.style.cssText = 'padding:16px;background:#111;border-top:none';
+    const addr = (b.address || '-') + ', ' + (b.zip || '') + ' ' + (b.city || '');
+    detailTd.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px">'
+      + '<div><strong style="color:#FF3366">Details</strong>'
+      + '<p style="margin:6px 0;color:#ccc">Adresse: ' + addr + '</p>'
+      + '<p style="margin:6px 0;color:#ccc">Tel: ' + (b.phone || '-') + '</p>'
+      + '<p style="margin:6px 0;color:#ccc">IBAN: <strong>' + (b.iban || '-') + '</strong></p>'
+      + '<p style="margin:6px 0;color:#ccc">Twint: ' + (b.twint || '-') + '</p>'
+      + '</div>'
+      + '<div id="barStats_' + b.id + '"><strong style="color:#FF3366">Statistik</strong><p style="color:#999">Klicke um zu laden...</p></div>'
+      + '</div>';
+    detailTr.appendChild(detailTd);
+    tbody.appendChild(detailTr);
+    tr.addEventListener('click', () => {
+      const vis = detailTr.style.display !== 'none';
+      detailTr.style.display = vis ? 'none' : 'table-row';
+      if (!vis) loadBarStatsAdmin(b.id);
+    });
   });
+}
+
+async function loadBarStatsAdmin(barId) {
+  const el = document.getElementById('barStats_' + barId);
+  if (!el) return;
+  try {
+    const r = await api({ action: 'getBarStats', token: _token, bar_id: barId });
+    if (r.success && r.stats) {
+      const s = r.stats;
+      el.innerHTML = '<strong style="color:#FF3366">Statistik</strong>'
+        + '<p style="margin:6px 0;color:#ccc">Deals: ' + (s.active_deals||0) + ' aktiv / ' + (s.total_deals||0) + ' total</p>'
+        + '<p style="margin:6px 0;color:#ccc">Gutscheine verkauft: ' + (s.vouchers_sold||0) + '</p>'
+        + '<p style="margin:6px 0;color:#ccc">Eingeloest: ' + (s.vouchers_redeemed||0) + '</p>'
+        + '<p style="margin:6px 0;color:#ccc">Umsatz: ' + Number(s.total_revenue||0).toFixed(2) + ' CHF</p>'
+        + '<p style="margin:6px 0;color:#ccc">Ausstehend: <strong>' + Number(s.pending_payout||0).toFixed(2) + ' CHF</strong></p>'
+        + '<p style="margin:6px 0;color:#ccc">Ausgezahlt: ' + Number(s.paid_out||0).toFixed(2) + ' CHF</p>';
+    }
+  } catch(e) { el.innerHTML = '<p style="color:#ef4444">Fehler</p>'; }
 }
 
 async function updateCommission(barId, rate) {
