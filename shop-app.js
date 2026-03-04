@@ -306,6 +306,21 @@ function buildDealCard(deal) {
     }
     img.src = imgUrl;
     img.alt = escHtml(deal.title);
+    img.referrerPolicy = 'no-referrer';
+    img.onerror = function() {
+      // Try alternate URL format on error
+      var tid = '';
+      if (imgUrl.indexOf('thumbnail?id=') >= 0) tid = imgUrl.split('id=')[1].split('&')[0];
+      else if (imgUrl.indexOf('/d/') >= 0) tid = imgUrl.split('/d/')[1].split('/')[0];
+      if (tid && !this.dataset.retried) {
+        this.dataset.retried = '1';
+        this.src = 'https://drive.google.com/uc?export=view&id=' + tid;
+      } else {
+        this.style.display = 'none';
+        this.parentElement.textContent = isPauschal ? '\ud83c\udff7\ufe0f' : '\ud83c\udf79';
+        this.parentElement.style.fontSize = '48px';
+      }
+    };
     imgDiv.appendChild(img);
   } else {
     imgDiv.textContent = isPauschal ? '🏷️' : '🍹';
