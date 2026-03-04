@@ -426,76 +426,105 @@ function renderBars(bars) {
   });
 }
 
-async function loadBarStatsAdmin(barId) {
+var _barVouchersCache = {};
+
+async function loadBarStatsAdmin(barId, period) {
   const el = document.getElementById('barStats_' + barId);
   if (!el) return;
-  el.innerHTML = '<p style="color:#999">Laden...</p>';
-  try {
-    const [statsRes, vouchersRes] = await Promise.all([
-      api({ action: 'getBarStats', token: _token, bar_id: barId }),
-      api({ action: 'getBarVouchers', token: _token, bar_id: barId })
-    ]);
-    if (!statsRes.success) { el.innerHTML = '<p style="color:#ef4444">Fehler</p>'; return; }
-    const s = statsRes.stats;
-    const vouchers = (vouchersRes.success && vouchersRes.vouchers) ? vouchersRes.vouchers : [];
-    const pending = Number(s.pending_payout||0);
-    const paid = Number(s.paid_out||0);
-    const comm = Number(s.our_commission||0);
+  period = period || 'all';
 
-    var html = '<strong style="color:#FF3366;font-size:16px">Statistik</strong>'
-      + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">'
-      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Verkauft</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_sold||0) + '</div></div>'
-      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Eingeloest</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + (s.vouchers_redeemed||0) + '</div></div>'
-      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Offen</div><div style="color:#f59e0b;font-size:18px;font-weight:700">' + (s.vouchers_not_redeemed||0) + '</div></div>'
-      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Unsere Provision</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + comm.toFixed(2) + ' CHF</div></div>'
-      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Schuld an Bar</div><div style="color:' + (pending > 0 ? '#ef4444' : '#22c55e') + ';font-size:18px;font-weight:700">' + pending.toFixed(2) + ' CHF</div></div>'
-      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Ausgezahlt</div><div style="color:#3b82f6;font-size:18px;font-weight:700">' + paid.toFixed(2) + ' CHF</div></div>'
-      + '</div>';
+  // Fetch only once, then filter client-side
+  if (!_barVouchersCache[barId]) {
+    el.innerHTML = '<p style="color:#999">Laden...</p>';
+    try {
+      var vRes = await api({ action: 'getBarVouchers', token: _token, bar_id: barId });
+      _barVouchersCache[barId] = (vRes.success && vRes.vouchers) ? vRes.vouchers : [];
+    } catch(e) { el.innerHTML = '<p style="color:#ef4444">Fehler</p>'; return; }
+  }
 
-    if (pending > 0) {
-      html += '<button id="payBtn_' + barId + '" style="margin-top:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;width:100%">Auszahlung: ' + pending.toFixed(2) + ' CHF an Bar ueberweisen</button>';
-    }
+  var allV = _barVouchersCache[barId];
+  var cutoff = getFilterDate(period);
+  var vouchers = cutoff ? allV.filter(function(v) { return new Date(v.created_at) >= cutoff; }) : allV;
 
-    // Voucher detail table
-    if (vouchers.length > 0) {
-      html += '<div style="margin-top:16px"><strong style="color:#FF3366;font-size:14px">Gutscheine (' + vouchers.length + ')</strong>';
-      html += '<table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:12px">';
-      html += '<tr style="border-bottom:1px solid #333"><th style="text-align:left;padding:6px;color:#999">Code</th><th style="text-align:left;padding:6px;color:#999">Deal</th><th style="text-align:right;padding:6px;color:#999">Preis</th><th style="text-align:right;padding:6px;color:#999">Provision</th><th style="text-align:right;padding:6px;color:#999">Bar-Anteil</th><th style="text-align:center;padding:6px;color:#999">Status</th><th style="text-align:center;padding:6px;color:#999">Auszahlung</th><th style="text-align:center;padding:6px;color:#999">Aktion</th></tr>';
-      vouchers.forEach(function(v) {
-        var statusColor = v.status === 'redeemed' ? '#22c55e' : '#f59e0b';
-        var statusText = v.status === 'redeemed' ? 'Eingeloest' : 'Offen';
-        var payColor = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
-        var payText = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
-        html += '<tr style="border-bottom:1px solid #222">';
-        html += '<td style="padding:6px;color:#ccc;font-family:monospace">' + (v.code||'-') + '</td>';
-        html += '<td style="padding:6px;color:#ccc">' + (v.deal_title||'-') + '</td>';
-        html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.price_paid||0).toFixed(2) + '</td>';
-        html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.platform_fee||0).toFixed(2) + '</td>';
-        html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.bar_payout||0).toFixed(2) + '</td>';
-        html += '<td style="padding:6px;text-align:center"><span style="color:' + statusColor + ';font-weight:600">' + statusText + '</span></td>';
-        html += '<td style="padding:6px;text-align:center"><span style="color:' + payColor + ';font-weight:600">' + payText + '</span></td>';
-        html += '<td style="padding:6px;text-align:center">';
-        if (v.status === 'sent' || v.status === 'issued') {
-          html += '<button class="btn-sm btn-red" style="font-size:11px;padding:3px 8px" data-refund-vid="' + v.id + '" data-refund-code="' + v.code + '">Erstatten</button>';
-        }
-        html += '</td></tr>';
-      });
-      html += '</table></div>';
-    }
+  // Compute stats from filtered vouchers
+  var sold = vouchers.length, redeemed = 0, pendingAmt = 0, paidAmt = 0, commAmt = 0;
+  vouchers.forEach(function(v) {
+    commAmt += Number(v.platform_fee) || 0;
+    if (v.status === 'redeemed') redeemed++;
+    if (v.status === 'redeemed' && v.payout_status === 'pending') pendingAmt += Number(v.bar_payout) || 0;
+    if (v.payout_status === 'paid') paidAmt += Number(v.bar_payout) || 0;
+  });
+  // Total pending (unfiltered) for payout button
+  var totalPending = 0;
+  allV.forEach(function(v) { if (v.status === 'redeemed' && v.payout_status === 'pending') totalPending += Number(v.bar_payout) || 0; });
 
-    el.innerHTML = html;
+  // Time filter buttons
+  var html = '<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap">';
+  [['day','Heute'],['week','Woche'],['month','Monat'],['year','Jahr'],['all','Alle']].forEach(function(f) {
+    var act = period === f[0] ? 'background:#FF3366;color:#fff;border-color:#FF3366' : 'background:#222;color:#ccc;border-color:#333';
+    html += '<button class="bsf_' + barId + '" data-p="' + f[0] + '" style="' + act + ';border:1px solid;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:11px;font-weight:600">' + f[1] + '</button>';
+  });
+  html += '</div>';
 
-    // Attach payout button
-    var payBtn = document.getElementById('payBtn_' + barId);
-    if (payBtn) payBtn.addEventListener('click', function() { payoutBar(barId); });
+  html += '<strong style="color:#FF3366;font-size:16px">Statistik</strong>'
+    + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">'
+    + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Verkauft</div><div style="color:#fff;font-size:18px;font-weight:700">' + sold + '</div></div>'
+    + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Eingeloest</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + redeemed + '</div></div>'
+    + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Offen</div><div style="color:#f59e0b;font-size:18px;font-weight:700">' + (sold - redeemed) + '</div></div>'
+    + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Unsere Provision</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + commAmt.toFixed(2) + ' CHF</div></div>'
+    + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Schuld an Bar</div><div style="color:' + (pendingAmt > 0 ? '#ef4444' : '#22c55e') + ';font-size:18px;font-weight:700">' + pendingAmt.toFixed(2) + ' CHF</div></div>'
+    + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Ausgezahlt</div><div style="color:#3b82f6;font-size:18px;font-weight:700">' + paidAmt.toFixed(2) + ' CHF</div></div>'
+    + '</div>';
 
-    // Attach refund buttons
-    el.querySelectorAll('[data-refund-vid]').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        refundVoucher(this.getAttribute('data-refund-vid'), this.getAttribute('data-refund-code'));
-      });
+  if (totalPending > 0) {
+    html += '<button id="payBtn_' + barId + '" style="margin-top:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;width:100%">Auszahlung: ' + totalPending.toFixed(2) + ' CHF an Bar ueberweisen</button>';
+  }
+
+  // Voucher detail table
+  if (vouchers.length > 0) {
+    html += '<div style="margin-top:16px"><strong style="color:#FF3366;font-size:14px">Gutscheine (' + vouchers.length + ')</strong>';
+    html += '<table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:12px">';
+    html += '<tr style="border-bottom:1px solid #333"><th style="text-align:left;padding:6px;color:#999">Datum</th><th style="text-align:left;padding:6px;color:#999">Code</th><th style="text-align:left;padding:6px;color:#999">Deal</th><th style="text-align:right;padding:6px;color:#999">Preis</th><th style="text-align:right;padding:6px;color:#999">Provision</th><th style="text-align:right;padding:6px;color:#999">Bar-Anteil</th><th style="text-align:center;padding:6px;color:#999">Status</th><th style="text-align:center;padding:6px;color:#999">Auszahlung</th><th style="text-align:center;padding:6px;color:#999">Aktion</th></tr>';
+    vouchers.forEach(function(v) {
+      var sc = v.status === 'redeemed' ? '#22c55e' : '#f59e0b';
+      var st2 = v.status === 'redeemed' ? 'Eingeloest' : 'Offen';
+      var pc = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
+      var pt = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
+      var ds = v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-';
+      html += '<tr style="border-bottom:1px solid #222">';
+      html += '<td style="padding:6px;color:#888;font-size:11px">' + ds + '</td>';
+      html += '<td style="padding:6px;color:#ccc;font-family:monospace">' + (v.code||'-') + '</td>';
+      html += '<td style="padding:6px;color:#ccc">' + (v.deal_title||'-') + '</td>';
+      html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.price_paid||0).toFixed(2) + '</td>';
+      html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.platform_fee||0).toFixed(2) + '</td>';
+      html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.bar_payout||0).toFixed(2) + '</td>';
+      html += '<td style="padding:6px;text-align:center"><span style="color:' + sc + ';font-weight:600">' + st2 + '</span></td>';
+      html += '<td style="padding:6px;text-align:center"><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td>';
+      html += '<td style="padding:6px;text-align:center">';
+      if (v.status === 'sent' || v.status === 'issued') {
+        html += '<button class="btn-sm btn-red" style="font-size:11px;padding:3px 8px" data-refund-vid="' + v.id + '" data-refund-code="' + v.code + '">Erstatten</button>';
+      }
+      html += '</td></tr>';
     });
-  } catch(e) { el.innerHTML = '<p style="color:#ef4444">Fehler: ' + e.message + '</p>'; }
+    html += '</table></div>';
+  }
+
+  el.innerHTML = html;
+
+  // Attach filter buttons
+  el.querySelectorAll('.bsf_' + barId).forEach(function(btn) {
+    btn.addEventListener('click', function() { loadBarStatsAdmin(barId, this.getAttribute('data-p')); });
+  });
+  // Attach payout button
+  var payBtn = document.getElementById('payBtn_' + barId);
+  if (payBtn) payBtn.addEventListener('click', function() { _barVouchersCache[barId] = null; payoutBar(barId); });
+  // Attach refund buttons
+  el.querySelectorAll('[data-refund-vid]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      _barVouchersCache[barId] = null;
+      refundVoucher(this.getAttribute('data-refund-vid'), this.getAttribute('data-refund-code'));
+    });
+  });
 }
 
 async function payoutBar(barId) {
