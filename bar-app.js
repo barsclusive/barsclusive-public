@@ -358,7 +358,9 @@ function openEditModal(deal) {
     var editPreview = document.getElementById('editImagePreview');
     var editPreviewImg = document.getElementById('editImagePreviewImg');
     if (editPreview && editPreviewImg && deal.image_url) {
-      editPreviewImg.src = deal.image_url; editPreview.style.display = 'block';
+      var previewUrl = deal.image_url;
+      if (previewUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var pfid = previewUrl.split('/d/')[1]; if (pfid) previewUrl = 'https://drive.google.com/thumbnail?id=' + pfid + '&sz=w400'; }
+      editPreviewImg.src = previewUrl; editPreview.style.display = 'block';
     } else if (editPreview) { editPreview.style.display = 'none'; }
     // Reset file input
     var editFile = document.getElementById('editImageFile');
