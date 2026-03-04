@@ -102,6 +102,7 @@
         <img src="logo.png" alt="BarSclusive">
       </div>
       <a href="bar-portal.html" class="back-btn">← Zurück zum Portal</a>
+      <div style="display:flex;gap:6px;margin-left:auto"><button onclick="_SL(this,'de')" style="background:#222;border:1px solid #FF3366;color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">DE</button><button onclick="_SL(this,'en')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">EN</button><button onclick="_SL(this,'it')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">IT</button><button onclick="_SL(this,'fr')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">FR</button></div>
     </div>
 
     <div class="content">
@@ -246,3 +247,37 @@
         <p><strong>BarSclusive</strong><br>
         Email: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
         <p style="margin-top:20px; color:#999; font-size:14px;">
+          Stand: Januar 2026 | BarSclusive, Basel, Schweiz
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
+    <p>&copy; 2026 BarSclusive</p>
+    <p style="margin-top:8px">
+      <a href="bar-portal.html" style="color:#FF3366">Bar-Portal</a> &middot;
+      <a href="datenschutz-bars.html" style="color:#FF3366">Datenschutz</a> &middot;
+      <a href="kontakt.html" style="color:#FF3366">Kontakt</a>
+    </p>
+  </div>
+
+<script>
+function _SL(b,l){
+  localStorage.setItem("barsclusive_lang",l);
+  document.querySelectorAll("[onclick*=_SL]").forEach(function(x){x.style.borderColor="#333";x.style.color="#888"});
+  b.style.borderColor="#FF3366";b.style.color="#fff";
+  var t={de:"AGB f\u00fcr Bars",en:"Terms for Bars",it:"Condizioni per bar",fr:"CGV pour bars"};
+  var bk={de:"\u2190 Zur\u00fcck zum Bar-Portal",en:"\u2190 Back to Bar Portal",it:"\u2190 Torna al portale",fr:"\u2190 Retour au portail"};
+  var h=document.querySelector("h1");if(h)h.textContent=t[l]||t.de;
+  var a=document.querySelector(".back-btn");if(a)a.textContent=bk[l]||bk.de;
+}
+document.addEventListener("DOMContentLoaded",function(){
+  var s=localStorage.getItem("barsclusive_lang")||"de";
+  var btns=document.querySelectorAll("[onclick*=_SL]");
+  var idx={de:0,en:1,it:2,fr:3};
+  if(btns[idx[s]])_SL(btns[idx[s]],s);
+});
+</script>
+</body>
+</html>
