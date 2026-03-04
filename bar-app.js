@@ -25,7 +25,7 @@ de: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Preis', createdLbl:'Erstellt', redeemedLbl:'Eingelöst',
   redeemTitle:'Gutschein einlösen', redeemHint:'Gutschein-Code des Kunden eingeben',
   redeemBtn:'Einlösen', redeemSuccess:'✅ Gutschein eingelöst!',
-  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', profileTitle:'Stammdaten', addressLbl:'Adresse', zipLbl:'PLZ', cityLbl:'Stadt', phoneLbl:'Telefon', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Speichern', profileSaved:'Profil gespeichert', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Ausgezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
+  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', profileTitle:'Stammdaten', addressLbl:'Adresse', zipLbl:'PLZ', cityLbl:'Stadt', phoneLbl:'Telefon', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Speichern', profileSaved:'Profil gespeichert', deleteAccountTitle:'Account löschen', deleteAccountWarning:'Alle Deals werden deaktiviert. Diese Aktion ist endgültig.', deleteAccountBtn:'Account endgültig löschen', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Ausgezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
   newPasswordLbl:'Neues Passwort (mind. 8 Zeichen)', confirmPassword:'Passwort bestätigen',
   changePasswordBtn:'Passwort ändern', editDeal:'Deal bearbeiten',
   saveLbl:'Speichern', cancelLbl:'Abbrechen',
@@ -54,7 +54,7 @@ en: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Price', createdLbl:'Created', redeemedLbl:'Redeemed',
   redeemTitle:'Redeem Voucher', redeemHint:"Enter the customer's voucher code",
   redeemBtn:'Redeem', redeemSuccess:'✅ Voucher redeemed!',
-  changePassword:'Change Password', oldPassword:'Old Password', profileTitle:'Master Data', addressLbl:'Address', zipLbl:'ZIP', cityLbl:'City', phoneLbl:'Phone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Save', profileSaved:'Profile saved', soldCount:'Sold', notRedeemed:'Not redeemed', paidOut:'Paid out', activeDeals:'Active Deals', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?', shop:'Shop', aboutUs:'About Us', howItWorks:'How It Works', legalNotice:'Legal Notice', privacy:'Privacy', termsBars:'Terms Bars', contact:'Contact',
+  changePassword:'Change Password', oldPassword:'Old Password', profileTitle:'Master Data', addressLbl:'Address', zipLbl:'ZIP', cityLbl:'City', phoneLbl:'Phone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Save', profileSaved:'Profile saved', deleteAccountTitle:'Delete Account', deleteAccountWarning:'All deals will be deactivated. This action is permanent.', deleteAccountBtn:'Delete account permanently', soldCount:'Sold', notRedeemed:'Not redeemed', paidOut:'Paid out', activeDeals:'Active Deals', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?', shop:'Shop', aboutUs:'About Us', howItWorks:'How It Works', legalNotice:'Legal Notice', privacy:'Privacy', termsBars:'Terms Bars', contact:'Contact',
   newPasswordLbl:'New Password (min. 8 chars)', confirmPassword:'Confirm Password',
   changePasswordBtn:'Change Password', editDeal:'Edit Deal',
   saveLbl:'Save', cancelLbl:'Cancel',
@@ -83,7 +83,7 @@ it: {
   codeLbl:'Codice', dealLbl:'Deal', priceLbl:'Prezzo', createdLbl:'Creato', redeemedLbl:'Riscattato',
   redeemTitle:'Riscatta Voucher', redeemHint:'Inserisci il codice voucher del cliente',
   redeemBtn:'Riscatta', redeemSuccess:'✅ Voucher riscattato!',
-  changePassword:'Cambia Password', oldPassword:'Vecchia Password', profileTitle:'Dati anagrafici', addressLbl:'Indirizzo', zipLbl:'CAP', cityLbl:'Città', phoneLbl:'Telefono', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Salva', profileSaved:'Profilo salvato', soldCount:'Venduti', notRedeemed:'Non riscattati', paidOut:'Pagato', activeDeals:'Deal attivi', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
+  changePassword:'Cambia Password', oldPassword:'Vecchia Password', profileTitle:'Dati anagrafici', addressLbl:'Indirizzo', zipLbl:'CAP', cityLbl:'Città', phoneLbl:'Telefono', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Salva', profileSaved:'Profilo salvato', deleteAccountTitle:'Elimina account', deleteAccountWarning:'Tutti i deal saranno disattivati. Questa azione è definitiva.', deleteAccountBtn:'Elimina account definitivamente', soldCount:'Venduti', notRedeemed:'Non riscattati', paidOut:'Pagato', activeDeals:'Deal attivi', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
   newPasswordLbl:'Nuova Password (min. 8 car.)', confirmPassword:'Conferma Password',
   changePasswordBtn:'Cambia Password', editDeal:'Modifica Deal',
   saveLbl:'Salva', cancelLbl:'Annulla',
@@ -112,7 +112,7 @@ fr: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Prix', createdLbl:'Créé', redeemedLbl:'Échangé',
   redeemTitle:'Échanger Bon', redeemHint:'Entrez le code du bon client',
   redeemBtn:'Échanger', redeemSuccess:'✅ Bon échangé!',
-  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', profileTitle:'Coordonnées', addressLbl:'Adresse', zipLbl:'NPA', cityLbl:'Ville', phoneLbl:'Téléphone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Enregistrer', profileSaved:'Profil enregistré', soldCount:'Vendus', notRedeemed:'Non utilis\xe9s', paidOut:'Pay\xe9', activeDeals:'Offres actives', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
+  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', profileTitle:'Coordonnées', addressLbl:'Adresse', zipLbl:'NPA', cityLbl:'Ville', phoneLbl:'Téléphone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Enregistrer', profileSaved:'Profil enregistré', deleteAccountTitle:'Supprimer le compte', deleteAccountWarning:'Tous les deals seront désactivés. Cette action est définitive.', deleteAccountBtn:'Supprimer le compte définitivement', soldCount:'Vendus', notRedeemed:'Non utilis\xe9s', paidOut:'Pay\xe9', activeDeals:'Offres actives', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
   newPasswordLbl:'Nouveau mot de passe (min. 8 car.)', confirmPassword:'Confirmer',
   changePasswordBtn:'Changer', editDeal:'Modifier Deal',
   saveLbl:'Enregistrer', cancelLbl:'Annuler',
@@ -265,6 +265,7 @@ async function deleteDeal(dealId) {
 
 // ── OVERVIEW ─────────────────────────────────────────────────────────────
 var _barStatsVouchers = null;
+var _barStatsDeals = -1;
 var _barStatsPeriod = 'all';
 
 function barFilterDate(period) {
@@ -282,20 +283,25 @@ async function loadBarStats(period) {
   period = period || _barStatsPeriod || 'all';
   _barStatsPeriod = period;
 
-  // Fetch vouchers once
-  if (!_barStatsVouchers) {
+  // Fetch data once, cache it
+  if (!_barStatsVouchers || _barStatsDeals < 0) {
+    var grid = document.getElementById('statsGrid');
+    grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
     try {
-      var vr = await api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId });
+      var [vr, dr] = await Promise.all([
+        api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId }),
+        api({ action: 'getBarDeals', token: s.token, bar_id: s.barId })
+      ]);
       _barStatsVouchers = (vr.success && vr.vouchers) ? vr.vouchers : [];
-    } catch(e) { _barStatsVouchers = []; }
+      _barStatsDeals = 0;
+      if (dr.success && dr.deals) dr.deals.forEach(function(d) { if (d.active) _barStatsDeals++; });
+    } catch(e) { _barStatsVouchers = []; _barStatsDeals = 0; }
   }
-  // Also get active deals count
-  var activeDeals = 0;
-  try {
-    var dr = await api({ action: 'getBarDeals', token: s.token, bar_id: s.barId });
-    if (dr.success && dr.deals) dr.deals.forEach(function(d) { if (d.active) activeDeals++; });
-  } catch(e) {}
 
+  renderBarStats(period);
+}
+
+function renderBarStats(period) {
   var cutoff = barFilterDate(period);
   var vouchers = cutoff ? _barStatsVouchers.filter(function(v) { return new Date(v.created_at) >= cutoff; }) : _barStatsVouchers;
 
@@ -311,7 +317,7 @@ async function loadBarStats(period) {
 
   // Filter buttons
   var filterDiv = document.createElement('div');
-  filterDiv.style.cssText = 'display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap';
+  filterDiv.style.cssText = 'display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap';
   [['day',{de:'Heute',en:'Today',it:'Oggi',fr:"Aujourd'hui"}],
    ['week',{de:'Woche',en:'Week',it:'Settimana',fr:'Semaine'}],
    ['month',{de:'Monat',en:'Month',it:'Mese',fr:'Mois'}],
@@ -321,7 +327,7 @@ async function loadBarStats(period) {
     var btn = document.createElement('button');
     btn.textContent = f[1][currentLang] || f[1].de;
     btn.style.cssText = (period === f[0] ? 'background:#FF3366;color:#fff;border-color:#FF3366' : 'background:#222;color:#ccc;border-color:#333') + ';border:1px solid;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
-    btn.addEventListener('click', function() { loadBarStats(f[0]); });
+    btn.addEventListener('click', function() { _barStatsPeriod = f[0]; renderBarStats(f[0]); });
     filterDiv.appendChild(btn);
   });
   grid.appendChild(filterDiv);
@@ -335,7 +341,7 @@ async function loadBarStats(period) {
     [t('notRedeemed') || 'Nicht eingelöst', sold - redeemed, '#f59e0b'],
     [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#ef4444'],
     [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#3b82f6'],
-    [t('activeDeals') || 'Aktive Deals', activeDeals, '#fff'],
+    [t('activeDeals') || 'Aktive Deals', _barStatsDeals, '#fff'],
   ].forEach(function(s) {
     var card = document.createElement('div'); card.className = 'stat-card';
     var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
@@ -664,7 +670,12 @@ async function doCreateDeal() {
       document.querySelectorAll('.wd-btn').forEach(function(b) { b.classList.remove('selected'); });
       document.getElementById('dealQty').value = '0';
     } else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast('Verbindungsfehler', true); }
+    if (_cBtn) { _cBtn.disabled = false; _cBtn.textContent = t('createDeal') || 'Deal erstellen'; }
+  } catch (e) {
+    showToast('Verbindungsfehler', true);
+    var _rb = document.getElementById('btnCreateDeal');
+    if (_rb) { _rb.disabled = false; _rb.textContent = t('createDeal') || 'Deal erstellen'; }
+  }
 }
 
 // ── TAB SWITCHING ─────────────────────────────────────────────────────────
@@ -820,6 +831,24 @@ async function saveProfile() {
   } catch(e) { showToast('Verbindungsfehler', true); }
 }
 
+async function deleteBarAccount() {
+  var s = sessionGet();
+  if (!s) { doLogout(); return; }
+  var msg = currentLang === 'de' ? 'Account wirklich löschen? Alle Deals werden deaktiviert. Diese Aktion ist endgültig!' :
+            currentLang === 'en' ? 'Really delete your account? All deals will be deactivated. This action is permanent!' :
+            currentLang === 'it' ? 'Eliminare davvero il tuo account? Tutti i deal saranno disattivati. Questa azione è definitiva!' :
+            'Vraiment supprimer votre compte ? Tous les deals seront désactivés. Cette action est définitive !';
+  if (!confirm(msg)) return;
+  if (!confirm(currentLang === 'de' ? 'Bist du GANZ sicher?' : 'Are you REALLY sure?')) return;
+  try {
+    var r = await api({ action: 'deleteBarAccount', token: s.token });
+    if (r.success) {
+      showToast('Account gelöscht');
+      setTimeout(function() { doLogout(); }, 1500);
+    } else showToast(r.error || 'Fehler', true);
+  } catch(e) { showToast('Verbindungsfehler', true); }
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
   // Language
@@ -878,6 +907,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // Change password
   var btnChangePw = document.getElementById('btnChangePassword');
   if (btnChangePw) btnChangePw.addEventListener('click', doChangePassword);
+
+  // Profile save + delete account
+  var btnSavePr = document.getElementById('btnSaveProfile');
+  if (btnSavePr) btnSavePr.addEventListener('click', saveProfile);
+  var btnDelAcc = document.getElementById('btnDeleteAccount');
+  if (btnDelAcc) btnDelAcc.addEventListener('click', deleteBarAccount);
 
   // Edit modal
   var btnCloseEdit  = document.getElementById('btnCloseEditModal');
