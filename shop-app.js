@@ -301,7 +301,7 @@ function buildDealCard(deal) {
     var imgUrl = deal.image_url;
     // Convert any Google Drive URL to the most reliable format
     var gid = '';
-    if (imgUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) gid = imgUrl.split('/d/')[1];
+    if (imgUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) gid = imgUrl.split('/d/')[1].split('=')[0];
     else if (imgUrl.indexOf('thumbnail?id=') >= 0) gid = imgUrl.split('id=')[1].split('&')[0];
     else if (imgUrl.indexOf('/d/') >= 0) gid = (imgUrl.split('/d/')[1] || '').split('/')[0];
     else if (imgUrl.indexOf('uc?') >= 0 && imgUrl.indexOf('id=') >= 0) gid = imgUrl.split('id=')[1].split('&')[0];
