@@ -96,6 +96,7 @@
         <img src="logo.png" alt="BarSclusive">
       </div>
       <a href="bar-portal.html" class="back-btn">← Zurück zum Portal</a>
+      <div style="display:flex;gap:6px;margin-left:auto"><button onclick="_SL(this,'de')" style="background:#222;border:1px solid #FF3366;color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">DE</button><button onclick="_SL(this,'en')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">EN</button><button onclick="_SL(this,'it')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">IT</button><button onclick="_SL(this,'fr')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">FR</button></div>
     </div>
 
     <div class="content">
@@ -242,4 +243,40 @@
 
       <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
         <h2>10. Änderungen</h2>
-        <p>Wir behalten uns vor, d
+        <p>Wir behalten uns vor, dtualisieren. Die aktuelle Version gilt ab dem Zeitpunkt der Veröffentlichung.</p>
+      </div>
+
+      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+        <h2>Kontakt</h2>
+        <p><strong>BarSclusive</strong><br>
+        Email: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
+        <p style="margin-top:20px; color:#999; font-size:14px;">
+          Stand: Januar 2026 | BarSclusive, Basel, Schweiz
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
+    <p>&copy; 2026 BarSclusive</p>
+  </div>
+
+<script>
+function _SL(b,l){
+  localStorage.setItem("barsclusive_lang",l);
+  document.querySelectorAll("[onclick*=_SL]").forEach(function(x){x.style.borderColor="#333";x.style.color="#888"});
+  b.style.borderColor="#FF3366";b.style.color="#fff";
+  var t={'de': 'Datenschutz Bars', 'en': 'Privacy for Bars', 'it': 'Privacy bar', 'fr': 'Confidentialit\\u00e9 bars'};
+  var bk={de:"\u2190 Zur\u00fcck",en:"\u2190 Back",it:"\u2190 Indietro",fr:"\u2190 Retour"};
+  var h=document.querySelector("h1");if(h)h.textContent=t[l]||t.de;
+  var a=document.querySelector(".back-btn,.back");if(a)a.textContent=bk[l]||bk.de;
+}
+document.addEventListener("DOMContentLoaded",function(){
+  var s=localStorage.getItem("barsclusive_lang")||"de";
+  var btns=document.querySelectorAll("[onclick*=_SL]");
+  var idx={de:0,en:1,it:2,fr:3};
+  if(btns[idx[s]])_SL(btns[idx[s]],s);
+});
+</script>
+</body>
+</html>
