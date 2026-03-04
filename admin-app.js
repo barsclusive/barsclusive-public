@@ -254,7 +254,7 @@ function renderOrders(orders, voucherMap) {
 
     tr.append(
       td(new Date(o.created_at).toLocaleString('de-CH')),
-      td(o.deal_title), td(o.bar_name), td(o.buyer_name),
+      td(o.deal_title), td(o.bar_name), td(o.buyer_name), td(o.buyer_email || '-'),
       td(Number(o.price).toFixed(2) + ' CHF'),
       statusTd, voucherTd, refundTd, actionTd
     );
@@ -429,30 +429,73 @@ function renderBars(bars) {
 async function loadBarStatsAdmin(barId) {
   const el = document.getElementById('barStats_' + barId);
   if (!el) return;
+  el.innerHTML = '<p style="color:#999">Laden...</p>';
   try {
-    const r = await api({ action: 'getBarStats', token: _token, bar_id: barId });
-    if (r.success && r.stats) {
-      const s = r.stats;
-      const pending = Number(s.pending_payout||0);
-      const paid = Number(s.paid_out||0);
-      const comm = Number(s.our_commission||0);
-      var html = '<strong style="color:#FF3366">Statistik</strong>'
-        + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">'
-        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Verkauft</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_sold||0) + '</div></div>'
-        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Eingelöst</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_redeemed||0) + '</div></div>'
-        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Offen</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_not_redeemed||0) + '</div></div>'
-        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Unsere Provision</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + comm.toFixed(2) + ' CHF</div></div>'
-        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Schuld an Bar</div><div style="color:' + (pending > 0 ? '#ef4444' : '#22c55e') + ';font-size:18px;font-weight:700">' + pending.toFixed(2) + ' CHF</div></div>'
-        + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Ausgezahlt</div><div style="color:#3b82f6;font-size:18px;font-weight:700">' + paid.toFixed(2) + ' CHF</div></div>'
-        + '</div>';
-      if (pending > 0) {
-        html += '<button id="payBtn_' + barId + '" style="margin-top:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;width:100%">💸 Auszahlung: ' + pending.toFixed(2) + ' CHF</button>';
-      }
-      el.innerHTML = html;
-      var payBtn = document.getElementById('payBtn_' + barId);
-      if (payBtn) payBtn.addEventListener('click', function() { payoutBar(barId); });
+    const [statsRes, vouchersRes] = await Promise.all([
+      api({ action: 'getBarStats', token: _token, bar_id: barId }),
+      api({ action: 'getBarVouchers', token: _token, bar_id: barId })
+    ]);
+    if (!statsRes.success) { el.innerHTML = '<p style="color:#ef4444">Fehler</p>'; return; }
+    const s = statsRes.stats;
+    const vouchers = (vouchersRes.success && vouchersRes.vouchers) ? vouchersRes.vouchers : [];
+    const pending = Number(s.pending_payout||0);
+    const paid = Number(s.paid_out||0);
+    const comm = Number(s.our_commission||0);
+
+    var html = '<strong style="color:#FF3366;font-size:16px">Statistik</strong>'
+      + '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">'
+      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Verkauft</div><div style="color:#fff;font-size:18px;font-weight:700">' + (s.vouchers_sold||0) + '</div></div>'
+      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Eingeloest</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + (s.vouchers_redeemed||0) + '</div></div>'
+      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Offen</div><div style="color:#f59e0b;font-size:18px;font-weight:700">' + (s.vouchers_not_redeemed||0) + '</div></div>'
+      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Unsere Provision</div><div style="color:#22c55e;font-size:18px;font-weight:700">' + comm.toFixed(2) + ' CHF</div></div>'
+      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Schuld an Bar</div><div style="color:' + (pending > 0 ? '#ef4444' : '#22c55e') + ';font-size:18px;font-weight:700">' + pending.toFixed(2) + ' CHF</div></div>'
+      + '<div style="background:#1a1a1a;padding:10px;border-radius:8px"><div style="color:#999;font-size:11px">Ausgezahlt</div><div style="color:#3b82f6;font-size:18px;font-weight:700">' + paid.toFixed(2) + ' CHF</div></div>'
+      + '</div>';
+
+    if (pending > 0) {
+      html += '<button id="payBtn_' + barId + '" style="margin-top:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;width:100%">Auszahlung: ' + pending.toFixed(2) + ' CHF an Bar ueberweisen</button>';
     }
-  } catch(e) { el.innerHTML = '<p style="color:#ef4444">Fehler</p>'; }
+
+    // Voucher detail table
+    if (vouchers.length > 0) {
+      html += '<div style="margin-top:16px"><strong style="color:#FF3366;font-size:14px">Gutscheine (' + vouchers.length + ')</strong>';
+      html += '<table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:12px">';
+      html += '<tr style="border-bottom:1px solid #333"><th style="text-align:left;padding:6px;color:#999">Code</th><th style="text-align:left;padding:6px;color:#999">Deal</th><th style="text-align:right;padding:6px;color:#999">Preis</th><th style="text-align:right;padding:6px;color:#999">Provision</th><th style="text-align:right;padding:6px;color:#999">Bar-Anteil</th><th style="text-align:center;padding:6px;color:#999">Status</th><th style="text-align:center;padding:6px;color:#999">Auszahlung</th><th style="text-align:center;padding:6px;color:#999">Aktion</th></tr>';
+      vouchers.forEach(function(v) {
+        var statusColor = v.status === 'redeemed' ? '#22c55e' : '#f59e0b';
+        var statusText = v.status === 'redeemed' ? 'Eingeloest' : 'Offen';
+        var payColor = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
+        var payText = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
+        html += '<tr style="border-bottom:1px solid #222">';
+        html += '<td style="padding:6px;color:#ccc;font-family:monospace">' + (v.code||'-') + '</td>';
+        html += '<td style="padding:6px;color:#ccc">' + (v.deal_title||'-') + '</td>';
+        html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.price_paid||0).toFixed(2) + '</td>';
+        html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.platform_fee||0).toFixed(2) + '</td>';
+        html += '<td style="padding:6px;color:#ccc;text-align:right">' + Number(v.bar_payout||0).toFixed(2) + '</td>';
+        html += '<td style="padding:6px;text-align:center"><span style="color:' + statusColor + ';font-weight:600">' + statusText + '</span></td>';
+        html += '<td style="padding:6px;text-align:center"><span style="color:' + payColor + ';font-weight:600">' + payText + '</span></td>';
+        html += '<td style="padding:6px;text-align:center">';
+        if (v.status === 'sent' || v.status === 'issued') {
+          html += '<button class="btn-sm btn-red" style="font-size:11px;padding:3px 8px" data-refund-vid="' + v.id + '" data-refund-code="' + v.code + '">Erstatten</button>';
+        }
+        html += '</td></tr>';
+      });
+      html += '</table></div>';
+    }
+
+    el.innerHTML = html;
+
+    // Attach payout button
+    var payBtn = document.getElementById('payBtn_' + barId);
+    if (payBtn) payBtn.addEventListener('click', function() { payoutBar(barId); });
+
+    // Attach refund buttons
+    el.querySelectorAll('[data-refund-vid]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        refundVoucher(this.getAttribute('data-refund-vid'), this.getAttribute('data-refund-code'));
+      });
+    });
+  } catch(e) { el.innerHTML = '<p style="color:#ef4444">Fehler: ' + e.message + '</p>'; }
 }
 
 async function payoutBar(barId) {
@@ -537,11 +580,16 @@ function renderDeals(deals) {
     const statusTd = document.createElement('td'); statusTd.appendChild(statusBadge);
 
     const actionTd = document.createElement('td');
+    actionTd.style.cssText = 'display:flex;gap:4px;flex-wrap:wrap';
     const btnToggle = document.createElement('button');
     btnToggle.className = 'btn-sm ' + (d.active ? 'btn-orange' : 'btn-green');
     btnToggle.textContent = d.active ? t('deactivateDeal') : t('activateDeal');
     btnToggle.addEventListener('click', () => adminToggleDeal(d.id, !d.active));
     actionTd.appendChild(btnToggle);
+    const btnDel = document.createElement('button');
+    btnDel.className = 'btn-sm btn-red'; btnDel.textContent = t('delete');
+    btnDel.addEventListener('click', () => adminDeleteDeal(d.id, d.title));
+    actionTd.appendChild(btnDel);
 
     tr.append(
       td(d.bar_name), td(d.title),
@@ -551,6 +599,16 @@ function renderDeals(deals) {
     );
     tbody.appendChild(tr);
   });
+}
+
+async function adminDeleteDeal(dealId, title) {
+  if (!confirm('Deal "' + (title||'') + '" wirklich loeschen?')) return;
+  if (!hasSession()) { doLogout(); return; }
+  try {
+    const r = await api({ action: 'adminDeleteDeal', token: _token, deal_id: dealId });
+    if (r.success) { showToast('Deal geloescht'); loadDeals(); }
+    else showToast(r.error || 'Fehler', true);
+  } catch(e) { showToast('Verbindungsfehler', true); }
 }
 
 async function adminToggleDeal(dealId, active) {
@@ -565,38 +623,113 @@ async function adminToggleDeal(dealId, active) {
 // =============================================
 // STATS
 // =============================================
+var _statsFilter = 'all';
+var _statsData = null;
+
 async function loadStats() {
   if (!hasSession()) { doLogout(); return; }
   try {
-    const r = await api({ action: 'getStats', token: _token });
-    if (!r.success) { showToast(r.error, true); return; }
-    renderStats(r);
+    const [vRes, oRes, bRes, dRes] = await Promise.all([
+      api({ action: 'getVouchers', token: _token }),
+      api({ action: 'getOrders', token: _token }),
+      api({ action: 'getBars', token: _token }),
+      api({ action: 'getAdminDeals', token: _token })
+    ]);
+    _statsData = {
+      vouchers: (vRes.success ? vRes.vouchers : []) || [],
+      orders: (oRes.success ? oRes.orders : []) || [],
+      bars: (bRes.success ? bRes.bars : []) || [],
+      deals: (dRes.success ? dRes.deals : []) || []
+    };
+    try { _statsData.customers = Math.max(0, (await api({ action: 'getCustomers', token: _token })).customers.length); } catch(e) { _statsData.customers = 0; }
+    renderStats(_statsFilter);
   } catch (e) { showToast('Ladefehler', true); }
 }
 
-function renderStats(s) {
-  const grid = document.getElementById('statsGrid');
-  grid.innerHTML = '';
+function setStatsFilter(period) {
+  _statsFilter = period;
+  document.querySelectorAll('.stats-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  var btn = document.getElementById('sf_' + period);
+  if (btn) btn.classList.add('active');
+  if (_statsData) renderStats(period);
+}
+
+function getFilterDate(period) {
+  var now = new Date();
+  if (period === 'day') { var d = new Date(now); d.setHours(0,0,0,0); return d; }
+  if (period === 'week') { var d = new Date(now); d.setDate(d.getDate() - 7); return d; }
+  if (period === 'month') { var d = new Date(now); d.setMonth(d.getMonth() - 1); return d; }
+  if (period === 'year') { var d = new Date(now); d.setFullYear(d.getFullYear() - 1); return d; }
+  return null; // 'all'
+}
+
+function renderStats(period) {
+  var container = document.getElementById('statsGrid');
+  container.innerHTML = '';
+
+  // Filter buttons
+  var filterHtml = '<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">';
+  [['day','Heute','Today'],['week','Woche','Week'],['month','Monat','Month'],['year','Jahr','Year'],['all','Alle','All']].forEach(function(f) {
+    var active = period === f[0] ? 'background:#FF3366;color:#fff;border-color:#FF3366' : 'background:#222;color:#ccc;border-color:#333';
+    filterHtml += '<button class="stats-filter-btn" id="sf_' + f[0] + '" onclick="setStatsFilter(\'' + f[0] + '\')" style="' + active + ';border:1px solid;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">' + f[1] + '</button>';
+  });
+  filterHtml += '</div>';
+
+  var filterDiv = document.createElement('div');
+  filterDiv.innerHTML = filterHtml;
+  container.appendChild(filterDiv);
+
+  var cutoff = getFilterDate(period);
+  var d = _statsData;
+
+  // Filter vouchers and orders by date
+  var filtV = cutoff ? d.vouchers.filter(function(v) { return new Date(v.created_at) >= cutoff; }) : d.vouchers;
+  var filtO = cutoff ? d.orders.filter(function(o) { return new Date(o.created_at) >= cutoff; }) : d.orders;
+
+  var totalRevenue = 0, totalFees = 0, pendingPayout = 0, totalPaidOut = 0, redeemed = 0, totalRefunds = 0;
+  filtV.forEach(function(v) {
+    totalRevenue += Number(v.price_paid) || 0;
+    totalFees += Number(v.platform_fee) || 0;
+    if (v.status === 'redeemed') {
+      redeemed++;
+      if (v.payout_status === 'pending') pendingPayout += Number(v.bar_payout) || 0;
+    }
+    if (v.payout_status === 'paid') totalPaidOut += Number(v.bar_payout) || 0;
+  });
+  var paidOrders = 0;
+  filtO.forEach(function(o) {
+    if (o.status === 'paid') paidOrders++;
+    if (o.refund_status === 'completed') totalRefunds += Number(o.price) || 0;
+  });
+  var activeBars = 0;
+  d.bars.forEach(function(b) { if (b.status === 'active') activeBars++; });
+  var activeDeals = 0;
+  d.deals.forEach(function(dl) { if (dl.active === true) activeDeals++; });
+
+  var grid = document.createElement('div');
+  grid.className = 'stats-grid';
   var stats = [
-    ['Bestellungen', s.total_orders],
-    ['Bezahlt', s.paid_orders],
-    ['Umsatz', Number(s.total_revenue || 0).toFixed(2) + ' CHF'],
-    ['Provision (Einnahmen)', Number(s.total_fees || 0).toFixed(2) + ' CHF'],
-    ['Schuld an Bars', Number(s.pending_payout || 0).toFixed(2) + ' CHF'],
-    ['Ausgezahlt an Bars', Number(s.total_paid_out || 0).toFixed(2) + ' CHF'],
-    ['Aktive Bars', s.active_bars],
-    ['Aktive Deals', s.active_deals],
-    ['Gutscheine eingelöst', s.redeemed_vouchers],
-    ['Kund:innen', s.total_customers],
-    ['Rückerstattungen', Number(s.total_refunds || 0).toFixed(2) + ' CHF'],
+    ['Gutscheine vermittelt', filtV.length],
+    ['Bestellungen', filtO.length],
+    ['Bezahlt', paidOrders],
+    ['Umsatz', Number(totalRevenue).toFixed(2) + ' CHF'],
+    ['Provision (Einnahmen)', Number(totalFees).toFixed(2) + ' CHF'],
+    ['Schuld an Bars', Number(pendingPayout).toFixed(2) + ' CHF'],
+    ['Ausgezahlt an Bars', Number(totalPaidOut).toFixed(2) + ' CHF'],
+    ['Aktive Bars', activeBars],
+    ['Aktive Deals', activeDeals],
+    ['Gutscheine eingelöst', redeemed],
+    ['Kund:innen', d.customers || 0],
+    ['Rückerstattungen', Number(totalRefunds).toFixed(2) + ' CHF'],
   ];
-  stats.forEach(function([label, val]) {
-    if (val === undefined || val === null) return;
+  stats.forEach(function(s) {
+    if (s[1] === undefined || s[1] === null) return;
     var card = document.createElement('div'); card.className = 'stat-card';
-    var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = label;
-    var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(val);
+    var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
+    var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]);
     card.append(lEl, vEl); grid.appendChild(card);
   });
+  container.appendChild(grid);
 }
 
 // =============================================
