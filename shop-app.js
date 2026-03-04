@@ -298,7 +298,13 @@ function buildDealCard(deal) {
 
   if (deal.image_url) {
     const img = document.createElement('img');
-    img.src = deal.image_url;
+    var imgUrl = deal.image_url;
+    // Fix old lh3.googleusercontent.com URLs
+    if (imgUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) {
+      var fid = imgUrl.split('/d/')[1];
+      if (fid) imgUrl = 'https://drive.google.com/thumbnail?id=' + fid + '&sz=w800';
+    }
+    img.src = imgUrl;
     img.alt = escHtml(deal.title);
     imgDiv.appendChild(img);
   } else {
@@ -932,7 +938,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Nur am', giltFuer:'Gilt für:', getraenke:'Getränke', essen:'Essen', alles:'Alles',
     refundReq:'Rückerstattung anfordern', refundRequested:'Rückerstattung angefordert', refunded:'Rückerstattet',
     remaining:'verbleibend', anmelden:'Anmelden', registrieren:'Registrieren',
-    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal',
+    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -954,7 +960,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Only on', giltFuer:'Applies to:', getraenke:'Drinks', essen:'Food', alles:'Everything',
     refundReq:'Request refund', refundRequested:'Refund requested', refunded:'Refunded',
     remaining:'remaining', anmelden:'Login', registrieren:'Register',
-    fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal',
+    fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal', loginSubmitBtn:'Login', cancelLoginBtn:'Cancel', suchenBtn:'Search', anmeldenTitle:'Login',
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -975,7 +981,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Solo il', giltFuer:'Valido per:', getraenke:'Bevande', essen:'Cibo', alles:'Tutto',
     refundReq:'Richiedi rimborso', refundRequested:'Rimborso richiesto', refunded:'Rimborsato',
     remaining:'rimanenti', anmelden:'Accedi', registrieren:'Registrati',
-    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar',
+    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi',
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -995,7 +1001,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Uniquement le', giltFuer:'Valable pour:', getraenke:'Boissons', essen:'Nourriture', alles:'Tout',
     refundReq:'Demander remboursement', refundRequested:'Remboursement demandé', refunded:'Remboursé',
     remaining:'restant', anmelden:'Connexion', registrieren:'Inscription',
-    fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars \u2192 Portail Bar',
+    fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars \u2192 Portail Bar', loginSubmitBtn:'Connexion', cancelLoginBtn:'Annuler', suchenBtn:'Chercher', anmeldenTitle:'Connexion',
     alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
   }
 };
