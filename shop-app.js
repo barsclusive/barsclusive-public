@@ -299,22 +299,24 @@ function buildDealCard(deal) {
   if (deal.image_url) {
     const img = document.createElement('img');
     var imgUrl = deal.image_url;
-    // Fix old lh3.googleusercontent.com URLs
-    if (imgUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) {
-      var fid = imgUrl.split('/d/')[1];
-      if (fid) imgUrl = 'https://drive.google.com/thumbnail?id=' + fid + '&sz=w800';
-    }
+    // Convert any Google Drive URL to the most reliable format
+    var gid = '';
+    if (imgUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) gid = imgUrl.split('/d/')[1];
+    else if (imgUrl.indexOf('thumbnail?id=') >= 0) gid = imgUrl.split('id=')[1].split('&')[0];
+    else if (imgUrl.indexOf('/d/') >= 0) gid = (imgUrl.split('/d/')[1] || '').split('/')[0];
+    else if (imgUrl.indexOf('uc?') >= 0 && imgUrl.indexOf('id=') >= 0) gid = imgUrl.split('id=')[1].split('&')[0];
+    if (gid) imgUrl = 'https://lh3.googleusercontent.com/d/' + gid + '=w800';
     img.src = imgUrl;
     img.alt = escHtml(deal.title);
     img.referrerPolicy = 'no-referrer';
+    img.crossOrigin = 'anonymous';
     img.onerror = function() {
-      // Try alternate URL format on error
-      var tid = '';
-      if (imgUrl.indexOf('thumbnail?id=') >= 0) tid = imgUrl.split('id=')[1].split('&')[0];
-      else if (imgUrl.indexOf('/d/') >= 0) tid = imgUrl.split('/d/')[1].split('/')[0];
-      if (tid && !this.dataset.retried) {
+      if (gid && !this.dataset.retried) {
         this.dataset.retried = '1';
-        this.src = 'https://drive.google.com/uc?export=view&id=' + tid;
+        this.src = 'https://drive.google.com/thumbnail?id=' + gid + '&sz=w800';
+      } else if (gid && !this.dataset.retried2) {
+        this.dataset.retried2 = '1';
+        this.src = 'https://drive.google.com/uc?export=view&id=' + gid;
       } else {
         this.style.display = 'none';
         this.parentElement.textContent = isPauschal ? '\ud83c\udff7\ufe0f' : '\ud83c\udf79';
