@@ -177,6 +177,8 @@ function switchTab(name, btn) {
 // =============================================
 // ORDERS
 // =============================================
+var _ordersData = [], _orderSort = { col: 'created_at', dir: -1 }, _orderFilters = {};
+
 async function loadOrders() {
   if (!hasSession()) { doLogout(); return; }
   try {
@@ -185,84 +187,121 @@ async function loadOrders() {
       api({ action: 'getVouchers', token: _token })
     ]);
     if (!ordersRes.success) { showToast(ordersRes.error, true); return; }
-    // Build voucher lookup by ID for quick cross-reference
-    const voucherMap = {};
-    if (vouchersRes.success && vouchersRes.vouchers) {
-      vouchersRes.vouchers.forEach(v => { voucherMap[v.id] = v; });
-    }
-    renderOrders(ordersRes.orders, voucherMap);
+    const vMap = {};
+    if (vouchersRes.success && vouchersRes.vouchers) vouchersRes.vouchers.forEach(v => { vMap[v.id] = v; });
+    _ordersData = (ordersRes.orders || []).map(o => { o._voucher = o.voucher_id ? vMap[o.voucher_id] : null; return o; });
+    _orderFilters = {};
+    renderOrders();
   } catch (e) { showToast('Ladefehler', true); }
 }
 
-function renderOrders(orders, voucherMap) {
-  voucherMap = voucherMap || {};
-  const tbody = document.getElementById('ordersBody');
+function renderOrders() {
+  var data = _ordersData.slice();
+  // Apply filters
+  Object.keys(_orderFilters).forEach(k => {
+    var f = _orderFilters[k].toLowerCase();
+    if (!f) return;
+    data = data.filter(o => {
+      var val = '';
+      if (k === 'date') val = new Date(o.created_at).toLocaleString('de-CH');
+      else if (k === 'deal') val = o.deal_title || '';
+      else if (k === 'bar') val = o.bar_name || '';
+      else if (k === 'buyer') val = o.buyer_name || '';
+      else if (k === 'email') val = o.buyer_email || '';
+      else if (k === 'price') val = String(Number(o.price || 0).toFixed(2));
+      else if (k === 'status') val = o.status || '';
+      else if (k === 'voucher') val = o._voucher ? o._voucher.status : '';
+      else if (k === 'refund') val = o.refund_status || '';
+      return val.toLowerCase().indexOf(f) !== -1;
+    });
+  });
+  // Sort
+  var sc = _orderSort.col, sd = _orderSort.dir;
+  data.sort((a, b) => {
+    var va, vb;
+    if (sc === 'created_at') { va = new Date(a.created_at); vb = new Date(b.created_at); }
+    else if (sc === 'price') { va = Number(a.price||0); vb = Number(b.price||0); }
+    else if (sc === 'deal') { va = (a.deal_title||'').toLowerCase(); vb = (b.deal_title||'').toLowerCase(); }
+    else if (sc === 'bar') { va = (a.bar_name||'').toLowerCase(); vb = (b.bar_name||'').toLowerCase(); }
+    else if (sc === 'buyer') { va = (a.buyer_name||'').toLowerCase(); vb = (b.buyer_name||'').toLowerCase(); }
+    else if (sc === 'status') { va = a.status||''; vb = b.status||''; }
+    else { va = a[sc]||''; vb = b[sc]||''; }
+    return va > vb ? sd : va < vb ? -sd : 0;
+  });
+
+  var tbody = document.getElementById('ordersBody');
   tbody.innerHTML = '';
-  if (!orders.length) {
-    tbody.innerHTML = '<tr><td colspan="9" class="no-data">' + t('noOrders') + '</td></tr>'; return;
+
+  // Filter row
+  var ftr = document.createElement('tr');
+  ftr.style.background = '#1a1a1a';
+  ['date','deal','bar','buyer','email','price','status','voucher','refund',''].forEach(k => {
+    var ftd = document.createElement('td'); ftd.style.padding = '4px';
+    if (k) {
+      var inp = document.createElement('input');
+      inp.type = 'text'; inp.placeholder = '🔍';
+      inp.value = _orderFilters[k] || '';
+      inp.style.cssText = 'width:100%;background:#222;color:#ccc;border:1px solid #444;padding:3px 6px;font-size:11px;border-radius:4px;box-sizing:border-box';
+      inp.addEventListener('input', function() { _orderFilters[k] = this.value; renderOrders(); });
+      ftd.appendChild(inp);
+    }
+    ftr.appendChild(ftd);
+  });
+  tbody.appendChild(ftr);
+
+  if (!data.length) {
+    tbody.innerHTML += '<tr><td colspan="10" class="no-data">Keine Bestellungen</td></tr>'; return;
   }
-  // Sort: newest first
-  orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-  orders.forEach(o => {
-    const tr = document.createElement('tr');
-    if (o.refund_status === 'requested') tr.classList.add('refund-row');
-
-    // Payment status (automatic via Stripe)
-    const statusBadge = document.createElement('span');
-    if (o.status === 'paid') { statusBadge.className = 'badge b-paid'; statusBadge.textContent = '✓ Bezahlt'; }
-    else if (o.status === 'pending_payment') { statusBadge.className = 'badge b-pending'; statusBadge.textContent = '⏳ Ausstehend'; }
-    else { statusBadge.className = 'badge b-inactive'; statusBadge.textContent = o.status; }
-    const statusTd = document.createElement('td'); statusTd.appendChild(statusBadge);
-
-    // Voucher/Gutschein status column
-    const voucherTd = document.createElement('td');
-    const voucher = o.voucher_id ? voucherMap[o.voucher_id] : null;
-    if (voucher) {
-      const vBadge = document.createElement('span');
-      if (voucher.status === 'redeemed') {
-        vBadge.className = 'badge b-paid'; vBadge.textContent = '✓ Eingelöst';
-      } else if (voucher.status === 'sent' || voucher.status === 'issued') {
-        vBadge.className = 'badge b-active'; vBadge.textContent = '⏳ Offen';
-      } else {
-        vBadge.className = 'badge b-inactive'; vBadge.textContent = voucher.status;
-      }
-      voucherTd.appendChild(vBadge);
-    } else if (o.status === 'paid') {
-      voucherTd.textContent = '–';
-    } else {
-      voucherTd.textContent = '–';
+  var totalPrice = 0;
+  data.forEach(o => {
+    totalPrice += Number(o.price || 0);
+    var tr = document.createElement('tr');
+    if (o.refund_status === 'requested') tr.style.background = '#2a2000';
+    var sBadge = o.status === 'paid' ? '<span class="badge b-paid">✓ Bezahlt</span>' : o.status === 'pending_payment' ? '<span class="badge b-pending">⏳</span>' : '<span class="badge b-inactive">' + (o.status||'-') + '</span>';
+    var vBadge = '-';
+    if (o._voucher) {
+      vBadge = o._voucher.status === 'redeemed' ? '<span class="badge b-paid">✓ Eingelöst</span>' : '<span class="badge b-active">⏳ Offen</span>';
     }
+    var refTxt = o.refund_status === 'requested' ? '<span style="color:#FFC107">⚠️ Angefordert</span>' : o.refund_status === 'completed' ? '<span style="color:#4CAF50">↩️ Erstattet</span>' : '-';
 
-    // Refund column
-    const refundTd = document.createElement('td');
-    if (o.refund_status === 'requested') {
-      refundTd.textContent = '⚠️ Angefordert'; refundTd.style.color = '#FFC107';
-    } else if (o.refund_status === 'completed') {
-      refundTd.textContent = '↩️ Erstattet'; refundTd.style.color = '#4CAF50';
-    } else { refundTd.textContent = '–'; }
+    var actionHtml = '';
+    if (o.refund_status === 'requested') actionHtml += '<button class="btn-sm btn-red" data-refund-oid="' + o.id + '">Erstatten</button> ';
+    actionHtml += '<button class="btn-sm" style="background:#333;color:#999;font-size:10px" data-del-oid="' + o.id + '">🗑</button>';
 
-    // Action: only refund button
-    const actionTd = document.createElement('td');
-    if (o.refund_status === 'requested') {
-      const btn = document.createElement('button');
-      btn.className = 'btn-sm btn-red';
-      btn.textContent = t('refundBtn');
-      btn.addEventListener('click', () => processRefund(o.id));
-      actionTd.appendChild(btn);
-    }
-
-    tr.append(
-      td(new Date(o.created_at).toLocaleString('de-CH')),
-      td(o.deal_title), td(o.bar_name), td(o.buyer_name), td(o.buyer_email || '-'),
-      td(Number(o.price).toFixed(2) + ' CHF'),
-      statusTd, voucherTd, refundTd, actionTd
-    );
+    tr.innerHTML = '<td style="font-size:11px">' + new Date(o.created_at).toLocaleString('de-CH') + '</td>'
+      + '<td>' + (o.deal_title||'-') + '</td><td>' + (o.bar_name||'-') + '</td>'
+      + '<td>' + (o.buyer_name||'-') + '</td><td style="font-size:11px">' + (o.buyer_email||'-') + '</td>'
+      + '<td style="text-align:right">' + Number(o.price||0).toFixed(2) + '</td>'
+      + '<td>' + sBadge + '</td><td>' + vBadge + '</td><td>' + refTxt + '</td>'
+      + '<td>' + actionHtml + '</td>';
     tbody.appendChild(tr);
+  });
+
+  // Sum row
+  var sumTr = document.createElement('tr');
+  sumTr.style.cssText = 'background:#1a1a1a;font-weight:700;border-top:2px solid #FF3366';
+  sumTr.innerHTML = '<td colspan="5" style="padding:8px;color:#FF3366">' + data.length + ' Bestellungen</td>'
+    + '<td style="text-align:right;padding:8px;color:#22c55e">' + totalPrice.toFixed(2) + ' CHF</td>'
+    + '<td colspan="4"></td>';
+  tbody.appendChild(sumTr);
+
+  // Attach event handlers
+  tbody.querySelectorAll('[data-refund-oid]').forEach(btn => {
+    btn.addEventListener('click', function() { processRefund(this.getAttribute('data-refund-oid')); });
+  });
+  tbody.querySelectorAll('[data-del-oid]').forEach(btn => {
+    btn.addEventListener('click', function() { deleteOrder(this.getAttribute('data-del-oid')); });
   });
 }
 
-// markPaid removed — Stripe auto-confirms payments via confirmStripePayment()
+async function deleteOrder(orderId) {
+  if (!confirm('Bestellung endgültig löschen?')) return;
+  try {
+    var r = await api({ action: 'deleteOrder', token: _token, order_id: orderId });
+    if (r.success) { showToast('Gelöscht'); loadOrders(); } else showToast(r.error, true);
+  } catch(e) { showToast('Fehler', true); }
+}
 
 async function processRefund(orderId) {
   if (!confirm('Rückerstattung als durchgeführt markieren?')) return;
@@ -277,51 +316,120 @@ async function processRefund(orderId) {
 // =============================================
 // VOUCHERS
 // =============================================
+var _vouchersData = [], _voucherSort = { col: 'created_at', dir: -1 }, _voucherFilters = {};
+
 async function loadVouchers() {
   if (!hasSession()) { doLogout(); return; }
   try {
     const r = await api({ action: 'getVouchers', token: _token });
     if (!r.success) { showToast(r.error, true); return; }
-    renderVouchers(r.vouchers);
+    _vouchersData = r.vouchers || [];
+    _voucherFilters = {};
+    renderVouchers();
   } catch (e) { showToast('Ladefehler', true); }
 }
 
-function renderVouchers(vouchers) {
-  const tbody = document.getElementById('vouchersBody');
+function renderVouchers() {
+  var data = _vouchersData.slice();
+  // Apply filters
+  Object.keys(_voucherFilters).forEach(k => {
+    var f = _voucherFilters[k].toLowerCase();
+    if (!f) return;
+    data = data.filter(v => {
+      var val = '';
+      if (k === 'date') val = v.created_at ? new Date(v.created_at).toLocaleString('de-CH') : '';
+      else if (k === 'code') val = v.code || '';
+      else if (k === 'deal') val = v.deal_title || '';
+      else if (k === 'bar') val = v.bar_name || '';
+      else if (k === 'price') val = String(Number(v.price_paid||0).toFixed(2));
+      else if (k === 'fee') val = String(Number(v.platform_fee||0).toFixed(2));
+      else if (k === 'payout') val = String(Number(v.bar_payout||0).toFixed(2));
+      else if (k === 'status') val = v.status || '';
+      else if (k === 'pay_status') val = v.payout_status || '';
+      return val.toLowerCase().indexOf(f) !== -1;
+    });
+  });
+  // Sort
+  var sc = _voucherSort.col, sd = _voucherSort.dir;
+  data.sort((a, b) => {
+    var va, vb;
+    if (sc === 'created_at') { va = new Date(a.created_at||0); vb = new Date(b.created_at||0); }
+    else if (sc === 'price') { va = Number(a.price_paid||0); vb = Number(b.price_paid||0); }
+    else if (sc === 'fee') { va = Number(a.platform_fee||0); vb = Number(b.platform_fee||0); }
+    else if (sc === 'payout') { va = Number(a.bar_payout||0); vb = Number(b.bar_payout||0); }
+    else { va = (a[sc]||'').toString().toLowerCase(); vb = (b[sc]||'').toString().toLowerCase(); }
+    return va > vb ? sd : va < vb ? -sd : 0;
+  });
+
+  var tbody = document.getElementById('vouchersBody');
   tbody.innerHTML = '';
-  if (!vouchers.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="no-data">' + t('noVouchers') + '</td></tr>'; return;
+
+  // Filter row
+  var ftr = document.createElement('tr');
+  ftr.style.background = '#1a1a1a';
+  ['date','code','deal','bar','price','fee','payout','status','pay_status',''].forEach(k => {
+    var ftd = document.createElement('td'); ftd.style.padding = '4px';
+    if (k) {
+      var inp = document.createElement('input');
+      inp.type = 'text'; inp.placeholder = '🔍';
+      inp.value = _voucherFilters[k] || '';
+      inp.style.cssText = 'width:100%;background:#222;color:#ccc;border:1px solid #444;padding:3px 6px;font-size:11px;border-radius:4px;box-sizing:border-box';
+      inp.addEventListener('input', function() { _voucherFilters[k] = this.value; renderVouchers(); });
+      ftd.appendChild(inp);
+    }
+    ftr.appendChild(ftd);
+  });
+  tbody.appendChild(ftr);
+
+  if (!data.length) {
+    tbody.innerHTML += '<tr><td colspan="10" class="no-data">Keine Gutscheine</td></tr>'; return;
   }
-  vouchers.forEach(v => {
-    const tr = document.createElement('tr');
-    const statusBadge = document.createElement('span');
-    statusBadge.className = 'badge ' + (v.status === 'sent' || v.status === 'issued' ? 'b-active' : v.status === 'redeemed' ? 'b-paid' : 'b-inactive');
-    statusBadge.textContent = v.status;
-    const statusTd = document.createElement('td'); statusTd.appendChild(statusBadge);
 
-    const actionTd = document.createElement('td');
-    if (v.payout_status === 'pending' && v.status === 'redeemed') {
-      const btn = document.createElement('button');
-      btn.className = 'btn-sm btn-blue'; btn.textContent = t('markPayout');
-      btn.addEventListener('click', () => markVoucherPaid(v.id));
-      actionTd.appendChild(btn);
-    }
-    if (v.status === 'sent' || v.status === 'issued') {
-      const refBtn = document.createElement('button');
-      refBtn.className = 'btn-sm btn-red'; refBtn.style.marginLeft = '4px';
-      refBtn.textContent = t('refundBtn');
-      refBtn.addEventListener('click', () => refundVoucher(v.id, v.code));
-      actionTd.appendChild(refBtn);
-    }
+  var totalPrice = 0, totalFee = 0, totalPayout = 0;
+  data.forEach(v => {
+    totalPrice += Number(v.price_paid||0);
+    totalFee += Number(v.platform_fee||0);
+    totalPayout += Number(v.bar_payout||0);
 
-    tr.append(
-      td(v.code), td(v.deal_title), td(v.bar_name),
-      td(Number(v.price_paid).toFixed(2) + ' CHF'),
-      td(Number(v.platform_fee).toFixed(2) + ' CHF'),
-      td(Number(v.bar_payout).toFixed(2) + ' CHF'),
-      statusTd, actionTd
-    );
+    var statusBadge = v.status === 'redeemed' ? '<span class="badge b-paid">✓ Eingelöst</span>' : (v.status === 'sent' || v.status === 'issued') ? '<span class="badge b-active">' + v.status + '</span>' : '<span class="badge b-inactive">' + (v.status||'-') + '</span>';
+    var payBadge = v.payout_status === 'paid' ? '<span style="color:#3b82f6;font-weight:600">Bezahlt</span>' : '<span style="color:#ef4444">Ausstehend</span>';
+
+    var actionHtml = '';
+    if (v.payout_status === 'pending' && v.status === 'redeemed') actionHtml += '<button class="btn-sm btn-blue" style="font-size:10px" data-markpaid-vid="' + v.id + '">💸</button> ';
+    if (v.status === 'sent' || v.status === 'issued') actionHtml += '<button class="btn-sm btn-red" style="font-size:10px" data-refund-vid="' + v.id + '" data-refund-code="' + (v.code||'') + '">↩️</button> ';
+    actionHtml += '<button class="btn-sm" style="background:#333;color:#999;font-size:10px" data-del-vid="' + v.id + '">🗑</button>';
+
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleString('de-CH') : '-') + '</td>'
+      + '<td style="font-family:monospace;font-size:11px">' + (v.code||'-') + '</td>'
+      + '<td>' + (v.deal_title||'-') + '</td><td>' + (v.bar_name||'-') + '</td>'
+      + '<td style="text-align:right">' + Number(v.price_paid||0).toFixed(2) + '</td>'
+      + '<td style="text-align:right;color:#ef4444">' + Number(v.platform_fee||0).toFixed(2) + '</td>'
+      + '<td style="text-align:right;color:#22c55e">' + Number(v.bar_payout||0).toFixed(2) + '</td>'
+      + '<td>' + statusBadge + '</td><td>' + payBadge + '</td>'
+      + '<td>' + actionHtml + '</td>';
     tbody.appendChild(tr);
+  });
+
+  // Sum row
+  var sumTr = document.createElement('tr');
+  sumTr.style.cssText = 'background:#1a1a1a;font-weight:700;border-top:2px solid #FF3366';
+  sumTr.innerHTML = '<td colspan="4" style="padding:8px;color:#FF3366">' + data.length + ' Gutscheine</td>'
+    + '<td style="text-align:right;padding:8px;color:#fff">' + totalPrice.toFixed(2) + '</td>'
+    + '<td style="text-align:right;padding:8px;color:#ef4444">' + totalFee.toFixed(2) + '</td>'
+    + '<td style="text-align:right;padding:8px;color:#22c55e">' + totalPayout.toFixed(2) + '</td>'
+    + '<td colspan="3"></td>';
+  tbody.appendChild(sumTr);
+
+  // Attach handlers
+  tbody.querySelectorAll('[data-markpaid-vid]').forEach(btn => {
+    btn.addEventListener('click', function() { markVoucherPaid(this.getAttribute('data-markpaid-vid')); });
+  });
+  tbody.querySelectorAll('[data-refund-vid]').forEach(btn => {
+    btn.addEventListener('click', function() { refundVoucher(this.getAttribute('data-refund-vid'), this.getAttribute('data-refund-code')); });
+  });
+  tbody.querySelectorAll('[data-del-vid]').forEach(btn => {
+    btn.addEventListener('click', function() { deleteVoucher(this.getAttribute('data-del-vid')); });
   });
 }
 
@@ -332,6 +440,14 @@ async function markVoucherPaid(voucherId) {
     if (r.success) { showToast('✅ Auszahlung markiert'); loadVouchers(); }
     else showToast(r.error || 'Fehler', true);
   } catch (e) { showToast('Verbindungsfehler', true); }
+}
+
+async function deleteVoucher(voucherId) {
+  if (!confirm('Gutschein endgültig löschen?')) return;
+  try {
+    var r = await api({ action: 'deleteVoucher', token: _token, voucher_id: voucherId });
+    if (r.success) { showToast('Gelöscht'); loadVouchers(); } else showToast(r.error, true);
+  } catch(e) { showToast('Fehler', true); }
 }
 
 // =============================================
@@ -427,6 +543,7 @@ function renderBars(bars) {
 }
 
 var _barVouchersCache = {};
+var _barStatusFilter = {};
 
 async function loadBarStatsAdmin(barId, period) {
   const el = document.getElementById('barStats_' + barId);
@@ -480,11 +597,28 @@ async function loadBarStatsAdmin(barId, period) {
     html += '<button id="payBtn_' + barId + '" style="margin-top:12px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;width:100%">Auszahlung: ' + totalPending.toFixed(2) + ' CHF an Bar ueberweisen</button>';
   }
 
-  // Voucher detail table
+  // Status filter + payout controls
+  var sf = _barStatusFilter[barId] || 'all';
+  if (sf === 'redeemed') vouchers = vouchers.filter(function(v) { return v.status === 'redeemed'; });
+  else if (sf === 'open') vouchers = vouchers.filter(function(v) { return v.status === 'sent' || v.status === 'issued'; });
+  else if (sf === 'pending_pay') vouchers = vouchers.filter(function(v) { return v.status === 'redeemed' && v.payout_status === 'pending'; });
+  else if (sf === 'paid_out') vouchers = vouchers.filter(function(v) { return v.payout_status === 'paid'; });
+
+  html += '<div style="display:flex;gap:6px;margin-top:14px;align-items:center;flex-wrap:wrap">';
+  html += '<strong style="color:#FF3366;font-size:14px">Gutscheine (' + vouchers.length + ')</strong>';
+  html += '<select id="barSF_' + barId + '" style="background:#222;color:#ccc;border:1px solid #444;padding:4px 8px;border-radius:4px;font-size:11px">';
+  [['all','Alle'],['redeemed','Eingelöst'],['open','Offen'],['pending_pay','Auszahlung ausstehend'],['paid_out','Ausbezahlt']].forEach(function(o) { html += '<option value="' + o[0] + '"' + (sf === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; });
+  html += '</select>';
+  if (totalPending > 0) {
+    html += '<button id="paySelBtn_' + barId + '" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12px">💸 Ausgewählte auszahlen</button>';
+    html += '<label style="color:#999;font-size:11px;cursor:pointer"><input type="checkbox" id="selAll_' + barId + '" style="margin-right:4px">Alle</label>';
+  }
+  html += '</div>';
+
+  // Voucher detail table with checkboxes
   if (vouchers.length > 0) {
-    html += '<div style="margin-top:16px"><strong style="color:#FF3366;font-size:14px">Gutscheine (' + vouchers.length + ')</strong>';
     html += '<table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:12px">';
-    html += '<tr style="border-bottom:1px solid #333"><th style="text-align:left;padding:6px;color:#999">Datum</th><th style="text-align:left;padding:6px;color:#999">Code</th><th style="text-align:left;padding:6px;color:#999">Deal</th><th style="text-align:right;padding:6px;color:#999">Preis</th><th style="text-align:right;padding:6px;color:#999">Provision</th><th style="text-align:right;padding:6px;color:#999">Bar-Anteil</th><th style="text-align:center;padding:6px;color:#999">Status</th><th style="text-align:center;padding:6px;color:#999">Auszahlung</th><th style="text-align:center;padding:6px;color:#999">Aktion</th></tr>';
+    html += '<tr style="border-bottom:1px solid #333"><th style="width:28px"></th><th style="text-align:left;padding:6px;color:#999">Datum</th><th style="text-align:left;padding:6px;color:#999">Code</th><th style="text-align:left;padding:6px;color:#999">Deal</th><th style="text-align:right;padding:6px;color:#999">Preis</th><th style="text-align:right;padding:6px;color:#999">Provision</th><th style="text-align:right;padding:6px;color:#999">Bar-Anteil</th><th style="text-align:center;padding:6px;color:#999">Status</th><th style="text-align:center;padding:6px;color:#999">Auszahlung</th><th style="text-align:center;padding:6px;color:#999">Aktion</th></tr>';
     vouchers.forEach(function(v) {
       var sc = v.status === 'redeemed' ? '#22c55e' : '#f59e0b';
       var st2 = v.status === 'redeemed' ? 'Eingeloest' : 'Offen';
@@ -506,7 +640,11 @@ async function loadBarStatsAdmin(barId, period) {
       }
       html += '</td></tr>';
     });
-    html += '</table></div>';
+    // Sum row
+    var sP = 0, sF = 0, sA = 0;
+    vouchers.forEach(function(v2) { sP += Number(v2.price_paid||0); sF += Number(v2.platform_fee||0); sA += Number(v2.bar_payout||0); });
+    html += '<tr style="border-top:2px solid #FF3366;font-weight:700"><td></td><td colspan="3" style="padding:6px;color:#FF3366">' + vouchers.length + ' Gutscheine</td><td style="padding:6px;text-align:right;color:#fff">' + sP.toFixed(2) + '</td><td style="padding:6px;text-align:right;color:#ef4444">' + sF.toFixed(2) + '</td><td style="padding:6px;text-align:right;color:#22c55e">' + sA.toFixed(2) + '</td><td colspan="3"></td></tr>';
+    html += '</table>';
   }
 
   el.innerHTML = html;
@@ -515,10 +653,20 @@ async function loadBarStatsAdmin(barId, period) {
   el.querySelectorAll('.bsf_' + barId).forEach(function(btn) {
     btn.addEventListener('click', function() { loadBarStatsAdmin(barId, this.getAttribute('data-p')); });
   });
-  // Attach payout button
-  var payBtn = document.getElementById('payBtn_' + barId);
-  if (payBtn) payBtn.addEventListener('click', function() { _barVouchersCache[barId] = null; payoutBar(barId); });
-  // Attach refund buttons
+  // Status filter
+  var sfSel = document.getElementById('barSF_' + barId);
+  if (sfSel) sfSel.addEventListener('change', function() { _barStatusFilter[barId] = this.value; loadBarStatsAdmin(barId, period); });
+  // Select all
+  var selAll = document.getElementById('selAll_' + barId);
+  if (selAll) selAll.addEventListener('change', function() { el.querySelectorAll('.vsel_' + barId).forEach(function(cb) { cb.checked = selAll.checked; }); });
+  // Payout selected
+  var paySelBtn = document.getElementById('paySelBtn_' + barId);
+  if (paySelBtn) paySelBtn.addEventListener('click', function() {
+    var ids = []; el.querySelectorAll('.vsel_' + barId + ':checked').forEach(function(cb) { ids.push(cb.value); });
+    if (!ids.length) { showToast('Keine Gutscheine ausgewählt', true); return; }
+    payoutBar(barId, ids);
+  });
+  // Refund buttons
   el.querySelectorAll('[data-refund-vid]').forEach(function(btn) {
     btn.addEventListener('click', function() {
       _barVouchersCache[barId] = null;
@@ -527,12 +675,16 @@ async function loadBarStatsAdmin(barId, period) {
   });
 }
 
-async function payoutBar(barId) {
-  if (!confirm('Auszahlung an diese Bar durchführen? Die Bar erhält eine Bestätigungs-Email.')) return;
+async function payoutBar(barId, voucherIds) {
+  var msg = voucherIds ? voucherIds.length + ' Gutscheine auszahlen?' : 'Alle ausstehenden Gutscheine auszahlen?';
+  if (!confirm(msg + ' Die Bar erhält eine Quittung per Email.')) return;
   try {
-    const r = await api({ action: 'payoutBar', token: _token, bar_id: barId });
+    var body = { action: 'payoutBar', token: _token, bar_id: barId };
+    if (voucherIds) body.voucher_ids = voucherIds;
+    const r = await api(body);
     if (r.success) {
       showToast('✅ ' + r.message);
+      _barVouchersCache[barId] = null;
       loadBarStatsAdmin(barId);
       loadStats();
     } else {
