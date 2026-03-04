@@ -953,7 +953,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Nur am', giltFuer:'Gilt für:', getraenke:'Getränke', essen:'Essen', alles:'Alles',
     refundReq:'Rückerstattung anfordern', refundRequested:'Rückerstattung angefordert', refunded:'Rückerstattet',
     remaining:'verbleibend', anmelden:'Anmelden', registrieren:'Registrieren',
-    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden',
+    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden', searchBarDeal:'Bar oder Deal suchen...', searchPLZ:'PLZ oder Ort...',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -975,7 +975,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Only on', giltFuer:'Applies to:', getraenke:'Drinks', essen:'Food', alles:'Everything',
     refundReq:'Request refund', refundRequested:'Refund requested', refunded:'Refunded',
     remaining:'remaining', anmelden:'Login', registrieren:'Register',
-    fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal', loginSubmitBtn:'Login', cancelLoginBtn:'Cancel', suchenBtn:'Search', anmeldenTitle:'Login',
+    fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal', loginSubmitBtn:'Login', cancelLoginBtn:'Cancel', suchenBtn:'Search', anmeldenTitle:'Login', searchBarDeal:'Search bar or deal...', searchPLZ:'ZIP or city...',
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -996,7 +996,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Solo il', giltFuer:'Valido per:', getraenke:'Bevande', essen:'Cibo', alles:'Tutto',
     refundReq:'Richiedi rimborso', refundRequested:'Rimborso richiesto', refunded:'Rimborsato',
     remaining:'rimanenti', anmelden:'Accedi', registrieren:'Registrati',
-    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi',
+    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi', searchBarDeal:'Cerca bar o offerta...', searchPLZ:'CAP o città...',
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -1016,7 +1016,7 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Uniquement le', giltFuer:'Valable pour:', getraenke:'Boissons', essen:'Nourriture', alles:'Tout',
     refundReq:'Demander remboursement', refundRequested:'Remboursement demandé', refunded:'Remboursé',
     remaining:'restant', anmelden:'Connexion', registrieren:'Inscription',
-    fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars \u2192 Portail Bar', loginSubmitBtn:'Connexion', cancelLoginBtn:'Annuler', suchenBtn:'Chercher', anmeldenTitle:'Connexion',
+    fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars \u2192 Portail Bar', loginSubmitBtn:'Connexion', cancelLoginBtn:'Annuler', suchenBtn:'Chercher', anmeldenTitle:'Connexion', searchBarDeal:'Chercher bar ou offre...', searchPLZ:'NPA ou ville...',
     alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
   }
 };
@@ -1056,6 +1056,11 @@ function applyShopTranslations() {
     var trans = (SHOP_TRANSLATIONS[shopLang] || {})[k];
     if (trans) el.textContent = trans;
   });
+  // Translate placeholders
+  var ss = document.getElementById('shopSearch');
+  if (ss) ss.placeholder = st('searchBarDeal');
+  var li = document.getElementById('locationInput');
+  if (li) li.placeholder = st('searchPLZ');
   renderDeals();
 }
 
