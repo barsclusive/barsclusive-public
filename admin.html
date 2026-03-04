@@ -117,14 +117,14 @@
   <div id="tabOrders" class="tab-content active">
     <div class="section-title">Bestellungen</div>
     <div class="overflow-x"><table><thead><tr>
-      <th>Datum</th><th>Deal</th><th>Bar</th><th>Käufer</th><th>Email</th><th>Preis</th><th>Zahlung</th><th>Gutschein</th><th>Rückerstattung</th><th>Aktion</th>
+      <th style="cursor:pointer" onclick="_orderSort={col:'created_at',dir:_orderSort.col==='created_at'?-_orderSort.dir:-1};renderOrders()">Datum ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'deal',dir:_orderSort.col==='deal'?-_orderSort.dir:1};renderOrders()">Deal ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'bar',dir:_orderSort.col==='bar'?-_orderSort.dir:1};renderOrders()">Bar ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'buyer',dir:_orderSort.col==='buyer'?-_orderSort.dir:1};renderOrders()">Käufer ⇅</th><th>Email</th><th style="cursor:pointer" onclick="_orderSort={col:'price',dir:_orderSort.col==='price'?-_orderSort.dir:-1};renderOrders()">Preis ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'status',dir:_orderSort.col==='status'?-_orderSort.dir:1};renderOrders()">Zahlung ⇅</th><th>Gutschein</th><th>Rückerstattung</th><th>Aktion</th>
     </tr></thead><tbody id="ordersBody"></tbody></table></div>
   </div>
 
   <div id="tabVouchers" class="tab-content">
     <div class="section-title">Gutscheine</div>
     <div class="overflow-x"><table><thead><tr>
-      <th>Code</th><th>Deal</th><th>Bar</th><th>Preis</th><th>Provision</th><th>Auszahlung</th><th>Status</th><th>Aktion</th>
+      <th style="cursor:pointer" onclick="_voucherSort={col:'created_at',dir:_voucherSort.col==='created_at'?-_voucherSort.dir:-1};renderVouchers()">Datum ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'code',dir:_voucherSort.col==='code'?-_voucherSort.dir:1};renderVouchers()">Code ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'deal_title',dir:_voucherSort.col==='deal_title'?-_voucherSort.dir:1};renderVouchers()">Deal ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'bar_name',dir:_voucherSort.col==='bar_name'?-_voucherSort.dir:1};renderVouchers()">Bar ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'price',dir:_voucherSort.col==='price'?-_voucherSort.dir:-1};renderVouchers()">Preis ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'fee',dir:_voucherSort.col==='fee'?-_voucherSort.dir:-1};renderVouchers()">Provision ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'payout',dir:_voucherSort.col==='payout'?-_voucherSort.dir:-1};renderVouchers()">Auszahlung ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'status',dir:_voucherSort.col==='status'?-_voucherSort.dir:1};renderVouchers()">Status ⇅</th><th style="cursor:pointer" onclick="_voucherSort={col:'payout_status',dir:_voucherSort.col==='payout_status'?-_voucherSort.dir:1};renderVouchers()">Auszahl. ⇅</th><th>Aktion</th>
     </tr></thead><tbody id="vouchersBody"></tbody></table></div>
   </div>
 
