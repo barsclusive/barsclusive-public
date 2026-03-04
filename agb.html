@@ -222,4 +222,41 @@
       <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
         <h2>Kontakt</h2>
         <p><strong>BarSclusive</strong><br>
-        Email: <a href="/cdn
+        Email: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
+        <p>Bei Problemen: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
+        <p style="margin-top:20px; color:#999; font-size:14px;">
+          Stand: Januar 2026 | BarSclusive, Basel, Schweiz
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
+    <p>&copy; 2026 BarSclusive</p>
+    <p style="margin-top:8px">
+      <a href="shop.html" style="color:#FF3366">Shop</a> &middot;
+      <a href="ueber-uns.html" style="color:#FF3366">&Uuml;ber uns</a> &middot;
+      <a href="datenschutz.html" style="color:#FF3366">Datenschutz</a> &middot;
+      <a href="kontakt.html" style="color:#FF3366">Kontakt</a>
+    </p>
+  </div>
+
+<script>
+function _SL(b,l){
+  localStorage.setItem("barsclusive_lang",l);
+  document.querySelectorAll("[onclick*=_SL]").forEach(function(x){x.style.borderColor="#333";x.style.color="#888"});
+  b.style.borderColor="#FF3366";b.style.color="#fff";
+  var t={de:"AGB f\u00fcr Kunden",en:"Terms and Conditions",it:"Condizioni generali",fr:"Conditions g\u00e9n\u00e9rales"};
+  var bk={de:"\u2190 Zur\u00fcck zum Shop",en:"\u2190 Back to Shop",it:"\u2190 Torna al negozio",fr:"\u2190 Retour \u00e0 la boutique"};
+  var h=document.querySelector("h1");if(h)h.textContent=t[l]||t.de;
+  var a=document.querySelector(".back-btn");if(a)a.textContent=bk[l]||bk.de;
+}
+document.addEventListener("DOMContentLoaded",function(){
+  var s=localStorage.getItem("barsclusive_lang")||"de";
+  var btns=document.querySelectorAll("[onclick*=_SL]");
+  var idx={de:0,en:1,it:2,fr:3};
+  if(btns[idx[s]])_SL(btns[idx[s]],s);
+});
+</script>
+</body>
+</html>
