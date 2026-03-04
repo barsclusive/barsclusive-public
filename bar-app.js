@@ -133,6 +133,21 @@ function applyTranslations() {
     const key = el.dataset.i18n;
     if (key) el.textContent = t(key);
   });
+  // Translate placeholders
+  var ph = {
+    profAddress: {de:'Strasse Nr.',en:'Street No.',it:'Via Nr.',fr:'Rue No.'},
+    profZip: {de:'PLZ',en:'ZIP',it:'CAP',fr:'NPA'},
+    profCity: {de:'Stadt',en:'City',it:'Città',fr:'Ville'},
+    profPhone: {de:'+41...',en:'+41...',it:'+41...',fr:'+41...'},
+    profIban: {de:'CH...',en:'CH...',it:'CH...',fr:'CH...'},
+    profTwint: {de:'+41...',en:'+41...',it:'+41...',fr:'+41...'},
+    dealTitle: {de:'z.B. 2 Cocktails für 1',en:'e.g. 2 Cocktails for 1',it:'es. 2 Cocktail per 1',fr:'ex. 2 Cocktails pour 1'},
+    regIban: {de:'CH00 0000 0000 0000 0000 0',en:'CH00 0000 0000 0000 0000 0',it:'CH00 0000 0000 0000 0000 0',fr:'CH00 0000 0000 0000 0000 0'}
+  };
+  Object.keys(ph).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && ph[id][currentLang]) el.placeholder = ph[id][currentLang];
+  });
 }
 
 function setLang(lang) {
@@ -249,30 +264,86 @@ async function deleteDeal(dealId) {
 }
 
 // ── OVERVIEW ─────────────────────────────────────────────────────────────
-async function loadBarStats() {
+var _barStatsVouchers = null;
+var _barStatsPeriod = 'all';
+
+function barFilterDate(period) {
+  var now = new Date();
+  if (period === 'day') { var d = new Date(now); d.setHours(0,0,0,0); return d; }
+  if (period === 'week') { var d = new Date(now); d.setDate(d.getDate() - 7); return d; }
+  if (period === 'month') { var d = new Date(now); d.setMonth(d.getMonth() - 1); return d; }
+  if (period === 'year') { var d = new Date(now); d.setFullYear(d.getFullYear() - 1); return d; }
+  return null;
+}
+
+async function loadBarStats(period) {
   var s = sessionGet();
   if (!s) { doLogout(); return; }
+  period = period || _barStatsPeriod || 'all';
+  _barStatsPeriod = period;
+
+  // Fetch vouchers once
+  if (!_barStatsVouchers) {
+    try {
+      var vr = await api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId });
+      _barStatsVouchers = (vr.success && vr.vouchers) ? vr.vouchers : [];
+    } catch(e) { _barStatsVouchers = []; }
+  }
+  // Also get active deals count
+  var activeDeals = 0;
   try {
-    var r = await api({ action: 'getBarStats', token: s.token, bar_id: s.barId });
-    if (!r.success) return;
-    var st = r.stats || {};
-    var grid = document.getElementById('statsGrid');
-    grid.innerHTML = '';
-    [
-      [t('soldCount') || 'Verkauft', st.vouchers_sold || 0, '#fff'],
-      [t('redeemed') || 'Eingel\xf6st', st.vouchers_redeemed || 0, '#22c55e'],
-      [t('notRedeemed') || 'Nicht eingel\xf6st', st.vouchers_not_redeemed || 0, '#f59e0b'],
-      [t('pendingPayout') || 'Gutschrift offen', Number(st.pending_payout || 0).toFixed(2) + ' CHF', '#ef4444'],
-      [t('paidOut') || 'Ausgezahlt', Number(st.paid_out || 0).toFixed(2) + ' CHF', '#3b82f6'],
-      [t('activeDeals') || 'Aktive Deals', st.active_deals || 0, '#fff'],
-    ].forEach(function([label, val, color]) {
-      var card = document.createElement('div'); card.className = 'stat-card';
-      var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = label;
-      var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(val);
-      if (color) vEl.style.color = color;
-      card.append(lEl, vEl); grid.appendChild(card);
-    });
-    } catch (e) {}
+    var dr = await api({ action: 'getBarDeals', token: s.token, bar_id: s.barId });
+    if (dr.success && dr.deals) dr.deals.forEach(function(d) { if (d.active) activeDeals++; });
+  } catch(e) {}
+
+  var cutoff = barFilterDate(period);
+  var vouchers = cutoff ? _barStatsVouchers.filter(function(v) { return new Date(v.created_at) >= cutoff; }) : _barStatsVouchers;
+
+  var sold = vouchers.length, redeemed = 0, pending = 0, paid = 0;
+  vouchers.forEach(function(v) {
+    if (v.status === 'redeemed') redeemed++;
+    if (v.status === 'redeemed' && v.payout_status === 'pending') pending += Number(v.bar_payout) || 0;
+    if (v.payout_status === 'paid') paid += Number(v.bar_payout) || 0;
+  });
+
+  var grid = document.getElementById('statsGrid');
+  grid.innerHTML = '';
+
+  // Filter buttons
+  var filterDiv = document.createElement('div');
+  filterDiv.style.cssText = 'display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap';
+  [['day',{de:'Heute',en:'Today',it:'Oggi',fr:"Aujourd'hui"}],
+   ['week',{de:'Woche',en:'Week',it:'Settimana',fr:'Semaine'}],
+   ['month',{de:'Monat',en:'Month',it:'Mese',fr:'Mois'}],
+   ['year',{de:'Jahr',en:'Year',it:'Anno',fr:'Année'}],
+   ['all',{de:'Alle',en:'All',it:'Tutti',fr:'Tous'}]
+  ].forEach(function(f) {
+    var btn = document.createElement('button');
+    btn.textContent = f[1][currentLang] || f[1].de;
+    btn.style.cssText = (period === f[0] ? 'background:#FF3366;color:#fff;border-color:#FF3366' : 'background:#222;color:#ccc;border-color:#333') + ';border:1px solid;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+    btn.addEventListener('click', function() { loadBarStats(f[0]); });
+    filterDiv.appendChild(btn);
+  });
+  grid.appendChild(filterDiv);
+
+  // Stat cards
+  var cardsDiv = document.createElement('div');
+  cardsDiv.className = 'stats-grid';
+  [
+    [t('soldCount') || 'Verkauft', sold, '#fff'],
+    [t('redeemed') || 'Eingelöst', redeemed, '#22c55e'],
+    [t('notRedeemed') || 'Nicht eingelöst', sold - redeemed, '#f59e0b'],
+    [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#ef4444'],
+    [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#3b82f6'],
+    [t('activeDeals') || 'Aktive Deals', activeDeals, '#fff'],
+  ].forEach(function(s) {
+    var card = document.createElement('div'); card.className = 'stat-card';
+    var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
+    var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]);
+    if (s[2]) vEl.style.color = s[2];
+    card.append(lEl, vEl); cardsDiv.appendChild(card);
+  });
+  grid.appendChild(cardsDiv);
 }
 
 // ── MY DEALS ──────────────────────────────────────────────────────────────
