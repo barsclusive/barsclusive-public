@@ -384,6 +384,36 @@
     <div id="dashSettings" class="tab-content">
       <div class="card">
         <h2>⚙️ <span data-i18n="tabSettings">Einstellungen</span></h2>
+        <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="profileTitle">Stammdaten</h3>
+        <div class="err-msg" id="profErr" aria-live="polite"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-group">
+            <label class="form-label" data-i18n="addressLbl">Adresse</label>
+            <input type="text" class="form-input" id="profAddress" placeholder="Strasse Nr.">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="zipLbl">PLZ</label>
+            <input type="text" class="form-input" id="profZip" placeholder="4000">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="cityLbl">Stadt</label>
+            <input type="text" class="form-input" id="profCity" placeholder="Basel">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="phoneLbl">Telefon</label>
+            <input type="tel" class="form-input" id="profPhone" placeholder="+41...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="ibanLbl">IBAN</label>
+            <input type="text" class="form-input" id="profIban" placeholder="CH...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="twintLbl">Twint</label>
+            <input type="text" class="form-input" id="profTwint" placeholder="+41...">
+          </div>
+        </div>
+        <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
+        <hr style="border:none;border-top:1px solid #333;margin:24px 0">
         <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="changePassword">Passwort ändern</h3>
         <div class="err-msg" id="pwErr" aria-live="polite"></div>
         <div class="form-group">
