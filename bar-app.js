@@ -25,7 +25,7 @@ de: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Preis', createdLbl:'Erstellt', redeemedLbl:'Eingelöst',
   redeemTitle:'Gutschein einlösen', redeemHint:'Gutschein-Code des Kunden eingeben',
   redeemBtn:'Einlösen', redeemSuccess:'✅ Gutschein eingelöst!',
-  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Ausgezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
+  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', profileTitle:'Stammdaten', addressLbl:'Adresse', zipLbl:'PLZ', cityLbl:'Stadt', phoneLbl:'Telefon', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Speichern', profileSaved:'Profil gespeichert', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Ausgezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
   newPasswordLbl:'Neues Passwort (mind. 8 Zeichen)', confirmPassword:'Passwort bestätigen',
   changePasswordBtn:'Passwort ändern', editDeal:'Deal bearbeiten',
   saveLbl:'Speichern', cancelLbl:'Abbrechen',
@@ -54,7 +54,7 @@ en: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Price', createdLbl:'Created', redeemedLbl:'Redeemed',
   redeemTitle:'Redeem Voucher', redeemHint:"Enter the customer's voucher code",
   redeemBtn:'Redeem', redeemSuccess:'✅ Voucher redeemed!',
-  changePassword:'Change Password', oldPassword:'Old Password', soldCount:'Sold', notRedeemed:'Not redeemed', paidOut:'Paid out', activeDeals:'Active Deals', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?', shop:'Shop', aboutUs:'About Us', howItWorks:'How It Works', legalNotice:'Legal Notice', privacy:'Privacy', termsBars:'Terms Bars', contact:'Contact',
+  changePassword:'Change Password', oldPassword:'Old Password', profileTitle:'Master Data', addressLbl:'Address', zipLbl:'ZIP', cityLbl:'City', phoneLbl:'Phone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Save', profileSaved:'Profile saved', soldCount:'Sold', notRedeemed:'Not redeemed', paidOut:'Paid out', activeDeals:'Active Deals', earnings:'Revenue', redeemed:'Redeemed', pendingPayout:'Pending', deleteDealBtn:'Delete Deal', deleteDealConfirm:'Permanently delete this deal?', shop:'Shop', aboutUs:'About Us', howItWorks:'How It Works', legalNotice:'Legal Notice', privacy:'Privacy', termsBars:'Terms Bars', contact:'Contact',
   newPasswordLbl:'New Password (min. 8 chars)', confirmPassword:'Confirm Password',
   changePasswordBtn:'Change Password', editDeal:'Edit Deal',
   saveLbl:'Save', cancelLbl:'Cancel',
@@ -83,7 +83,7 @@ it: {
   codeLbl:'Codice', dealLbl:'Deal', priceLbl:'Prezzo', createdLbl:'Creato', redeemedLbl:'Riscattato',
   redeemTitle:'Riscatta Voucher', redeemHint:'Inserisci il codice voucher del cliente',
   redeemBtn:'Riscatta', redeemSuccess:'✅ Voucher riscattato!',
-  changePassword:'Cambia Password', oldPassword:'Vecchia Password', soldCount:'Venduti', notRedeemed:'Non riscattati', paidOut:'Pagato', activeDeals:'Deal attivi', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
+  changePassword:'Cambia Password', oldPassword:'Vecchia Password', profileTitle:'Dati anagrafici', addressLbl:'Indirizzo', zipLbl:'CAP', cityLbl:'Città', phoneLbl:'Telefono', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Salva', profileSaved:'Profilo salvato', soldCount:'Venduti', notRedeemed:'Non riscattati', paidOut:'Pagato', activeDeals:'Deal attivi', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
   newPasswordLbl:'Nuova Password (min. 8 car.)', confirmPassword:'Conferma Password',
   changePasswordBtn:'Cambia Password', editDeal:'Modifica Deal',
   saveLbl:'Salva', cancelLbl:'Annulla',
@@ -112,7 +112,7 @@ fr: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Prix', createdLbl:'Créé', redeemedLbl:'Échangé',
   redeemTitle:'Échanger Bon', redeemHint:'Entrez le code du bon client',
   redeemBtn:'Échanger', redeemSuccess:'✅ Bon échangé!',
-  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', soldCount:'Vendus', notRedeemed:'Non utilis\xe9s', paidOut:'Pay\xe9', activeDeals:'Offres actives', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
+  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', profileTitle:'Coordonnées', addressLbl:'Adresse', zipLbl:'NPA', cityLbl:'Ville', phoneLbl:'Téléphone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Enregistrer', profileSaved:'Profil enregistré', soldCount:'Vendus', notRedeemed:'Non utilis\xe9s', paidOut:'Pay\xe9', activeDeals:'Offres actives', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
   newPasswordLbl:'Nouveau mot de passe (min. 8 car.)', confirmPassword:'Confirmer',
   changePasswordBtn:'Changer', editDeal:'Modifier Deal',
   saveLbl:'Enregistrer', cancelLbl:'Annuler',
@@ -303,6 +303,8 @@ function renderMyDeals(deals) {
       if (iUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var fid = iUrl.split('/d/')[1]; if (fid) iUrl = 'https://drive.google.com/thumbnail?id=' + fid + '&sz=w200'; }
       thumb.src = iUrl;
       thumb.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0';
+      thumb.referrerPolicy = 'no-referrer';
+      thumb.onerror = function() { this.style.display='none'; };
       item.appendChild(thumb);
     }
     var info = document.createElement('div');
@@ -360,7 +362,7 @@ function openEditModal(deal) {
     if (editPreview && editPreviewImg && deal.image_url) {
       var previewUrl = deal.image_url;
       if (previewUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var pfid = previewUrl.split('/d/')[1]; if (pfid) previewUrl = 'https://drive.google.com/thumbnail?id=' + pfid + '&sz=w400'; }
-      editPreviewImg.src = previewUrl; editPreview.style.display = 'block';
+      editPreviewImg.src = previewUrl; editPreviewImg.referrerPolicy = 'no-referrer'; editPreview.style.display = 'block';
     } else if (editPreview) { editPreview.style.display = 'none'; }
     // Reset file input
     var editFile = document.getElementById('editImageFile');
@@ -607,7 +609,7 @@ var TAB_IDS = {
   vouchers:'dashVouchers', redeem:'dashRedeem', settings:'dashSettings'
 };
 var TAB_LOADERS = {
-  overview: loadBarStats, mydeals: loadMyDeals,
+  overview: loadBarStats, mydeals: loadMyDeals, settings: loadProfile,
   vouchers: loadMyVouchers, redeem: function() {}
 };
 
@@ -707,6 +709,45 @@ window.addEventListener('load', function() {
   var savedLang = localStorage.getItem('barsclusive_bar_lang') || 'de';
   setLang(savedLang);
 });
+
+
+// ── PROFILE ───────────────────────────────────────────────────────────────
+async function loadProfile() {
+  var s = sessionGet();
+  if (!s) return;
+  try {
+    var r = await api({ action: 'getBarProfile', token: s.token });
+    if (!r.success || !r.profile) return;
+    var b = r.profile;
+    var el = function(id) { return document.getElementById(id); };
+    if (el('profAddress')) el('profAddress').value = b.address || '';
+    if (el('profZip')) el('profZip').value = b.zip || '';
+    if (el('profCity')) el('profCity').value = b.city || '';
+    if (el('profPhone')) el('profPhone').value = b.phone || '';
+    if (el('profIban')) el('profIban').value = b.iban || '';
+    if (el('profTwint')) el('profTwint').value = b.twint || '';
+  } catch(e) {}
+}
+
+async function saveProfile() {
+  var s = sessionGet();
+  if (!s) { doLogout(); return; }
+  var payload = {
+    action: 'updateBarProfile',
+    token: s.token,
+    address: document.getElementById('profAddress').value.trim(),
+    zip: document.getElementById('profZip').value.trim(),
+    city: document.getElementById('profCity').value.trim(),
+    phone: document.getElementById('profPhone').value.trim(),
+    iban: document.getElementById('profIban').value.trim(),
+    twint: document.getElementById('profTwint').value.trim()
+  };
+  try {
+    var r = await api(payload);
+    if (r.success) showToast(t('profileSaved') || 'Gespeichert');
+    else showToast(r.error || 'Fehler', true);
+  } catch(e) { showToast('Verbindungsfehler', true); }
+}
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
