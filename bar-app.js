@@ -634,11 +634,14 @@ async function doCreateDeal() {
     var imageUrl = document.getElementById('dealImageUrl') ? document.getElementById('dealImageUrl').value : '';
     var imgF = document.getElementById('dealImageFile');
     if (imgF && imgF.files.length > 0) {
+      var file = imgF.files[0];
+      if (file.size > 5 * 1024 * 1024) { showToast('Bild zu gross (max 5MB)', true); return; }
       try {
-        var b64 = await fileToBase64(imgF.files[0]);
-        var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: imgF.files[0].name });
-        if (uR.success) imageUrl = uR.url;
-      } catch(e) {}
+        var b64 = await fileToBase64(file);
+        var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: file.name });
+        if (uR.success) { imageUrl = uR.url; }
+        else { showToast('Bild-Upload: ' + (uR.error || 'Fehler'), true); return; }
+      } catch(e) { showToast('Bild-Upload fehlgeschlagen', true); return; }
     }
 
     var _cBtn = document.getElementById('btnCreateDeal');
