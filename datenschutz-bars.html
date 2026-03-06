@@ -96,162 +96,169 @@
         <img src="logo.png" alt="BarSclusive">
       </div>
       <a href="bar-portal.html" class="back-btn">← Zurück zum Portal</a>
-      <div style="display:flex;gap:6px;margin-left:auto"><button onclick="_SL(this,'de')" style="background:#222;border:1px solid #FF3366;color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">DE</button><button onclick="_SL(this,'en')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">EN</button><button onclick="_SL(this,'it')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">IT</button><button onclick="_SL(this,'fr')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">FR</button></div>
+      <div style="display:flex;gap:6px;margin-left:auto">
+        <button onclick="_SL(this,'de')" style="background:#222;border:1px solid #FF3366;color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">DE</button>
+        <button onclick="_SL(this,'en')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">EN</button>
+        <button onclick="_SL(this,'it')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">IT</button>
+        <button onclick="_SL(this,'fr')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">FR</button>
+      </div>
     </div>
 
     <div class="content">
       <h1>Datenschutzerklärung für Bars</h1>
-      <p class="subtitle">BarSclusive | Stand: Februar 2026</p>
+      <p class="subtitle">BarSclusive | Stand: März 2026</p>
 
       <div class="section">
-        <h2>1. Verantwortlicher</h2>
+        <h2>1. Verantwortliche Stelle</h2>
         <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a><br>
-        Schweiz</p>
+        Basel, Schweiz<br>
+        E-Mail: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
       </div>
 
       <div class="section">
-        <h2>2. Welche Daten wir von Ihnen sammeln</h2>
-        
-        <h3>2.1 Bei Registrierung</h3>
+        <h2>2. Wofür diese Datenschutzerklärung gilt</h2>
+        <p>Diese Datenschutzerklärung gilt für Bars und andere Betriebe, die das BarSclusive-Bar-Portal nutzen.</p>
+        <p>BarSclusive betreibt das öffentliche Frontend über GitHub Pages. Das Backend läuft über Google Apps Script. Daten werden über Google Sheets, Google Drive und Google MailApp verarbeitet. Zahlungen von Kundinnen und Kunden laufen über Stripe.</p>
+      </div>
+
+      <div class="section">
+        <h2>3. Welche Personendaten und Geschäftsdaten wir bearbeiten</h2>
+
+        <h3>3.1 Bei Registrierung und Kontoverwaltung</h3>
         <ul>
-          <li>Bar-Name</li>
-          <li>Stadt, Adresse, PLZ</li>
-          <li>Email, Telefon</li>
-          <li>Passwort (verschlüsselt gespeichert)</li>
+          <li>Name der Bar</li>
+          <li>Stadt</li>
+          <li>Adresse</li>
+          <li>PLZ</li>
+          <li>E-Mail-Adresse</li>
+          <li>Telefonnummer</li>
+          <li>Passwort in gehashter Form</li>
+          <li>Status des Bar-Kontos</li>
+          <li>Kommissionssatz</li>
+          <li>Session-Daten</li>
+          <li>Passwort-Reset-Daten</li>
         </ul>
 
-        <h3>2.2 Optional für Auszahlungen</h3>
+        <h3>3.2 Bei Auszahlungen und Abrechnung</h3>
         <ul>
           <li>IBAN</li>
-          <li>Twint-Nummer</li>
+          <li>gegebenenfalls Twint-Angaben</li>
+          <li>Gutscheine</li>
+          <li>Auszahlungsstatus</li>
+          <li>abrechnungsrelevante Daten</li>
         </ul>
 
-        <h3>2.3 Bei Deal-Erstellung</h3>
+        <h3>3.3 Bei Deal-Erstellung und Portalnutzung</h3>
         <ul>
-          <li>Deal-Details (Titel, Beschreibung, Preise)</li>
-          <li>Bilder (URLs)</li>
-          <li>Gültigkeitsdaten</li>
+          <li>Deal-Titel und Beschreibungen</li>
+          <li>Preise und Mengen</li>
+          <li>Bilder und Bild-URLs</li>
+          <li>Kategorien</li>
+          <li>Gültigkeitsdaten und Zeitfenster</li>
+          <li>Deal-Status</li>
         </ul>
 
-        <h3>2.4 Technische Daten</h3>
+        <h3>3.4 Sicherheits- und Systemdaten</h3>
         <ul>
-          <li>Login-Aktivitäten</li>
-          <li>IP-Adresse, Browser-Typ</li>
-          <li>Session-Tokens (90 Minuten gültig)</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>3. Zweck der Datenverarbeitung</h2>
-        <ul>
-          <li><strong>Vertragserfüllung:</strong> Bereitstellung der Plattform, Auszahlungen</li>
-          <li><strong>Kommunikation:</strong> Freischaltungs-Emails, wichtige Benachrichtigungen</li>
-          <li><strong>Sicherheit:</strong> Betrugsprävention, Rate-Limiting</li>
-          <li><strong>Rechtliche Pflichten:</strong> Aufbewahrung von Abrechnungen</li>
+          <li>Login- und Sicherheitslogs</li>
+          <li>Rate-Limits</li>
+          <li>Delivery-Logs</li>
+          <li>technische Verbindungsdaten, soweit sie systembedingt anfallen</li>
         </ul>
       </div>
 
       <div class="section">
-        <h2>4. Datenweitergabe</h2>
-        
-        <h3>4.1 Was Kunden sehen</h3>
-        <p>Wenn ein Kunde Ihren Deal kauft, sieht er:</p>
+        <h2>4. Zweck der Datenbearbeitung</h2>
         <ul>
-          <li>Bar-Name</li>
+          <li>Bereitstellung und Betrieb des Bar-Portals</li>
+          <li>Registrierung, Login und Kontoverwaltung</li>
+          <li>Erstellung, Verwaltung und Anzeige von Deals</li>
+          <li>Verarbeitung von Gutscheinen, Einlösungen und Auszahlungen</li>
+          <li>Kommunikation mit Bars</li>
+          <li>Missbrauchsverhinderung und Systemsicherheit</li>
+          <li>Erfüllung gesetzlicher Pflichten</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>5. Sichtbarkeit und Weitergabe von Daten</h2>
+
+        <h3>5.1 Sichtbarkeit für Kundinnen und Kunden</h3>
+        <p>Im Rahmen der Plattform können insbesondere folgende Angaben für Kundinnen und Kunden sichtbar sein:</p>
+        <ul>
+          <li>Name der Bar</li>
           <li>Stadt</li>
-          <li>Deal-Details</li>
-        </ul>
-        
-        <p><strong>Kunden sehen NICHT:</strong></p>
-        <ul>
-          <li>Ihre Adresse (außer Sie geben sie im Deal an)</li>
-          <li>Ihre Email</li>
-          <li>Ihre Telefonnummer</li>
-          <li>IBAN / Twint</li>
+          <li>Adresse, soweit auf der Plattform angezeigt</li>
+          <li>Deal-Details, Bilder, Preise und Gültigkeitsangaben</li>
         </ul>
 
-        <h3>4.2 Was wir weitergeben</h3>
+        <h3>5.2 Weitergabe an Dienstleister</h3>
+        <p>Wir arbeiten mit Dienstleistern und Plattformen zusammen, soweit dies für den Betrieb erforderlich ist. Dazu gehören insbesondere:</p>
         <ul>
-          <li><strong>An Zahlungsdienstleister:</strong> IBAN/Twint nur für Auszahlungen</li>
-          <li><strong>An Email-Dienst (Google Mail):</strong> Für Benachrichtigungen</li>
+          <li>GitHub Pages für das öffentliche Frontend</li>
+          <li>Google Apps Script, Google Sheets, Google Drive und Google MailApp für Backend, Speicherung und Kommunikation</li>
+          <li>Stripe für die Zahlungsabwicklung von Kundinnen und Kunden</li>
         </ul>
 
-        <h3>4.3 Was wir NICHT weitergeben</h3>
+        <h3>5.3 Keine Datenverkäufe</h3>
         <ul>
+          <li>Kein Verkauf personenbezogener Daten oder Geschäftsdaten</li>
           <li>Keine Weitergabe an Dritte zu Werbezwecken</li>
-          <li>Kein Verkauf von Daten</li>
+          <li>Keine Analyse- oder Werbetracking-Tools</li>
         </ul>
       </div>
 
       <div class="section">
-        <h2>5. Datenspeicherung</h2>
-        
-        <h3>5.1 Speicherort</h3>
-        <p>Daten werden auf <strong>Google Cloud (EU/Schweiz)</strong> gespeichert.</p>
-
-        <h3>5.2 Speicherdauer</h3>
+        <h2>6. Speicherung und Aufbewahrung</h2>
+        <p>Daten von Bars werden über die von uns eingesetzten Systeme gespeichert und verarbeitet, insbesondere über Google Apps Script, Google Sheets, Google Drive und Google MailApp.</p>
+        <p>Wir speichern Daten nur so lange, wie dies für den Betrieb des Portals, für Auszahlungen, Abrechnungen, Sicherheitszwecke oder aufgrund gesetzlicher Pflichten erforderlich ist.</p>
         <ul>
-          <li><strong>Account-Daten:</strong> Solange Sie registriert sind</li>
-          <li><strong>Abrechnungen:</strong> 10 Jahre (gesetzlich)</li>
-          <li><strong>Sessions:</strong> 90 Minuten</li>
-          <li><strong>Login-Versuche:</strong> 24 Stunden</li>
+          <li>Kontodaten grundsätzlich während der Dauer des Bar-Kontos</li>
+          <li>Session-Daten zeitlich begrenzt</li>
+          <li>abrechnungsrelevante Daten nach Massgabe gesetzlicher Aufbewahrungspflichten</li>
+          <li>Sicherheits- und Protokolldaten soweit erforderlich für Schutz, Nachvollziehbarkeit und Missbrauchsverhinderung</li>
         </ul>
       </div>
 
       <div class="section">
-        <h2>6. Ihre Rechte (DSGVO)</h2>
-        
-        <h3>6.1 Auskunftsrecht</h3>
-        <p>Sie können jederzeit erfahren, welche Daten wir über Ihre Bar gespeichert haben.</p>
-
-        <h3>6.2 Berichtigungsrecht</h3>
-        <p>Sie können Ihre Daten jederzeit im Bar-Portal aktualisieren oder uns kontaktieren.</p>
-
-        <h3>6.3 Löschungsrecht</h3>
-        <p>Sie können die Löschung Ihres Accounts verlangen. Abrechnungsdaten müssen wir 10 Jahre aufbewahren (gesetzlich).</p>
-
-        <h3>6.4 Datenübertragbarkeit</h3>
-        <p>Sie können Ihre Daten in einem gängigen Format (z.B. CSV) erhalten.</p>
-
-        <h3>6.5 Beschwerde</h3>
-        <p>Sie können sich an den <strong>Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten (EDÖB)</strong> wenden.</p>
+        <h2>7. Cookies, Local Storage und ähnliche Technologien</h2>
+        <p>Wir verwenden keine Analyse- oder Werbetracking-Cookies.</p>
+        <p>Für technisch notwendige Funktionen können jedoch Cookies, Local Storage oder vergleichbare Speichertechnologien verwendet werden, insbesondere für Login-Zustände, Spracheinstellungen, Session-Verwaltung und Portal-Funktionen.</p>
       </div>
 
       <div class="section">
-        <h2>7. Sicherheit</h2>
+        <h2>8. Datensicherheit</h2>
         <ul>
-          <li><strong>Passwörter:</strong> PBKDF2-HMAC-SHA256 Verschlüsselung</li>
-          <li><strong>HTTPS:</strong> Sichere Verbindung</li>
-          <li><strong>Rate Limiting:</strong> Schutz vor Angriffen</li>
-          <li><strong>Session-Timeout:</strong> 90 Minuten</li>
+          <li>Passwörter werden nicht im Klartext gespeichert</li>
+          <li>Verbindungen erfolgen über HTTPS</li>
+          <li>Zugriffe werden technisch beschränkt</li>
+          <li>Es bestehen Sicherheitsmechanismen wie Session-Verwaltung, Rate-Limits und 2-Faktor-Absicherung für relevante Zugänge</li>
         </ul>
-        <p>Trotz aller Maßnahmen können wir keine 100% Sicherheit garantieren.</p>
+        <p>Wir treffen angemessene technische und organisatorische Massnahmen. Eine absolute Sicherheit kann jedoch nicht garantiert werden.</p>
       </div>
 
       <div class="section">
-        <h2>8. Cookies</h2>
-        <p>Wir verwenden nur Session-Cookies (90 Min) für Login-Verwaltung.</p>
-        <p><strong>Keine Tracking-Cookies, keine Werbung, keine Analyse-Tools.</strong></p>
+        <h2>9. Ihre Rechte</h2>
+        <p>Sie haben im Rahmen des anwendbaren Datenschutzrechts insbesondere das Recht auf Auskunft, Berichtigung, Löschung im gesetzlich zulässigen Rahmen sowie auf Einschränkung oder Widerspruch, soweit dies im Einzelfall anwendbar ist.</p>
+        <p>Wenn Sie der Ansicht sind, dass die Bearbeitung Ihrer Daten gegen geltendes Datenschutzrecht verstösst, können Sie sich an den <strong>Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten (EDÖB)</strong> wenden.</p>
       </div>
 
       <div class="section">
-        <h2>9. Kontakt für Datenschutzanfragen</h2>
-        <p><strong>Email:</strong> <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
-        <p>Wir bearbeiten Ihre Anfrage innerhalb von 30 Tagen.</p>
+        <h2>10. Kontakt für Datenschutzanfragen</h2>
+        <p><strong>E-Mail:</strong> <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
       </div>
 
       <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
-        <h2>10. Änderungen</h2>
-        <p>Wir behalten uns vor, dtualisieren. Die aktuelle Version gilt ab dem Zeitpunkt der Veröffentlichung.</p>
+        <h2>11. Änderungen</h2>
+        <p>Wir können diese Datenschutzerklärung anpassen, wenn sich das Portal, die Datenbearbeitung oder die rechtlichen Anforderungen ändern. Massgeblich ist die jeweils veröffentlichte Version.</p>
       </div>
 
       <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
         <h2>Kontakt</h2>
         <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
+        E-Mail: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
         <p style="margin-top:20px; color:#999; font-size:14px;">
-          Stand: Januar 2026 | BarSclusive, Basel, Schweiz
+          Stand: März 2026 | BarSclusive, Basel, Schweiz
         </p>
       </div>
     </div>
@@ -266,8 +273,8 @@ function _SL(b,l){
   localStorage.setItem("barsclusive_lang",l);
   document.querySelectorAll("[onclick*=_SL]").forEach(function(x){x.style.borderColor="#333";x.style.color="#888"});
   b.style.borderColor="#FF3366";b.style.color="#fff";
-  var t={'de': 'Datenschutz Bars', 'en': 'Privacy for Bars', 'it': 'Privacy bar', 'fr': 'Confidentialit\\u00e9 bars'};
-  var bk={de:"\u2190 Zur\u00fcck",en:"\u2190 Back",it:"\u2190 Indietro",fr:"\u2190 Retour"};
+  var t={'de': 'Datenschutz für Bars', 'en': 'Privacy for Bars', 'it': 'Privacy per Bar', 'fr': 'Confidentialité pour bars'};
+  var bk={de:"← Zurück zum Portal",en:"← Back to Portal",it:"← Torna al portale",fr:"← Retour au portail"};
   var h=document.querySelector("h1");if(h)h.textContent=t[l]||t.de;
   var a=document.querySelector(".back-btn,.back");if(a)a.textContent=bk[l]||bk.de;
 }
