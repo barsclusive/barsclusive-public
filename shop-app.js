@@ -402,7 +402,14 @@ function buildDealCard(deal) {
   const btn = document.createElement('button');
   btn.className = 'btn-buy';
   btn.textContent = shopT('profitiere') || 'Profitiere jetzt!';
-  btn.addEventListener('click', () => openBuyModal(deal));
+  btn.addEventListener('click', (e) => { e.stopPropagation(); openBuyModal(deal); });
+  var cartBtn = document.createElement('button');
+  cartBtn.className = 'add-cart-btn';
+  cartBtn.textContent = '🛒+';
+  cartBtn.title = 'In den Warenkorb';
+  cartBtn.addEventListener('click', function(e) { e.stopPropagation(); addToCart(deal); });
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', function() { openDealDetail(deal); });
 
   // Time slots display
   var tsContainer = document.createElement('div');
@@ -420,8 +427,8 @@ function buildDealCard(deal) {
   // Favorite button
   var favBtn = document.createElement('button');
   favBtn.className = 'fav-btn';
-  favBtn.textContent = (_favorites.indexOf(deal.bar_id) !== -1) ? '\u2764\uFE0F' : '\u{1F90D}';
-  favBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleFavorite(deal.bar_id, favBtn); });
+  favBtn.textContent = (_favorites.indexOf(deal.id) !== -1) ? '\u2764\uFE0F' : '\u{1F90D}';
+  favBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleFavorite(deal.id, favBtn); });
 
   // btnRow replaced by priceBtn in content.append
 
@@ -1163,19 +1170,19 @@ async function loadFavorites() {
   if (!s) return;
   try {
     var r = await api({ action: 'getFavorites', token: s.token });
-    if (r.success) _favorites = r.bar_ids || [];
+    if (r.success) _favorites = r.deal_ids || r.bar_ids || [];
   } catch(e) {}
 }
 
-async function toggleFavorite(barId, btn) {
+async function toggleFavorite(dealId, btn) {
   var s = sessionGet();
   if (!s) { showToast('Bitte einloggen', true); return; }
-  var isFav = _favorites.indexOf(barId) !== -1;
+  var isFav = _favorites.indexOf(dealId) !== -1;
   try {
-    var r = await api({ action: isFav ? 'removeFavorite' : 'addFavorite', token: s.token, bar_id: barId });
+    var r = await api({ action: isFav ? 'removeFavorite' : 'addFavorite', token: s.token, deal_id: dealId });
     if (r.success) {
-      if (isFav) _favorites = _favorites.filter(function(id) { return id !== barId; });
-      else _favorites.push(barId);
+      if (isFav) _favorites = _favorites.filter(function(id) { return id !== dealId; });
+      else _favorites.push(dealId);
       btn.textContent = isFav ? '\u{1F90D}' : '\u2764\uFE0F';
     }
   } catch(e) {}
@@ -1186,10 +1193,283 @@ function showFavorites() {
   if (!el) return;
   el.innerHTML = '';
   if (!_favorites.length) { el.innerHTML = '<div class="empty"><h3>Noch keine Favoriten</h3><p>Klicke \u2764\uFE0F bei einem Deal</p></div>'; return; }
-  var favDeals = allDeals.filter(function(d) { return _favorites.indexOf(d.bar_id) !== -1; });
+  var favDeals = allDeals.filter(function(d) { return _favorites.indexOf(d.id) !== -1; });
   if (!favDeals.length) { el.innerHTML = '<div class="empty"><h3>Keine aktiven Deals von Favoriten</h3></div>'; return; }
   favDeals.forEach(function(d) { el.appendChild(buildDealCard(d)); });
 }
 
 // Load favorites on page load if logged in
 window.addEventListener('load', function() { loadFavorites(); });
+
+
+// =============================================
+// DEAL DETAIL MODAL
+// =============================================
+var _detailDeal = null;
+
+function openDealDetail(deal) {
+  _detailDeal = deal;
+  var modal = document.getElementById('dealDetailModal');
+  if (!modal) return;
+  
+  var isPauschal = (deal.categories || []).indexOf('pauschalgutscheine') !== -1;
+  
+  // Image
+  var imgDiv = document.getElementById('ddImg');
+  var existingImg = imgDiv.querySelector('img');
+  if (existingImg) existingImg.remove();
+  if (deal.image_url) {
+    var img = document.createElement('img');
+    var gid = '';
+    var u = deal.image_url;
+    if (u.indexOf('lh3.googleusercontent.com/d/') >= 0) gid = u.split('/d/')[1].split('=')[0];
+    else if (u.indexOf('thumbnail?id=') >= 0) gid = u.split('id=')[1].split('&')[0];
+    else if (u.indexOf('/d/') >= 0) gid = (u.split('/d/')[1] || '').split('/')[0];
+    if (gid) img.src = 'https://lh3.googleusercontent.com/d/' + gid + '=w800';
+    else img.src = u;
+    img.referrerPolicy = 'no-referrer';
+    img.onerror = function() { this.style.display='none'; };
+    imgDiv.insertBefore(img, imgDiv.firstChild);
+  }
+  
+  document.getElementById('ddTitle').textContent = deal.title;
+  document.getElementById('ddBar').textContent = deal.bar_name + (deal.bar_city ? ' \u2022 ' + deal.bar_city : '');
+  document.getElementById('ddDesc').textContent = deal.description || '';
+  document.getElementById('ddPrice').textContent = Number(deal.deal_price).toFixed(2) + ' CHF';
+  var origEl = document.getElementById('ddOrig');
+  if (deal.original_price > deal.deal_price) {
+    origEl.textContent = Number(deal.original_price).toFixed(2) + ' CHF';
+    origEl.style.display = 'inline';
+  } else { origEl.style.display = 'none'; }
+  
+  // Info section
+  var info = '';
+  if (deal.bar_address) info += '<div><span style="color:#999">Adresse</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
+  if (isPauschal) {
+    if (deal.discount_percent) info += '<div><span style="color:#999">Rabatt</span><span style="color:#FF3366;font-weight:700">' + deal.discount_percent + '%</span></div>';
+    if (deal.min_order) info += '<div><span style="color:#999">Mindestbestellung</span><span>' + deal.min_order + ' CHF</span></div>';
+    info += '<div><span style="color:#999">Typ</span><span>Pauschalgutschein</span></div>';
+  }
+  var weekdays = deal.valid_weekdays || [];
+  if (weekdays.length) info += '<div><span style="color:#999">Wochentage</span><span>' + weekdays.join(', ') + '</span></div>';
+  if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">Zeit</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
+  if (deal.max_quantity > 0) info += '<div><span style="color:#999">Verfügbar</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
+  document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">Keine weiteren Details</div>';
+  
+  // Share buttons
+  var shareUrl = window.location.origin + window.location.pathname + '?deal=' + deal.id;
+  var shareText = deal.title + ' bei ' + deal.bar_name + ' - nur ' + Number(deal.deal_price).toFixed(2) + ' CHF!';
+  var shareHtml = '<button class="share-btn" onclick="copyDealLink()">📋 Link kopieren</button>'
+    + '<button class="share-btn" onclick="shareDeal(\'whatsapp\')">💬 WhatsApp</button>'
+    + '<button class="share-btn" onclick="shareDeal(\'facebook\')">📘 Facebook</button>'
+    + '<button class="share-btn" onclick="shareDeal(\'telegram\')">✈️ Telegram</button>';
+  document.getElementById('ddShare').innerHTML = shareHtml;
+  
+  // Buy button
+  document.getElementById('ddBuyBtn').onclick = function() { closeDealDetail(); openBuyModal(deal); };
+  // Add cart button in detail
+  var ddCartBtn = document.getElementById('ddCartBtn');
+  if (!ddCartBtn) {
+    ddCartBtn = document.createElement('button');
+    ddCartBtn.id = 'ddCartBtn';
+    ddCartBtn.style.cssText = 'width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
+    document.getElementById('ddBuyBtn').after(ddCartBtn);
+  }
+  ddCartBtn.textContent = '🛒 In den Warenkorb';
+  ddCartBtn.onclick = function() { addToCart(deal); };
+  
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDealDetail() {
+  var modal = document.getElementById('dealDetailModal');
+  if (modal) modal.classList.remove('active');
+  document.body.style.overflow = '';
+  _detailDeal = null;
+}
+
+function copyDealLink() {
+  if (!_detailDeal) return;
+  var url = window.location.origin + window.location.pathname + '?deal=' + _detailDeal.id;
+  navigator.clipboard.writeText(url).then(function() { showToast('Link kopiert!'); }).catch(function() { showToast('Link: ' + url); });
+}
+
+function shareDeal(platform) {
+  if (!_detailDeal) return;
+  var d = _detailDeal;
+  var url = encodeURIComponent(window.location.origin + window.location.pathname + '?deal=' + d.id);
+  var text = encodeURIComponent(d.title + ' bei ' + d.bar_name + ' - nur ' + Number(d.deal_price).toFixed(2) + ' CHF!');
+  var link = '';
+  if (platform === 'whatsapp') link = 'https://wa.me/?text=' + text + '%20' + url;
+  else if (platform === 'facebook') link = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  else if (platform === 'telegram') link = 'https://t.me/share/url?url=' + url + '&text=' + text;
+  if (link) window.open(link, '_blank');
+}
+
+// Close modal on backdrop click
+document.addEventListener('click', function(e) {
+  var modal = document.getElementById('dealDetailModal');
+  if (modal && e.target === modal) closeDealDetail();
+});
+
+// Open deal from URL parameter
+window.addEventListener('load', function() {
+  var params = new URLSearchParams(window.location.search);
+  var dealId = params.get('deal');
+  if (dealId && allDeals.length) {
+    var d = allDeals.find(function(x) { return x.id === dealId; });
+    if (d) setTimeout(function() { openDealDetail(d); }, 300);
+  }
+});
+
+// =============================================
+// GEOLOCATION
+// =============================================
+var _userLat = null, _userLng = null;
+
+function showGeoBanner() {
+  if (localStorage.getItem('barsclusive_geo_dismissed')) return;
+  if (_userLat) return;
+  var banner = document.getElementById('geoBanner');
+  if (banner) banner.style.display = 'block';
+}
+
+function dismissGeoBanner() {
+  var banner = document.getElementById('geoBanner');
+  if (banner) banner.style.display = 'none';
+  localStorage.setItem('barsclusive_geo_dismissed', '1');
+}
+
+function requestGeoPermission() {
+  if (!navigator.geolocation) { showToast('Standort nicht verfügbar', true); dismissGeoBanner(); return; }
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      _userLat = pos.coords.latitude;
+      _userLng = pos.coords.longitude;
+      dismissGeoBanner();
+      showToast('📍 Deals werden nach Nähe sortiert');
+      sortDealsByDistance();
+    },
+    function() { dismissGeoBanner(); showToast('Standort nicht verfügbar', true); },
+    { enableHighAccuracy: false, timeout: 10000 }
+  );
+}
+
+function sortDealsByDistance() {
+  if (!_userLat || !_userLng) return;
+  // Simple sort by city name proximity (no real coords in deals)
+  // This is a placeholder - real implementation needs bar coordinates
+  renderDeals();
+}
+
+// Show geo banner after page load
+window.addEventListener('load', function() { setTimeout(showGeoBanner, 2000); });
+
+
+// =============================================
+// CART
+// =============================================
+var _cart = [];
+
+function getCart() { try { _cart = JSON.parse(localStorage.getItem('barsclusive_cart')||'[]'); } catch(e) { _cart = []; } return _cart; }
+function saveCart() { try { localStorage.setItem('barsclusive_cart', JSON.stringify(_cart)); } catch(e) {} updateCartBadge(); }
+
+function addToCart(deal) {
+  getCart();
+  var existing = _cart.find(function(c) { return c.deal_id === deal.id; });
+  if (existing) { existing.quantity++; }
+  else { _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' }); }
+  saveCart();
+  showToast('\u{1F6D2} ' + deal.title + ' zum Warenkorb hinzugefügt');
+}
+
+function removeFromCart(dealId) {
+  getCart();
+  _cart = _cart.filter(function(c) { return c.deal_id !== dealId; });
+  saveCart();
+  renderCartPanel();
+}
+
+function changeCartQty(dealId, delta) {
+  getCart();
+  var item = _cart.find(function(c) { return c.deal_id === dealId; });
+  if (!item) return;
+  item.quantity = Math.max(1, item.quantity + delta);
+  saveCart();
+  renderCartPanel();
+}
+
+function getCartTotal() {
+  getCart();
+  var total = 0;
+  _cart.forEach(function(c) { total += c.price * c.quantity; });
+  return total;
+}
+
+function updateCartBadge() {
+  getCart();
+  var badge = document.getElementById('cartBadge');
+  var count = 0;
+  _cart.forEach(function(c) { count += c.quantity; });
+  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+}
+
+function toggleCartPanel() {
+  var panel = document.getElementById('cartPanel');
+  if (!panel) return;
+  panel.classList.toggle('active');
+  if (panel.classList.contains('active')) renderCartPanel();
+}
+
+function renderCartPanel() {
+  var body = document.getElementById('cartBody');
+  if (!body) return;
+  getCart();
+  if (!_cart.length) { body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">Warenkorb ist leer</div>'; return; }
+  var html = '';
+  _cart.forEach(function(c) {
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222">'
+      + '<div style="flex:1"><div style="font-weight:600;font-size:14px">' + c.title + '</div><div style="font-size:12px;color:#999">' + c.bar_name + '</div></div>'
+      + '<div style="display:flex;align-items:center;gap:8px">'
+      + '<button onclick="changeCartQty(\'' + c.deal_id + '\',-1)" style="background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px">-</button>'
+      + '<span style="min-width:20px;text-align:center">' + c.quantity + '</span>'
+      + '<button onclick="changeCartQty(\'' + c.deal_id + '\',1)" style="background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px">+</button>'
+      + '<span style="min-width:60px;text-align:right;font-weight:700">' + (c.price * c.quantity).toFixed(2) + '</span>'
+      + '<button onclick="removeFromCart(\'' + c.deal_id + '\')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px">✕</button>'
+      + '</div></div>';
+  });
+  html += '<div style="padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px">Total: ' + getCartTotal().toFixed(2) + ' CHF</div>';
+  html += '<button onclick="checkoutCart()" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px">Jetzt bezahlen</button>';
+  body.innerHTML = html;
+}
+
+async function checkoutCart() {
+  getCart();
+  if (!_cart.length) { showToast('Warenkorb ist leer', true); return; }
+  var s = sessionGet();
+  var buyerName = s ? s.name : prompt('Dein Name:');
+  var buyerEmail = s ? s.email : prompt('Deine Email:');
+  if (!buyerName || !buyerEmail) { showToast('Name und Email sind Pflichtfelder', true); return; }
+  
+  try {
+    showToast('Wird verarbeitet...');
+    var r = await api({
+      action: 'createCartCheckout',
+      items: _cart.map(function(c) { return { deal_id: c.deal_id, quantity: c.quantity }; }),
+      buyer_name: buyerName,
+      buyer_email: buyerEmail,
+      customer_id: s ? s.customerId : '',
+      site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '')
+    });
+    if (r.success && r.checkout_url) {
+      _cart = []; saveCart();
+      window.location.href = r.checkout_url;
+    } else {
+      showToast(r.error || 'Checkout fehlgeschlagen', true);
+    }
+  } catch(e) { showToast('Verbindungsfehler', true); }
+}
+
+// Init cart on load
+window.addEventListener('load', function() { getCart(); updateCartBadge(); });
