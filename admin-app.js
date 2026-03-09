@@ -99,6 +99,11 @@ function getFilterDate(period) {
   if (period === 'week') { var d = new Date(now); d.setDate(d.getDate()-7); return d; }
   if (period === 'month') { var d = new Date(now); d.setMonth(d.getMonth()-1); return d; }
   if (period === 'year') { var d = new Date(now); d.setFullYear(d.getFullYear()-1); return d; }
+  if (period === 'custom' && _customFrom) return new Date(_customFrom);
+  return null;
+}
+function getFilterDateTo(period) {
+  if (period === 'custom' && _customTo) { var d = new Date(_customTo); d.setHours(23,59,59,999); return d; }
   return null;
 }
 
@@ -328,6 +333,7 @@ async function refundVoucher(id,code){if(!confirm('Gutschein '+(code||'')+' erst
 // PAYOUT TAB (NEW)
 // =============================================
 var _payoutData = null;
+var _payoutTimeFilter = 'all';
 
 async function loadPayout() {
   if (!hasSession()) { doLogout(); return; }
@@ -358,11 +364,30 @@ function renderPayout() {
   content.innerHTML = '';
   if (!_payoutData) return;
   var filterBar = document.getElementById('payoutBarFilter').value;
+  
+  // Add time filter if not exists
+  var timeFilterEl = document.getElementById('payoutTimeFilter');
+  if (!timeFilterEl) {
+    var tf = document.createElement('div');
+    tf.id = 'payoutTimeFilter';
+    tf.style.cssText = 'display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap';
+    [['all','Alle'],['day','Heute'],['week','Woche'],['month','Monat'],['year','Jahr']].forEach(function(f){
+      var b = document.createElement('button');
+      b.textContent = f[1];
+      b.style.cssText = (_payoutTimeFilter===f[0]?'background:#FF3366;color:#fff;border-color:#FF3366':'background:#222;color:#ccc;border-color:#333')+';border:1px solid;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+      b.addEventListener('click', function() { _payoutTimeFilter=f[0]; renderPayout(); });
+      tf.appendChild(b);
+    });
+    content.parentElement.insertBefore(tf, content);
+  }
+  
+  var payoutCutoff = getFilterDate(_payoutTimeFilter || 'all');
 
   // Group vouchers by bar
   var barGroups = {};
   _payoutData.vouchers.forEach(function(v) {
     if (filterBar && String(v.bar_id) !== filterBar) return;
+    if (payoutCutoff && new Date(v.created_at) < payoutCutoff) return;
     if (!barGroups[v.bar_id]) barGroups[v.bar_id] = { name: v.bar_name, vouchers: [] };
     barGroups[v.bar_id].vouchers.push(v);
   });
@@ -612,11 +637,14 @@ function renderStats(period) {
   var barId=_statsBarId;
 
   // Filter buttons
-  var filterHtml='<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">';
+  var filterHtml='<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center">';
   [['day','Heute'],['week','Woche'],['month','Monat'],['year','Jahr'],['all','Alle']].forEach(function(f){
     var active=period===f[0]?'background:#FF3366;color:#fff;border-color:#FF3366':'background:#222;color:#ccc;border-color:#333';
     filterHtml+='<button class="stats-filter-btn" id="sf_'+f[0]+'" onclick="setStatsFilter(\''+f[0]+'\')" style="'+active+';border:1px solid;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">'+f[1]+'</button>';
   });
+  filterHtml+='<input type="date" id="sfFrom" style="background:#222;color:#ccc;border:1px solid #333;padding:5px 10px;border-radius:6px;font-size:12px" onchange="setStatsCustomRange()">';
+  filterHtml+='<span style="color:#666;font-size:12px">bis</span>';
+  filterHtml+='<input type="date" id="sfTo" style="background:#222;color:#ccc;border:1px solid #333;padding:5px 10px;border-radius:6px;font-size:12px" onchange="setStatsCustomRange()">';
   filterHtml+='</div>';
   var fDiv=document.createElement('div');fDiv.innerHTML=filterHtml;container.appendChild(fDiv);
 
@@ -631,9 +659,10 @@ function renderStats(period) {
     filtO=filtO.filter(function(o){return String(o.bar_id)===barId;});
   }
   // Filter by date
+  var dateTo=getFilterDateTo(period);
   if(cutoff){
-    filtV=filtV.filter(function(v){return new Date(v.created_at)>=cutoff;});
-    filtO=filtO.filter(function(o){return new Date(o.created_at)>=cutoff;});
+    filtV=filtV.filter(function(v){var d=new Date(v.created_at);return d>=cutoff&&(!dateTo||d<=dateTo);});
+    filtO=filtO.filter(function(o){var d=new Date(o.created_at);return d>=cutoff&&(!dateTo||d<=dateTo);});
   }
 
   var totalRevenue=0,totalFees=0,pendingPayout=0,totalPaidOut=0,redeemed=0,notRedeemed=0,refunded=0;
@@ -652,17 +681,17 @@ function renderStats(period) {
 
   var grid=document.createElement('div');grid.className='stats-grid';
   var stats=[
-    ['Gutscheine vermittelt',filtV.length],
-    ['Bestellungen',filtO.length],
-    ['Bezahlt',paidOrders],
-    ['Umsatz',fmtChf(totalRevenue)+' CHF'],
-    ['Provision (Einnahmen)',fmtChf(totalFees)+' CHF'],
-    ['Schuld an Bars',fmtChf(pendingPayout)+' CHF'],
-    ['Ausgezahlt',fmtChf(totalPaidOut)+' CHF'],
-    ['Eingelöst',redeemed],
-    ['Nicht eingelöst',notRedeemed],
-    ['Rückerstattet',refunded],
-    ['Aktive Deals',activeDeals],
+    ['Gutscheine vermittelt',filtV.length,'all_vouchers'],
+    ['Bestellungen',filtO.length,'all_orders'],
+    ['Bezahlt',paidOrders,'paid_orders'],
+    ['Umsatz',fmtChf(totalRevenue)+' CHF','revenue'],
+    ['Provision (Einnahmen)',fmtChf(totalFees)+' CHF','commission'],
+    ['Schuld an Bars',fmtChf(pendingPayout)+' CHF','pending_payout'],
+    ['Ausgezahlt',fmtChf(totalPaidOut)+' CHF','paid_out'],
+    ['Eingelöst',redeemed,'redeemed'],
+    ['Nicht eingelöst',notRedeemed,'not_redeemed'],
+    ['Rückerstattet',refunded,'refunded'],
+    ['Aktive Deals',activeDeals,'active_deals'],
   ];
   if(!barId){
     stats.push(['Aktive Bars',activeBars]);
@@ -671,6 +700,8 @@ function renderStats(period) {
   }
   stats.forEach(function(s){
     var card=document.createElement('div');card.className='stat-card';
+    card.style.cursor='pointer';
+    card.addEventListener('click',function(){ showStatDetail(s[0],s[2]||null); });
     var lEl=document.createElement('div');lEl.className='stat-label';lEl.textContent=s[0];
     var vEl=document.createElement('div');vEl.className='stat-value';vEl.textContent=String(s[1]);
     card.append(lEl,vEl);grid.appendChild(card);
@@ -733,3 +764,59 @@ document.addEventListener('DOMContentLoaded', function() {
   var cs=document.getElementById('customerSearch');
   if(cs) cs.addEventListener('input',function(){var q=this.value.toLowerCase();renderCustomers(_allCustomers.filter(function(c){return(c.name||'').toLowerCase().includes(q)||(c.email||'').toLowerCase().includes(q);}));});
 });
+
+
+// Clickable stat card detail
+function showStatDetail(label, filterKey) {
+  if (!_statsData || !filterKey) return;
+  var detailEl=document.getElementById('statsBarDetail');
+  if (!detailEl) return;
+  var barId=_statsBarId;
+  var cutoff=getFilterDate(_statsFilter);
+  var filtV=_statsData.vouchers;
+  var filtO=_statsData.orders;
+  if(barId){filtV=filtV.filter(function(v){return String(v.bar_id)===barId;});filtO=filtO.filter(function(o){return String(o.bar_id)===barId;});}
+  if(cutoff){filtV=filtV.filter(function(v){return new Date(v.created_at)>=cutoff;});filtO=filtO.filter(function(o){return new Date(o.created_at)>=cutoff;});}
+  
+  var items=[];
+  if(filterKey==='redeemed') items=filtV.filter(function(v){return v.status==='redeemed';});
+  else if(filterKey==='not_redeemed') items=filtV.filter(function(v){return v.status!=='redeemed'&&v.status!=='refunded';});
+  else if(filterKey==='refunded') items=filtV.filter(function(v){return v.status==='refunded';});
+  else if(filterKey==='pending_payout') items=filtV.filter(function(v){return v.status==='redeemed'&&v.payout_status==='pending';});
+  else if(filterKey==='paid_out') items=filtV.filter(function(v){return v.payout_status==='paid';});
+  else if(filterKey==='all_vouchers') items=filtV;
+  else if(filterKey==='all_orders'||filterKey==='paid_orders') { renderStatOrderDetail(detailEl,label,filterKey==='paid_orders'?filtO.filter(function(o){return o.status==='paid';}):filtO); return; }
+  else { detailEl.innerHTML=''; return; }
+  
+  var html='<div class="section-title" style="margin-top:20px">'+esc(label)+' ('+items.length+')</div>';
+  if(!items.length){html+='<div class="no-data">Keine Daten</div>';detailEl.innerHTML=html;return;}
+  html+='<div class="overflow-x"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th>Datum</th><th>Code</th><th>Deal</th><th>Bar</th><th>Kunde</th><th>Email</th><th>Preis</th><th>Status</th><th>Auszahl.</th></tr></thead><tbody>';
+  items.forEach(function(v){
+    html+='<tr><td style="font-size:11px">'+fmtDate(v.created_at)+'</td><td style="font-family:monospace">'+esc(v.code||'-')+'</td><td>'+esc(v.deal_title||'-')+'</td><td>'+esc(v.bar_name||'-')+'</td><td>'+esc(v.buyer_name||'-')+'</td><td style="font-size:11px">'+esc(v.buyer_email||'-')+'</td><td style="text-align:right">'+fmtChf(v.price_paid)+'</td><td>'+esc(v.status||'-')+'</td><td>'+esc(v.payout_status||'-')+'</td></tr>';
+  });
+  html+='</tbody></table></div>';
+  detailEl.innerHTML=html;
+}
+
+function renderStatOrderDetail(el,label,orders){
+  var html='<div class="section-title" style="margin-top:20px">'+esc(label)+' ('+orders.length+')</div>';
+  if(!orders.length){html+='<div class="no-data">Keine Daten</div>';el.innerHTML=html;return;}
+  html+='<div class="overflow-x"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th>Datum</th><th>Deal</th><th>Bar</th><th>Käufer</th><th>Email</th><th>Preis</th><th>Status</th><th>Rückerstattung</th></tr></thead><tbody>';
+  orders.forEach(function(o){
+    html+='<tr><td style="font-size:11px">'+fmtDate(o.created_at)+'</td><td>'+esc(o.deal_title||'-')+'</td><td>'+esc(o.bar_name||'-')+'</td><td>'+esc(o.buyer_name||'-')+'</td><td style="font-size:11px">'+esc(o.buyer_email||'-')+'</td><td style="text-align:right">'+fmtChf(o.price)+'</td><td>'+esc(o.status||'-')+'</td><td>'+esc(o.refund_status||'-')+'</td></tr>';
+  });
+  html+='</tbody></table></div>';
+  el.innerHTML=html;
+}
+
+function setStatsCustomRange() {
+  var from=document.getElementById('sfFrom');
+  var to=document.getElementById('sfTo');
+  if(!from||!to||!from.value) return;
+  _statsFilter='custom';
+  _customFrom=from.value;
+  _customTo=to.value||new Date().toISOString().split('T')[0];
+  document.querySelectorAll('.stats-filter-btn').forEach(function(b){b.classList.remove('active');});
+  if(_statsData) renderStats('custom');
+}
+var _customFrom='',_customTo='';
