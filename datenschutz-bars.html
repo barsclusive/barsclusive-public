@@ -76,13 +76,6 @@
       color: #ddd;
     }
     li { margin-bottom: 8px; }
-    .highlight {
-      background: #1a1a1a;
-      padding: 20px;
-      border-radius: 8px;
-      border-left: 4px solid #FF3366;
-      margin: 20px 0;
-    }
     strong { color: #fff; }
     a { color: #FF3366; text-decoration: none; }
     a:hover { text-decoration: underline; }
@@ -96,12 +89,6 @@
         <img src="logo.png" alt="BarSclusive">
       </div>
       <a href="bar-portal.html" class="back-btn">← Zurück zum Portal</a>
-      <div style="display:flex;gap:6px;margin-left:auto">
-        <button onclick="_SL(this,'de')" style="background:#222;border:1px solid #FF3366;color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">DE</button>
-        <button onclick="_SL(this,'en')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">EN</button>
-        <button onclick="_SL(this,'it')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">IT</button>
-        <button onclick="_SL(this,'fr')" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">FR</button>
-      </div>
     </div>
 
     <div class="content">
@@ -111,152 +98,106 @@
       <div class="section">
         <h2>1. Verantwortliche Stelle</h2>
         <p><strong>BarSclusive</strong><br>
-        Basel, Schweiz<br>
-        E-Mail: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
+        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a><br>
+        Basel, Schweiz</p>
       </div>
 
       <div class="section">
-        <h2>2. Wofür diese Datenschutzerklärung gilt</h2>
-        <p>Diese Datenschutzerklärung gilt für Bars und andere Betriebe, die das BarSclusive-Bar-Portal nutzen.</p>
-        <p>BarSclusive betreibt das öffentliche Frontend über GitHub Pages. Das Backend läuft über Google Apps Script. Daten werden über Google Sheets, Google Drive und Google MailApp verarbeitet. Zahlungen von Kundinnen und Kunden laufen über Stripe.</p>
-      </div>
+        <h2>2. Welche Daten wir bearbeiten</h2>
 
-      <div class="section">
-        <h2>3. Welche Personendaten und Geschäftsdaten wir bearbeiten</h2>
-
-        <h3>3.1 Bei Registrierung und Kontoverwaltung</h3>
+        <h3>2.1 Bei Registrierung und im Profil</h3>
         <ul>
-          <li>Name der Bar</li>
-          <li>Stadt</li>
+          <li>Bar-Name</li>
           <li>Adresse</li>
           <li>PLZ</li>
-          <li>E-Mail-Adresse</li>
-          <li>Telefonnummer</li>
-          <li>Passwort in gehashter Form</li>
-          <li>Status des Bar-Kontos</li>
-          <li>Kommissionssatz</li>
-          <li>Session-Daten</li>
-          <li>Passwort-Reset-Daten</li>
-        </ul>
-
-        <h3>3.2 Bei Auszahlungen und Abrechnung</h3>
-        <ul>
-          <li>IBAN</li>
-          <li>gegebenenfalls Twint-Angaben</li>
-          <li>Gutscheine</li>
-          <li>Auszahlungsstatus</li>
-          <li>abrechnungsrelevante Daten</li>
-        </ul>
-
-        <h3>3.3 Bei Deal-Erstellung und Portalnutzung</h3>
-        <ul>
-          <li>Deal-Titel und Beschreibungen</li>
-          <li>Preise und Mengen</li>
-          <li>Bilder und Bild-URLs</li>
-          <li>Kategorien</li>
-          <li>Gültigkeitsdaten und Zeitfenster</li>
-          <li>Deal-Status</li>
-        </ul>
-
-        <h3>3.4 Sicherheits- und Systemdaten</h3>
-        <ul>
-          <li>Login- und Sicherheitslogs</li>
-          <li>Rate-Limits</li>
-          <li>Delivery-Logs</li>
-          <li>technische Verbindungsdaten, soweit sie systembedingt anfallen</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>4. Zweck der Datenbearbeitung</h2>
-        <ul>
-          <li>Bereitstellung und Betrieb des Bar-Portals</li>
-          <li>Registrierung, Login und Kontoverwaltung</li>
-          <li>Erstellung, Verwaltung und Anzeige von Deals</li>
-          <li>Verarbeitung von Gutscheinen, Einlösungen und Auszahlungen</li>
-          <li>Kommunikation mit Bars</li>
-          <li>Missbrauchsverhinderung und Systemsicherheit</li>
-          <li>Erfüllung gesetzlicher Pflichten</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>5. Sichtbarkeit und Weitergabe von Daten</h2>
-
-        <h3>5.1 Sichtbarkeit für Kundinnen und Kunden</h3>
-        <p>Im Rahmen der Plattform können insbesondere folgende Angaben für Kundinnen und Kunden sichtbar sein:</p>
-        <ul>
-          <li>Name der Bar</li>
           <li>Stadt</li>
-          <li>Adresse, soweit auf der Plattform angezeigt</li>
-          <li>Deal-Details, Bilder, Preise und Gültigkeitsangaben</li>
+          <li>Email-Adresse</li>
+          <li>Telefonnummer, sofern angegeben</li>
+          <li>Passwort in verschlüsselter Form</li>
+          <li>IBAN oder weitere Auszahlungsdaten, sofern erfasst</li>
+          <li>MWST-pflichtig: Ja oder Nein</li>
+          <li>falls MWST-pflichtig: MWST-Nummer</li>
         </ul>
 
-        <h3>5.2 Weitergabe an Dienstleister</h3>
-        <p>Wir arbeiten mit Dienstleistern und Plattformen zusammen, soweit dies für den Betrieb erforderlich ist. Dazu gehören insbesondere:</p>
+        <h3>2.2 Bei Deal-Erstellung und Verwaltung</h3>
         <ul>
-          <li>GitHub Pages für das öffentliche Frontend</li>
-          <li>Google Apps Script, Google Sheets, Google Drive und Google MailApp für Backend, Speicherung und Kommunikation</li>
-          <li>Stripe für die Zahlungsabwicklung von Kundinnen und Kunden</li>
+          <li>Deal-Titel</li>
+          <li>Beschreibung</li>
+          <li>Preise</li>
+          <li>Bilder</li>
+          <li>Gültigkeitsdaten</li>
+          <li>Status von Deals</li>
+          <li>Einlösungsdaten</li>
+          <li>Gutscheinzuordnungen</li>
         </ul>
 
-        <h3>5.3 Keine Datenverkäufe</h3>
+        <h3>2.3 Technische Daten</h3>
         <ul>
-          <li>Kein Verkauf personenbezogener Daten oder Geschäftsdaten</li>
-          <li>Keine Weitergabe an Dritte zu Werbezwecken</li>
-          <li>Keine Analyse- oder Werbetracking-Tools</li>
+          <li>Login-Daten</li>
+          <li>Session-Daten</li>
+          <li>technische Zugriffsdaten</li>
+          <li>sicherheitsrelevante Protokolldaten, soweit dies für Betrieb und Schutz der Plattform erforderlich ist</li>
         </ul>
       </div>
 
       <div class="section">
-        <h2>6. Speicherung und Aufbewahrung</h2>
-        <p>Daten von Bars werden über die von uns eingesetzten Systeme gespeichert und verarbeitet, insbesondere über Google Apps Script, Google Sheets, Google Drive und Google MailApp.</p>
-        <p>Wir speichern Daten nur so lange, wie dies für den Betrieb des Portals, für Auszahlungen, Abrechnungen, Sicherheitszwecke oder aufgrund gesetzlicher Pflichten erforderlich ist.</p>
+        <h2>3. Zweck der Datenbearbeitung</h2>
         <ul>
-          <li>Kontodaten grundsätzlich während der Dauer des Bar-Kontos</li>
-          <li>Session-Daten zeitlich begrenzt</li>
-          <li>abrechnungsrelevante Daten nach Massgabe gesetzlicher Aufbewahrungspflichten</li>
-          <li>Sicherheits- und Protokolldaten soweit erforderlich für Schutz, Nachvollziehbarkeit und Missbrauchsverhinderung</li>
+          <li>Registrierung und Verwaltung von Partnerbars</li>
+          <li>Freischaltung und Betrieb des Bar-Portals</li>
+          <li>Erstellung und Veröffentlichung von Deals</li>
+          <li>Verwaltung von Gutscheinen und Einlösungen</li>
+          <li>Abwicklung von Auszahlungen bei eingelösten Fix-Preis-Deals</li>
+          <li>Erstellung von Belegen und Abrechnungen</li>
+          <li>Berücksichtigung des MWST-Status der Bar in der Beleglogik</li>
+          <li>Support, Sicherheit und Missbrauchsprävention</li>
         </ul>
       </div>
 
       <div class="section">
-        <h2>7. Cookies, Local Storage und ähnliche Technologien</h2>
-        <p>Wir verwenden keine Analyse- oder Werbetracking-Cookies.</p>
-        <p>Für technisch notwendige Funktionen können jedoch Cookies, Local Storage oder vergleichbare Speichertechnologien verwendet werden, insbesondere für Login-Zustände, Spracheinstellungen, Session-Verwaltung und Portal-Funktionen.</p>
+        <h2>4. MWST-Status der Bar</h2>
+        <p>Der von der Partnerbar angegebene MWST-Status sowie eine allfällige MWST-Nummer werden bearbeitet, damit Belege, Rechnungsangaben und interne Abrechnungslogik korrekt ausgestaltet werden können.</p>
+        <p>Ist eine Partnerbar nicht MWST-pflichtig, wird dies entsprechend im System berücksichtigt.</p>
       </div>
 
       <div class="section">
-        <h2>8. Datensicherheit</h2>
+        <h2>5. Weitergabe von Daten</h2>
+        <p>Wir geben Daten nur weiter, soweit dies für den Betrieb der Plattform, die Zahlungsabwicklung, technische Bereitstellung oder Kommunikation erforderlich ist.</p>
+        <p>Wir verkaufen keine Daten und geben sie nicht zu eigenen Werbezwecken an Dritte weiter.</p>
+      </div>
+
+      <div class="section">
+        <h2>6. Speicherdauer</h2>
+        <p>Wir speichern Daten von Partnerbars nur so lange, wie dies für die Nutzung der Plattform, Auszahlungen, Abrechnungen, Sicherheit oder gesetzliche Pflichten erforderlich ist.</p>
+      </div>
+
+      <div class="section">
+        <h2>7. Datensicherheit</h2>
+        <p>Wir treffen angemessene technische und organisatorische Massnahmen zum Schutz der bearbeiteten Daten.</p>
         <ul>
-          <li>Passwörter werden nicht im Klartext gespeichert</li>
-          <li>Verbindungen erfolgen über HTTPS</li>
-          <li>Zugriffe werden technisch beschränkt</li>
-          <li>Es bestehen Sicherheitsmechanismen wie Session-Verwaltung, Rate-Limits und 2-Faktor-Absicherung für relevante Zugänge</li>
+          <li>Zugriffsbeschränkungen</li>
+          <li>verschlüsselte Passwortspeicherung</li>
+          <li>Session-Verwaltung</li>
+          <li>Sicherheitsmassnahmen im Rahmen des verwendeten Setups</li>
+          <li>Zwei-Faktor-Authentisierung bei genutzten Konten, soweit aktiviert</li>
         </ul>
-        <p>Wir treffen angemessene technische und organisatorische Massnahmen. Eine absolute Sicherheit kann jedoch nicht garantiert werden.</p>
       </div>
 
       <div class="section">
-        <h2>9. Ihre Rechte</h2>
-        <p>Sie haben im Rahmen des anwendbaren Datenschutzrechts insbesondere das Recht auf Auskunft, Berichtigung, Löschung im gesetzlich zulässigen Rahmen sowie auf Einschränkung oder Widerspruch, soweit dies im Einzelfall anwendbar ist.</p>
-        <p>Wenn Sie der Ansicht sind, dass die Bearbeitung Ihrer Daten gegen geltendes Datenschutzrecht verstösst, können Sie sich an den <strong>Eidgenössischen Datenschutz- und Öffentlichkeitsbeauftragten (EDÖB)</strong> wenden.</p>
+        <h2>8. Rechte</h2>
+        <p>Im Rahmen des anwendbaren Rechts können Partnerbars insbesondere Auskunft, Berichtigung oder Löschung ihrer Daten verlangen.</p>
+        <p>Anfragen können an <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a> gerichtet werden.</p>
       </div>
 
       <div class="section">
-        <h2>10. Kontakt für Datenschutzanfragen</h2>
-        <p><strong>E-Mail:</strong> <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
-      </div>
-
-      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
-        <h2>11. Änderungen</h2>
-        <p>Wir können diese Datenschutzerklärung anpassen, wenn sich das Portal, die Datenbearbeitung oder die rechtlichen Anforderungen ändern. Massgeblich ist die jeweils veröffentlichte Version.</p>
+        <h2>9. Änderungen</h2>
+        <p>Wir können diese Datenschutzerklärung jederzeit anpassen. Massgebend ist die jeweils veröffentlichte Fassung.</p>
       </div>
 
       <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
         <h2>Kontakt</h2>
         <p><strong>BarSclusive</strong><br>
-        E-Mail: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
+        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
         <p style="margin-top:20px; color:#999; font-size:14px;">
           Stand: März 2026 | BarSclusive, Basel, Schweiz
         </p>
@@ -267,23 +208,5 @@
   <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
     <p>&copy; 2026 BarSclusive</p>
   </div>
-
-<script>
-function _SL(b,l){
-  localStorage.setItem("barsclusive_lang",l);
-  document.querySelectorAll("[onclick*=_SL]").forEach(function(x){x.style.borderColor="#333";x.style.color="#888"});
-  b.style.borderColor="#FF3366";b.style.color="#fff";
-  var t={'de': 'Datenschutz für Bars', 'en': 'Privacy for Bars', 'it': 'Privacy per Bar', 'fr': 'Confidentialité pour bars'};
-  var bk={de:"← Zurück zum Portal",en:"← Back to Portal",it:"← Torna al portale",fr:"← Retour au portail"};
-  var h=document.querySelector("h1");if(h)h.textContent=t[l]||t.de;
-  var a=document.querySelector(".back-btn,.back");if(a)a.textContent=bk[l]||bk.de;
-}
-document.addEventListener("DOMContentLoaded",function(){
-  var s=localStorage.getItem("barsclusive_lang")||"de";
-  var btns=document.querySelectorAll("[onclick*=_SL]");
-  var idx={de:0,en:1,it:2,fr:3};
-  if(btns[idx[s]])_SL(btns[idx[s]],s);
-});
-</script>
 </body>
 </html>
