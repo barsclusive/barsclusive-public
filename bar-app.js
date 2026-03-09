@@ -219,6 +219,10 @@ async function doBarRegister() {
   var email   = document.getElementById('regBarEmail').value.trim();
   var pass    = document.getElementById('regBarPass').value;
   var iban    = document.getElementById('regIban') ? document.getElementById('regIban').value.trim() : '';
+  var mwstYes = document.getElementById('regMwstYes');
+  var mwstLiable = mwstYes && mwstYes.checked;
+  var mwstNumber = document.getElementById('regMwstNumber') ? document.getElementById('regMwstNumber').value.trim() : '';
+  if (mwstLiable && !mwstNumber) { showToast('MWST-Nummer ist Pflichtfeld', true); return; }
   var consent = document.getElementById('regConsent').checked;
   var err     = document.getElementById('regErr');
   err.textContent = '';
@@ -825,7 +829,11 @@ async function saveProfile() {
     city: document.getElementById('profCity').value.trim(),
     phone: document.getElementById('profPhone').value.trim(),
     iban: document.getElementById('profIban').value.trim(),
-    twint: document.getElementById('profTwint').value.trim()
+    twint: document.getElementById('profTwint').value.trim(),
+    mwst_liable: document.getElementById('profMwstYes') && document.getElementById('profMwstYes').checked,
+    mwst_number: document.getElementById('profMwstNumber') ? document.getElementById('profMwstNumber').value.trim() : '',
+    latitude: document.getElementById('profLat') ? document.getElementById('profLat').value : '',
+    longitude: document.getElementById('profLng') ? document.getElementById('profLng').value : ''
   };
   try {
     var r = await api(payload);
@@ -950,6 +958,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ── IMAGE UPLOAD PREVIEW ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
+  // MWST toggle in registration
+  var regMwstYes = document.getElementById('regMwstYes');
+  var regMwstNo = document.getElementById('regMwstNo');
+  var regMwstGroup = document.getElementById('regMwstNumGroup');
+  if (regMwstYes) regMwstYes.addEventListener('change', function() { if (regMwstGroup) regMwstGroup.style.display = 'block'; });
+  if (regMwstNo) regMwstNo.addEventListener('change', function() { if (regMwstGroup) regMwstGroup.style.display = 'none'; });
+  // MWST toggle in settings
+  var profMwstYes = document.getElementById('profMwstYes');
+  var profMwstNo = document.getElementById('profMwstNo');
+  var profMwstGroup = document.getElementById('profMwstNumGroup');
+  if (profMwstYes) profMwstYes.addEventListener('change', function() { if (profMwstGroup) profMwstGroup.style.display = 'block'; });
+  if (profMwstNo) profMwstNo.addEventListener('change', function() { if (profMwstGroup) profMwstGroup.style.display = 'none'; });
+
+
+  // Geocode button
+  var btnGeocode = document.getElementById('btnGeocode');
+  if (btnGeocode) btnGeocode.addEventListener('click', async function() {
+    var addr = (document.getElementById('profAddress') || {}).value || '';
+    var zip = (document.getElementById('profZip') || {}).value || '';
+    var city = (document.getElementById('profCity') || {}).value || '';
+    if (!addr && !city) { showToast('Bitte zuerst Adresse eingeben', true); return; }
+    var q = [addr, zip, city, 'Switzerland'].filter(Boolean).join(', ');
+    btnGeocode.textContent = '⏳ Suche...'; btnGeocode.disabled = true;
+    try {
+      var resp = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
+      var data = await resp.json();
+      if (data && data.length > 0) {
+        document.getElementById('profLat').value = Number(data[0].lat).toFixed(6);
+        document.getElementById('profLng').value = Number(data[0].lon).toFixed(6);
+        showToast('📍 Standort gefunden: ' + data[0].display_name.substring(0, 50));
+      } else { showToast('Adresse nicht gefunden', true); }
+    } catch(e) { showToast('Geocoding fehlgeschlagen', true); }
+    finally { btnGeocode.textContent = '📍 Standort prüfen'; btnGeocode.disabled = false; }
+  });
+
   var imgFile = document.getElementById('dealImageFile');
   if (imgFile) {
     imgFile.addEventListener('change', function() {
