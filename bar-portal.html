@@ -181,6 +181,17 @@
           <label class="form-label" for="regIban">IBAN * (für Auszahlungen)</label>
           <input type="text" class="form-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0">
         </div>
+        <div class="form-group">
+          <label class="form-label">MWST-pflichtig?</label>
+          <div style="display:flex;gap:16px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="no" checked id="regMwstNo"> Nein</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="yes" id="regMwstYes"> Ja</label>
+          </div>
+        </div>
+        <div class="form-group" id="regMwstNumGroup" style="display:none">
+          <label class="form-label" for="regMwstNumber">MWST-Nummer *</label>
+          <input type="text" class="form-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST">
+        </div>
         <div class="form-check">
           <input type="checkbox" id="regConsent">
           <label for="regConsent">Ich akzeptiere die <a href="agb-bars.html" target="_blank" rel="noopener" style="color:#FF3366">AGB</a> &amp; <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutz</a></label>
@@ -411,6 +422,26 @@
             <label class="form-label" data-i18n="twintLbl">Twint</label>
             <input type="text" class="form-input" id="profTwint" placeholder="+41...">
           </div>
+        </div>
+        <div style="margin-bottom:18px">
+          <label class="form-label">MWST-pflichtig?</label>
+          <div style="display:flex;gap:16px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="no" id="profMwstNo" checked> Nein</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="yes" id="profMwstYes"> Ja</label>
+          </div>
+        </div>
+        <div class="form-group" id="profMwstNumGroup" style="display:none">
+          <label class="form-label">MWST-Nummer</label>
+          <input type="text" class="form-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST">
+        </div>
+        <div style="margin-bottom:18px">
+          <label class="form-label">📍 Standort</label>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+            <input type="text" class="form-input" id="profLat" placeholder="Breitengrad" style="width:120px" readonly>
+            <input type="text" class="form-input" id="profLng" placeholder="Längengrad" style="width:120px" readonly>
+            <button type="button" id="btnGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">📍 Standort prüfen</button>
+          </div>
+          <small style="color:#666;font-size:11px">Wird automatisch aus deiner Adresse berechnet</small>
         </div>
         <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
         <hr style="border:none;border-top:1px solid #333;margin:24px 0">
