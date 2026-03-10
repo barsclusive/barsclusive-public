@@ -190,8 +190,12 @@
           <input type="password" class="form-input" id="regBarPass" autocomplete="new-password">
         </div>
         <div class="form-group">
+          <label class="form-label" for="regBarPassConfirm">Passwort bestätigen *</label>
+          <input type="password" class="form-input" id="regBarPassConfirm" autocomplete="new-password">
+        </div>
+        <div class="form-group">
           <label class="form-label" for="regIban">IBAN * (für Auszahlungen)</label>
-          <input type="text" class="form-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0">
+          <input type="text" class="form-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" pattern="[A-Z]{2}[0-9]{2}[\s0-9]{12,30}" style="text-transform:uppercase;letter-spacing:1px">
         </div>
         <div class="form-group">
           <label class="form-label">MWST-pflichtig?</label>
@@ -202,7 +206,7 @@
         </div>
         <div class="form-group" id="regMwstNumGroup">
           <label class="form-label" for="regMwstNumber">MWST-Nummer *</label>
-          <input type="text" class="form-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST">
+          <input type="text" class="form-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" style="letter-spacing:0.5px" pattern="CHE-\d{3}\.\d{3}\.\d{3}\s?(MWST|TVA|IVA)?">
         </div>
         <div class="form-check">
           <input type="checkbox" id="regConsent">
@@ -523,6 +527,43 @@
       <input type="file" class="form-input" id="editImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
       <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild"></div>
       <input type="hidden" id="editImageUrl">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Gültigkeitsdauer</label>
+      <div class="validity-toggle">
+        <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> Wiederkehrend</label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> Einmaliges Datum</label>
+      </div>
+    </div>
+    <div id="editRecurringFields" style="margin-top:8px">
+      <label class="form-label">Wochentage</label>
+      <div class="weekdays" id="editWeekdays">
+        <div class="wd-btn" data-wd="Mo">Mo</div><div class="wd-btn" data-wd="Di">Di</div><div class="wd-btn" data-wd="Mi">Mi</div><div class="wd-btn" data-wd="Do">Do</div><div class="wd-btn" data-wd="Fr">Fr</div><div class="wd-btn" data-wd="Sa">Sa</div><div class="wd-btn" data-wd="So">So</div>
+      </div>
+    </div>
+    <div id="editSingleFields" style="display:none;margin-top:8px">
+      <div class="form-group">
+        <label class="form-label">Datum</label>
+        <input type="date" class="form-input" id="editSingleDate">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
+      <div class="form-group">
+        <label class="form-label">Von (Uhrzeit)</label>
+        <input type="time" class="form-input" id="editTimeFrom">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bis (Uhrzeit)</label>
+        <input type="time" class="form-input" id="editTimeTo">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Zeitfenster</label>
+      <div class="cats-grid" style="margin-top:6px">
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> 🌅 Morgen</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> ☀️ Mittag</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> 🌙 Abend</label>
+      </div>
     </div>
     <div class="form-check" style="margin-bottom:20px">
       <input type="checkbox" id="editActive">
