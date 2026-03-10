@@ -1298,11 +1298,19 @@ function openDealDetail(deal) {
   // Share buttons
   var shareUrl = window.location.origin + window.location.pathname + '?deal=' + deal.id;
   var shareText = deal.title + ' bei ' + deal.bar_name + ' - nur ' + Number(deal.deal_price).toFixed(2) + ' CHF!';
-  var shareHtml = '<button class="share-btn" onclick="copyDealLink()">📋 Link kopieren</button>'
-    + '<button class="share-btn" onclick="shareDeal(\'whatsapp\')">💬 WhatsApp</button>'
-    + '<button class="share-btn" onclick="shareDeal(\'facebook\')">📘 Facebook</button>'
-    + '<button class="share-btn" onclick="shareDeal(\'telegram\')">✈️ Telegram</button>';
-  document.getElementById('ddShare').innerHTML = shareHtml;
+  var shareEl = document.getElementById('ddShare');
+  shareEl.innerHTML = '';
+  [['📋 Link kopieren', function() { copyDealLink(); }],
+   ['💬 WhatsApp', function() { shareDeal('whatsapp'); }],
+   ['📘 Facebook', function() { shareDeal('facebook'); }],
+   ['✈️ Telegram', function() { shareDeal('telegram'); }]
+  ].forEach(function(s) {
+    var btn = document.createElement('button');
+    btn.className = 'share-btn';
+    btn.textContent = s[0];
+    btn.addEventListener('click', s[1]);
+    shareEl.appendChild(btn);
+  });
   
   // Buy button
   document.getElementById('ddBuyBtn').onclick = function() { closeDealDetail(); openBuyModal(deal); };
@@ -1486,21 +1494,57 @@ function renderCartPanel() {
   if (!body) return;
   getCart();
   if (!_cart.length) { body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">Warenkorb ist leer</div>'; return; }
-  var html = '';
+  body.innerHTML = '';
   _cart.forEach(function(c) {
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222">'
-      + '<div style="flex:1"><div style="font-weight:600;font-size:14px">' + c.title + '</div><div style="font-size:12px;color:#999">' + c.bar_name + '</div></div>'
-      + '<div style="display:flex;align-items:center;gap:8px">'
-      + '<button onclick="changeCartQty(\'' + c.deal_id + '\',-1)" style="background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px">-</button>'
-      + '<span style="min-width:20px;text-align:center">' + c.quantity + '</span>'
-      + '<button onclick="changeCartQty(\'' + c.deal_id + '\',1)" style="background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px">+</button>'
-      + '<span style="min-width:60px;text-align:right;font-weight:700">' + (c.price * c.quantity).toFixed(2) + '</span>'
-      + '<button onclick="removeFromCart(\'' + c.deal_id + '\')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px">✕</button>'
-      + '</div></div>';
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222';
+    
+    var info = document.createElement('div');
+    info.style.flex = '1';
+    info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title) + '</div><div style="font-size:12px;color:#999">' + escHtml(c.bar_name) + '</div>';
+    
+    var controls = document.createElement('div');
+    controls.style.cssText = 'display:flex;align-items:center;gap:8px';
+    
+    var btnMinus = document.createElement('button');
+    btnMinus.textContent = '-';
+    btnMinus.style.cssText = 'background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
+    btnMinus.addEventListener('click', (function(id) { return function() { changeCartQty(id, -1); }; })(c.deal_id));
+    
+    var qtySpan = document.createElement('span');
+    qtySpan.style.cssText = 'min-width:20px;text-align:center';
+    qtySpan.textContent = c.quantity;
+    
+    var btnPlus = document.createElement('button');
+    btnPlus.textContent = '+';
+    btnPlus.style.cssText = 'background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
+    btnPlus.addEventListener('click', (function(id) { return function() { changeCartQty(id, 1); }; })(c.deal_id));
+    
+    var priceSpan = document.createElement('span');
+    priceSpan.style.cssText = 'min-width:60px;text-align:right;font-weight:700';
+    priceSpan.textContent = (c.price * c.quantity).toFixed(2);
+    
+    var btnRemove = document.createElement('button');
+    btnRemove.textContent = '✕';
+    btnRemove.style.cssText = 'background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px';
+    btnRemove.addEventListener('click', (function(id) { return function() { removeFromCart(id); }; })(c.deal_id));
+    
+    controls.append(btnMinus, qtySpan, btnPlus, priceSpan, btnRemove);
+    row.append(info, controls);
+    body.appendChild(row);
   });
-  html += '<div style="padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px">Total: ' + getCartTotal().toFixed(2) + ' CHF</div>';
-  html += '<button onclick="checkoutCart()" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px">Jetzt bezahlen</button>';
-  body.innerHTML = html;
+  
+  var totalDiv = document.createElement('div');
+  totalDiv.style.cssText = 'padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px';
+  totalDiv.textContent = 'Total: ' + getCartTotal().toFixed(2) + ' CHF';
+  body.appendChild(totalDiv);
+  
+  var checkBtn = document.createElement('button');
+  checkBtn.id = 'cartCheckoutBtn';
+  checkBtn.textContent = 'Jetzt bezahlen';
+  checkBtn.style.cssText = 'width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px';
+  checkBtn.addEventListener('click', checkoutCart);
+  body.appendChild(checkBtn);
 }
 
 async function checkoutCart() {
@@ -1528,8 +1572,7 @@ async function checkoutCart() {
     buyerEmail = email;
   }
   
-  var checkoutBtn = document.querySelector('#cartBody button[onclick*="checkoutCart"]');
-  if (!checkoutBtn) { var btns = document.querySelectorAll('#cartBody button'); if (btns.length) checkoutBtn = btns[btns.length - 1]; }
+  var checkoutBtn = document.getElementById('cartCheckoutBtn');
   
   try {
     if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.textContent = '⏳ Wird verarbeitet...'; }
@@ -1556,3 +1599,26 @@ async function checkoutCart() {
 
 // Init cart on load
 window.addEventListener('load', function() { getCart(); updateCartBadge(); });
+
+// =============================================
+// EVENT BINDINGS for cart, deal modal, geo (no inline onclick needed)
+// =============================================
+document.addEventListener('DOMContentLoaded', function() {
+  // Cart open/close
+  var cartOpen = document.getElementById('cartOpenBtn');
+  if (cartOpen) cartOpen.addEventListener('click', toggleCartPanel);
+  var cartClose = document.getElementById('cartCloseBtn');
+  if (cartClose) cartClose.addEventListener('click', toggleCartPanel);
+  var cartOverlay = document.getElementById('cartOverlay');
+  if (cartOverlay) cartOverlay.addEventListener('click', toggleCartPanel);
+  
+  // Deal detail close
+  var ddClose = document.getElementById('dealDetailCloseBtn');
+  if (ddClose) ddClose.addEventListener('click', closeDealDetail);
+  
+  // Geo banner
+  var geoBtn = document.getElementById('geoPermBtn');
+  if (geoBtn) geoBtn.addEventListener('click', requestGeoPermission);
+  var geoDismiss = document.getElementById('geoDismissBtn');
+  if (geoDismiss) geoDismiss.addEventListener('click', dismissGeoBanner);
+});
