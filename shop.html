@@ -14,12 +14,14 @@
   -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
-                 script-src 'self' 'unsafe-inline';
-                 style-src 'self' 'unsafe-inline';
+                 script-src 'self' 'unsafe-inline' https://unpkg.com;
+                 style-src 'self' 'unsafe-inline' https://unpkg.com;
                  connect-src https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org;
                  img-src 'self' data: https:;
                  frame-src 'none';
                  object-src 'none';">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -261,6 +263,13 @@
 
 <!-- MAIN -->
 <div class="container">
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button id="viewGrid" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🏠 Deals</button>
+    <button id="viewMap" style="background:#2a2a2a;color:#ccc;border:1px solid #3a3a3a;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🗺️ Karte</button>
+  </div>
+  <div id="shopMapWrap" style="display:none;border-radius:16px;overflow:hidden;border:1px solid #2a2a2a;margin-bottom:20px">
+    <div id="shopMap" style="height:450px;width:100%"></div>
+  </div>
   <div id="dealsView">
     <div id="geoBanner" style="display:none;max-width:1200px;margin:16px auto;padding:0 20px">
   <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-size:13px;color:#ccc">
