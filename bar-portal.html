@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BarSclusive – Bar-Portal</title>
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org; img-src 'self' data: https:; frame-src 'none'; object-src 'none';">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; connect-src https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org; img-src 'self' data: https:; frame-src 'none'; object-src 'none';">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#000;color:#fff;min-height:100vh}
@@ -165,6 +167,15 @@
         <div class="form-group">
           <label class="form-label" for="regZip">PLZ *</label>
           <input type="text" class="form-input" id="regZip" maxlength="10">
+        </div>
+        <div class="form-group">
+          <button type="button" id="btnRegGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;width:100%">📍 Adresse auf Karte prüfen</button>
+          <div id="regMapWrap" style="display:none;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid #3a3a3a">
+            <div id="regMap" style="height:200px;width:100%"></div>
+          </div>
+          <input type="hidden" id="regLat">
+          <input type="hidden" id="regLng">
+          <small style="color:#666;font-size:11px;margin-top:4px;display:block">Prüfe deine Adresse – der Pin wird im Shop auf der Karte angezeigt.</small>
         </div>
         <div class="form-group">
           <label class="form-label" for="regPhone" data-i18n="phone">Telefon</label>
@@ -443,6 +454,9 @@
             <input type="text" class="form-input" id="profLat" placeholder="Breitengrad" style="width:120px" readonly>
             <input type="text" class="form-input" id="profLng" placeholder="Längengrad" style="width:120px" readonly>
             <button type="button" id="btnGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">📍 Standort prüfen</button>
+          </div>
+          <div id="profMapWrap" style="display:none;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid #3a3a3a">
+            <div id="profMap" style="height:200px;width:100%"></div>
           </div>
           <small style="color:#666;font-size:11px">Wird automatisch aus deiner Adresse berechnet</small>
         </div>
