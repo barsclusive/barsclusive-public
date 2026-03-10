@@ -232,10 +232,19 @@ async function doBarRegister() {
   var btn = document.getElementById('btnBarRegister');
   try {
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
-    var r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass, iban });
+    var r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass, iban, mwst_liable: mwstLiable, mwst_number: mwstNumber });
     if (r.success) {
       showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
       document.getElementById('regBarPass').value = '';
+      // Auto-geocode the address
+      try {
+        var q = [address, zip, city, 'Switzerland'].filter(Boolean).join(', ');
+        var geoResp = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
+        var geoData = await geoResp.json();
+        if (geoData && geoData.length > 0 && r.bar_id) {
+          // We can't save yet since bar is pending, but coordinates will be set on first profile save
+        }
+      } catch(ge) {}
     } else {
       err.textContent = r.error || 'Fehler bei der Registrierung.';
     }
@@ -271,6 +280,8 @@ async function deleteDeal(dealId) {
 var _barStatsVouchers = null;
 var _barStatsDeals = -1;
 var _barStatsPeriod = 'all';
+var _barCustomFrom = '';
+var _barCustomTo = '';
 
 function barFilterDate(period) {
   var now = new Date();
@@ -278,7 +289,63 @@ function barFilterDate(period) {
   if (period === 'week') { var d = new Date(now); d.setDate(d.getDate() - 7); return d; }
   if (period === 'month') { var d = new Date(now); d.setMonth(d.getMonth() - 1); return d; }
   if (period === 'year') { var d = new Date(now); d.setFullYear(d.getFullYear() - 1); return d; }
+  if (period === 'custom' && _barCustomFrom) return new Date(_barCustomFrom);
   return null;
+}
+
+function barFilterDateTo(period) {
+  if (period === 'custom' && _barCustomTo) { var d = new Date(_barCustomTo); d.setHours(23,59,59,999); return d; }
+  return null;
+}
+
+function ensureBarFilterBar() {
+  var bar = document.getElementById('barStatsFilterBar');
+  if (!bar || bar.children.length > 0) return;
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center';
+  [['day',{de:'Heute',en:'Today',it:'Oggi',fr:"Aujourd'hui"}],
+   ['week',{de:'Woche',en:'Week',it:'Settimana',fr:'Semaine'}],
+   ['month',{de:'Monat',en:'Month',it:'Mese',fr:'Mois'}],
+   ['year',{de:'Jahr',en:'Year',it:'Anno',fr:'Année'}],
+   ['all',{de:'Alle',en:'All',it:'Tutti',fr:'Tous'}]
+  ].forEach(function(f) {
+    var btn = document.createElement('button');
+    btn.className = 'bar-stats-filter-btn';
+    btn.dataset.period = f[0];
+    btn.textContent = f[1][currentLang] || f[1].de;
+    btn.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+    btn.addEventListener('click', function() { _barStatsPeriod = f[0]; highlightBarFilterBtn(f[0]); renderBarStats(f[0]); });
+    wrap.appendChild(btn);
+  });
+  var fromInp = document.createElement('input'); fromInp.type='date'; fromInp.id='barSfFrom';
+  fromInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
+  wrap.appendChild(fromInp);
+  var span = document.createElement('span'); span.textContent='–'; span.style.cssText='color:#666;font-size:12px';
+  wrap.appendChild(span);
+  var toInp = document.createElement('input'); toInp.type='date'; toInp.id='barSfTo';
+  toInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
+  wrap.appendChild(toInp);
+  var applyBtn = document.createElement('button'); applyBtn.textContent='OK';
+  applyBtn.style.cssText = 'background:#FF3366;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+  applyBtn.addEventListener('click', function() {
+    var f = document.getElementById('barSfFrom'), tt = document.getElementById('barSfTo');
+    if (!f || !f.value) { showToast('Bitte Von-Datum wählen', true); return; }
+    _barCustomFrom = f.value;
+    _barCustomTo = tt ? tt.value || new Date().toISOString().split('T')[0] : '';
+    _barStatsPeriod = 'custom';
+    highlightBarFilterBtn('custom');
+    renderBarStats('custom');
+  });
+  wrap.appendChild(applyBtn);
+  bar.appendChild(wrap);
+  highlightBarFilterBtn(_barStatsPeriod);
+}
+
+function highlightBarFilterBtn(period) {
+  document.querySelectorAll('.bar-stats-filter-btn').forEach(function(b) {
+    if (b.dataset.period === period) { b.style.background='#FF3366'; b.style.color='#fff'; b.style.borderColor='#FF3366'; }
+    else { b.style.background='#222'; b.style.color='#ccc'; b.style.borderColor='#333'; }
+  });
 }
 
 async function loadBarStats(period) {
@@ -287,7 +354,6 @@ async function loadBarStats(period) {
   period = period || _barStatsPeriod || 'all';
   _barStatsPeriod = period;
 
-  // Fetch data once, cache it
   if (!_barStatsVouchers || _barStatsDeals < 0) {
     var grid = document.getElementById('statsGrid');
     grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
@@ -306,54 +372,70 @@ async function loadBarStats(period) {
 }
 
 function renderBarStats(period) {
+  ensureBarFilterBar();
   var cutoff = barFilterDate(period);
-  var vouchers = cutoff ? _barStatsVouchers.filter(function(v) { return new Date(v.created_at) >= cutoff; }) : _barStatsVouchers;
+  var dateTo = barFilterDateTo(period);
+  var vouchers = _barStatsVouchers;
+  if (cutoff) {
+    vouchers = vouchers.filter(function(v) {
+      var d = new Date(v.created_at);
+      return d >= cutoff && (!dateTo || d <= dateTo);
+    });
+  }
 
-  var sold = vouchers.length, redeemed = 0, pending = 0, paid = 0;
+  var sold = vouchers.length, redeemed = 0, notRedeemed = 0, pending = 0, paid = 0;
   vouchers.forEach(function(v) {
-    if (v.status === 'redeemed') redeemed++;
-    if (v.status === 'redeemed' && v.payout_status === 'pending') pending += Number(v.bar_payout) || 0;
+    if (v.status === 'redeemed') { redeemed++; if (v.payout_status === 'pending') pending += Number(v.bar_payout) || 0; }
+    else { notRedeemed++; }
     if (v.payout_status === 'paid') paid += Number(v.bar_payout) || 0;
   });
 
   var grid = document.getElementById('statsGrid');
   grid.innerHTML = '';
 
-  // Filter buttons
-  var filterDiv = document.createElement('div');
-  filterDiv.style.cssText = 'display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap';
-  [['day',{de:'Heute',en:'Today',it:'Oggi',fr:"Aujourd'hui"}],
-   ['week',{de:'Woche',en:'Week',it:'Settimana',fr:'Semaine'}],
-   ['month',{de:'Monat',en:'Month',it:'Mese',fr:'Mois'}],
-   ['year',{de:'Jahr',en:'Year',it:'Anno',fr:'Année'}],
-   ['all',{de:'Alle',en:'All',it:'Tutti',fr:'Tous'}]
-  ].forEach(function(f) {
-    var btn = document.createElement('button');
-    btn.textContent = f[1][currentLang] || f[1].de;
-    btn.style.cssText = (period === f[0] ? 'background:#FF3366;color:#fff;border-color:#FF3366' : 'background:#222;color:#ccc;border-color:#333') + ';border:1px solid;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
-    btn.addEventListener('click', function() { _barStatsPeriod = f[0]; renderBarStats(f[0]); });
-    filterDiv.appendChild(btn);
-  });
-  grid.appendChild(filterDiv);
-
-  // Stat cards
   var cardsDiv = document.createElement('div');
   cardsDiv.className = 'stats-grid';
   [
-    [t('soldCount') || 'Verkauft', sold, '#fff'],
-    [t('redeemed') || 'Eingelöst', redeemed, '#22c55e'],
-    [t('notRedeemed') || 'Nicht eingelöst', sold - redeemed, '#f59e0b'],
-    [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#ef4444'],
-    [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#3b82f6'],
-    [t('activeDeals') || 'Aktive Deals', _barStatsDeals, '#fff'],
+    [t('soldCount') || 'Verkauft', sold, '#fff', 'sold'],
+    [t('redeemed') || 'Eingelöst', redeemed, '#22c55e', 'redeemed'],
+    [t('notRedeemed') || 'Nicht eingelöst', notRedeemed, '#f59e0b', 'not_redeemed'],
+    [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
+    [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
+    [t('activeDeals') || 'Aktive Deals', _barStatsDeals, '#fff', null],
   ].forEach(function(s) {
     var card = document.createElement('div'); card.className = 'stat-card';
+    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function() { showBarStatDetail(s[0], s[3], vouchers); }); }
     var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
     var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]);
     if (s[2]) vEl.style.color = s[2];
     card.append(lEl, vEl); cardsDiv.appendChild(card);
   });
   grid.appendChild(cardsDiv);
+}
+
+function showBarStatDetail(label, filterKey, filteredVouchers) {
+  var detailEl = document.getElementById('barStatsDetail');
+  if (!detailEl) return;
+  var items = [];
+  if (filterKey === 'sold') items = filteredVouchers;
+  else if (filterKey === 'redeemed') items = filteredVouchers.filter(function(v) { return v.status === 'redeemed'; });
+  else if (filterKey === 'not_redeemed') items = filteredVouchers.filter(function(v) { return v.status !== 'redeemed' && v.status !== 'refunded'; });
+  else if (filterKey === 'pending_payout') items = filteredVouchers.filter(function(v) { return v.status === 'redeemed' && v.payout_status === 'pending'; });
+  else if (filterKey === 'paid_out') items = filteredVouchers.filter(function(v) { return v.payout_status === 'paid'; });
+  else { detailEl.innerHTML = ''; return; }
+
+  if (!items.length) { detailEl.innerHTML = '<div style="color:#666;text-align:center;padding:20px">Keine Daten für diesen Zeitraum</div>'; return; }
+  var html = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + label + ' (' + items.length + ')</div>';
+  html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>Datum</th><th>Code</th><th>Deal</th><th>Preis</th><th>Status</th><th>Auszahl.</th></tr></thead><tbody>';
+  items.forEach(function(v) {
+    var sc = v.status === 'redeemed' ? '#22c55e' : v.status === 'refunded' ? '#ef4444' : '#f59e0b';
+    var st = v.status === 'redeemed' ? 'Eingelöst' : v.status === 'refunded' ? 'Erstattet' : 'Offen';
+    var pc = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
+    var pt = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
+    html += '<tr><td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-') + '</td><td style="font-family:monospace">' + (v.code || '-') + '</td><td>' + (v.deal_title || '-') + '</td><td style="text-align:right">' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + st + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  detailEl.innerHTML = html;
 }
 
 // ── MY DEALS ──────────────────────────────────────────────────────────────
@@ -815,6 +897,18 @@ async function loadProfile() {
     if (el('profPhone')) el('profPhone').value = b.phone || '';
     if (el('profIban')) el('profIban').value = b.iban || '';
     if (el('profTwint')) el('profTwint').value = b.twint || '';
+    // MWST
+    if (b.mwst_liable === true || b.mwst_liable === 'true') {
+      if (el('profMwstYes')) el('profMwstYes').checked = true;
+      if (el('profMwstNumGroup')) el('profMwstNumGroup').style.display = 'block';
+    } else if (b.mwst_liable === false || b.mwst_liable === 'false') {
+      if (el('profMwstNo')) el('profMwstNo').checked = true;
+      if (el('profMwstNumGroup')) el('profMwstNumGroup').style.display = 'none';
+    }
+    if (el('profMwstNumber')) el('profMwstNumber').value = b.mwst_number || '';
+    // Coordinates
+    if (el('profLat') && b.latitude) el('profLat').value = b.latitude;
+    if (el('profLng') && b.longitude) el('profLng').value = b.longitude;
   } catch(e) {}
 }
 
@@ -958,13 +1052,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ── IMAGE UPLOAD PREVIEW ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-  // MWST toggle in registration
+  // MWST toggle in registration (default is now Yes/visible)
   var regMwstYes = document.getElementById('regMwstYes');
   var regMwstNo = document.getElementById('regMwstNo');
   var regMwstGroup = document.getElementById('regMwstNumGroup');
   if (regMwstYes) regMwstYes.addEventListener('change', function() { if (regMwstGroup) regMwstGroup.style.display = 'block'; });
   if (regMwstNo) regMwstNo.addEventListener('change', function() { if (regMwstGroup) regMwstGroup.style.display = 'none'; });
-  // MWST toggle in settings
+  // MWST toggle in settings (default is now Yes/visible)
   var profMwstYes = document.getElementById('profMwstYes');
   var profMwstNo = document.getElementById('profMwstNo');
   var profMwstGroup = document.getElementById('profMwstNumGroup');
