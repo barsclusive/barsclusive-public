@@ -9,9 +9,9 @@ const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscb
 const TRANSLATIONS = {
 de: {
   logout:'Ausloggen', login:'Login', register:'Registrieren',
-  barLogin:'Bar Login', email:'Email', password:'Passwort',
+  barLogin:'Bar Login', email:'Email *', password:'Passwort',
   loginBtn:'Einloggen', registerBar:'Bar registrieren',
-  barName:'Bar-Name *', city:'Stadt *', address:'Adresse', phone:'Telefon',
+  barName:'Bar-Name *', city:'Stadt *', address:'Adresse *', phone:'Telefon',
   passwordMin:'Passwort (mind. 8 Zeichen) *', privacyPolicy:'Datenschutzerklärung',
   registerBtn:'Registrieren', pendingNote:'Nach der Registrierung wird dein Account von BarSclusive freigeschaltet.',
   tabOverview:'Übersicht', tabNewDeal:'Neuer Deal', tabMyDeals:'Meine Deals',
@@ -38,9 +38,9 @@ de: {
 },
 en: {
   logout:'Logout', login:'Login', register:'Register',
-  barLogin:'Bar Login', email:'Email', password:'Password',
+  barLogin:'Bar Login', email:'Email *', password:'Password',
   loginBtn:'Login', registerBar:'Register Bar',
-  barName:'Bar Name *', city:'City *', address:'Address', phone:'Phone',
+  barName:'Bar Name *', city:'City *', address:'Address *', phone:'Phone',
   passwordMin:'Password (min. 8 chars) *', privacyPolicy:'Privacy Policy',
   registerBtn:'Register', pendingNote:'After registration your account will be activated by BarSclusive.',
   tabOverview:'Overview', tabNewDeal:'New Deal', tabMyDeals:'My Deals',
@@ -67,9 +67,9 @@ en: {
 },
 it: {
   logout:'Esci', login:'Login', register:'Registrati',
-  barLogin:'Login Bar', email:'Email', password:'Password',
+  barLogin:'Login Bar', email:'Email *', password:'Password',
   loginBtn:'Accedi', registerBar:'Registra Bar',
-  barName:'Nome Bar *', city:'Città *', address:'Indirizzo', phone:'Telefono',
+  barName:'Nome Bar *', city:'Città *', address:'Indirizzo *', phone:'Telefono',
   passwordMin:'Password (min. 8 caratteri) *', privacyPolicy:'Privacy Policy',
   registerBtn:'Registrati', pendingNote:'Dopo la registrazione il tuo account sarà attivato da BarSclusive.',
   tabOverview:'Panoramica', tabNewDeal:'Nuovo Deal', tabMyDeals:'I miei Deal',
@@ -96,9 +96,9 @@ it: {
 },
 fr: {
   logout:'Déconnexion', login:'Connexion', register:'Inscription',
-  barLogin:'Connexion Bar', email:'Email', password:'Mot de passe',
+  barLogin:'Connexion Bar', email:'Email *', password:'Mot de passe',
   loginBtn:'Se connecter', registerBar:'Inscrire Bar',
-  barName:'Nom du Bar *', city:'Ville *', address:'Adresse', phone:'Téléphone',
+  barName:'Nom du Bar *', city:'Ville *', address:'Adresse *', phone:'Téléphone',
   passwordMin:'Mot de passe (min. 8 car.) *', privacyPolicy:'Politique de confidentialité',
   registerBtn:"S'inscrire", pendingNote:"Après l'inscription, votre compte sera activé par BarSclusive.",
   tabOverview:'Aperçu', tabNewDeal:'Nouveau Deal', tabMyDeals:'Mes Deals',
@@ -276,7 +276,10 @@ async function doBarRegister() {
   var btn = document.getElementById('btnBarRegister');
   try {
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
-    var r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass, iban, mwst_liable: mwstLiable, mwst_number: mwstNumber });
+    var r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass, iban, mwst_liable: mwstLiable, mwst_number: mwstNumber,
+      latitude: document.getElementById('regLat') ? document.getElementById('regLat').value : '',
+      longitude: document.getElementById('regLng') ? document.getElementById('regLng').value : ''
+    });
     if (r.success) {
       showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
       document.getElementById('regBarPass').value = '';
@@ -1162,25 +1165,83 @@ document.addEventListener('DOMContentLoaded', function() {
   if (profMwstNo) profMwstNo.addEventListener('change', function() { if (profMwstGroup) profMwstGroup.style.display = 'none'; });
 
 
-  // Geocode button
+  // Geocode + map helper
+  var _profMap = null, _profMarker = null;
+  var _regMap = null, _regMarker = null;
+
+  function showMapPin(mapId, wrapId, lat, lng, existingMap, existingMarker) {
+    var wrap = document.getElementById(wrapId);
+    if (!wrap) return { map: existingMap, marker: existingMarker };
+    wrap.style.display = 'block';
+    if (!existingMap) {
+      existingMap = L.map(mapId).setView([lat, lng], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        maxZoom: 19
+      }).addTo(existingMap);
+      existingMarker = L.marker([lat, lng], { draggable: true }).addTo(existingMap);
+    } else {
+      existingMap.setView([lat, lng], 15);
+      existingMarker.setLatLng([lat, lng]);
+    }
+    setTimeout(function() { existingMap.invalidateSize(); }, 200);
+    return { map: existingMap, marker: existingMarker };
+  }
+
+  async function geocodeAddress(addr, zip, city, callback) {
+    if (!addr && !city) { showToast('Bitte zuerst Adresse eingeben', true); return; }
+    var q = [addr, zip, city, 'Schweiz'].filter(Boolean).join(', ');
+    try {
+      var resp = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
+      var data = await resp.json();
+      if (data && data.length > 0) {
+        callback(Number(data[0].lat), Number(data[0].lon), data[0].display_name);
+      } else { showToast('Adresse nicht gefunden – bitte prüfen', true); }
+    } catch(e) { showToast('Geocoding fehlgeschlagen', true); }
+  }
+
+  // Settings geocode button
   var btnGeocode = document.getElementById('btnGeocode');
   if (btnGeocode) btnGeocode.addEventListener('click', async function() {
     var addr = (document.getElementById('profAddress') || {}).value || '';
     var zip = (document.getElementById('profZip') || {}).value || '';
     var city = (document.getElementById('profCity') || {}).value || '';
-    if (!addr && !city) { showToast('Bitte zuerst Adresse eingeben', true); return; }
-    var q = [addr, zip, city, 'Switzerland'].filter(Boolean).join(', ');
     btnGeocode.textContent = '⏳ Suche...'; btnGeocode.disabled = true;
-    try {
-      var resp = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
-      var data = await resp.json();
-      if (data && data.length > 0) {
-        document.getElementById('profLat').value = Number(data[0].lat).toFixed(6);
-        document.getElementById('profLng').value = Number(data[0].lon).toFixed(6);
-        showToast('📍 Standort gefunden: ' + data[0].display_name.substring(0, 50));
-      } else { showToast('Adresse nicht gefunden', true); }
-    } catch(e) { showToast('Geocoding fehlgeschlagen', true); }
-    finally { btnGeocode.textContent = '📍 Standort prüfen'; btnGeocode.disabled = false; }
+    await geocodeAddress(addr, zip, city, function(lat, lng, display) {
+      document.getElementById('profLat').value = lat.toFixed(6);
+      document.getElementById('profLng').value = lng.toFixed(6);
+      var r = showMapPin('profMap', 'profMapWrap', lat, lng, _profMap, _profMarker);
+      _profMap = r.map; _profMarker = r.marker;
+      _profMarker.on('dragend', function(e) {
+        var p = e.target.getLatLng();
+        document.getElementById('profLat').value = p.lat.toFixed(6);
+        document.getElementById('profLng').value = p.lng.toFixed(6);
+      });
+      showToast('📍 Standort gefunden');
+    });
+    btnGeocode.textContent = '📍 Standort prüfen'; btnGeocode.disabled = false;
+  });
+
+  // Registration geocode button
+  var btnRegGeo = document.getElementById('btnRegGeocode');
+  if (btnRegGeo) btnRegGeo.addEventListener('click', async function() {
+    var addr = (document.getElementById('regAddress') || {}).value || '';
+    var zip = (document.getElementById('regZip') || {}).value || '';
+    var city = (document.getElementById('regCity') || {}).value || '';
+    btnRegGeo.textContent = '⏳ Suche...'; btnRegGeo.disabled = true;
+    await geocodeAddress(addr, zip, city, function(lat, lng, display) {
+      document.getElementById('regLat').value = lat.toFixed(6);
+      document.getElementById('regLng').value = lng.toFixed(6);
+      var r = showMapPin('regMap', 'regMapWrap', lat, lng, _regMap, _regMarker);
+      _regMap = r.map; _regMarker = r.marker;
+      _regMarker.on('dragend', function(e) {
+        var p = e.target.getLatLng();
+        document.getElementById('regLat').value = p.lat.toFixed(6);
+        document.getElementById('regLng').value = p.lng.toFixed(6);
+      });
+      showToast('📍 Standort gefunden – Pin verschiebbar!');
+    });
+    btnRegGeo.textContent = '📍 Adresse auf Karte prüfen'; btnRegGeo.disabled = false;
   });
 
   var imgFile = document.getElementById('dealImageFile');
