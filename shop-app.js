@@ -276,6 +276,8 @@ function renderDeals() {
 
   el.innerHTML = '';
   visible.forEach(deal => el.appendChild(buildDealCard(deal)));
+  // Update map markers if map exists
+  if (_shopMap && _mapView) updateShopMapMarkers();
 }
 
 function buildDealCard(deal) {
@@ -1654,4 +1656,122 @@ document.addEventListener('DOMContentLoaded', function() {
   if (geoBtn) geoBtn.addEventListener('click', requestGeoPermission);
   var geoDismiss = document.getElementById('geoDismissBtn');
   if (geoDismiss) geoDismiss.addEventListener('click', dismissGeoBanner);
+});
+
+// =============================================
+// SHOP MAP (Leaflet)
+// =============================================
+var _shopMap = null;
+var _shopMapMarkers = [];
+var _mapView = false;
+
+function initShopMap() {
+  if (_shopMap) return;
+  var el = document.getElementById('shopMap');
+  if (!el) return;
+  // Default to Switzerland center
+  _shopMap = L.map('shopMap').setView([47.37, 8.54], 8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+    maxZoom: 19
+  }).addTo(_shopMap);
+}
+
+function updateShopMapMarkers() {
+  if (!_shopMap) return;
+  // Clear old markers
+  _shopMapMarkers.forEach(function(m) { _shopMap.removeLayer(m); });
+  _shopMapMarkers = [];
+  
+  // Group deals by bar (avoid duplicate markers)
+  var barMap = {};
+  allDeals.forEach(function(d) {
+    if (!d.bar_lat || !d.bar_lng) return;
+    var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
+    if (!lat || !lng) return;
+    var key = d.bar_id || (lat + ',' + lng);
+    if (!barMap[key]) barMap[key] = { lat: lat, lng: lng, name: d.bar_name, city: d.bar_city, deals: [] };
+    barMap[key].deals.push(d);
+  });
+  
+  var bounds = [];
+  Object.keys(barMap).forEach(function(key) {
+    var b = barMap[key];
+    var popupHtml = '<div style="min-width:180px">'
+      + '<strong style="font-size:14px">' + (b.name || '') + '</strong>'
+      + '<div style="color:#666;font-size:12px;margin-bottom:6px">' + (b.city || '') + '</div>';
+    b.deals.forEach(function(d) {
+      popupHtml += '<div style="padding:4px 0;border-top:1px solid #eee;cursor:pointer" data-deal-id="' + d.id + '">'
+        + '<span style="font-weight:600">' + d.title + '</span>'
+        + '<span style="color:#FF3366;float:right">' + Number(d.deal_price).toFixed(2) + ' CHF</span>'
+        + '</div>';
+    });
+    popupHtml += '</div>';
+    
+    var marker = L.marker([b.lat, b.lng]).addTo(_shopMap);
+    marker.bindPopup(popupHtml);
+    marker.on('popupopen', function() {
+      // Attach click events to deal links in popup
+      setTimeout(function() {
+        document.querySelectorAll('[data-deal-id]').forEach(function(el) {
+          el.addEventListener('click', function() {
+            var dealId = this.getAttribute('data-deal-id');
+            var deal = allDeals.find(function(dd) { return dd.id === dealId; });
+            if (deal) { _shopMap.closePopup(); openDealDetail(deal); }
+          });
+        });
+      }, 100);
+    });
+    _shopMapMarkers.push(marker);
+    bounds.push([b.lat, b.lng]);
+  });
+  
+  // Fit bounds if we have markers
+  if (bounds.length > 0) {
+    if (bounds.length === 1) { _shopMap.setView(bounds[0], 14); }
+    else { _shopMap.fitBounds(bounds, { padding: [30, 30] }); }
+  }
+}
+
+function toggleMapView(showMap) {
+  _mapView = showMap;
+  var mapWrap = document.getElementById('shopMapWrap');
+  var dealsView = document.getElementById('dealsView');
+  var btnGrid = document.getElementById('viewGrid');
+  var btnMap = document.getElementById('viewMap');
+  
+  if (showMap) {
+    if (mapWrap) mapWrap.style.display = 'block';
+    if (dealsView) dealsView.style.display = 'none';
+    if (btnMap) { btnMap.style.background = '#FF3366'; btnMap.style.color = '#fff'; btnMap.style.borderColor = '#FF3366'; }
+    if (btnGrid) { btnGrid.style.background = '#2a2a2a'; btnGrid.style.color = '#ccc'; btnGrid.style.borderColor = '#3a3a3a'; }
+    initShopMap();
+    setTimeout(function() { if (_shopMap) _shopMap.invalidateSize(); updateShopMapMarkers(); }, 200);
+  } else {
+    if (mapWrap) mapWrap.style.display = 'none';
+    if (dealsView) dealsView.style.display = 'block';
+    if (btnGrid) { btnGrid.style.background = '#FF3366'; btnGrid.style.color = '#fff'; btnGrid.style.borderColor = '#FF3366'; }
+    if (btnMap) { btnMap.style.background = '#2a2a2a'; btnMap.style.color = '#ccc'; btnMap.style.borderColor = '#3a3a3a'; }
+  }
+}
+
+// Bind map toggle buttons
+document.addEventListener('DOMContentLoaded', function() {
+  var btnGrid = document.getElementById('viewGrid');
+  var btnMap = document.getElementById('viewMap');
+  if (btnGrid) btnGrid.addEventListener('click', function() { toggleMapView(false); });
+  if (btnMap) btnMap.addEventListener('click', function() { toggleMapView(true); });
+});
+
+// Update map markers when deals are loaded
+var _origRenderDeals = typeof renderDeals === 'function' ? renderDeals : null;
+// Hook into deals loading to update map
+window.addEventListener('load', function() {
+  // After deals are loaded, update map markers if map is visible
+  var checkInterval = setInterval(function() {
+    if (allDeals && allDeals.length > 0) {
+      clearInterval(checkInterval);
+      if (_mapView && _shopMap) updateShopMapMarkers();
+    }
+  }, 1000);
 });
