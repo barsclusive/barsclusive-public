@@ -187,6 +187,48 @@ function sessionClear() {
   document.getElementById('btnLogout').style.display = 'none';
 }
 
+// ── DATA CACHE (avoids re-fetching on every tab switch) ─────────────────
+var _dataCache = {
+  deals: null, vouchers: null, profile: null,
+  dealsLoading: false, vouchersLoading: false, profileLoading: false,
+  statsLoading: false
+};
+
+function clearDataCache() {
+  _dataCache = { deals: null, vouchers: null, profile: null, dealsLoading: false, vouchersLoading: false, profileLoading: false, statsLoading: false };
+  _barStatsVouchers = null;
+  _barStatsDeals = -1;
+}
+
+async function prefetchAllData() {
+  var s = sessionGet();
+  if (!s) return;
+  // Fire all requests in parallel, don't await individually
+  var promises = [];
+  if (!_dataCache.deals) {
+    _dataCache.dealsLoading = true;
+    promises.push(api({ action: 'getBarDeals', token: s.token, bar_id: s.barId }).then(function(r) {
+      _dataCache.dealsLoading = false;
+      if (r.success) _dataCache.deals = r.deals || [];
+    }).catch(function() { _dataCache.dealsLoading = false; }));
+  }
+  if (!_dataCache.vouchers) {
+    _dataCache.vouchersLoading = true;
+    promises.push(api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId }).then(function(r) {
+      _dataCache.vouchersLoading = false;
+      if (r.success) _dataCache.vouchers = r.vouchers || [];
+    }).catch(function() { _dataCache.vouchersLoading = false; }));
+  }
+  if (!_dataCache.profile) {
+    _dataCache.profileLoading = true;
+    promises.push(api({ action: 'getBarProfile', token: s.token }).then(function(r) {
+      _dataCache.profileLoading = false;
+      if (r.success && r.profile) _dataCache.profile = r.profile;
+    }).catch(function() { _dataCache.profileLoading = false; }));
+  }
+  await Promise.all(promises);
+}
+
 // ── AUTH ─────────────────────────────────────────────────────────────────
 async function doBarLogin() {
   var email = document.getElementById('loginEmail').value.trim();
@@ -202,6 +244,8 @@ async function doBarLogin() {
       sessionSet(r.token, r.bar.id, r.bar.name);
       document.getElementById('loginPassword').value = '';
       showAuthScreen(false);
+      clearDataCache();
+      prefetchAllData(); // Start loading all data in parallel
       loadBarStats();
     } else {
       err.textContent = r.error || 'Ungültige Zugangsdaten.';
@@ -271,7 +315,7 @@ async function deleteDeal(dealId) {
   if (!s) { doLogout(); return; }
   try {
     var r = await api({ action: 'deleteDeal', token: s.token, deal_id: dealId });
-    if (r.success) { showToast(r.message || 'Deal gelöscht'); loadMyDeals(); }
+    if (r.success) { showToast(r.message || 'Deal gelöscht'); _dataCache.deals = null; _barStatsDeals = -1; loadMyDeals(); }
     else showToast(r.error || 'Fehler', true);
   } catch (e) { showToast('Verbindungsfehler', true); }
 }
@@ -354,19 +398,39 @@ async function loadBarStats(period) {
   period = period || _barStatsPeriod || 'all';
   _barStatsPeriod = period;
 
-  if (!_barStatsVouchers || _barStatsDeals < 0) {
-    var grid = document.getElementById('statsGrid');
-    grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
-    try {
-      var [vr, dr] = await Promise.all([
-        api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId }),
-        api({ action: 'getBarDeals', token: s.token, bar_id: s.barId })
-      ]);
-      _barStatsVouchers = (vr.success && vr.vouchers) ? vr.vouchers : [];
-      _barStatsDeals = 0;
-      if (dr.success && dr.deals) dr.deals.forEach(function(d) { if (d.active) _barStatsDeals++; });
-    } catch(e) { _barStatsVouchers = []; _barStatsDeals = 0; }
+  // Use cached data if available for instant render
+  if (_barStatsVouchers && _barStatsDeals >= 0) {
+    renderBarStats(period);
+    return;
   }
+
+  // Try to use prefetched cache
+  if (_dataCache.vouchers && _dataCache.deals) {
+    _barStatsVouchers = _dataCache.vouchers;
+    _barStatsDeals = 0;
+    _dataCache.deals.forEach(function(d) { if (d.active) _barStatsDeals++; });
+    renderBarStats(period);
+    return;
+  }
+
+  var grid = document.getElementById('statsGrid');
+  grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
+
+  if (_dataCache.statsLoading) return;
+  _dataCache.statsLoading = true;
+  try {
+    var [vr, dr] = await Promise.all([
+      api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId }),
+      api({ action: 'getBarDeals', token: s.token, bar_id: s.barId })
+    ]);
+    _dataCache.statsLoading = false;
+    _barStatsVouchers = (vr.success && vr.vouchers) ? vr.vouchers : [];
+    _dataCache.vouchers = _barStatsVouchers;
+    _barStatsDeals = 0;
+    var deals = (dr.success && dr.deals) ? dr.deals : [];
+    _dataCache.deals = deals;
+    deals.forEach(function(d) { if (d.active) _barStatsDeals++; });
+  } catch(e) { _dataCache.statsLoading = false; _barStatsVouchers = []; _barStatsDeals = 0; }
 
   renderBarStats(period);
 }
@@ -442,11 +506,22 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
 async function loadMyDeals() {
   var s = sessionGet();
   if (!s) { doLogout(); return; }
+  // Show cached data instantly
+  if (_dataCache.deals) { renderMyDeals(_dataCache.deals); }
+  else {
+    var el = document.getElementById('dealList');
+    el.innerHTML = '<div class="empty" style="padding:20px;color:#999">Laden...</div>';
+  }
+  // Refresh in background
+  if (_dataCache.dealsLoading) return;
+  _dataCache.dealsLoading = true;
   try {
     var r = await api({ action: 'getBarDeals', token: s.token, bar_id: s.barId });
-    if (!r.success) { showToast(r.error || 'Fehler', true); return; }
-    renderMyDeals(r.deals);
-  } catch (e) { showToast('Verbindungsfehler', true); }
+    _dataCache.dealsLoading = false;
+    if (!r.success) { if (!_dataCache.deals) showToast(r.error || 'Fehler', true); return; }
+    _dataCache.deals = r.deals || [];
+    renderMyDeals(_dataCache.deals);
+  } catch (e) { _dataCache.dealsLoading = false; if (!_dataCache.deals) showToast('Verbindungsfehler', true); }
 }
 
 function renderMyDeals(deals) {
@@ -505,7 +580,7 @@ async function toggleDeal(dealId, active) {
   if (!s) { doLogout(); return; }
   try {
     var r = await api({ action: 'updateDealStatus', token: s.token, deal_id: dealId, active: active });
-    if (r.success) { showToast(active ? '✅ Aktiviert' : '⏸ Deaktiviert'); loadMyDeals(); }
+    if (r.success) { showToast(active ? '✅ Aktiviert' : '⏸ Deaktiviert'); _dataCache.deals = null; _barStatsDeals = -1; loadMyDeals(); }
     else showToast(r.error || 'Fehler', true);
   } catch (e) { showToast('Verbindungsfehler', true); }
 }
@@ -578,6 +653,7 @@ async function saveEditDeal() {
     var r = await api(payload);
     if (r.success) {
       showToast('✅ ' + t('saveLbl'));
+      _dataCache.deals = null;
       closeEditModal();
       loadMyDeals();
     } else showToast(r.error || 'Fehler', true);
@@ -588,11 +664,20 @@ async function saveEditDeal() {
 async function loadMyVouchers() {
   var s = sessionGet();
   if (!s) { doLogout(); return; }
+  if (_dataCache.vouchers) { renderVouchers(_dataCache.vouchers); }
+  else {
+    var tbody = document.getElementById('voucherBody');
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#999">Laden...</td></tr>';
+  }
+  if (_dataCache.vouchersLoading) return;
+  _dataCache.vouchersLoading = true;
   try {
     var r = await api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId });
-    if (!r.success) { showToast(r.error || 'Fehler', true); return; }
-    renderVouchers(r.vouchers);
-  } catch (e) { showToast('Verbindungsfehler', true); }
+    _dataCache.vouchersLoading = false;
+    if (!r.success) { if (!_dataCache.vouchers) showToast(r.error || 'Fehler', true); return; }
+    _dataCache.vouchers = r.vouchers || [];
+    renderVouchers(_dataCache.vouchers);
+  } catch (e) { _dataCache.vouchersLoading = false; if (!_dataCache.vouchers) showToast('Verbindungsfehler', true); }
 }
 
 function renderVouchers(vouchers) {
@@ -648,6 +733,7 @@ async function doRedeem() {
       result.style.display = 'block';
       document.getElementById('redeemCode').value = '';
       showToast('✅ ' + t('redeemSuccess'));
+      _dataCache.vouchers = null; _barStatsVouchers = null;
     } else {
       err.textContent = r.error || 'Ungültiger Gutschein.';
     }
@@ -749,6 +835,7 @@ async function doCreateDeal() {
     });
     if (r.success) {
       showToast('✅ Deal erstellt!');
+      _dataCache.deals = null; _barStatsVouchers = null; _barStatsDeals = -1;
       ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo']
         .forEach(function(id) { document.getElementById(id).value = ''; });
       var imgEl = document.getElementById('dealImageFile'); if(imgEl) imgEl.value = '';
@@ -867,11 +954,11 @@ window.addEventListener('load', function() {
   var s = sessionGet();
   if (s) {
     showAuthScreen(false);
-    // Restore bar name display and logout button
     var el = document.getElementById('barNameDisplay');
     if (el) el.textContent = s.barName || '';
     var logBtn = document.getElementById('btnLogout');
     if (logBtn) logBtn.style.display = 'block';
+    prefetchAllData(); // Pre-load all data in background
     loadBarStats();
   } else {
     showAuthScreen(true);
@@ -886,10 +973,20 @@ window.addEventListener('load', function() {
 async function loadProfile() {
   var s = sessionGet();
   if (!s) return;
+  // Show cached profile instantly
+  if (_dataCache.profile) { applyProfileToForm(_dataCache.profile); }
+  if (_dataCache.profileLoading) return;
+  _dataCache.profileLoading = true;
   try {
     var r = await api({ action: 'getBarProfile', token: s.token });
+    _dataCache.profileLoading = false;
     if (!r.success || !r.profile) return;
-    var b = r.profile;
+    _dataCache.profile = r.profile;
+    applyProfileToForm(r.profile);
+  } catch(e) { _dataCache.profileLoading = false; }
+}
+
+function applyProfileToForm(b) {
     var el = function(id) { return document.getElementById(id); };
     if (el('profAddress')) el('profAddress').value = b.address || '';
     if (el('profZip')) el('profZip').value = b.zip || '';
@@ -909,7 +1006,6 @@ async function loadProfile() {
     // Coordinates
     if (el('profLat') && b.latitude) el('profLat').value = b.latitude;
     if (el('profLng') && b.longitude) el('profLng').value = b.longitude;
-  } catch(e) {}
 }
 
 async function saveProfile() {
@@ -931,7 +1027,7 @@ async function saveProfile() {
   };
   try {
     var r = await api(payload);
-    if (r.success) showToast(t('profileSaved') || 'Gespeichert');
+    if (r.success) { _dataCache.profile = null; showToast(t('profileSaved') || 'Gespeichert'); }
     else showToast(r.error || 'Fehler', true);
   } catch(e) { showToast('Verbindungsfehler', true); }
 }
