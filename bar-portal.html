@@ -184,11 +184,11 @@
         <div class="form-group">
           <label class="form-label">MWST-pflichtig?</label>
           <div style="display:flex;gap:16px;margin-top:6px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="no" checked id="regMwstNo"> Nein</label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="yes" id="regMwstYes"> Ja</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="no" id="regMwstNo"> Nein</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="yes" checked id="regMwstYes"> Ja</label>
           </div>
         </div>
-        <div class="form-group" id="regMwstNumGroup" style="display:none">
+        <div class="form-group" id="regMwstNumGroup">
           <label class="form-label" for="regMwstNumber">MWST-Nummer *</label>
           <input type="text" class="form-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST">
         </div>
@@ -219,7 +219,9 @@
 
     <!-- OVERVIEW -->
     <div id="dashOverview" class="tab-content active">
+      <div id="barStatsFilterBar"></div>
       <div class="stats-grid" id="statsGrid"></div>
+      <div id="barStatsDetail"></div>
       <div style="color:#999;font-size:14px"><span data-i18n="loggedInAs">Eingeloggt als:</span> <span id="barNameDisplay"></span></div>
     </div>
 
@@ -426,11 +428,11 @@
         <div style="margin-bottom:18px">
           <label class="form-label">MWST-pflichtig?</label>
           <div style="display:flex;gap:16px;margin-top:6px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="no" id="profMwstNo" checked> Nein</label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="yes" id="profMwstYes"> Ja</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="no" id="profMwstNo"> Nein</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="yes" checked id="profMwstYes"> Ja</label>
           </div>
         </div>
-        <div class="form-group" id="profMwstNumGroup" style="display:none">
+        <div class="form-group" id="profMwstNumGroup">
           <label class="form-label">MWST-Nummer</label>
           <input type="text" class="form-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST">
         </div>
