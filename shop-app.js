@@ -573,16 +573,51 @@ function buildOrderCard(o) {
   card.append(head, details, date);
 
   if (o.voucher_code) {
-    const box = document.createElement('div');
-    box.className = 'voucher-box';
-    const label = document.createElement('div');
-    label.style.cssText = 'font-size:12px;color:#999;margin-bottom:6px';
-    label.textContent = shopT('gutscheinCode') || 'Gutschein-Code:';
-    const code = document.createElement('div');
-    code.className = 'voucher-code';
-    code.textContent = o.voucher_code;
-    box.append(label, code);
-    card.appendChild(box);
+    // Handle multiple voucher codes (cart orders store comma-separated)
+    var codes = o.voucher_code.split(',').map(function(c) { return c.trim(); }).filter(Boolean);
+    codes.forEach(function(vc) {
+      var box = document.createElement('div');
+      box.className = 'voucher-box';
+      var label = document.createElement('div');
+      label.style.cssText = 'font-size:12px;color:#999;margin-bottom:6px';
+      label.textContent = shopT('gutscheinCode') || 'Gutschein-Code:';
+      var codeEl = document.createElement('div');
+      codeEl.className = 'voucher-code';
+      codeEl.textContent = vc;
+      box.append(label, codeEl);
+
+      // Voucher link + share row
+      var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(vc);
+      var actions = document.createElement('div');
+      actions.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px';
+
+      var viewLink = document.createElement('a');
+      viewLink.href = vUrl;
+      viewLink.target = '_blank';
+      viewLink.style.cssText = 'padding:7px 14px;border-radius:18px;background:#FF3366;color:#fff;font-size:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px';
+      viewLink.textContent = '🎫 ' + (shopT('gutscheinAnzeigen') || 'Anzeigen');
+      actions.appendChild(viewLink);
+
+      var copyBtn = document.createElement('button');
+      copyBtn.className = 'share-btn';
+      copyBtn.textContent = '📋 ' + (shopT('linkKopieren') || 'Link kopieren');
+      copyBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); }; })(vc));
+      actions.appendChild(copyBtn);
+
+      var waBtn = document.createElement('button');
+      waBtn.className = 'share-btn';
+      waBtn.textContent = '💬 WhatsApp';
+      waBtn.addEventListener('click', (function(c, t) { return function() { shareVoucher(c, t, 'whatsapp'); }; })(vc, o.deal_title || ''));
+      actions.appendChild(waBtn);
+
+      var tgBtn = document.createElement('button');
+      tgBtn.className = 'share-btn';
+      tgBtn.textContent = '✈️ Telegram';
+      tgBtn.addEventListener('click', (function(c, t) { return function() { shareVoucher(c, t, 'telegram'); }; })(vc, o.deal_title || ''));
+      actions.appendChild(tgBtn);
+      box.appendChild(actions);
+      card.appendChild(box);
+    });
   }
 
   if (o.refund_status === 'requested') {
@@ -963,6 +998,7 @@ const SHOP_TRANSLATIONS = {
     refundReq:'Rückerstattung anfordern', refundRequested:'Rückerstattung angefordert', refunded:'Rückerstattet',
     remaining:'verbleibend', anmelden:'Anmelden', registrieren:'Registrieren',
     fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden', searchBarDeal:'Bar oder Deal suchen...', searchPLZ:'PLZ oder Ort...',
+    gutscheinAnzeigen:'Anzeigen', linkKopieren:'Link kopieren', linkKopiert:'Link kopiert!',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -985,6 +1021,7 @@ const SHOP_TRANSLATIONS = {
     refundReq:'Request refund', refundRequested:'Refund requested', refunded:'Refunded',
     remaining:'remaining', anmelden:'Login', registrieren:'Register',
     fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal', loginSubmitBtn:'Login', cancelLoginBtn:'Cancel', suchenBtn:'Search', anmeldenTitle:'Login', searchBarDeal:'Search bar or deal...', searchPLZ:'ZIP or city...',
+    gutscheinAnzeigen:'View', linkKopieren:'Copy link', linkKopiert:'Link copied!',
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -1006,6 +1043,7 @@ const SHOP_TRANSLATIONS = {
     refundReq:'Richiedi rimborso', refundRequested:'Rimborso richiesto', refunded:'Rimborsato',
     remaining:'rimanenti', anmelden:'Accedi', registrieren:'Registrati',
     fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi', searchBarDeal:'Cerca bar o offerta...', searchPLZ:'CAP o città...',
+    gutscheinAnzeigen:'Visualizza', linkKopieren:'Copia link', linkKopiert:'Link copiato!',
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -1026,6 +1064,7 @@ const SHOP_TRANSLATIONS = {
     refundReq:'Demander remboursement', refundRequested:'Remboursement demandé', refunded:'Remboursé',
     remaining:'restant', anmelden:'Connexion', registrieren:'Inscription',
     fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars \u2192 Portail Bar', loginSubmitBtn:'Connexion', cancelLoginBtn:'Annuler', suchenBtn:'Chercher', anmeldenTitle:'Connexion', searchBarDeal:'Chercher bar ou offre...', searchPLZ:'NPA ou ville...',
+    gutscheinAnzeigen:'Afficher', linkKopieren:'Copier le lien', linkKopiert:'Lien copié!',
     alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
   }
 };
@@ -1307,6 +1346,22 @@ function shareDeal(platform) {
   if (link) window.open(link, '_blank');
 }
 
+// Voucher sharing functions
+function copyVoucherLink(code) {
+  var url = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(code);
+  navigator.clipboard.writeText(url).then(function() { showToast(shopT('linkKopiert') || 'Link kopiert!'); }).catch(function() { showToast('Link: ' + url); });
+}
+
+function shareVoucher(code, dealTitle, platform) {
+  var url = encodeURIComponent(window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + code);
+  var text = encodeURIComponent((dealTitle || 'BarSclusive Gutschein') + ' - ' + code);
+  var link = '';
+  if (platform === 'whatsapp') link = 'https://wa.me/?text=' + text + '%20' + url;
+  else if (platform === 'telegram') link = 'https://t.me/share/url?url=' + url + '&text=' + text;
+  else if (platform === 'facebook') link = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  if (link) window.open(link, '_blank');
+}
+
 // Close modal on backdrop click
 document.addEventListener('click', function(e) {
   var modal = document.getElementById('dealDetailModal');
@@ -1358,8 +1413,12 @@ function requestGeoPermission() {
 
 function sortDealsByDistance() {
   if (!_userLat || !_userLng) return;
-  // Simple sort by city name proximity (no real coords in deals)
-  // This is a placeholder - real implementation needs bar coordinates
+  allDeals.forEach(function(d) {
+    if (d.bar_lat && d.bar_lng) {
+      d._dist = haversine(_userLat, _userLng, Number(d.bar_lat), Number(d.bar_lng));
+    } else { d._dist = 99999; }
+  });
+  allDeals.sort(function(a, b) { return (a._dist || 99999) - (b._dist || 99999); });
   renderDeals();
 }
 
@@ -1448,12 +1507,32 @@ async function checkoutCart() {
   getCart();
   if (!_cart.length) { showToast('Warenkorb ist leer', true); return; }
   var s = sessionGet();
-  var buyerName = s ? s.name : prompt('Dein Name:');
-  var buyerEmail = s ? s.email : prompt('Deine Email:');
-  if (!buyerName || !buyerEmail) { showToast('Name und Email sind Pflichtfelder', true); return; }
+  var buyerName, buyerEmail;
+  if (s && s.name && s.email) {
+    buyerName = s.name;
+    buyerEmail = s.email;
+  } else {
+    // Use buy modal fields if user filled them for a previous purchase
+    var nameEl = document.getElementById('buyName');
+    var emailEl = document.getElementById('buyEmail');
+    buyerName = nameEl ? nameEl.value.trim() : '';
+    buyerEmail = emailEl ? emailEl.value.trim() : '';
+  }
+  if (!buyerName || !buyerEmail) {
+    // Open a cart checkout dialog
+    var name = prompt(shopT('deinName') || 'Dein Name:');
+    if (!name) return;
+    var email = prompt(shopT('deineEmail') || 'Deine Email:');
+    if (!email) return;
+    buyerName = name;
+    buyerEmail = email;
+  }
+  
+  var checkoutBtn = document.querySelector('#cartBody button[onclick*="checkoutCart"]');
+  if (!checkoutBtn) { var btns = document.querySelectorAll('#cartBody button'); if (btns.length) checkoutBtn = btns[btns.length - 1]; }
   
   try {
-    showToast('Wird verarbeitet...');
+    if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.textContent = '⏳ Wird verarbeitet...'; }
     var r = await api({
       action: 'createCartCheckout',
       items: _cart.map(function(c) { return { deal_id: c.deal_id, quantity: c.quantity }; }),
@@ -1467,8 +1546,12 @@ async function checkoutCart() {
       window.location.href = r.checkout_url;
     } else {
       showToast(r.error || 'Checkout fehlgeschlagen', true);
+      if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Jetzt bezahlen'; }
     }
-  } catch(e) { showToast('Verbindungsfehler', true); }
+  } catch(e) { 
+    showToast('Verbindungsfehler', true);
+    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Jetzt bezahlen'; }
+  }
 }
 
 // Init cart on load
