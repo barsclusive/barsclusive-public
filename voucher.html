@@ -81,6 +81,11 @@
       <div class="value" id="vPrice"></div>
     </div>
 
+    <div class="voucher-field" id="vMwstWrap" style="display:none">
+      <div class="label" data-i18n="lMwst">MWST</div>
+      <div class="value" id="vMwst" style="font-size:13px"></div>
+    </div>
+
     <div class="voucher-field">
       <div class="label" data-i18n="lStatus">Status</div>
       <div class="value" id="vStatus"></div>
@@ -93,12 +98,7 @@
 
     <div class="qr-wrap" id="qrCode"></div>
 
-    <div id="shareRow" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0">
-      <button onclick="copyVoucherLink()" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">📋 <span data-i18n="sLink">Link kopieren</span></button>
-      <button onclick="shareVoucher('whatsapp')" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">💬 WhatsApp</button>
-      <button onclick="shareVoucher('telegram')" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">✈️ Telegram</button>
-      <button onclick="shareVoucher('facebook')" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">📘 Facebook</button>
-    </div>
+    <div id="shareRow" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0"></div>
 
     <div class="voucher-info">
       💡 Zeige diesen Gutschein dem Personal in der Bar. Der Code kann gescannt oder manuell eingegeben werden.
@@ -145,6 +145,14 @@ async function loadVoucher() {
     document.getElementById('vPrice').textContent = Number(v.price_paid).toFixed(2) + ' CHF';
     document.getElementById('vCode').textContent = v.code;
 
+    // MWST info (if bar is MWST-pflichtig and not a Pauschalgutschein)
+    if (v.bar_mwst_liable && v.bar_mwst_number && Number(v.price_paid) > 2.50) {
+      var mwstRate = 8.1;
+      var mwstAmount = (Number(v.price_paid) * mwstRate / (100 + mwstRate));
+      document.getElementById('vMwstWrap').style.display = 'block';
+      document.getElementById('vMwst').textContent = 'inkl. ' + mwstRate + '% MWST (CHF ' + mwstAmount.toFixed(2) + ') · UID: ' + v.bar_mwst_number;
+    }
+
     const statusEl = document.getElementById('vStatus');
     statusEl.textContent = STATUS_MAP[v.status] || v.status;
     statusEl.className = 'value ' + (STATUS_CLASS[v.status] || '');
@@ -177,6 +185,9 @@ async function loadVoucher() {
 
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('voucherCard').style.display = 'block';
+
+    // Build share buttons dynamically
+    buildShareButtons();
 
   } catch (e) {
     showError('Verbindungsfehler. Bitte erneut versuchen.');
@@ -218,6 +229,34 @@ function showToast(msg) {
   setTimeout(function() { t.remove(); }, 2500);
 }
 
+function buildShareButtons() {
+  var row = document.getElementById('shareRow');
+  if (!row) return;
+  row.innerHTML = '';
+  var btnStyle = 'padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px';
+  var items = [
+    ['📋 Link kopieren', function() { copyVoucherLink(); }],
+    ['💬 WhatsApp', function() { shareVoucher('whatsapp'); }],
+    ['📘 Facebook', function() { shareVoucher('facebook'); }],
+    ['✈️ Telegram', function() { shareVoucher('telegram'); }],
+    ['📸 Instagram', function() { copyVoucherLink(); showToast('Link kopiert – in Instagram einfügen!'); }],
+    ['🎵 TikTok', function() { copyVoucherLink(); showToast('Link kopiert – in TikTok einfügen!'); }]
+  ];
+  if (navigator.share) {
+    items.unshift(['📱 Teilen', function() {
+      var title = document.getElementById('vDealTitle') ? document.getElementById('vDealTitle').textContent : 'BarSclusive Gutschein';
+      navigator.share({ title: title, url: window.location.href }).catch(function() {});
+    }]);
+  }
+  items.forEach(function(s) {
+    var btn = document.createElement('button');
+    btn.style.cssText = btnStyle;
+    btn.textContent = s[0];
+    btn.addEventListener('click', s[1]);
+    row.appendChild(btn);
+  });
+}
+
 loadVoucher();
 </script>
 <!-- FOOTER -->
@@ -231,10 +270,10 @@ loadVoucher();
 </div>
 <script>
 var _T={
-de:{lDeal:'Deal',lMin:'Mindestbestellung',lApplies:'Gilt für',lPaid:'Bezahlt',lStatus:'Status',hint:'Zeige diesen Code in der Bar vor',loading:'Gutschein wird geladen...',notFound:'Gutschein nicht gefunden',sLink:'Link kopieren'},
-en:{lDeal:'Deal',lMin:'Minimum order',lApplies:'Applies to',lPaid:'Paid',lStatus:'Status',hint:'Show this code at the bar',loading:'Loading voucher...',notFound:'Voucher not found',sLink:'Copy link'},
-it:{lDeal:'Offerta',lMin:'Ordine minimo',lApplies:'Valido per',lPaid:'Pagato',lStatus:'Stato',hint:'Mostra questo codice al bar',loading:'Caricamento voucher...',notFound:'Voucher non trovato',sLink:'Copia link'},
-fr:{lDeal:'Offre',lMin:'Commande minimum',lApplies:'Valable pour',lPaid:'Payé',lStatus:'Statut',hint:'Montre ce code au bar',loading:'Chargement du bon...',notFound:'Bon non trouvé',sLink:'Copier le lien'}
+de:{lDeal:'Deal',lMin:'Mindestbestellung',lApplies:'Gilt für',lPaid:'Bezahlt',lMwst:'MWST',lStatus:'Status',hint:'Zeige diesen Code in der Bar vor',loading:'Gutschein wird geladen...',notFound:'Gutschein nicht gefunden',sLink:'Link kopieren'},
+en:{lDeal:'Deal',lMin:'Minimum order',lApplies:'Applies to',lPaid:'Paid',lMwst:'VAT',lStatus:'Status',hint:'Show this code at the bar',loading:'Loading voucher...',notFound:'Voucher not found',sLink:'Copy link'},
+it:{lDeal:'Offerta',lMin:'Ordine minimo',lApplies:'Valido per',lPaid:'Pagato',lMwst:'IVA',lStatus:'Stato',hint:'Mostra questo codice al bar',loading:'Caricamento voucher...',notFound:'Voucher non trovato',sLink:'Copia link'},
+fr:{lDeal:'Offre',lMin:'Commande minimum',lApplies:'Valable pour',lPaid:'Payé',lMwst:'TVA',lStatus:'Statut',hint:'Montre ce code au bar',loading:'Chargement du bon...',notFound:'Bon non trouvé',sLink:'Copier le lien'}
 };
 function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=_T[l]||_T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
 (function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
