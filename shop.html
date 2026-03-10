@@ -14,7 +14,7 @@
   -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
-                 script-src 'self';
+                 script-src 'self' 'unsafe-inline';
                  style-src 'self' 'unsafe-inline';
                  connect-src https://script.google.com https://script.googleusercontent.com;
                  img-src 'self' data: https:;
@@ -174,6 +174,7 @@
     .add-cart-btn{background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;margin-left:8px}
     .add-cart-btn:hover{background:#FF3366;border-color:#FF3366}
   </style>
+  <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
 
@@ -199,7 +200,7 @@
         <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
         <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">FR</button>
       </div>
-      <button class="cart-btn" onclick="toggleCartPanel()">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
+      <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
     <div class="user-menu">
         <button class="user-button" id="userBtn">👤 Login</button>
         <div class="user-dropdown" id="userDropdown">
@@ -265,8 +266,8 @@
   <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-size:13px;color:#ccc">
     <span>📍</span>
     <span>Deals in deiner Nähe anzeigen?</span>
-    <button onclick="requestGeoPermission()" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">Standort freigeben</button>
-    <button onclick="dismissGeoBanner()" style="background:none;color:#666;border:none;cursor:pointer;font-size:16px">✕</button>
+    <button id="geoPermBtn" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">Standort freigeben</button>
+    <button id="geoDismissBtn" style="background:none;color:#666;border:none;cursor:pointer;font-size:16px">✕</button>
   </div>
 </div>
 <div id="dealsLoading" class="deals-grid">
@@ -431,7 +432,7 @@
 <div id="dealDetailModal" class="deal-modal">
   <div class="deal-modal-box">
     <div class="deal-modal-img" id="ddImg">
-      <button class="deal-modal-close" onclick="closeDealDetail()">✕</button>
+      <button class="deal-modal-close" id="dealDetailCloseBtn">✕</button>
     </div>
     <div class="deal-modal-body">
       <div class="deal-modal-title" id="ddTitle"></div>
@@ -452,10 +453,10 @@
 <div id="cartPanel" class="cart-panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
     <h2 style="font-size:18px">🛒 Warenkorb</h2>
-    <button onclick="toggleCartPanel()" style="background:none;border:none;color:#999;font-size:22px;cursor:pointer">✕</button>
+    <button id="cartCloseBtn" style="background:none;border:none;color:#999;font-size:22px;cursor:pointer">✕</button>
   </div>
   <div id="cartBody"></div>
 </div>
-<div class="cart-overlay" onclick="toggleCartPanel()"></div>
+<div class="cart-overlay" id="cartOverlay"></div>
 </body>
 </html>
