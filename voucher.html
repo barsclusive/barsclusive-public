@@ -92,6 +92,13 @@
 
     <div class="qr-wrap" id="qrCode"></div>
 
+    <div id="shareRow" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0">
+      <button onclick="copyVoucherLink()" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">📋 <span data-i18n="sLink">Link kopieren</span></button>
+      <button onclick="shareVoucher('whatsapp')" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">💬 WhatsApp</button>
+      <button onclick="shareVoucher('telegram')" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">✈️ Telegram</button>
+      <button onclick="shareVoucher('facebook')" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px">📘 Facebook</button>
+    </div>
+
     <div class="voucher-info">
       💡 Zeige diesen Gutschein dem Personal in der Bar. Der Code kann gescannt oder manuell eingegeben werden.
     </div>
@@ -181,6 +188,35 @@ function showError(msg) {
   document.getElementById('errorMsg').textContent = msg;
 }
 
+function copyVoucherLink() {
+  var url = window.location.href;
+  navigator.clipboard.writeText(url).then(function() {
+    showToast('Link kopiert!');
+  }).catch(function() {
+    showToast('Link: ' + url);
+  });
+}
+
+function shareVoucher(platform) {
+  var url = encodeURIComponent(window.location.href);
+  var title = document.getElementById('vDealTitle') ? document.getElementById('vDealTitle').textContent : 'BarSclusive Gutschein';
+  var bar = document.getElementById('vBarName') ? document.getElementById('vBarName').textContent : '';
+  var text = encodeURIComponent(title + (bar ? ' bei ' + bar : '') + ' - BarSclusive Gutschein');
+  var link = '';
+  if (platform === 'whatsapp') link = 'https://wa.me/?text=' + text + '%20' + url;
+  else if (platform === 'telegram') link = 'https://t.me/share/url?url=' + url + '&text=' + text;
+  else if (platform === 'facebook') link = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+  if (link) window.open(link, '_blank');
+}
+
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999;animation:fadeIn .3s';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 2500);
+}
+
 loadVoucher();
 </script>
 <!-- FOOTER -->
@@ -194,10 +230,10 @@ loadVoucher();
 </div>
 <script>
 var _T={
-de:{lDeal:'Deal',lMin:'Mindestbestellung',lApplies:'Gilt für',lPaid:'Bezahlt',lStatus:'Status',hint:'Zeige diesen Code in der Bar vor',loading:'Gutschein wird geladen...',notFound:'Gutschein nicht gefunden'},
-en:{lDeal:'Deal',lMin:'Minimum order',lApplies:'Applies to',lPaid:'Paid',lStatus:'Status',hint:'Show this code at the bar',loading:'Loading voucher...',notFound:'Voucher not found'},
-it:{lDeal:'Offerta',lMin:'Ordine minimo',lApplies:'Valido per',lPaid:'Pagato',lStatus:'Stato',hint:'Mostra questo codice al bar',loading:'Caricamento voucher...',notFound:'Voucher non trovato'},
-fr:{lDeal:'Offre',lMin:'Commande minimum',lApplies:'Valable pour',lPaid:'Payé',lStatus:'Statut',hint:'Montre ce code au bar',loading:'Chargement du bon...',notFound:'Bon non trouvé'}
+de:{lDeal:'Deal',lMin:'Mindestbestellung',lApplies:'Gilt für',lPaid:'Bezahlt',lStatus:'Status',hint:'Zeige diesen Code in der Bar vor',loading:'Gutschein wird geladen...',notFound:'Gutschein nicht gefunden',sLink:'Link kopieren'},
+en:{lDeal:'Deal',lMin:'Minimum order',lApplies:'Applies to',lPaid:'Paid',lStatus:'Status',hint:'Show this code at the bar',loading:'Loading voucher...',notFound:'Voucher not found',sLink:'Copy link'},
+it:{lDeal:'Offerta',lMin:'Ordine minimo',lApplies:'Valido per',lPaid:'Pagato',lStatus:'Stato',hint:'Mostra questo codice al bar',loading:'Caricamento voucher...',notFound:'Voucher non trovato',sLink:'Copia link'},
+fr:{lDeal:'Offre',lMin:'Commande minimum',lApplies:'Valable pour',lPaid:'Payé',lStatus:'Statut',hint:'Montre ce code au bar',loading:'Chargement du bon...',notFound:'Bon non trouvé',sLink:'Copier le lien'}
 };
 function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=_T[l]||_T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
 (function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
