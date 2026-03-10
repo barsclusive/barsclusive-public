@@ -150,19 +150,26 @@ function switchTab(name, btn) {
 }
 
 // =============================================
+// ADMIN DATA CACHE - skip reload if already loaded
+// =============================================
+var _adminLoaded = { orders:false, vouchers:false, bars:false, deals:false, customers:false, stats:false, payout:false };
+
+// =============================================
 // ORDERS
 // =============================================
 var _ordersData = [], _orderSort = { col:'created_at', dir:-1 }, _orderFilters = {};
 
-async function loadOrders() {
+async function loadOrders(force) {
   if (!hasSession()) { doLogout(); return; }
+  if (!force && _adminLoaded.orders && _ordersData.length > 0) { renderOrders(); return; }
   try {
     var [oR, vR] = await Promise.all([api({action:'getOrders',token:_token}), api({action:'getVouchers',token:_token})]);
     if (!oR.success) { showToast(oR.error, true); return; }
     var vMap = {};
     if (vR.success && vR.vouchers) vR.vouchers.forEach(function(v) { vMap[v.id] = v; });
     _ordersData = (oR.orders||[]).map(function(o) { o._voucher = o.voucher_id ? vMap[o.voucher_id] : null; return o; });
-    _orderFilters = {};
+    if (force) _orderFilters = {};
+    _adminLoaded.orders = true;
     renderOrders();
   } catch(e) { showToast('Ladefehler', true); }
 }
@@ -234,21 +241,23 @@ function renderOrders() {
   tbody.querySelectorAll('[data-refund-oid]').forEach(function(b){b.addEventListener('click',function(){processRefund(this.getAttribute('data-refund-oid'));});});
   tbody.querySelectorAll('[data-del-oid]').forEach(function(b){b.addEventListener('click',function(){deleteOrder(this.getAttribute('data-del-oid'));});});
 }
-async function deleteOrder(id) { if(!confirm('Bestellung löschen?'))return; try{var r=await api({action:'deleteOrder',token:_token,order_id:id});if(r.success){showToast('Gelöscht');loadOrders();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);} }
-async function processRefund(id) { if(!confirm('Rückerstattung durchführen? Kunde erhält Email.'))return; try{var r=await api({action:'processRefund',token:_token,order_id:id});if(r.success){showToast('✅ Erstattet');loadOrders();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);} }
+async function deleteOrder(id) { if(!confirm('Bestellung löschen?'))return; try{var r=await api({action:'deleteOrder',token:_token,order_id:id});if(r.success){showToast('Gelöscht');_adminLoaded.orders=false;_statsData=null;loadOrders(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);} }
+async function processRefund(id) { if(!confirm('Rückerstattung durchführen? Kunde erhält Email.'))return; try{var r=await api({action:'processRefund',token:_token,order_id:id});if(r.success){showToast('✅ Erstattet');_adminLoaded.orders=false;_adminLoaded.vouchers=false;_statsData=null;_payoutData=null;loadOrders(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);} }
 
 // =============================================
 // VOUCHERS (with buyer_name + buyer_email)
 // =============================================
 var _vouchersData=[], _voucherSort={col:'created_at',dir:-1}, _voucherFilters={};
 
-async function loadVouchers() {
+async function loadVouchers(force) {
   if (!hasSession()) { doLogout(); return; }
+  if (!force && _adminLoaded.vouchers && _vouchersData.length > 0) { renderVouchers(); return; }
   try {
     var r = await api({action:'getVouchers',token:_token});
     if (!r.success) { showToast(r.error,true); return; }
     _vouchersData = r.vouchers||[];
-    _voucherFilters = {};
+    if (force) _voucherFilters = {};
+    _adminLoaded.vouchers = true;
     renderVouchers();
   } catch(e) { showToast('Ladefehler',true); }
 }
@@ -325,9 +334,9 @@ function renderVouchers() {
   tbody.querySelectorAll('[data-refund-vid]').forEach(function(b){b.addEventListener('click',function(){refundVoucher(this.getAttribute('data-refund-vid'),this.getAttribute('data-refund-code'));});});
   tbody.querySelectorAll('[data-del-vid]').forEach(function(b){b.addEventListener('click',function(){deleteVoucher(this.getAttribute('data-del-vid'));});});
 }
-async function markVoucherPaid(id){try{var r=await api({action:'markVoucherPaid',token:_token,voucher_id:id});if(r.success){showToast('✅ Markiert');loadVouchers();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
-async function deleteVoucher(id){if(!confirm('Gutschein löschen?'))return;try{var r=await api({action:'deleteVoucher',token:_token,voucher_id:id});if(r.success){showToast('Gelöscht');loadVouchers();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
-async function refundVoucher(id,code){if(!confirm('Gutschein '+(code||'')+' erstatten? Kunde wird per Email benachrichtigt.'))return;try{var r=await api({action:'refundVoucher',token:_token,voucher_id:id});if(r.success){showToast('✅ Erstattet');loadVouchers();loadOrders();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
+async function markVoucherPaid(id){try{var r=await api({action:'markVoucherPaid',token:_token,voucher_id:id});if(r.success){showToast('✅ Markiert');_adminLoaded.vouchers=false;_statsData=null;_payoutData=null;loadVouchers(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
+async function deleteVoucher(id){if(!confirm('Gutschein löschen?'))return;try{var r=await api({action:'deleteVoucher',token:_token,voucher_id:id});if(r.success){showToast('Gelöscht');_adminLoaded.vouchers=false;_statsData=null;_payoutData=null;loadVouchers(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
+async function refundVoucher(id,code){if(!confirm('Gutschein '+(code||'')+' erstatten? Kunde wird per Email benachrichtigt.'))return;try{var r=await api({action:'refundVoucher',token:_token,voucher_id:id});if(r.success){showToast('✅ Erstattet');_adminLoaded.vouchers=false;_adminLoaded.orders=false;_statsData=null;_payoutData=null;loadVouchers(true);loadOrders(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
 
 // =============================================
 // PAYOUT TAB (NEW)
@@ -335,8 +344,9 @@ async function refundVoucher(id,code){if(!confirm('Gutschein '+(code||'')+' erst
 var _payoutData = null;
 var _payoutTimeFilter = 'all';
 
-async function loadPayout() {
+async function loadPayout(force) {
   if (!hasSession()) { doLogout(); return; }
+  if (!force && _payoutData) { renderPayout(); return; }
   try {
     var [vR, bR] = await Promise.all([
       api({action:'getVouchers',token:_token}),
@@ -494,7 +504,7 @@ async function payoutBar(barId, voucherIds) {
     var body = { action:'payoutBar', token:_token, bar_id:barId };
     if (voucherIds) body.voucher_ids = voucherIds;
     var r = await api(body);
-    if (r.success) { showToast('✅ '+r.message); loadPayout(); }
+    if (r.success) { showToast('✅ '+r.message);_payoutData=null;_adminLoaded.vouchers=false;_statsData=null;loadPayout(true); }
     else showToast(r.error||'Fehler', true);
   } catch(e) { showToast('Fehler',true); }
 }
@@ -502,11 +512,13 @@ async function payoutBar(barId, voucherIds) {
 // =============================================
 // BARS
 // =============================================
-async function loadBars() {
+async function loadBars(force) {
   if (!hasSession()) { doLogout(); return; }
+  if (!force && _adminLoaded.bars) { return; }
   try {
     var r = await api({action:'getBars',token:_token});
     if (!r.success) { showToast(r.error,true); return; }
+    _adminLoaded.bars = true;
     renderBars(r.bars);
   } catch(e) { showToast('Ladefehler',true); }
 }
@@ -564,13 +576,14 @@ async function loadBarMiniStats(barId) {
 }
 
 async function updateCommission(barId,rate){try{var r=await api({action:'updateBarCommission',token:_token,bar_id:barId,commission_rate:rate});if(r.success)showToast('✅ Provision gespeichert');else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
-async function updateBarStatus(barId,status){try{var r=await api({action:'updateBarStatus',token:_token,bar_id:barId,status:status});if(r.success){showToast('✅ Status geändert');if(status==='active'){try{await api({action:'sendBarActivationEmail',token:_token,bar_id:barId});}catch(e){}}loadBars();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
-async function deleteBar(barId,name){if(!confirm('Bar "'+name+'" löschen?'))return;try{var r=await api({action:'deleteBar',token:_token,bar_id:barId});if(r.success){showToast('✅ Gelöscht');loadBars();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
+async function updateBarStatus(barId,status){try{var r=await api({action:'updateBarStatus',token:_token,bar_id:barId,status:status});if(r.success){showToast('✅ Status geändert');if(status==='active'){try{await api({action:'sendBarActivationEmail',token:_token,bar_id:barId});}catch(e){}}_adminLoaded.bars=false;loadBars(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
+async function deleteBar(barId,name){if(!confirm('Bar "'+name+'" löschen?'))return;try{var r=await api({action:'deleteBar',token:_token,bar_id:barId});if(r.success){showToast('✅ Gelöscht');_adminLoaded.bars=false;loadBars(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
 
 // =============================================
 // DEALS
 // =============================================
-async function loadDeals(){if(!hasSession()){doLogout();return;}try{var r=await api({action:'getAdminDeals',token:_token});if(!r.success){showToast(r.error,true);return;}renderDeals(r.deals);}catch(e){showToast('Ladefehler',true);}}
+var _allDealsAdmin = [];
+async function loadDeals(force){if(!hasSession()){doLogout();return;}if(!force&&_adminLoaded.deals&&_allDealsAdmin.length>0){renderDeals(_allDealsAdmin);return;}try{var r=await api({action:'getAdminDeals',token:_token});if(!r.success){showToast(r.error,true);return;}_allDealsAdmin=r.deals||[];_adminLoaded.deals=true;renderDeals(_allDealsAdmin);}catch(e){showToast('Ladefehler',true);}}
 function renderDeals(deals){
   var tbody=document.getElementById('dealsBody');tbody.innerHTML='';
   if(!deals.length){tbody.innerHTML='<tr><td colspan="6" class="no-data">'+t('noDeals')+'</td></tr>';return;}
@@ -587,16 +600,17 @@ function renderDeals(deals){
     tbody.appendChild(tr);
   });
 }
-async function adminDeleteDeal(id,title){if(!confirm('Deal "'+(title||'')+'" löschen?'))return;try{var r=await api({action:'adminDeleteDeal',token:_token,deal_id:id});if(r.success){showToast('Gelöscht');loadDeals();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
-async function adminToggleDeal(id,active){try{var r=await api({action:'updateDealStatus',token:_token,deal_id:id,active:active});if(r.success){showToast(active?'✅ Aktiviert':'⏸ Deaktiviert');loadDeals();}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
+async function adminDeleteDeal(id,title){if(!confirm('Deal "'+(title||'')+'" löschen?'))return;try{var r=await api({action:'adminDeleteDeal',token:_token,deal_id:id});if(r.success){showToast('Gelöscht');_adminLoaded.deals=false;_statsData=null;loadDeals(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
+async function adminToggleDeal(id,active){try{var r=await api({action:'updateDealStatus',token:_token,deal_id:id,active:active});if(r.success){showToast(active?'✅ Aktiviert':'⏸ Deaktiviert');_adminLoaded.deals=false;_statsData=null;loadDeals(true);}else showToast(r.error,true);}catch(e){showToast('Fehler',true);}}
 
 // =============================================
 // STATS (with per-bar filter + detail table)
 // =============================================
 var _statsFilter='all', _statsData=null, _statsBarId='';
 
-async function loadStats() {
+async function loadStats(force) {
   if (!hasSession()) { doLogout(); return; }
+  if (!force && _statsData) { renderStats(_statsFilter); return; }
   try {
     var [vR,oR,bR,dR] = await Promise.all([
       api({action:'getVouchers',token:_token}),
@@ -757,7 +771,7 @@ function renderStats(period) {
 // CUSTOMERS
 // =============================================
 var _allCustomers=[];
-async function loadCustomers(){if(!hasSession()){doLogout();return;}try{var r=await api({action:'getCustomers',token:_token});if(!r.success){showToast(r.error,true);return;}_allCustomers=r.customers||[];renderCustomers(_allCustomers);}catch(e){showToast('Ladefehler',true);}}
+async function loadCustomers(force){if(!hasSession()){doLogout();return;}if(!force&&_adminLoaded.customers&&_allCustomers.length>0){renderCustomers(_allCustomers);return;}try{var r=await api({action:'getCustomers',token:_token});if(!r.success){showToast(r.error,true);return;}_allCustomers=r.customers||[];_adminLoaded.customers=true;renderCustomers(_allCustomers);}catch(e){showToast('Ladefehler',true);}}
 function renderCustomers(customers){var tbody=document.getElementById('customersBody');tbody.innerHTML='';if(!customers.length){tbody.innerHTML='<tr><td colspan="3" class="no-data">Keine Kund:innen</td></tr>';return;}customers.forEach(function(c){var tr=document.createElement('tr');var d=c.created_at?new Date(c.created_at):null;tr.append(td(c.name||'-'),td(c.email),td(d?d.toLocaleDateString('de-CH'):'-'));tbody.appendChild(tr);});}
 
 // =============================================
