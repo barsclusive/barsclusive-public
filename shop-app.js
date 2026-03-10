@@ -9,35 +9,43 @@ const BACKEND_URL  = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlsc
 // =============================================
 // SESSION — in-memory only
 // =============================================
-let _session = null; // { token, name, email, role, expiresAt }
+let _session = null;
 
 function sessionSet(token, name, email, role) {
-  _session = {
-    token,
-    name,
-    email,
-    role,
-    expiresAt: Date.now() + 90 * 60 * 1000
-  };
+  _session = { token, name, email, role, expiresAt: Date.now() + 90 * 60 * 1000 };
+  try { localStorage.setItem('barsclusive_customer_session', JSON.stringify(_session)); } catch(e) {}
   document.getElementById('userBtn').textContent = '👤 ' + escHtml(name);
   document.getElementById('btnOrders').style.display = 'block';
   var bf = document.getElementById('btnFavorites'); if(bf) bf.style.display = 'block';
 }
 
 function sessionGet() {
-  if (!_session) return null;
-  if (Date.now() > _session.expiresAt) { sessionClear(); return null; }
+  if (!_session) {
+    try { var s = localStorage.getItem('barsclusive_customer_session'); if (s) _session = JSON.parse(s); } catch(e) {}
+  }
+  if (!_session || Date.now() > _session.expiresAt) { sessionClear(); return null; }
   return _session;
 }
 
 function sessionClear() {
   _session = null;
+  try { localStorage.removeItem('barsclusive_customer_session'); } catch(e) {}
   document.getElementById('userBtn').textContent = '👤 Login';
   document.getElementById('btnOrders').style.display = 'none';
   var bf2 = document.getElementById('btnFavorites'); if(bf2) bf2.style.display = 'none';
   _favorites = [];
   document.getElementById('userDropdown').classList.remove('show');
 }
+
+// Restore session on page load
+window.addEventListener('load', function() {
+  var s = sessionGet();
+  if (s) {
+    document.getElementById('userBtn').textContent = '👤 ' + escHtml(s.name);
+    document.getElementById('btnOrders').style.display = 'block';
+    var bf = document.getElementById('btnFavorites'); if(bf) bf.style.display = 'block';
+  }
+});
 
 // =============================================
 // XSS — escape all untrusted data before DOM insertion
@@ -102,9 +110,10 @@ function clearLocation() {
 }
 
 function attachDistances() {
-  allDeals.forEach(d => {
-    if (d.bar_lat && d.bar_lng && userLocation) {
-      d._dist = haversine(userLocation.lat, userLocation.lng, d.bar_lat, d.bar_lng);
+  if (!_userLat || !_userLng) return;
+  allDeals.forEach(function(d) {
+    if (d.bar_lat && d.bar_lng && Number(d.bar_lat) && Number(d.bar_lng)) {
+      d._dist = haversine(_userLat, _userLng, Number(d.bar_lat), Number(d.bar_lng));
     }
   });
 }
@@ -350,10 +359,10 @@ function buildDealCard(deal) {
     b.textContent = (CAT_EMOJI[mainCat] || '') + ' ' + (CAT_NAME[mainCat] || mainCat);
     imgDiv.appendChild(b);
   }
-  if (deal._dist !== undefined) {
+  if (deal._dist !== undefined && deal._dist < 200) {
     const b = document.createElement('div');
     b.className = 'badge-dist';
-    b.textContent = deal._dist.toFixed(1) + ' km';
+    b.textContent = deal._dist < 1 ? (deal._dist * 1000).toFixed(0) + ' m' : deal._dist.toFixed(1) + ' km';
     imgDiv.appendChild(b);
   }
 
@@ -718,6 +727,8 @@ async function doRegister() {
 
   if (!name || !email || !password) { showToast('Alle Felder ausfüllen', true); return; }
   if (password.length < 8)           { showToast('Passwort mind. 8 Zeichen', true); return; }
+  var passConfirm = document.getElementById('regPasswordConfirm') ? document.getElementById('regPasswordConfirm').value : password;
+  if (password !== passConfirm)      { showToast('Passwörter stimmen nicht überein', true); return; }
   if (!consent)                       { showToast('Datenschutz akzeptieren', true); return; }
 
   try {
@@ -1025,6 +1036,7 @@ const SHOP_TRANSLATIONS = {
     remaining:'verbleibend', anmelden:'Anmelden', registrieren:'Registrieren',
     fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden', searchBarDeal:'Bar oder Deal suchen...', searchPLZ:'PLZ oder Ort...',
     gutscheinAnzeigen:'Anzeigen', linkKopieren:'Link kopieren', linkKopiert:'Link kopiert!',
+    warenkorbLeer:'Warenkorb ist leer', jetztBezahlen:'Jetzt bezahlen', total:'Total', deinName:'Dein Name:', deineEmail:'Deine Email:', pwBestaetigen:'Passwort bestätigen',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -1048,6 +1060,7 @@ const SHOP_TRANSLATIONS = {
     remaining:'remaining', anmelden:'Login', registrieren:'Register',
     fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal', loginSubmitBtn:'Login', cancelLoginBtn:'Cancel', suchenBtn:'Search', anmeldenTitle:'Login', searchBarDeal:'Search bar or deal...', searchPLZ:'ZIP or city...',
     gutscheinAnzeigen:'View', linkKopieren:'Copy link', linkKopiert:'Link copied!',
+    warenkorbLeer:'Cart is empty', jetztBezahlen:'Pay now', total:'Total', deinName:'Your name:', deineEmail:'Your email:', pwBestaetigen:'Confirm password',
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -1070,6 +1083,7 @@ const SHOP_TRANSLATIONS = {
     remaining:'rimanenti', anmelden:'Accedi', registrieren:'Registrati',
     fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi', searchBarDeal:'Cerca bar o offerta...', searchPLZ:'CAP o città...',
     gutscheinAnzeigen:'Visualizza', linkKopieren:'Copia link', linkKopiert:'Link copiato!',
+    warenkorbLeer:'Carrello vuoto', jetztBezahlen:'Paga ora', total:'Totale', deinName:'Il tuo nome:', deineEmail:'La tua email:', pwBestaetigen:'Conferma password',
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -1457,11 +1471,11 @@ function requestGeoPermission() {
 function sortDealsByDistance() {
   if (!_userLat || !_userLng) return;
   allDeals.forEach(function(d) {
-    if (d.bar_lat && d.bar_lng) {
+    if (d.bar_lat && d.bar_lng && Number(d.bar_lat) && Number(d.bar_lng)) {
       d._dist = haversine(_userLat, _userLng, Number(d.bar_lat), Number(d.bar_lng));
-    } else { d._dist = 99999; }
+    }
   });
-  allDeals.sort(function(a, b) { return (a._dist || 99999) - (b._dist || 99999); });
+  allDeals.sort(function(a, b) { return (a._dist || 9999) - (b._dist || 9999); });
   renderDeals();
 }
 
@@ -1528,7 +1542,7 @@ function renderCartPanel() {
   var body = document.getElementById('cartBody');
   if (!body) return;
   getCart();
-  if (!_cart.length) { body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">Warenkorb ist leer</div>'; return; }
+  if (!_cart.length) { body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">' + (shopT('warenkorbLeer') || 'Warenkorb ist leer') + '</div>'; return; }
   body.innerHTML = '';
   _cart.forEach(function(c) {
     var row = document.createElement('div');
@@ -1571,12 +1585,12 @@ function renderCartPanel() {
   
   var totalDiv = document.createElement('div');
   totalDiv.style.cssText = 'padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px';
-  totalDiv.textContent = 'Total: ' + getCartTotal().toFixed(2) + ' CHF';
+  totalDiv.textContent = (shopT('total') || 'Total') + ': ' + getCartTotal().toFixed(2) + ' CHF';
   body.appendChild(totalDiv);
   
   var checkBtn = document.createElement('button');
   checkBtn.id = 'cartCheckoutBtn';
-  checkBtn.textContent = 'Jetzt bezahlen';
+  checkBtn.textContent = shopT('jetztBezahlen') || 'Jetzt bezahlen';
   checkBtn.style.cssText = 'width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px';
   checkBtn.addEventListener('click', checkoutCart);
   body.appendChild(checkBtn);
@@ -1584,7 +1598,7 @@ function renderCartPanel() {
 
 async function checkoutCart() {
   getCart();
-  if (!_cart.length) { showToast('Warenkorb ist leer', true); return; }
+  if (!_cart.length) { showToast(shopT('warenkorbLeer') || 'Warenkorb ist leer', true); return; }
   var s = sessionGet();
   var buyerName, buyerEmail;
   if (s && s.name && s.email) {
@@ -1624,11 +1638,11 @@ async function checkoutCart() {
       window.location.href = r.checkout_url;
     } else {
       showToast(r.error || 'Checkout fehlgeschlagen', true);
-      if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Jetzt bezahlen'; }
+      if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = shopT('jetztBezahlen') || 'Jetzt bezahlen'; }
     }
   } catch(e) { 
     showToast('Verbindungsfehler', true);
-    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = 'Jetzt bezahlen'; }
+    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = shopT('jetztBezahlen') || 'Jetzt bezahlen'; }
   }
 }
 
