@@ -624,29 +624,54 @@ async function loadStats() {
 
 function setStatsFilter(period){
   _statsFilter=period;
-  document.querySelectorAll('.stats-filter-btn').forEach(function(b){b.classList.remove('active');});
-  var btn=document.getElementById('sf_'+period); if(btn)btn.classList.add('active');
+  highlightStatsFilterBtn(period);
   if(_statsData) renderStats(period);
 }
 
+function ensureStatsFilterBar() {
+  var bar = document.getElementById('statsFilterBar');
+  if (!bar || bar.children.length > 0) return;
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center';
+  [['day','Heute'],['week','Woche'],['month','Monat'],['year','Jahr'],['all','Alle']].forEach(function(f) {
+    var btn = document.createElement('button');
+    btn.className = 'stats-filter-btn';
+    btn.dataset.period = f[0];
+    btn.textContent = f[1];
+    btn.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600';
+    btn.addEventListener('click', function() { setStatsFilter(f[0]); });
+    wrap.appendChild(btn);
+  });
+  var fromInp = document.createElement('input'); fromInp.type='date'; fromInp.id='sfFrom';
+  fromInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:5px 10px;border-radius:6px;font-size:12px';
+  wrap.appendChild(fromInp);
+  var span = document.createElement('span'); span.textContent='bis'; span.style.cssText='color:#666;font-size:12px';
+  wrap.appendChild(span);
+  var toInp = document.createElement('input'); toInp.type='date'; toInp.id='sfTo';
+  toInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:5px 10px;border-radius:6px;font-size:12px';
+  wrap.appendChild(toInp);
+  var applyBtn = document.createElement('button'); applyBtn.textContent='Anwenden';
+  applyBtn.style.cssText = 'background:#FF3366;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+  applyBtn.addEventListener('click', setStatsCustomRange);
+  wrap.appendChild(applyBtn);
+  bar.appendChild(wrap);
+}
+
+function highlightStatsFilterBtn(period) {
+  document.querySelectorAll('.stats-filter-btn').forEach(function(b) {
+    if (b.dataset.period === period) { b.style.background='#FF3366'; b.style.color='#fff'; b.style.borderColor='#FF3366'; }
+    else { b.style.background='#222'; b.style.color='#ccc'; b.style.borderColor='#333'; }
+  });
+}
+
 function renderStats(period) {
+  ensureStatsFilterBar();
+  highlightStatsFilterBtn(period);
   var container=document.getElementById('statsGrid');
   container.innerHTML='';
   var detailEl=document.getElementById('statsBarDetail');
   detailEl.innerHTML='';
   var barId=_statsBarId;
-
-  // Filter buttons
-  var filterHtml='<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center">';
-  [['day','Heute'],['week','Woche'],['month','Monat'],['year','Jahr'],['all','Alle']].forEach(function(f){
-    var active=period===f[0]?'background:#FF3366;color:#fff;border-color:#FF3366':'background:#222;color:#ccc;border-color:#333';
-    filterHtml+='<button class="stats-filter-btn" id="sf_'+f[0]+'" onclick="setStatsFilter(\''+f[0]+'\')" style="'+active+';border:1px solid;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600">'+f[1]+'</button>';
-  });
-  filterHtml+='<input type="date" id="sfFrom" style="background:#222;color:#ccc;border:1px solid #333;padding:5px 10px;border-radius:6px;font-size:12px" onchange="setStatsCustomRange()">';
-  filterHtml+='<span style="color:#666;font-size:12px">bis</span>';
-  filterHtml+='<input type="date" id="sfTo" style="background:#222;color:#ccc;border:1px solid #333;padding:5px 10px;border-radius:6px;font-size:12px" onchange="setStatsCustomRange()">';
-  filterHtml+='</div>';
-  var fDiv=document.createElement('div');fDiv.innerHTML=filterHtml;container.appendChild(fDiv);
 
   var cutoff=getFilterDate(period);
   var d=_statsData;
@@ -746,7 +771,7 @@ function showToast(msg,isError){var el=document.getElementById('toast');el.textC
 // INIT
 // =============================================
 document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('btnLogin').addEventListener('click', doAdminLogin);
+  var _loginBtn = document.getElementById('btnLogin'); _loginBtn.addEventListener('click', function() { if (_loginBtn.disabled) return; doAdminLogin(); });
   document.getElementById('adminPass').addEventListener('keydown', function(e) { if (e.key==='Enter') doAdminLogin(); });
   document.getElementById('btnLogout').addEventListener('click', doLogout);
   document.querySelectorAll('[data-tab]').forEach(function(btn) {
@@ -773,10 +798,11 @@ function showStatDetail(label, filterKey) {
   if (!detailEl) return;
   var barId=_statsBarId;
   var cutoff=getFilterDate(_statsFilter);
+  var dateTo=getFilterDateTo(_statsFilter);
   var filtV=_statsData.vouchers;
   var filtO=_statsData.orders;
   if(barId){filtV=filtV.filter(function(v){return String(v.bar_id)===barId;});filtO=filtO.filter(function(o){return String(o.bar_id)===barId;});}
-  if(cutoff){filtV=filtV.filter(function(v){return new Date(v.created_at)>=cutoff;});filtO=filtO.filter(function(o){return new Date(o.created_at)>=cutoff;});}
+  if(cutoff){filtV=filtV.filter(function(v){var d=new Date(v.created_at);return d>=cutoff&&(!dateTo||d<=dateTo);});filtO=filtO.filter(function(o){var d=new Date(o.created_at);return d>=cutoff&&(!dateTo||d<=dateTo);});}
   
   var items=[];
   if(filterKey==='redeemed') items=filtV.filter(function(v){return v.status==='redeemed';});
@@ -812,11 +838,11 @@ function renderStatOrderDetail(el,label,orders){
 function setStatsCustomRange() {
   var from=document.getElementById('sfFrom');
   var to=document.getElementById('sfTo');
-  if(!from||!to||!from.value) return;
+  if(!from||!to||!from.value) { showToast('Bitte Von-Datum wählen', true); return; }
   _statsFilter='custom';
   _customFrom=from.value;
   _customTo=to.value||new Date().toISOString().split('T')[0];
-  document.querySelectorAll('.stats-filter-btn').forEach(function(b){b.classList.remove('active');});
+  highlightStatsFilterBtn('custom');
   if(_statsData) renderStats('custom');
 }
 var _customFrom='',_customTo='';
