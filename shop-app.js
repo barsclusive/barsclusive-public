@@ -451,6 +451,7 @@ function buildDealCard(deal) {
     priceBtn.appendChild(pOld);
   }
   priceBtn.appendChild(favBtn);
+  priceBtn.appendChild(cartBtn);
 
   content.append(title, bar, addrDiv, tsContainer, validity, priceBtn);
   card.append(imgDiv, content);
@@ -615,6 +616,29 @@ function buildOrderCard(o) {
       tgBtn.textContent = '✈️ Telegram';
       tgBtn.addEventListener('click', (function(c, t) { return function() { shareVoucher(c, t, 'telegram'); }; })(vc, o.deal_title || ''));
       actions.appendChild(tgBtn);
+
+      var igBtn = document.createElement('button');
+      igBtn.className = 'share-btn';
+      igBtn.textContent = '📸 Instagram';
+      igBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast('Link kopiert – in Instagram einfügen!'); }; })(vc));
+      actions.appendChild(igBtn);
+
+      var tkBtn = document.createElement('button');
+      tkBtn.className = 'share-btn';
+      tkBtn.textContent = '🎵 TikTok';
+      tkBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast('Link kopiert – in TikTok einfügen!'); }; })(vc));
+      actions.appendChild(tkBtn);
+
+      if (navigator.share) {
+        var nsBtn = document.createElement('button');
+        nsBtn.className = 'share-btn';
+        nsBtn.textContent = '📱 Teilen';
+        nsBtn.addEventListener('click', (function(c, t) { return function() {
+          var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(c);
+          navigator.share({ title: t || 'BarSclusive Gutschein', url: vUrl }).catch(function() {});
+        }; })(vc, o.deal_title || ''));
+        actions.appendChild(nsBtn);
+      }
       box.appendChild(actions);
       card.appendChild(box);
     });
@@ -1300,11 +1324,20 @@ function openDealDetail(deal) {
   var shareText = deal.title + ' bei ' + deal.bar_name + ' - nur ' + Number(deal.deal_price).toFixed(2) + ' CHF!';
   var shareEl = document.getElementById('ddShare');
   shareEl.innerHTML = '';
-  [['📋 Link kopieren', function() { copyDealLink(); }],
-   ['💬 WhatsApp', function() { shareDeal('whatsapp'); }],
-   ['📘 Facebook', function() { shareDeal('facebook'); }],
-   ['✈️ Telegram', function() { shareDeal('telegram'); }]
-  ].forEach(function(s) {
+  var shareItems = [
+    ['📋 Link kopieren', function() { copyDealLink(); }],
+    ['💬 WhatsApp', function() { shareDeal('whatsapp'); }],
+    ['📘 Facebook', function() { shareDeal('facebook'); }],
+    ['✈️ Telegram', function() { shareDeal('telegram'); }],
+    ['📸 Instagram', function() { copyDealLink(); showToast('Link kopiert – jetzt in Instagram Story einfügen!'); }],
+    ['🎵 TikTok', function() { copyDealLink(); showToast('Link kopiert – jetzt in TikTok einfügen!'); }]
+  ];
+  if (navigator.share) {
+    shareItems.unshift(['📱 Teilen', function() {
+      navigator.share({ title: deal.title, text: shareText, url: shareUrl }).catch(function() {});
+    }]);
+  }
+  shareItems.forEach(function(s) {
     var btn = document.createElement('button');
     btn.className = 'share-btn';
     btn.textContent = s[0];
