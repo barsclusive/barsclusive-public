@@ -272,6 +272,8 @@ async function doBarRegister() {
   err.textContent = '';
   if (!name || !city || !address || !zip || !email || !pass || !iban) { err.textContent = 'Alle Pflichtfelder ausfüllen (Name, Stadt, Adresse, PLZ, Email, Passwort, IBAN).'; return; }
   if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
+  var passConfirm = document.getElementById('regBarPassConfirm') ? document.getElementById('regBarPassConfirm').value : pass;
+  if (pass !== passConfirm) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
   if (!consent) { err.textContent = 'Bitte AGB & Datenschutz akzeptieren.'; return; }
   var btn = document.getElementById('btnBarRegister');
   try {
@@ -597,18 +599,51 @@ function openEditModal(deal) {
   document.getElementById('editDealPrice').value    = deal.deal_price || '';
   document.getElementById('editQty').value          = deal.max_quantity || 0;
   document.getElementById('editImageUrl').value     = deal.image_url || '';
-    // Show current image preview if exists
-    var editPreview = document.getElementById('editImagePreview');
-    var editPreviewImg = document.getElementById('editImagePreviewImg');
-    if (editPreview && editPreviewImg && deal.image_url) {
-      var previewUrl = deal.image_url;
-      if (previewUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var pfid = previewUrl.split('/d/')[1]; if (pfid) previewUrl = 'https://drive.google.com/thumbnail?id=' + pfid + '&sz=w400'; }
-      editPreviewImg.src = previewUrl; editPreviewImg.referrerPolicy = 'no-referrer'; editPreview.style.display = 'block';
-    } else if (editPreview) { editPreview.style.display = 'none'; }
-    // Reset file input
-    var editFile = document.getElementById('editImageFile');
-    if (editFile) editFile.value = '';
-  document.getElementById('editActive').checked     = !!deal.active;
+  // Image preview
+  var editPreview = document.getElementById('editImagePreview');
+  var editPreviewImg = document.getElementById('editImagePreviewImg');
+  if (editPreview && editPreviewImg && deal.image_url) {
+    var previewUrl = deal.image_url;
+    if (previewUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var pfid = previewUrl.split('/d/')[1]; if (pfid) previewUrl = 'https://drive.google.com/thumbnail?id=' + pfid + '&sz=w400'; }
+    editPreviewImg.src = previewUrl; editPreviewImg.referrerPolicy = 'no-referrer'; editPreview.style.display = 'block';
+  } else if (editPreview) { editPreview.style.display = 'none'; }
+  var editFile = document.getElementById('editImageFile');
+  if (editFile) editFile.value = '';
+  document.getElementById('editActive').checked = !!deal.active;
+
+  // Validity type
+  var vType = deal.validity_type || 'recurring';
+  var vRecurring = document.getElementById('editVTypeRecurring');
+  var vSingle = document.getElementById('editVTypeSingle');
+  if (vRecurring) vRecurring.checked = (vType === 'recurring');
+  if (vSingle) vSingle.checked = (vType === 'single');
+  var ef1 = document.getElementById('editRecurringFields');
+  var ef2 = document.getElementById('editSingleFields');
+  if (ef1) ef1.style.display = vType === 'recurring' ? 'block' : 'none';
+  if (ef2) ef2.style.display = vType === 'single' ? 'block' : 'none';
+
+  // Weekdays
+  var wds = deal.valid_weekdays || [];
+  document.querySelectorAll('#editWeekdays .wd-btn').forEach(function(b) {
+    b.classList.toggle('selected', wds.indexOf(b.getAttribute('data-wd')) !== -1);
+  });
+
+  // Single date
+  var sd = document.getElementById('editSingleDate');
+  if (sd) sd.value = deal.valid_single_date || '';
+
+  // Time from/to
+  var tf = document.getElementById('editTimeFrom');
+  var tt = document.getElementById('editTimeTo');
+  if (tf) tf.value = deal.valid_from_time || '';
+  if (tt) tt.value = deal.valid_to_time || '';
+
+  // Time slots
+  var ts = deal.time_slots || [];
+  document.querySelectorAll('input[name="editTimeSlot"]').forEach(function(c) {
+    c.checked = ts.indexOf(c.value) !== -1;
+  });
+
   document.getElementById('editModal').classList.add('active');
 }
 
@@ -631,8 +666,14 @@ async function saveEditDeal() {
     original_price: parseFloat(document.getElementById('editOrigPrice').value) || 0,
     deal_price:     price,
     max_quantity:   parseInt(document.getElementById('editQty').value) || 0,
-    image_url:      document.getElementById('editImageUrl').value.trim(), // may be overridden by file upload below
+    image_url:      document.getElementById('editImageUrl').value.trim(),
     active:         document.getElementById('editActive').checked,
+    validity_type:  (document.querySelector('input[name="editValidType"]:checked') || {}).value || 'recurring',
+    valid_weekdays: Array.from(document.querySelectorAll('#editWeekdays .wd-btn.selected')).map(function(b) { return b.getAttribute('data-wd'); }),
+    valid_single_date: (document.getElementById('editSingleDate') || {}).value || '',
+    valid_from_time: (document.getElementById('editTimeFrom') || {}).value || '',
+    valid_to_time:   (document.getElementById('editTimeTo') || {}).value || '',
+    time_slots:     Array.from(document.querySelectorAll('input[name="editTimeSlot"]:checked')).map(function(c) { return c.value; }),
   };
 
   try {
@@ -1129,6 +1170,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // Close modal on backdrop click
   var editModal = document.getElementById('editModal');
   if (editModal) editModal.addEventListener('click', function(e) { if (e.target === this) closeEditModal(); });
+
+  // Edit modal: weekday toggles
+  document.querySelectorAll('#editWeekdays .wd-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { this.classList.toggle('selected'); });
+  });
+  // Edit modal: validity type toggle
+  document.querySelectorAll('input[name="editValidType"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      var isRec = this.value === 'recurring';
+      var ef1 = document.getElementById('editRecurringFields');
+      var ef2 = document.getElementById('editSingleFields');
+      if (ef1) ef1.style.display = isRec ? 'block' : 'none';
+      if (ef2) ef2.style.display = isRec ? 'none' : 'block';
+    });
+  });
 
   // Password reset
   var linkBarForgotPassword = document.getElementById('linkBarForgotPassword');
