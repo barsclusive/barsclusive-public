@@ -4,96 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Impressum – BarSclusive</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#000;color:#fff;min-height:100vh}
     .header{background:#111;padding:18px 24px;border-bottom:1px solid #1f1f1f;display:flex;align-items:center;gap:16px}
     .back{color:#FF3366;text-decoration:none;font-size:14px}
-    .logo{font-size:18px;font-weight:700}
     .container{max-width:800px;margin:40px auto;padding:0 20px}
     h1{font-size:28px;font-weight:700;margin-bottom:30px}
     h2{font-size:18px;font-weight:600;margin:28px 0 12px;color:#FF3366}
     p{color:#ccc;line-height:1.7;margin-bottom:12px;font-size:15px}
     a{color:#FF3366}
-    .footer{text-align:center;padding:40px 20px;color:#555;font-size:13px;margin-top:60px;border-top:1px solid #1a1a1a}
+    .lang-switch{display:flex;gap:6px;margin-left:auto}
+    .lang-switch button{background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px}
+    .lang-switch button.active{border-color:#FF3366;color:#fff}
+    .footer{text-align:center;padding:30px;color:#555;font-size:13px;border-top:1px solid #333;margin-top:40px}
+    .footer a{color:#FF3366;text-decoration:none;margin:0 8px}
   </style>
 </head>
 <body>
 <div class="header">
-  <a href="shop.html" class="back">← Zurück</a>
-    <div style="display:flex;gap:6px;margin-left:auto"><button onclick="setIL('de')" id="iDE" style="background:#222;border:1px solid #FF3366;color:#fff;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">DE</button><button onclick="setIL('en')" id="iEN" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">EN</button><button onclick="setIL('it')" id="iIT" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">IT</button><button onclick="setIL('fr')" id="iFR" style="background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px">FR</button></div>
-  <div class="logo">🎫 BarSclusive</div>
+  <a href="shop.html" class="back" id="backLink">&larr; Zur&uuml;ck</a>
+  <div class="lang-switch" id="langSwitch">
+    <button id="iDE" class="active">DE</button>
+    <button id="iEN">EN</button>
+    <button id="iIT">IT</button>
+    <button id="iFR">FR</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <img src="logo.png" alt="BarSclusive" style="height:60px">
+  </div>
 </div>
-<div class="container">
-  <h1>Impressum</h1>
-
-  <h2>Angaben gemäss Art. 3 ZGB</h2>
-  <p>
-    BarSclusive<br>
-    [Deine Strasse und Hausnummer]<br>
-    [PLZ Ort], Schweiz
+<div class="container" id="content"></div>
+<div class="footer">
+  <p>&copy; 2026 BarSclusive</p>
+  <p style="margin-top:8px">
+    <a href="shop.html" id="fShop">Shop</a>
+    <a href="ueber-uns.html" id="fAbout">&Uuml;ber uns</a>
+    <a href="datenschutz.html" id="fPrivacy">Datenschutz</a>
+    <a href="agb.html" id="fTerms">AGB</a>
+    <a href="kontakt.html" id="fContact">Kontakt</a>
   </p>
-
-  <h2>Kontakt</h2>
-  <p>
-    E-Mail: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>
-  </p>
-
-  <h2>Verantwortlich für den Inhalt</h2>
-  <p>[Dein Vor- und Nachname]</p>
-
-  <h2>Haftungsausschluss</h2>
-  <p>
-    Alle Angaben auf dieser Website wurden sorgfältig geprüft. Wir bemühen uns,
-    dieses Informationsangebot aktuell, inhaltlich richtig und vollständig anzubieten.
-    Dennoch ist das Auftreten von Fehlern nicht völlig auszuschliessen. Eine Haftung
-    oder Garantie für Aktualität, Richtigkeit und Vollständigkeit der zur Verfügung
-    gestellten Informationen kann daher nicht übernommen werden.
-  </p>
-
-  <h2>Urheberrecht</h2>
-  <p>
-    Die auf dieser Website veröffentlichten Inhalte und Werke unterliegen dem
-    schweizerischen Urheberrecht. Jede vom schweizerischen Urheberrecht nicht
-    zugelassene Verwertung bedarf der vorherigen schriftlichen Zustimmung der Autoren.</p>
-
-    <h2 style="margin-top:24px;color:#FF3366">Kontakt</h2>
-    <p>Email: <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a></p>
-
-    <p style="margin-top:30px; color:#666; font-size:13px;">Stand: Januar 2026 | BarSclusive, Basel, Schweiz</p>
-  </div>
-
-  <div style="text-align:center;padding:30px;color:#555;font-size:13px;border-top:1px solid #333;margin-top:40px">
-    <p>&copy; 2026 BarSclusive</p>
-    <p style="margin-top:8px">
-      <a href="shop.html" style="color:#FF3366" id="fShop">Shop</a> &middot;
-      <a href="ueber-uns.html" style="color:#FF3366" id="fAbout">&Uuml;ber uns</a> &middot;
-      <a href="datenschutz.html" style="color:#FF3366" id="fPrivacy">Datenschutz</a> &middot;
-      <a href="agb.html" style="color:#FF3366" id="fTerms">AGB</a>
-    </p>
-  </div>
-
+</div>
 <script>
-var IL={
-  de:{t:"Impressum",b:"\u2190 Zur\u00fcck"},
-  en:{t:"Legal Notice",b:"\u2190 Back"},
-  it:{t:"Impressum",b:"\u2190 Indietro"},
-  fr:{t:"Mentions l\u00e9gales",b:"\u2190 Retour"}
+var T={
+de:{title:'Impressum',back:'\u2190 Zur\u00fcck',fShop:'Shop',fAbout:'\u00dcber uns',fPrivacy:'Datenschutz',fTerms:'AGB',fContact:'Kontakt',
+body:'<h1>Impressum</h1><h2>Angaben gem\u00e4ss Art. 3 ZGB</h2><p>BarSclusive<br>[Deine Strasse und Hausnummer]<br>[PLZ Ort], Schweiz</p><h2>Kontakt</h2><p>E-Mail: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Verantwortlich f\u00fcr den Inhalt</h2><p>[Dein Vor- und Nachname]</p><h2>Haftungsausschluss</h2><p>Alle Angaben auf dieser Website wurden sorgf\u00e4ltig gepr\u00fcft. Wir bem\u00fchen uns, dieses Informationsangebot aktuell, inhaltlich richtig und vollst\u00e4ndig anzubieten. Dennoch ist das Auftreten von Fehlern nicht v\u00f6llig auszuschliessen. Eine Haftung oder Garantie f\u00fcr Aktualit\u00e4t, Richtigkeit und Vollst\u00e4ndigkeit der zur Verf\u00fcgung gestellten Informationen kann daher nicht \u00fcbernommen werden.</p><h2>Urheberrecht</h2><p>Die auf dieser Website ver\u00f6ffentlichten Inhalte und Werke unterliegen dem schweizerischen Urheberrecht. Jede vom schweizerischen Urheberrecht nicht zugelassene Verwertung bedarf der vorherigen schriftlichen Zustimmung der Autoren.</p><p style="margin-top:30px;color:#666;font-size:13px">Stand: Januar 2026 | BarSclusive, Schweiz</p>'},
+en:{title:'Legal Notice',back:'\u2190 Back',fShop:'Shop',fAbout:'About Us',fPrivacy:'Privacy',fTerms:'Terms',fContact:'Contact',
+body:'<h1>Legal Notice</h1><h2>Information according to Art. 3 ZGB</h2><p>BarSclusive<br>[Your Street and Number]<br>[ZIP City], Switzerland</p><h2>Contact</h2><p>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Responsible for Content</h2><p>[Your Full Name]</p><h2>Disclaimer</h2><p>All information on this website has been carefully reviewed. We strive to keep this information current, accurate, and complete. However, errors cannot be entirely ruled out. No liability or guarantee can be assumed for the timeliness, accuracy, and completeness of the information provided.</p><h2>Copyright</h2><p>The content and works published on this website are subject to Swiss copyright law. Any use not permitted under Swiss copyright law requires the prior written consent of the authors.</p><p style="margin-top:30px;color:#666;font-size:13px">Last updated: January 2026 | BarSclusive, Switzerland</p>'},
+it:{title:'Impressum',back:'\u2190 Indietro',fShop:'Shop',fAbout:'Chi siamo',fPrivacy:'Privacy',fTerms:'Condizioni',fContact:'Contatto',
+body:'<h1>Impressum</h1><h2>Informazioni secondo Art. 3 ZGB</h2><p>BarSclusive<br>[Via e Numero]<br>[CAP Citt\u00e0], Svizzera</p><h2>Contatto</h2><p>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Responsabile del contenuto</h2><p>[Nome e Cognome]</p><h2>Esclusione di responsabilit\u00e0</h2><p>Tutte le informazioni su questo sito web sono state verificate con cura. Ci impegniamo a mantenere queste informazioni aggiornate, accurate e complete. Tuttavia, non \u00e8 possibile escludere completamente errori. Non si assume alcuna responsabilit\u00e0 o garanzia per l\'attualit\u00e0, la correttezza e la completezza delle informazioni fornite.</p><h2>Diritti d\'autore</h2><p>I contenuti e le opere pubblicati su questo sito web sono soggetti al diritto d\'autore svizzero. Qualsiasi utilizzo non consentito dalla legge svizzera sul diritto d\'autore richiede il previo consenso scritto degli autori.</p><p style="margin-top:30px;color:#666;font-size:13px">Stato: Gennaio 2026 | BarSclusive, Svizzera</p>'},
+fr:{title:'Mentions l\u00e9gales',back:'\u2190 Retour',fShop:'Shop',fAbout:'\u00c0 propos',fPrivacy:'Confidentialit\u00e9',fTerms:'CGV',fContact:'Contact',
+body:'<h1>Mentions l\u00e9gales</h1><h2>Informations selon Art. 3 CC</h2><p>BarSclusive<br>[Rue et Num\u00e9ro]<br>[NPA Ville], Suisse</p><h2>Contact</h2><p>Email : <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Responsable du contenu</h2><p>[Pr\u00e9nom et Nom]</p><h2>Clause de non-responsabilit\u00e9</h2><p>Toutes les informations de ce site ont \u00e9t\u00e9 soigneusement v\u00e9rifi\u00e9es. Nous nous effor\u00e7ons de maintenir ces informations \u00e0 jour, exactes et compl\u00e8tes. Cependant, des erreurs ne peuvent \u00eatre totalement exclues. Aucune responsabilit\u00e9 ni garantie ne peut \u00eatre assum\u00e9e quant \u00e0 l\'actualit\u00e9, l\'exactitude et l\'exhaustivit\u00e9 des informations fournies.</p><h2>Droit d\'auteur</h2><p>Les contenus et \u0153uvres publi\u00e9s sur ce site sont soumis au droit d\'auteur suisse. Toute utilisation non autoris\u00e9e par la loi suisse sur le droit d\'auteur n\u00e9cessite le consentement \u00e9crit pr\u00e9alable des auteurs.</p><p style="margin-top:30px;color:#666;font-size:13px">Mise \u00e0 jour : Janvier 2026 | BarSclusive, Suisse</p>'}
 };
-function setIL(l){
-  localStorage.setItem("barsclusive_lang",l);
-  ["iDE","iEN","iIT","iFR"].forEach(function(id){
-    var b=document.getElementById(id);
-    if(b){b.style.borderColor="#333";b.style.color="#888";}
-  });
-  var btn=document.getElementById("i"+l.toUpperCase());
-  if(btn){btn.style.borderColor="#FF3366";btn.style.color="#fff";}
-  var t=IL[l]||IL.de;
-  var h=document.querySelector("h1");if(h)h.textContent=t.t;
-  var bk=document.querySelector(".back");if(bk)bk.textContent=t.b;
+function setLang(l){
+  localStorage.setItem('barsclusive_lang',l);
+  var t=T[l]||T.de;
+  document.getElementById('content').innerHTML=t.body;
+  document.getElementById('backLink').textContent=t.back;
+  document.title=t.title+' \u2013 BarSclusive';
+  document.getElementById('fShop').textContent=t.fShop;
+  document.getElementById('fAbout').textContent=t.fAbout;
+  document.getElementById('fPrivacy').textContent=t.fPrivacy;
+  document.getElementById('fTerms').textContent=t.fTerms;
+  document.getElementById('fContact').textContent=t.fContact;
+  document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active');});
+  var btn=document.getElementById('i'+l.toUpperCase());
+  if(btn)btn.classList.add('active');
 }
-var sl=localStorage.getItem("barsclusive_lang")||"de";
-document.addEventListener("DOMContentLoaded",function(){setIL(sl);});
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.lang-switch button').forEach(function(btn){
+    btn.addEventListener('click',function(){setLang(this.id.replace('i','').toLowerCase());});
+  });
+  setLang(localStorage.getItem('barsclusive_lang')||'de');
+});
 </script>
 </body>
 </html>
