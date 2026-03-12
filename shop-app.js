@@ -74,50 +74,135 @@ let filters  = { date: 'all', time: 'all', cat: 'all', customDate: null, search:
 var _favorites = [];
 let userLocation  = null;
 let locationOn    = false;
+let _locationState = { label: '', lat: null, lng: null, source: '', textFilter: '' };
 
-window.addEventListener('load', () => { loadDeals(); });
+window.addEventListener('load', () => { restoreLocationState(); loadDeals(); });
 
+function isValidCoord(v) { return typeof v === 'number' && isFinite(v) && Math.abs(v) > 0; }
+function saveLocationState() {
+  try { localStorage.setItem('barsclusive_shop_location', JSON.stringify(_locationState)); } catch(e) {}
+}
+function restoreLocationState() {
+  try {
+    var raw = localStorage.getItem('barsclusive_shop_location');
+    if (!raw) return;
+    var parsed = JSON.parse(raw);
+    if (!parsed) return;
+    _locationState = Object.assign(_locationState, parsed);
+    if (parsed.label && document.getElementById('locationInput')) document.getElementById('locationInput').value = parsed.label;
+    filters.city = parsed.textFilter || '';
+    if (isValidCoord(Number(parsed.lat)) && isValidCoord(Number(parsed.lng))) {
+      _userLat = Number(parsed.lat);
+      _userLng = Number(parsed.lng);
+    }
+    updateLocationUi();
+  } catch(e) {}
+}
+function updateLocationUi() {
+  var clearBtn = document.getElementById('btnClearLocation');
+  var statusEl = document.getElementById('locationStatus');
+  var inputEl = document.getElementById('locationInput');
+  var hasLocation = !!(filters.city || _locationState.label || (isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng))));
+  if (clearBtn) clearBtn.style.display = hasLocation ? 'inline-block' : 'none';
+  if (statusEl) {
+    if (_locationState.label) {
+      statusEl.style.display = 'inline-flex';
+      statusEl.textContent = '📍 ' + _locationState.label;
+    } else {
+      statusEl.style.display = 'none';
+      statusEl.textContent = '';
+    }
+  }
+  if (inputEl && _locationState.label && document.activeElement !== inputEl) inputEl.value = _locationState.label;
+}
 function setFilter(type, val, btn) {
   filters[type] = val;
   const attr = { date: 'data-filter-date', time: 'data-filter-time', cat: 'data-filter-cat' }[type];
-  if (attr) {
-    document.querySelectorAll('.filter-btn[' + attr + ']').forEach(b => b.classList.remove('active'));
-  }
+  if (attr) document.querySelectorAll('.filter-btn[' + attr + ']').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   renderDeals();
 }
-
 function setCustomDate(val) {
   filters.date = 'custom';
   filters.customDate = val;
-  // Deactivate all date buttons when custom date is selected
   document.querySelectorAll('.filter-btn[data-filter-date]').forEach(b => b.classList.remove('active'));
   renderDeals();
 }
-
-function applyLocation() {
-  var val = (document.getElementById('locationInput').value || '').trim().toLowerCase();
+async function geocodeLocationQuery(query) {
+  var q = String(query || '').trim();
+  if (q.length < 2) return [];
+  try {
+    var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=ch&q=' + encodeURIComponent(q);
+    var resp = await fetch(url, { headers: { 'Accept-Language': 'de' } });
+    var data = await resp.json();
+    return Array.isArray(data) ? data : [];
+  } catch(e) { return []; }
+}
+function mapLocationResult(item) {
+  var a = item.address || {};
+  var city = a.city || a.town || a.village || a.hamlet || a.municipality || '';
+  var zip = a.postcode || '';
+  var title = item.display_name || [a.road, a.house_number, zip, city].filter(Boolean).join(', ');
+  return {
+    label: [title].filter(Boolean).join(''),
+    shortLabel: [zip, city].filter(Boolean).join(' ') || city || title,
+    textFilter: (city || zip || title).toLowerCase(),
+    lat: Number(item.lat),
+    lng: Number(item.lon)
+  };
+}
+function applySelectedLocation(place) {
+  _locationState = {
+    label: place.label || place.shortLabel || '',
+    lat: Number(place.lat),
+    lng: Number(place.lng),
+    source: 'search',
+    textFilter: (place.textFilter || '').toLowerCase()
+  };
+  _userLat = Number(place.lat);
+  _userLng = Number(place.lng);
+  filters.city = _locationState.textFilter;
+  saveLocationState();
+  updateLocationUi();
+  sortDealsByDistance();
+}
+async function applyLocation() {
+  var input = document.getElementById('locationInput');
+  var val = (input && input.value || '').trim();
   if (!val) { clearLocation(); return; }
-  filters.city = val;
-  document.getElementById('btnClearLocation').style.display = 'inline-block';
-  renderDeals();
+  var results = await geocodeLocationQuery(val);
+  if (results.length) {
+    applySelectedLocation(mapLocationResult(results[0]));
+  } else {
+    filters.city = val.toLowerCase();
+    _locationState.label = val;
+    _locationState.textFilter = val.toLowerCase();
+    _locationState.source = 'text';
+    _locationState.lat = null; _locationState.lng = null;
+    _userLat = null; _userLng = null;
+    saveLocationState();
+    updateLocationUi();
+    renderDeals();
+  }
 }
 function clearLocation() {
   filters.city = '';
-  document.getElementById('locationInput').value = '';
-  document.getElementById('btnClearLocation').style.display = 'none';
+  _locationState = { label: '', lat: null, lng: null, source: '', textFilter: '' };
+  _userLat = null; _userLng = null;
+  var input = document.getElementById('locationInput');
+  if (input) input.value = '';
+  saveLocationState();
+  updateLocationUi();
   renderDeals();
 }
-
 function attachDistances() {
-  if (!_userLat || !_userLng) return;
+  var hasCoords = isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng));
   allDeals.forEach(function(d) {
-    if (d.bar_lat && d.bar_lng && Number(d.bar_lat) && Number(d.bar_lng)) {
-      d._dist = haversine(_userLat, _userLng, Number(d.bar_lat), Number(d.bar_lng));
-    }
+    var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
+    if (hasCoords && isValidCoord(lat) && isValidCoord(lng)) d._dist = haversine(Number(_userLat), Number(_userLng), lat, lng);
+    else delete d._dist;
   });
 }
-
 function haversine(la1, lo1, la2, lo2) {
   const R  = 6371;
   const dL = (la2 - la1) * Math.PI / 180;
@@ -125,10 +210,44 @@ function haversine(la1, lo1, la2, lo2) {
   const a  = Math.sin(dL/2)**2 + Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
-
-function sortByDistance() {
-  allDeals.sort((a, b) => (a._dist ?? 999) - (b._dist ?? 999));
+function sortDealsByDistance() {
+  attachDistances();
   renderDeals();
+}
+function getVisibleDeals() {
+  attachDistances();
+  var visible = allDeals.filter(function(d) {
+    if (filters.cat !== 'all' && !(d.categories || []).includes(filters.cat)) return false;
+    if (!matchDate(d)) return false;
+    if (!matchTime(d)) return false;
+    if (filters.search) {
+      var hay = ((d.title||'') + ' ' + (d.bar_name||'') + ' ' + (d.bar_city||'') + ' ' + (d.description||'')).toLowerCase();
+      if (!hay.includes(filters.search)) return false;
+    }
+    if (filters.city) {
+      var q = String(filters.city).toLowerCase();
+      var haystack = ((d.bar_city||'') + ' ' + (d.bar_zip||'') + ' ' + (d.bar_address||'')).toLowerCase();
+      if (/^\d+$/.test(q)) {
+        var prefix = q.length >= 2 ? q.substring(0, 2) : q;
+        if (!(String(d.bar_zip||'').startsWith(prefix))) return false;
+      } else if (!haystack.includes(q)) {
+        return false;
+      }
+    }
+    return true;
+  });
+  var hasCoords = isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng));
+  visible.sort(function(a,b) {
+    if (hasCoords) {
+      var da = typeof a._dist === 'number' ? a._dist : 9999;
+      var db = typeof b._dist === 'number' ? b._dist : 9999;
+      if (da !== db) return da - db;
+    }
+    var dA = a.original_price > 0 ? (1 - a.deal_price/a.original_price) : 0;
+    var dB = b.original_price > 0 ? (1 - b.deal_price/b.original_price) : 0;
+    return dB - dA;
+  });
+  return visible;
 }
 
 // =============================================
@@ -168,6 +287,7 @@ async function loadDeals(forceRefresh = false) {
     const d = await r.json();
     if (d.success) {
       allDeals = d.deals;
+      attachDistances();
       dealsCache = { data: d.deals, timestamp: now };
       try { localStorage.setItem('barsclusive_deals_cache', JSON.stringify(dealsCache)); } catch(e) {}
       var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
@@ -244,48 +364,21 @@ function matchTime(deal) {
 
 function renderDeals() {
   const el = document.getElementById('dealsList');
-
-  const visible = allDeals.filter(d => {
-    if (filters.cat !== 'all' && !(d.categories || []).includes(filters.cat)) return false;
-    if (!matchDate(d)) return false;
-    if (!matchTime(d)) return false;
-    if (filters.search) {
-      var hay = ((d.title||'') + ' ' + (d.bar_name||'') + ' ' + (d.bar_city||'') + ' ' + (d.description||'')).toLowerCase();
-      if (!hay.includes(filters.search)) return false;
-    }
-    if (filters.city) {
-      var q = filters.city;
-      var haystack = ((d.bar_city||'') + ' ' + (d.bar_zip||'')).toLowerCase();
-      // PLZ proximity: if user enters a number, match first 2 digits (same region)
-      if (/^\d+$/.test(q)) {
-        var prefix = q.length >= 2 ? q.substring(0,2) : q;
-        if (!(d.bar_zip||'').startsWith(prefix)) return false;
-      } else {
-        if (!haystack.includes(q)) return false;
-      }
-    }
-    return true;
-  });
-
-  // Sort by highest discount first
-  visible.sort(function(a,b) {
-    var dA = a.original_price > 0 ? (1 - a.deal_price/a.original_price) : 0;
-    var dB = b.original_price > 0 ? (1 - b.deal_price/b.original_price) : 0;
-    return dB - dA;
-  });
+  const visible = getVisibleDeals();
 
   if (!visible.length) {
     el.innerHTML = '';
     const div = document.createElement('div');
-    div.className = 'empty';
-    div.innerHTML = '<h3>' + (shopT('keineDeals') || 'Keine Deals gefunden') + '</h3><p>' + (shopT('andereFilter') || 'Andere Filter versuchen') + '</p>';
+    div.className = 'empty-state';
+    div.style.cssText = 'grid-column:1/-1;text-align:center;padding:70px 20px;color:#666';
+    div.innerHTML = '<div style="font-size:56px;margin-bottom:10px">🍸</div><div style="font-size:18px;font-weight:700;margin-bottom:6px">' + escHtml(shopT('keineDeals') || 'Keine Deals gefunden') + '</div><div style="font-size:14px">' + escHtml(shopT('andereFilter') || 'Versuche andere Filter') + '</div>';
     el.appendChild(div);
+    if (_shopMap && _mapView) updateShopMapMarkers();
     return;
   }
 
   el.innerHTML = '';
-  visible.forEach(deal => el.appendChild(buildDealCard(deal)));
-  // Update map markers if map exists
+  visible.forEach(function(deal) { el.appendChild(buildDealCard(deal)); });
   if (_shopMap && _mapView) updateShopMapMarkers();
 }
 
@@ -784,7 +877,13 @@ function openModal(id) {
 }
 
 function closeModal(id) {
-  document.getElementById(id).classList.remove('active');
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('active');
+  if (id === 'buyModal') {
+    var btn = document.getElementById('btnBuySubmit');
+    if (btn) { btn.disabled = false; btn.textContent = '💳 Jetzt bezahlen'; }
+  }
 }
 
 // Handle browser back button — only closes open modals, doesn't mess with them
@@ -1237,8 +1336,43 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnApplyLoc) btnApplyLoc.addEventListener('click', applyLocation);
   var btnClearLoc = document.getElementById('btnClearLocation');
   if (btnClearLoc) btnClearLoc.addEventListener('click', clearLocation);
+  var btnUseMyLocation = document.getElementById('btnUseMyLocation');
+  if (btnUseMyLocation) btnUseMyLocation.addEventListener('click', requestGeoPermission);
   var locInput = document.getElementById('locationInput');
-  if (locInput) locInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') applyLocation(); });
+  var locSuggestions = document.getElementById('locationSuggestions');
+  function closeLocationSuggestions() { if (locSuggestions) { locSuggestions.style.display = 'none'; locSuggestions.innerHTML = ''; } }
+  if (locInput) {
+    var runLocationSearch = (function() {
+      var timer = null;
+      return function() {
+        clearTimeout(timer);
+        timer = setTimeout(async function() {
+          var q = locInput.value.trim();
+          if (q.length < 3) { closeLocationSuggestions(); return; }
+          var results = await geocodeLocationQuery(q);
+          if (!locSuggestions) return;
+          locSuggestions.innerHTML = '';
+          results.forEach(function(item) {
+            var p = mapLocationResult(item);
+            var row = document.createElement('div');
+            row.className = 'suggestion-item';
+            row.innerHTML = '<div class="suggestion-title">' + escHtml(p.label) + '</div><div class="suggestion-meta">' + escHtml(p.shortLabel) + '</div>';
+            row.addEventListener('click', function() {
+              applySelectedLocation(p);
+              closeLocationSuggestions();
+            });
+            locSuggestions.appendChild(row);
+          });
+          locSuggestions.style.display = results.length ? 'block' : 'none';
+        }, 250);
+      };
+    })();
+    locInput.addEventListener('input', runLocationSearch);
+    locInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') { e.preventDefault(); applyLocation(); closeLocationSuggestions(); } });
+    locInput.addEventListener('focus', function() { if (locSuggestions && locSuggestions.innerHTML.trim()) locSuggestions.style.display = 'block'; });
+    document.addEventListener('click', function(e) { if (!e.target.closest('.search-select-wrap')) closeLocationSuggestions(); });
+  }
+  updateLocationUi();
 });
 
 // =============================================
@@ -1372,7 +1506,7 @@ function openDealDetail(deal) {
     document.getElementById('ddBuyBtn').after(ddCartBtn);
   }
   ddCartBtn.textContent = '🛒 In den Warenkorb';
-  ddCartBtn.onclick = function() { addToCart(deal); };
+  ddCartBtn.onclick = function() { addToCart(deal); closeDealDetail(); };
   
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1442,7 +1576,7 @@ var _userLat = null, _userLng = null;
 
 function showGeoBanner() {
   if (localStorage.getItem('barsclusive_geo_dismissed')) return;
-  if (_userLat) return;
+  if (isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng))) return;
   var banner = document.getElementById('geoBanner');
   if (banner) banner.style.display = 'block';
 }
@@ -1459,6 +1593,9 @@ function requestGeoPermission() {
     function(pos) {
       _userLat = pos.coords.latitude;
       _userLng = pos.coords.longitude;
+      _locationState = { label: 'Mein Standort', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
+      saveLocationState();
+      updateLocationUi();
       dismissGeoBanner();
       showToast('📍 Deals werden nach Nähe sortiert');
       sortDealsByDistance();
@@ -1468,18 +1605,6 @@ function requestGeoPermission() {
   );
 }
 
-function sortDealsByDistance() {
-  if (!_userLat || !_userLng) return;
-  allDeals.forEach(function(d) {
-    if (d.bar_lat && d.bar_lng && Number(d.bar_lat) && Number(d.bar_lng)) {
-      d._dist = haversine(_userLat, _userLng, Number(d.bar_lat), Number(d.bar_lng));
-    }
-  });
-  allDeals.sort(function(a, b) { return (a._dist || 9999) - (b._dist || 9999); });
-  renderDeals();
-}
-
-// Show geo banner after page load
 window.addEventListener('load', function() { setTimeout(showGeoBanner, 2000); });
 
 
@@ -1490,14 +1615,39 @@ var _cart = [];
 
 function getCart() { try { _cart = JSON.parse(localStorage.getItem('barsclusive_cart')||'[]'); } catch(e) { _cart = []; } return _cart; }
 function saveCart() { try { localStorage.setItem('barsclusive_cart', JSON.stringify(_cart)); } catch(e) {} updateCartBadge(); }
+var _cartCheckoutBusy = false;
+
+function openCartPanel() {
+  var panel = document.getElementById('cartPanel');
+  var overlay = document.getElementById('cartOverlay');
+  if (!panel) return;
+  panel.classList.add('active');
+  if (overlay) overlay.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  renderCartPanel();
+}
+function closeCartPanel() {
+  var panel = document.getElementById('cartPanel');
+  var overlay = document.getElementById('cartOverlay');
+  if (panel) panel.classList.remove('active');
+  if (overlay) overlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+function toggleCartPanel() {
+  var panel = document.getElementById('cartPanel');
+  if (!panel) return;
+  if (panel.classList.contains('active')) closeCartPanel();
+  else openCartPanel();
+}
 
 function addToCart(deal) {
   getCart();
   var existing = _cart.find(function(c) { return c.deal_id === deal.id; });
-  if (existing) { existing.quantity++; }
-  else { _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' }); }
+  if (existing) existing.quantity++;
+  else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
   saveCart();
-  showToast('\u{1F6D2} ' + deal.title + ' zum Warenkorb hinzugefügt');
+  openCartPanel();
+  showToast('🛒 ' + deal.title + ' zum Warenkorb hinzugefügt');
 }
 
 function removeFromCart(dealId) {
@@ -1531,100 +1681,89 @@ function updateCartBadge() {
   if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
 }
 
-function toggleCartPanel() {
-  var panel = document.getElementById('cartPanel');
-  if (!panel) return;
-  panel.classList.toggle('active');
-  if (panel.classList.contains('active')) renderCartPanel();
-}
-
 function renderCartPanel() {
   var body = document.getElementById('cartBody');
   if (!body) return;
   getCart();
-  if (!_cart.length) { body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">' + (shopT('warenkorbLeer') || 'Warenkorb ist leer') + '</div>'; return; }
+  if (!_cart.length) {
+    body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">' + (shopT('warenkorbLeer') || 'Warenkorb ist leer') + '</div>';
+    return;
+  }
+  var s = sessionGet();
+  var defaultName = s && s.name ? s.name : ((document.getElementById('cartBuyerName') || {}).value || '');
+  var defaultEmail = s && s.email ? s.email : ((document.getElementById('cartBuyerEmail') || {}).value || '');
   body.innerHTML = '';
   _cart.forEach(function(c) {
     var row = document.createElement('div');
-    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222';
-    
+    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;gap:12px';
     var info = document.createElement('div');
     info.style.flex = '1';
     info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title) + '</div><div style="font-size:12px;color:#999">' + escHtml(c.bar_name) + '</div>';
-    
     var controls = document.createElement('div');
     controls.style.cssText = 'display:flex;align-items:center;gap:8px';
-    
     var btnMinus = document.createElement('button');
     btnMinus.textContent = '-';
     btnMinus.style.cssText = 'background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
-    btnMinus.addEventListener('click', (function(id) { return function() { changeCartQty(id, -1); }; })(c.deal_id));
-    
+    btnMinus.addEventListener('click', function() { changeCartQty(c.deal_id, -1); });
     var qtySpan = document.createElement('span');
     qtySpan.style.cssText = 'min-width:20px;text-align:center';
     qtySpan.textContent = c.quantity;
-    
     var btnPlus = document.createElement('button');
     btnPlus.textContent = '+';
     btnPlus.style.cssText = 'background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
-    btnPlus.addEventListener('click', (function(id) { return function() { changeCartQty(id, 1); }; })(c.deal_id));
-    
+    btnPlus.addEventListener('click', function() { changeCartQty(c.deal_id, 1); });
     var priceSpan = document.createElement('span');
-    priceSpan.style.cssText = 'min-width:60px;text-align:right;font-weight:700';
-    priceSpan.textContent = (c.price * c.quantity).toFixed(2);
-    
+    priceSpan.style.cssText = 'min-width:72px;text-align:right;font-weight:700';
+    priceSpan.textContent = (c.price * c.quantity).toFixed(2) + ' CHF';
     var btnRemove = document.createElement('button');
     btnRemove.textContent = '✕';
     btnRemove.style.cssText = 'background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px';
-    btnRemove.addEventListener('click', (function(id) { return function() { removeFromCart(id); }; })(c.deal_id));
-    
+    btnRemove.addEventListener('click', function() { removeFromCart(c.deal_id); });
     controls.append(btnMinus, qtySpan, btnPlus, priceSpan, btnRemove);
     row.append(info, controls);
     body.appendChild(row);
   });
-  
+
   var totalDiv = document.createElement('div');
   totalDiv.style.cssText = 'padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px';
   totalDiv.textContent = (shopT('total') || 'Total') + ': ' + getCartTotal().toFixed(2) + ' CHF';
   body.appendChild(totalDiv);
-  
+
+  var buyerWrap = document.createElement('div');
+  buyerWrap.style.cssText = 'margin-top:14px;padding:14px;background:#171717;border:1px solid #2a2a2a;border-radius:12px';
+  buyerWrap.innerHTML = ''
+    + '<div style="font-size:13px;font-weight:700;margin-bottom:12px">Checkout</div>'
+    + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerName">Name</label><input type="text" class="form-input" id="cartBuyerName" value="' + escHtml(defaultName) + '" autocomplete="name"></div>'
+    + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerEmail">Email</label><input type="email" class="form-input" id="cartBuyerEmail" value="' + escHtml(defaultEmail) + '" autocomplete="email"></div>'
+    + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>Ich akzeptiere die <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">AGB</a> und <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutz</a>.</span></label>';
+  body.appendChild(buyerWrap);
+
   var checkBtn = document.createElement('button');
   checkBtn.id = 'cartCheckoutBtn';
-  checkBtn.textContent = shopT('jetztBezahlen') || 'Jetzt bezahlen';
-  checkBtn.style.cssText = 'width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px';
+  checkBtn.textContent = _cartCheckoutBusy ? '⏳ Wird verarbeitet...' : (shopT('jetztBezahlen') || 'Jetzt bezahlen');
+  checkBtn.disabled = _cartCheckoutBusy;
+  checkBtn.style.cssText = 'width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px';
   checkBtn.addEventListener('click', checkoutCart);
   body.appendChild(checkBtn);
 }
 
 async function checkoutCart() {
   getCart();
-  if (!_cart.length) { showToast(shopT('warenkorbLeer') || 'Warenkorb ist leer', true); return; }
+  if (!_cart.length || _cartCheckoutBusy) { if (!_cart.length) showToast(shopT('warenkorbLeer') || 'Warenkorb ist leer', true); return; }
   var s = sessionGet();
-  var buyerName, buyerEmail;
-  if (s && s.name && s.email) {
-    buyerName = s.name;
-    buyerEmail = s.email;
-  } else {
-    // Use buy modal fields if user filled them for a previous purchase
-    var nameEl = document.getElementById('buyName');
-    var emailEl = document.getElementById('buyEmail');
-    buyerName = nameEl ? nameEl.value.trim() : '';
-    buyerEmail = emailEl ? emailEl.value.trim() : '';
-  }
-  if (!buyerName || !buyerEmail) {
-    // Open a cart checkout dialog
-    var name = prompt(shopT('deinName') || 'Dein Name:');
-    if (!name) return;
-    var email = prompt(shopT('deineEmail') || 'Deine Email:');
-    if (!email) return;
-    buyerName = name;
-    buyerEmail = email;
-  }
-  
+  var nameEl = document.getElementById('cartBuyerName');
+  var emailEl = document.getElementById('cartBuyerEmail');
+  var consentEl = document.getElementById('cartConsent');
+  var buyerName = nameEl ? nameEl.value.trim() : '';
+  var buyerEmail = emailEl ? emailEl.value.trim() : '';
+  if (!buyerName || !buyerEmail) { showToast('Name und Email sind Pflichtfelder', true); return; }
+  if (!consentEl || !consentEl.checked) { showToast('Bitte AGB und Datenschutz akzeptieren', true); return; }
+
   var checkoutBtn = document.getElementById('cartCheckoutBtn');
-  
+  _cartCheckoutBusy = true;
+  if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.textContent = '⏳ Wird verarbeitet...'; }
+
   try {
-    if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.textContent = '⏳ Wird verarbeitet...'; }
     var r = await api({
       action: 'createCartCheckout',
       items: _cart.map(function(c) { return { deal_id: c.deal_id, quantity: c.quantity }; }),
@@ -1634,19 +1773,21 @@ async function checkoutCart() {
       site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '')
     });
     if (r.success && r.checkout_url) {
-      _cart = []; saveCart();
+      _cart = [];
+      saveCart();
+      closeCartPanel();
       window.location.href = r.checkout_url;
-    } else {
-      showToast(r.error || 'Checkout fehlgeschlagen', true);
-      if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = shopT('jetztBezahlen') || 'Jetzt bezahlen'; }
+      return;
     }
-  } catch(e) { 
+    showToast(r.error || 'Checkout fehlgeschlagen', true);
+  } catch(e) {
     showToast('Verbindungsfehler', true);
-    if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.textContent = shopT('jetztBezahlen') || 'Jetzt bezahlen'; }
+  } finally {
+    _cartCheckoutBusy = false;
+    renderCartPanel();
   }
 }
 
-// Init cart on load
 window.addEventListener('load', function() { getCart(); updateCartBadge(); });
 
 // =============================================
@@ -1657,9 +1798,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var cartOpen = document.getElementById('cartOpenBtn');
   if (cartOpen) cartOpen.addEventListener('click', toggleCartPanel);
   var cartClose = document.getElementById('cartCloseBtn');
-  if (cartClose) cartClose.addEventListener('click', toggleCartPanel);
+  if (cartClose) cartClose.addEventListener('click', closeCartPanel);
   var cartOverlay = document.getElementById('cartOverlay');
-  if (cartOverlay) cartOverlay.addEventListener('click', toggleCartPanel);
+  if (cartOverlay) cartOverlay.addEventListener('click', closeCartPanel);
   
   // Deal detail close
   var ddClose = document.getElementById('dealDetailCloseBtn');
@@ -1693,58 +1834,53 @@ function initShopMap() {
 
 function updateShopMapMarkers() {
   if (!_shopMap) return;
-  // Clear old markers
   _shopMapMarkers.forEach(function(m) { _shopMap.removeLayer(m); });
   _shopMapMarkers = [];
-  
-  // Group deals by bar (avoid duplicate markers)
+  var visibleDeals = getVisibleDeals();
   var barMap = {};
-  allDeals.forEach(function(d) {
-    if (!d.bar_lat || !d.bar_lng) return;
+  visibleDeals.forEach(function(d) {
     var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
-    if (!lat || !lng) return;
+    if (!isValidCoord(lat) || !isValidCoord(lng)) return;
     var key = d.bar_id || (lat + ',' + lng);
     if (!barMap[key]) barMap[key] = { lat: lat, lng: lng, name: d.bar_name, city: d.bar_city, deals: [] };
     barMap[key].deals.push(d);
   });
-  
+
   var bounds = [];
+  if (isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng))) {
+    var userMarker = L.circleMarker([Number(_userLat), Number(_userLng)], { radius: 8 }).addTo(_shopMap);
+    userMarker.bindPopup('Dein Standort');
+    _shopMapMarkers.push(userMarker);
+    bounds.push([Number(_userLat), Number(_userLng)]);
+  }
+
   Object.keys(barMap).forEach(function(key) {
     var b = barMap[key];
-    var popupHtml = '<div style="min-width:180px">'
-      + '<strong style="font-size:14px">' + (b.name || '') + '</strong>'
-      + '<div style="color:#666;font-size:12px;margin-bottom:6px">' + (b.city || '') + '</div>';
+    var popupHtml = '<div style="min-width:180px"><strong style="font-size:14px">' + escHtml(b.name || '') + '</strong><div style="color:#666;font-size:12px;margin-bottom:6px">' + escHtml(b.city || '') + '</div>';
     b.deals.forEach(function(d) {
-      popupHtml += '<div style="padding:4px 0;border-top:1px solid #eee;cursor:pointer" data-deal-id="' + d.id + '">'
-        + '<span style="font-weight:600">' + d.title + '</span>'
-        + '<span style="color:#FF3366;float:right">' + Number(d.deal_price).toFixed(2) + ' CHF</span>'
-        + '</div>';
+      popupHtml += '<div style="padding:4px 0;border-top:1px solid #eee;cursor:pointer" data-deal-id="' + d.id + '"><span style="font-weight:600">' + escHtml(d.title) + '</span><span style="color:#FF3366;float:right">' + Number(d.deal_price).toFixed(2) + ' CHF</span></div>';
     });
     popupHtml += '</div>';
-    
     var marker = L.marker([b.lat, b.lng]).addTo(_shopMap);
     marker.bindPopup(popupHtml);
     marker.on('popupopen', function() {
-      // Attach click events to deal links in popup
       setTimeout(function() {
         document.querySelectorAll('[data-deal-id]').forEach(function(el) {
           el.addEventListener('click', function() {
             var dealId = this.getAttribute('data-deal-id');
-            var deal = allDeals.find(function(dd) { return dd.id === dealId; });
+            var deal = visibleDeals.find(function(dd) { return dd.id === dealId; });
             if (deal) { _shopMap.closePopup(); openDealDetail(deal); }
           });
         });
-      }, 100);
+      }, 60);
     });
     _shopMapMarkers.push(marker);
     bounds.push([b.lat, b.lng]);
   });
-  
-  // Fit bounds if we have markers
-  if (bounds.length > 0) {
-    if (bounds.length === 1) { _shopMap.setView(bounds[0], 14); }
-    else { _shopMap.fitBounds(bounds, { padding: [30, 30] }); }
-  }
+
+  if (bounds.length > 1) _shopMap.fitBounds(bounds, { padding: [30, 30] });
+  else if (bounds.length === 1) _shopMap.setView(bounds[0], 14);
+  else _shopMap.setView([47.37, 8.54], 8);
 }
 
 function toggleMapView(showMap) {
