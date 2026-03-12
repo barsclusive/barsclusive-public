@@ -393,7 +393,7 @@ function buildDealCard(deal) {
 
   // FIX BUG 5: Pauschalgutscheine hinzugefügt
   const CAT_EMOJI = { breakfast:'🥐', lunch:'🍽️', aperitif:'🍹', dinner:'🍷', events:'🎉', pauschalgutscheine:'🏷️' };
-  const CAT_NAME  = { breakfast:'Breakfast', lunch:'Lunch', aperitif:'Aperitif', dinner:'Dinner', events:'Events', pauschalgutscheine:'Rabatt-Gutschein' };
+  const CAT_NAME  = { breakfast: st('catBreakfast').replace(/^.*? /,''), lunch: st('catLunch').replace(/^.*? /,''), aperitif: st('catAperitif').replace(/^.*? /,''), dinner: st('catDinner').replace(/^.*? /,''), events: st('catEvents').replace(/^.*? /,''), pauschalgutscheine: st('catDiscount').replace(/^.*? /,'') };
   const mainCat   = (deal.categories || [])[0];
 
   // Image area
@@ -519,7 +519,7 @@ function buildDealCard(deal) {
   var tsContainer = document.createElement('div');
   if (deal.time_slots && deal.time_slots.length > 0) {
     tsContainer.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px';
-    var tsLabels = {morning:'\u{1F305} Morgen', midday:'\u2600\uFE0F Mittag', evening:'\u{1F319} Abend'};
+    var tsLabels = {morning:(shopLang==='en'?'🌅 Morning':shopLang==='it'?'🌅 Mattina':shopLang==='fr'?'🌅 Matin':'🌅 Morgen'), midday:(shopLang==='en'?'☀️ Midday':shopLang==='it'?'☀️ Pranzo':shopLang==='fr'?'☀️ Midi':'☀️ Mittag'), evening:(shopLang==='en'?'🌙 Evening':shopLang==='it'?'🌙 Sera':shopLang==='fr'?'🌙 Soir':'🌙 Abend')};
     deal.time_slots.forEach(function(slot) {
       var sp = document.createElement('span');
       sp.style.cssText = 'background:#2a2a2a;padding:3px 8px;border-radius:8px;font-size:11px;color:#ccc';
@@ -541,6 +541,13 @@ function buildDealCard(deal) {
   addrDiv.style.cssText = 'color:#888;font-size:12px;margin-bottom:4px';
   if (deal.bar_address) addrDiv.textContent = '📍 ' + deal.bar_address + (deal.bar_city ? ', ' + deal.bar_city : '');
   else if (deal.bar_city) addrDiv.textContent = '📍 ' + deal.bar_city;
+
+  if (deal._dist !== undefined) {
+    var distLine = document.createElement('div');
+    distLine.style.cssText = 'color:#bdbdbd;font-size:12px;margin-bottom:8px';
+    distLine.textContent = '📍 ' + (deal._dist < 1 ? (deal._dist * 1000).toFixed(0) + ' m' : deal._dist.toFixed(1) + ' km');
+    content.appendChild(distLine);
+  }
 
   // Price next to button
   var priceBtn = document.createElement('div');
@@ -1142,12 +1149,12 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Nur am', giltFuer:'Gilt für:', getraenke:'Getränke', essen:'Essen', alles:'Alles',
     refundReq:'Rückerstattung anfordern', refundRequested:'Rückerstattung angefordert', refunded:'Rückerstattet',
     remaining:'verbleibend', anmelden:'Anmelden', registrieren:'Registrieren',
-    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Note legali', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars → Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden', searchBarDeal:'Bar oder Deal suchen...', searchPLZ:'PLZ oder Ort...',
+    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars → Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden', searchBarDeal:'Bar oder Deal suchen...', searchPLZ:'PLZ oder Ort...',
     gutscheinAnzeigen:'Anzeigen', linkKopieren:'Link kopieren', linkKopiert:'Link kopiert!',
     warenkorbLeer:'Warenkorb ist leer', jetztBezahlen:'Jetzt bezahlen', total:'Total', deinName:'Dein Name:', deineEmail:'Deine Email:', pwBestaetigen:'Passwort bestätigen',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Karte', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Rabatt',
     myLocationBtn:'Mein Standort', clearLocationBtn:'Zurücksetzen', geoEnableBtn:'Standort freigeben', geoBannerText:'Deals in deiner Nähe anzeigen?', mapStateText:'Deals direkt auf der Karte der Schweiz', mapCountryBadge:'🇨🇭 Schweiz',
-    emailLbl:'Email', passwordLbl:'Passwort', nameLbl:'Name', registerPasswordLbl:'Passwort (mind. 8 Zeichen)', registerConfirmLbl:'Passwort bestätigen', registerModalTitle:'✨ Registrieren', registerSubmitBtn:'Registrieren', acceptPrivacyOnly:'Ich akzeptiere die', privacyOnly:'Datenschutzerklärung', alreadyRegistered:'Schon registriert?', goToLogin:'Zum Login', cartTitle:'🛒 Warenkorb', checkoutTitle:'Zur Kasse', acceptTermsCart:'Ich akzeptiere die', processing:'⏳ Wird verarbeitet...', nameEmailRequired:'Name und Email sind Pflichtfelder', checkoutFailed:'Checkout fehlgeschlagen', loginModalTitle:'🔐 Anmelden', resetModalTitle:'🔑 Passwort zurücksetzen', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', backBtn:'Zurück', buyNameLbl:'Name', buyEmailLbl:'Email', buyConsentIntro:'Ich akzeptiere die', buyNowBtn:'💳 Jetzt bezahlen',
+    emailLbl:'Email', passwordLbl:'Passwort', nameLbl:'Name', registerPasswordLbl:'Passwort (mind. 8 Zeichen)', registerConfirmLbl:'Passwort bestätigen', registerModalTitle:'✨ Registrieren', registerSubmitBtn:'Registrieren', acceptPrivacyOnly:'Ich akzeptiere die', privacyOnly:'Datenschutzerklärung', alreadyRegistered:'Schon registriert?', goToLogin:'Zum Login', cartTitle:'🛒 Warenkorb', checkoutTitle:'Checkout', acceptTermsCart:'Ich akzeptiere die', processing:'⏳ Wird verarbeitet...', nameEmailRequired:'Name und Email sind Pflichtfelder', checkoutFailed:'Checkout fehlgeschlagen', loginModalTitle:'🔐 Anmelden', resetModalTitle:'🔑 Passwort zurücksetzen', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', backBtn:'Zurück',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -1174,7 +1181,7 @@ const SHOP_TRANSLATIONS = {
     warenkorbLeer:'Cart is empty', jetztBezahlen:'Pay now', total:'Total', deinName:'Your name:', deineEmail:'Your email:', pwBestaetigen:'Confirm password',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Map', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Discount',
     myLocationBtn:'My location', clearLocationBtn:'Reset', geoEnableBtn:'Enable location', geoBannerText:'Show deals near you?', mapStateText:'Deals directly on the map of Switzerland', mapCountryBadge:'🇨🇭 Switzerland',
-    emailLbl:'Email', passwordLbl:'Password', nameLbl:'Name', registerPasswordLbl:'Password (min. 8 chars)', registerConfirmLbl:'Confirm password', registerModalTitle:'✨ Register', registerSubmitBtn:'Register', acceptPrivacyOnly:'I accept the', privacyOnly:'Privacy Policy', alreadyRegistered:'Already registered?', goToLogin:'Go to login', cartTitle:'🛒 Cart', checkoutTitle:'Checkout', acceptTermsCart:'I accept the', processing:'⏳ Processing...', nameEmailRequired:'Name and email are required', checkoutFailed:'Checkout failed', loginModalTitle:'🔐 Login', resetModalTitle:'🔑 Reset password', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', backBtn:'Back', buyNameLbl:'Name', buyEmailLbl:'Email', buyConsentIntro:'I accept the', buyNowBtn:'💳 Pay now',
+    emailLbl:'Email', passwordLbl:'Password', nameLbl:'Name', registerPasswordLbl:'Password (min. 8 chars)', registerConfirmLbl:'Confirm password', registerModalTitle:'✨ Register', registerSubmitBtn:'Register', acceptPrivacyOnly:'I accept the', privacyOnly:'Privacy Policy', alreadyRegistered:'Already registered?', goToLogin:'Go to login', cartTitle:'🛒 Cart', checkoutTitle:'Checkout', acceptTermsCart:'I accept the', processing:'⏳ Processing...', nameEmailRequired:'Name and email are required', checkoutFailed:'Checkout failed', loginModalTitle:'🔐 Login', resetModalTitle:'🔑 Reset password', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', backBtn:'Back',
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -1195,12 +1202,12 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Solo il', giltFuer:'Valido per:', getraenke:'Bevande', essen:'Cibo', alles:'Tutto',
     refundReq:'Richiedi rimborso', refundRequested:'Rimborso richiesto', refunded:'Rimborsato',
     remaining:'rimanenti', anmelden:'Accedi', registrieren:'Registrati',
-    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Note legali', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar → Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi', searchBarDeal:'Cerca bar o offerta...', searchPLZ:'CAP o città...',
+    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar → Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi', searchBarDeal:'Cerca bar o offerta...', searchPLZ:'CAP o città...',
     gutscheinAnzeigen:'Visualizza', linkKopieren:'Copia link', linkKopiert:'Link copiato!',
     warenkorbLeer:'Carrello vuoto', jetztBezahlen:'Paga ora', total:'Totale', deinName:'Il tuo nome:', deineEmail:'La tua email:', pwBestaetigen:'Conferma password',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Mappa', catBreakfast:'🥐 Colazione', catLunch:'🍽️ Pranzo', catAperitif:'🍹 Aperitivo', catDinner:'🍷 Cena', catEvents:'🎉 Eventi', catDiscount:'🏷️ Sconto',
     myLocationBtn:'La mia posizione', clearLocationBtn:'Reimposta', geoEnableBtn:'Attiva posizione', geoBannerText:'Mostrare i deal vicino a te?', mapStateText:'Deal direttamente sulla mappa della Svizzera', mapCountryBadge:'🇨🇭 Svizzera',
-    emailLbl:'Email', passwordLbl:'Password', nameLbl:'Nome', registerPasswordLbl:'Password (min. 8 caratteri)', registerConfirmLbl:'Conferma password', registerModalTitle:'✨ Registrati', registerSubmitBtn:'Registrati', acceptPrivacyOnly:'Accetto la', privacyOnly:'Privacy', alreadyRegistered:'Già registrato?', goToLogin:'Vai al login', cartTitle:'🛒 Carrello', checkoutTitle:'Checkout', acceptTermsCart:'Accetto', processing:'⏳ Elaborazione...', nameEmailRequired:'Nome ed email sono obbligatori', checkoutFailed:'Checkout non riuscito', loginModalTitle:'🔐 Accedi', resetModalTitle:'🔑 Reimposta password', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', backBtn:'Indietro', buyNameLbl:'Nome', buyEmailLbl:'Email', buyConsentIntro:'Accetto', buyNowBtn:'💳 Paga ora',
+    emailLbl:'Email', passwordLbl:'Password', nameLbl:'Nome', registerPasswordLbl:'Password (min. 8 caratteri)', registerConfirmLbl:'Conferma password', registerModalTitle:'✨ Registrati', registerSubmitBtn:'Registrati', acceptPrivacyOnly:'Accetto la', privacyOnly:'Privacy', alreadyRegistered:'Già registrato?', goToLogin:'Vai al login', cartTitle:'🛒 Carrello', checkoutTitle:'Checkout', acceptTermsCart:'Accetto', processing:'⏳ Elaborazione...', nameEmailRequired:'Nome ed email sono obbligatori', checkoutFailed:'Checkout non riuscito', loginModalTitle:'🔐 Accedi', resetModalTitle:'🔑 Reimposta password', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', backBtn:'Indietro',
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -1225,7 +1232,7 @@ const SHOP_TRANSLATIONS = {
     alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Carte', catBreakfast:'🥐 Petit-déjeuner', catLunch:'🍽️ Déjeuner', catAperitif:'🍹 Apéritif', catDinner:'🍷 Dîner', catEvents:'🎉 Événements', catDiscount:'🏷️ Réduction',
     myLocationBtn:'Ma position', clearLocationBtn:'Réinitialiser', geoEnableBtn:'Activer la position', geoBannerText:'Afficher les deals près de vous ?', mapStateText:'Deals directement sur la carte de la Suisse', mapCountryBadge:'🇨🇭 Suisse',
-    emailLbl:'Email', passwordLbl:'Mot de passe', nameLbl:'Nom', registerPasswordLbl:'Mot de passe (min. 8 car.)', registerConfirmLbl:'Confirmer le mot de passe', registerModalTitle:'✨ Inscription', registerSubmitBtn:'S\'inscrire', acceptPrivacyOnly:'J\'accepte la', privacyOnly:'Confidentialité', alreadyRegistered:'Déjà inscrit ?', goToLogin:'Vers la connexion', cartTitle:'🛒 Panier', checkoutTitle:'Checkout', acceptTermsCart:'J\'accepte les', processing:'⏳ Traitement...', nameEmailRequired:'Nom et email sont obligatoires', checkoutFailed:'Échec du checkout', loginModalTitle:'🔐 Connexion', resetModalTitle:'🔑 Réinitialiser le mot de passe', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', backBtn:'Retour', buyNameLbl:'Nom', buyEmailLbl:'Email', buyConsentIntro:'J\'accepte les', buyNowBtn:'💳 Payer maintenant',
+    emailLbl:'Email', passwordLbl:'Mot de passe', nameLbl:'Nom', registerPasswordLbl:'Mot de passe (min. 8 car.)', registerConfirmLbl:'Confirmer le mot de passe', registerModalTitle:'✨ Inscription', registerSubmitBtn:"S'inscrire", acceptPrivacyOnly:"J'accepte la", privacyOnly:'Confidentialité', alreadyRegistered:'Déjà inscrit ?', goToLogin:'Vers la connexion', cartTitle:'🛒 Panier', checkoutTitle:'Checkout', acceptTermsCart:"J'accepte les", processing:'⏳ Traitement...', nameEmailRequired:'Nom et email sont obligatoires', checkoutFailed:'Échec du checkout', loginModalTitle:'🔐 Connexion', resetModalTitle:'🔑 Réinitialiser le mot de passe', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', backBtn:'Retour',
   }
 };
 
@@ -1278,10 +1285,6 @@ function applyShopTranslations() {
   if (loginModalTitle) loginModalTitle.textContent = st('loginModalTitle');
   var resetModalTitle = document.getElementById('resetModalTitle');
   if (resetModalTitle) resetModalTitle.textContent = st('resetModalTitle');
-  var buyNameLbl = document.getElementById('buyNameLbl'); if (buyNameLbl) buyNameLbl.textContent = st('buyNameLbl');
-  var buyEmailLbl = document.getElementById('buyEmailLbl'); if (buyEmailLbl) buyEmailLbl.textContent = st('buyEmailLbl');
-  var buyConsentIntro = document.getElementById('buyConsentIntro'); if (buyConsentIntro) buyConsentIntro.textContent = st('buyConsentIntro');
-  var btnBuySubmit = document.getElementById('btnBuySubmit'); if (btnBuySubmit) btnBuySubmit.textContent = st('buyNowBtn');
   var mapStateText = document.getElementById('mapStateText');
   if (mapStateText) mapStateText.textContent = st('mapStateText');
   var mapCountryBadge = document.getElementById('mapCountryBadge');
