@@ -25,7 +25,7 @@ de: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Preis', createdLbl:'Erstellt', redeemedLbl:'Eingelöst',
   redeemTitle:'Gutschein einlösen', redeemHint:'Gutschein-Code des Kunden eingeben',
   redeemBtn:'Einlösen', redeemSuccess:'✅ Gutschein eingelöst!',
-  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', profileTitle:'Stammdaten', addressLbl:'Adresse', zipLbl:'PLZ', cityLbl:'Stadt', phoneLbl:'Telefon', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Speichern', profileSaved:'Profil gespeichert', deleteAccountTitle:'Account löschen', deleteAccountWarning:'Alle Deals werden deaktiviert. Diese Aktion ist endgültig.', deleteAccountBtn:'Account endgültig löschen', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Ausgezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
+  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', profileTitle:'Stammdaten', addressLbl:'Adresse', zipLbl:'PLZ', cityLbl:'Stadt', phoneLbl:'Telefon', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Speichern', profileSaved:'Profil gespeichert', deleteAccountTitle:'Account löschen', deleteAccountWarning:'Alle Deals werden deaktiviert. Diese Aktion ist endgültig.', deleteAccountBtn:'Account endgültig löschen', soldCount:'Verkauft', notRedeemed:'Nicht eingelöst', paidOut:'Ausgezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
   newPasswordLbl:'Neues Passwort (mind. 8 Zeichen)', confirmPassword:'Passwort bestätigen',
   changePasswordBtn:'Passwort ändern', editDeal:'Deal bearbeiten',
   saveLbl:'Speichern', cancelLbl:'Abbrechen',
@@ -35,7 +35,23 @@ de: {
   soldCount:'verkauft',
   resetPasswordTitle:'Passwort zurücksetzen',
   newPassword:'Neues Passwort',
-  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
+  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)',
+  regAddressHelp:'Bitte die Adresse aus der Vorschlagsliste wählen. Adresse, PLZ, Ort und Koordinaten werden automatisch übernommen.',
+  addressNotSelected:'Noch keine Adresse gewählt',
+  checkMapSelection:'Auswahl auf Karte prüfen',
+  confirmPasswordReq:'Passwort bestätigen *',
+  ibanPayoutLabel:'IBAN * (für Auszahlungen)',
+  ibanHelp:'Nur gültige IBAN-Zeichen. Die Eingabe wird automatisch formatiert.',
+  mwstLabel:'MWST',
+  notMwstLiable:'Ich bin nicht MWST-pflichtig',
+  mwstNumberReq:'MWST-Nummer *',
+  mwstHelp:'Die UID wird automatisch formatiert. Beispiel: CHE-123.456.789 MWST',
+  acceptTerms:'Ich akzeptiere die',
+  profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.',
+  locationLabel:'Standort',
+  locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
+  zipReq:'PLZ *',
+  mwstNumberLabel:'MWST-Nummer'
 },
 en: {
   logout:'Logout', login:'Login', register:'Register',
@@ -65,7 +81,23 @@ en: {
   soldCount:'sold',
   resetPasswordTitle:'Reset Password',
   newPassword:'New Password',
-  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)'
+  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)',
+  regAddressHelp:'Please choose the address from the suggestion list. Address, ZIP, city and coordinates are filled automatically.',
+  addressNotSelected:'No address selected yet',
+  checkMapSelection:'Check selection on map',
+  confirmPasswordReq:'Confirm password *',
+  ibanPayoutLabel:'IBAN * (for payouts)',
+  ibanHelp:'Only valid IBAN characters are allowed. Input is formatted automatically.',
+  mwstLabel:'VAT',
+  notMwstLiable:'I am not liable for VAT',
+  mwstNumberReq:'VAT number *',
+  mwstHelp:'The UID is formatted automatically. Example: CHE-123.456.789 VAT',
+  acceptTerms:'I accept the',
+  profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.',
+  locationLabel:'Location',
+  locationHelp:'Taken from the selected address and can be fine-tuned on the map.',
+  zipReq:'ZIP *',
+  mwstNumberLabel:'VAT number'
 },
 it: {
   logout:'Esci', login:'Login', register:'Registrati',
@@ -95,7 +127,23 @@ it: {
   soldCount:'venduti',
   resetPasswordTitle:'Reimposta Password',
   newPassword:'Nuova Password',
-  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)'
+  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)',
+  regAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Indirizzo, CAP, città e coordinate vengono compilati automaticamente.',
+  addressNotSelected:'Nessun indirizzo selezionato',
+  checkMapSelection:'Controlla la selezione sulla mappa',
+  confirmPasswordReq:'Conferma password *',
+  ibanPayoutLabel:'IBAN * (per i pagamenti)',
+  ibanHelp:'Sono ammessi solo caratteri IBAN validi. L’inserimento viene formattato automaticamente.',
+  mwstLabel:'IVA',
+  notMwstLiable:'Non sono soggetto a IVA',
+  mwstNumberReq:'Numero IVA *',
+  mwstHelp:'L’UID viene formattato automaticamente. Esempio: CHE-123.456.789 IVA',
+  acceptTerms:'Accetto i',
+  profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.',
+  locationLabel:'Posizione',
+  locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.',
+  zipReq:'CAP *',
+  mwstNumberLabel:'Numero IVA'
 },
 fr: {
   logout:'Déconnexion', login:'Connexion', register:'Inscription',
@@ -115,7 +163,7 @@ fr: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Prix', createdLbl:'Créé', redeemedLbl:'Échangé',
   redeemTitle:'Échanger Bon', redeemHint:'Entrez le code du bon client',
   redeemBtn:'Échanger', redeemSuccess:'✅ Bon échangé!',
-  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', profileTitle:'Coordonnées', addressLbl:'Adresse', zipLbl:'NPA', cityLbl:'Ville', phoneLbl:'Téléphone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Enregistrer', profileSaved:'Profil enregistré', deleteAccountTitle:'Supprimer le compte', deleteAccountWarning:'Tous les deals seront désactivés. Cette action est définitive.', deleteAccountBtn:'Supprimer le compte définitivement', soldCount:'Vendus', notRedeemed:'Non utilis\xe9s', paidOut:'Pay\xe9', activeDeals:'Offres actives', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
+  changePassword:'Changer le mot de passe', oldPassword:'Ancien mot de passe', profileTitle:'Coordonnées', addressLbl:'Adresse', zipLbl:'NPA', cityLbl:'Ville', phoneLbl:'Téléphone', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Enregistrer', profileSaved:'Profil enregistré', deleteAccountTitle:'Supprimer le compte', deleteAccountWarning:'Tous les deals seront désactivés. Cette action est définitive.', deleteAccountBtn:'Supprimer le compte définitivement', soldCount:'Vendus', notRedeemed:'Non utilisés', paidOut:'Payé', activeDeals:'Offres actives', earnings:'Revenus', redeemed:'Utilisés', pendingPayout:'En attente', deleteDealBtn:'Supprimer', deleteDealConfirm:'Supprimer définitivement cette offre ?', shop:'Shop', aboutUs:'À propos', howItWorks:'Comment ça marche', legalNotice:'Mentions légales', privacy:'Confidentialité', termsBars:'CGV Bars', contact:'Contact',
   newPasswordLbl:'Nouveau mot de passe (min. 8 car.)', confirmPassword:'Confirmer',
   changePasswordBtn:'Changer', editDeal:'Modifier Deal',
   saveLbl:'Enregistrer', cancelLbl:'Annuler',
@@ -125,10 +173,25 @@ fr: {
   soldCount:'vendus',
   resetPasswordTitle:'Réinitialiser le mot de passe',
   newPassword:'Nouveau mot de passe',
-  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)'
+  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)',
+  regAddressHelp:'Veuillez choisir l’adresse dans la liste des suggestions. L’adresse, le NPA, la ville et les coordonnées sont remplis automatiquement.',
+  addressNotSelected:'Aucune adresse sélectionnée',
+  checkMapSelection:'Vérifier la sélection sur la carte',
+  confirmPasswordReq:'Confirmer le mot de passe *',
+  ibanPayoutLabel:'IBAN * (pour les paiements)',
+  ibanHelp:'Seuls les caractères IBAN valides sont autorisés. La saisie est formatée automatiquement.',
+  mwstLabel:'TVA',
+  notMwstLiable:'Je ne suis pas assujetti à la TVA',
+  mwstNumberReq:'Numéro TVA *',
+  mwstHelp:'L’UID est formaté automatiquement. Exemple : CHE-123.456.789 TVA',
+  acceptTerms:'J’accepte les',
+  profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.',
+  locationLabel:'Emplacement',
+  locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.',
+  zipReq:'NPA *',
+  mwstNumberLabel:'Numéro TVA'
 }
 };
-
 
 let currentLang = 'de';
 function t(key) { return TRANSLATIONS[currentLang][key] || TRANSLATIONS.de[key] || key; }
@@ -168,7 +231,7 @@ function normalizeIban(v) { return formatIbanDisplay(v); }
 
 function formatMwstDisplay(v) {
   var up = String(v || '').toUpperCase().replace(/\s+/g, ' ').trim();
-  var suffix = /(?:MWST|TVA|IVA)$/.test(up) ? up.match(/(MWST|TVA|IVA)$/)[1] : 'MWST';
+  var suffix = /(?:MWST|TVA|IVA)$/.test(up) ? up.match(/(MWST|TVA|IVA)$/)[1] : (currentLang === 'fr' ? 'TVA' : currentLang === 'it' ? 'IVA' : 'MWST');
   var digits = onlyDigits(up).slice(0, 9);
   if (!digits) return '';
   var parts = [];
@@ -221,7 +284,7 @@ function parseSelectedAddress(prefix) {
 }
 function setAddressMeta(prefix, text) {
   var el = document.getElementById(prefix + 'AddressMeta');
-  if (el) el.textContent = text || 'Noch keine Adresse gewählt';
+  if (el) el.textContent = text || t('addressNotSelected');
 }
 function setSelectedAddress(prefix, place) {
   var sInput = document.getElementById(prefix + 'AddressSearch');
@@ -251,7 +314,7 @@ function clearSelectedAddress(prefix, keepSearch) {
   });
   var zv = document.getElementById(prefix + 'ZipVisible');
   if (zv) zv.value = '';
-  setAddressMeta(prefix, 'Noch keine Adresse gewählt');
+  setAddressMeta(prefix, t('addressNotSelected'));
 }
 function extractAddressParts(item) {
   var a = item.address || {};
@@ -264,601 +327,840 @@ function extractAddressParts(item) {
     label: item.display_name || ''
   };
 }
-function debounce(fn, wait) {
-  var tmr = null;
-  return function() {
-    var args = arguments, ctx = this;
-    clearTimeout(tmr);
-    tmr = setTimeout(function() { fn.apply(ctx, args); }, wait);
-  };
-}
+var _addrDebounce = null;
 function bindAddressAutocomplete(prefix) {
   var input = document.getElementById(prefix + 'AddressSearch');
   var box = document.getElementById(prefix + 'AddressSuggestions');
   if (!input || !box) return;
-  var currentResults = [];
-  function closeBox() { box.style.display = 'none'; box.innerHTML = ''; }
-  function openBox() { if (box.innerHTML.trim()) box.style.display = 'block'; }
-  function renderResults(items) {
-    currentResults = items || [];
-    box.innerHTML = '';
-    if (!currentResults.length) { closeBox(); return; }
-    currentResults.forEach(function(item) {
-      var place = extractAddressParts(item);
-      var row = document.createElement('div');
-      row.className = 'suggestion-item';
-      row.innerHTML = '<div class="suggestion-title">' + esc(place.address || place.label) + '</div><div class="suggestion-meta">' + esc([place.zip, place.city].filter(Boolean).join(' ')) + '</div>';
-      row.addEventListener('click', function() {
-        setSelectedAddress(prefix, place);
-        closeBox();
+  var currentIndex = -1;
+  var results = [];
+
+  function render() {
+    if (!results.length) {
+      box.style.display = 'none';
+      box.innerHTML = '';
+      return;
+    }
+    box.innerHTML = results.map(function(item, idx) {
+      var p = extractAddressParts(item);
+      return '<div class="suggestion-item' + (idx === currentIndex ? ' active' : '') + '" data-idx="' + idx + '">' +
+        '<div class="suggestion-title">' + escapeHtml(p.address || p.label) + '</div>' +
+        '<div class="suggestion-meta">' + escapeHtml([p.zip, p.city].filter(Boolean).join(' ')) + '</div>' +
+      '</div>';
+    }).join('');
+    box.style.display = 'block';
+    Array.from(box.querySelectorAll('.suggestion-item')).forEach(function(el) {
+      el.addEventListener('click', function() {
+        var idx = Number(this.dataset.idx);
+        var p = extractAddressParts(results[idx]);
+        setSelectedAddress(prefix, p);
+        box.style.display = 'none';
       });
-      box.appendChild(row);
     });
-    openBox();
   }
-  var runSearch = debounce(async function() {
-    var q = normText(input.value);
-    if (q.length < 3) { closeBox(); if (!q) clearSelectedAddress(prefix, true); return; }
-    if (input.dataset.selected === '1' && q === input.value) {
-      // continue searching only if user edits after selection
+
+  input.addEventListener('input', function() {
+    clearSelectedAddress(prefix, true);
+    var q = this.value.trim();
+    if (_addrDebounce) clearTimeout(_addrDebounce);
+    if (q.length < 3) {
+      results = [];
+      render();
+      return;
     }
-    input.dataset.selected = '';
-    try {
-      var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=ch&q=' + encodeURIComponent(q);
-      var resp = await fetch(url, { headers: { 'Accept-Language': 'de' } });
-      var data = await resp.json();
-      renderResults(Array.isArray(data) ? data : []);
-    } catch (e) {
-      closeBox();
+    _addrDebounce = setTimeout(async function() {
+      try {
+        var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=ch&q=' + encodeURIComponent(q);
+        var resp = await fetch(url, { headers: { 'Accept-Language': 'de,en,it,fr' } });
+        results = await resp.json();
+        currentIndex = -1;
+        render();
+      } catch (e) {
+        results = [];
+        render();
+      }
+    }, 280);
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (!results.length || box.style.display === 'none') return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      currentIndex = Math.min(currentIndex + 1, results.length - 1);
+      render();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      currentIndex = Math.max(currentIndex - 1, 0);
+      render();
+    } else if (e.key === 'Enter') {
+      if (currentIndex >= 0 && results[currentIndex]) {
+        e.preventDefault();
+        var p = extractAddressParts(results[currentIndex]);
+        setSelectedAddress(prefix, p);
+        box.style.display = 'none';
+      }
+    } else if (e.key === 'Escape') {
+      box.style.display = 'none';
     }
-  }, 250);
-  input.addEventListener('input', runSearch);
-  input.addEventListener('focus', function() { if (box.innerHTML.trim()) box.style.display = 'block'; });
-  document.addEventListener('click', function(e) { if (!e.target.closest('.search-select-wrap')) closeBox(); });
-}
-
-function esc(s) {
-  return String(s || '')
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-}
-
-function applyTranslations() {
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    if (key) el.textContent = t(key);
   });
-  document.title = 'BarSclusive – ' + t('portalTitle');
-  // Translate placeholders
-  var ph = {
-    profAddressSearch: {de:'Adresse suchen und auswählen',en:'Search and select address',it:'Cerca e seleziona indirizzo',fr:'Rechercher et sélectionner une adresse'},
-    profZip: {de:'PLZ',en:'ZIP',it:'CAP',fr:'NPA'},
-    profCity: {de:'Stadt',en:'City',it:'Città',fr:'Ville'},
-    profPhone: {de:'+41...',en:'+41...',it:'+41...',fr:'+41...'},
-    profIban: {de:'CH00 0000 0000 0000 0000 0',en:'CH00 0000 0000 0000 0000 0',it:'CH00 0000 0000 0000 0000 0',fr:'CH00 0000 0000 0000 0000 0'},
-    profTwint: {de:'+41...',en:'+41...',it:'+41...',fr:'+41...'},
-    regAddressSearch: {de:'Adresse suchen und auswählen',en:'Search and select address',it:'Cerca e seleziona indirizzo',fr:'Rechercher et sélectionner une adresse'},
-    dealTitle: {de:'z.B. 2 Cocktails für 1',en:'e.g. 2 Cocktails for 1',it:'es. 2 Cocktail per 1',fr:'ex. 2 Cocktails pour 1'},
-    regIban: {de:'CH00 0000 0000 0000 0000 0',en:'CH00 0000 0000 0000 0000 0',it:'CH00 0000 0000 0000 0000 0',fr:'CH00 0000 0000 0000 0000 0'},
-    regMwstNumber: {de:'CHE-123.456.789 MWST',en:'CHE-123.456.789 VAT',it:'CHE-123.456.789 IVA',fr:'CHE-123.456.789 TVA'},
-    profMwstNumber: {de:'CHE-123.456.789 MWST',en:'CHE-123.456.789 VAT',it:'CHE-123.456.789 IVA',fr:'CHE-123.456.789 TVA'}
-  };
-  Object.keys(ph).forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el && ph[id][currentLang]) el.placeholder = ph[id][currentLang];
+
+  document.addEventListener('click', function(e) {
+    if (!box.contains(e.target) && e.target !== input) {
+      box.style.display = 'none';
+    }
+  });
+}
+function escapeHtml(v) {
+  return String(v || '').replace(/[&<>"']/g, function(ch) {
+    return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[ch];
   });
 }
 
-function setLang(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang;
-  try { localStorage.setItem('barsclusive_bar_lang', lang); } catch(e) {}
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.remove('active');
-  });
-  var activeBtn = document.getElementById('lang' + lang.toUpperCase());
-  if (activeBtn) activeBtn.classList.add('active');
-  applyTranslations();
-}
-
-// ── SESSION (in-memory + localStorage fallback) ──────────────────────────
-let _session = null;
-
-function sessionSet(token, barId, barName) {
-  _session = { token, barId, barName, role: 'bar', expiresAt: Date.now() + 90 * 60 * 1000 };
-  try { localStorage.setItem('barsclusive_bar_session', JSON.stringify(_session)); } catch(e) {}
-  document.getElementById('btnLogout').style.display = 'block';
-  var el = document.getElementById('barNameDisplay');
-  if (el) el.textContent = barName;
-}
+// =============================================
+// SESSION & STATE
+// =============================================
+const SESSION_KEY = 'barsclusive_bar_session';
+const _dataCache = {
+  stats: null,
+  deals: null,
+  vouchers: null,
+  profile: null,
+  statsLoading: false,
+  dealsLoading: false,
+  vouchersLoading: false,
+  profileLoading: false
+};
 
 function sessionGet() {
-  if (!_session) {
-    try { var s = localStorage.getItem('barsclusive_bar_session'); if (s) _session = JSON.parse(s); } catch(e) {}
-  }
-  if (!_session || Date.now() > _session.expiresAt) { _session = null; try { localStorage.removeItem('barsclusive_bar_session'); } catch(e) {} return null; }
-  return _session;
+  try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { return null; }
+}
+function sessionSet(data) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(data));
+}
+function sessionClear() {
+  localStorage.removeItem(SESSION_KEY);
+  _dataCache.stats = null;
+  _dataCache.deals = null;
+  _dataCache.vouchers = null;
+  _dataCache.profile = null;
 }
 
-function sessionClear() {
-  _session = null;
-  try { localStorage.removeItem('barsclusive_bar_session'); } catch(e) {}
+// =============================================
+// I18N APPLY
+// =============================================
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('barsclusive_bar_lang', lang);
+
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  var activeBtn = document.getElementById('lang' + lang.toUpperCase());
+  if (activeBtn) activeBtn.classList.add('active');
+
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.dataset.i18n;
+    var txt = t(key);
+    if (el.tagName === 'INPUT' && el.placeholder !== undefined) {
+      if (key === 'password' || key === 'email' || key === 'barName' || key === 'city' || key === 'address' || key === 'phone') {
+        el.placeholder = txt.replace(/\s*\*$/, '');
+      } else if (key === 'dealTitleLbl' || key === 'dealDescLbl') {
+        el.placeholder = txt.replace(/\s*\*$/, '');
+      } else {
+        if (el.type !== 'checkbox' && el.type !== 'radio') el.value = txt;
+      }
+    } else {
+      el.textContent = txt;
+    }
+  });
+
+  var regAddressSearch = document.getElementById('regAddressSearch');
+  if (regAddressSearch) regAddressSearch.placeholder = {
+    de:'Adresse suchen und auswählen',
+    en:'Search and select an address',
+    it:'Cerca e seleziona un indirizzo',
+    fr:'Rechercher et sélectionner une adresse'
+  }[lang];
+
+  var profAddressSearch = document.getElementById('profAddressSearch');
+  if (profAddressSearch) profAddressSearch.placeholder = {
+    de:'Adresse suchen und auswählen',
+    en:'Search and select an address',
+    it:'Cerca e seleziona un indirizzo',
+    fr:'Rechercher et sélectionner une adresse'
+  }[lang];
+
+  var loginEmail = document.getElementById('loginEmail');
+  if (loginEmail) loginEmail.placeholder = {
+    de:'Email',
+    en:'Email',
+    it:'Email',
+    fr:'Email'
+  }[lang];
+
+  var loginPassword = document.getElementById('loginPassword');
+  if (loginPassword) loginPassword.placeholder = {
+    de:'Passwort',
+    en:'Password',
+    it:'Password',
+    fr:'Mot de passe'
+  }[lang];
+
+  var redeemCode = document.getElementById('redeemCode');
+  if (redeemCode) redeemCode.placeholder = {
+    de:'XXXX-XXXX-XXXX',
+    en:'XXXX-XXXX-XXXX',
+    it:'XXXX-XXXX-XXXX',
+    fr:'XXXX-XXXX-XXXX'
+  }[lang];
+
+  var regZipVisible = document.getElementById('regZipVisible');
+  if (regZipVisible) regZipVisible.placeholder = {
+    de:'wird automatisch gefüllt',
+    en:'filled automatically',
+    it:'compilato automaticamente',
+    fr:'rempli automatiquement'
+  }[lang];
+
+  var regCity = document.getElementById('regCity');
+  if (regCity) regCity.placeholder = {
+    de:'wird automatisch gefüllt',
+    en:'filled automatically',
+    it:'compilata automaticamente',
+    fr:'remplie automatiquement'
+  }[lang];
+
+  var pwOld = document.getElementById('pwOld');
+  if (pwOld) pwOld.placeholder = {
+    de:'Aktuelles Passwort',
+    en:'Current password',
+    it:'Password attuale',
+    fr:'Mot de passe actuel'
+  }[lang];
+
+  var pwNew = document.getElementById('pwNew');
+  if (pwNew) pwNew.placeholder = {
+    de:'Neues Passwort',
+    en:'New password',
+    it:'Nuova password',
+    fr:'Nouveau mot de passe'
+  }[lang];
+
+  var pwConfirm = document.getElementById('pwConfirm');
+  if (pwConfirm) pwConfirm.placeholder = {
+    de:'Passwort wiederholen',
+    en:'Repeat password',
+    it:'Ripeti password',
+    fr:'Répéter le mot de passe'
+  }[lang];
+
+  var barResetEmail = document.getElementById('barResetEmail');
+  if (barResetEmail) barResetEmail.placeholder = {
+    de:'deine@email.ch',
+    en:'your@email.com',
+    it:'tua@email.com',
+    fr:'votre@email.com'
+  }[lang];
+
+  var barResetCode = document.getElementById('barResetCode');
+  if (barResetCode) barResetCode.placeholder = {
+    de:'123456',
+    en:'123456',
+    it:'123456',
+    fr:'123456'
+  }[lang];
+
+  var barResetNewPassword = document.getElementById('barResetNewPassword');
+  if (barResetNewPassword) barResetNewPassword.placeholder = {
+    de:'Neues Passwort',
+    en:'New password',
+    it:'Nuova password',
+    fr:'Nouveau mot de passe'
+  }[lang];
+
+  setMaskedInputValue('regIban', (document.getElementById('regIban') || {}).value || '', formatIbanDisplay);
+  setMaskedInputValue('profIban', (document.getElementById('profIban') || {}).value || '', formatIbanDisplay);
+  setMaskedInputValue('regMwstNumber', (document.getElementById('regMwstNumber') || {}).value || '', formatMwstDisplay);
+  setMaskedInputValue('profMwstNumber', (document.getElementById('profMwstNumber') || {}).value || '', formatMwstDisplay);
+
+  var s = sessionGet();
+  if (s) {
+    if (_dataCache.stats) renderBarStats(_dataCache.stats);
+    if (_dataCache.deals) renderMyDeals(_dataCache.deals);
+    if (_dataCache.vouchers) renderMyVouchers(_dataCache.vouchers);
+  }
+}
+
+// =============================================
+// SCREEN TOGGLES
+// =============================================
+function showAuthScreen(show) {
+  document.getElementById('loginScreen').style.display = show ? 'block' : 'none';
+  document.getElementById('barDashboard').style.display = show ? 'none' : 'block';
+}
+
+function doLogout() {
+  sessionClear();
+  showAuthScreen(true);
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginErr').textContent = '';
   document.getElementById('btnLogout').style.display = 'none';
 }
 
-// ── DATA CACHE (avoids re-fetching on every tab switch) ─────────────────
-var _dataCache = {
-  deals: null, vouchers: null, profile: null,
-  dealsLoading: false, vouchersLoading: false, profileLoading: false,
-  statsLoading: false
-};
-
-function clearDataCache() {
-  _dataCache = { deals: null, vouchers: null, profile: null, dealsLoading: false, vouchersLoading: false, profileLoading: false, statsLoading: false };
-  _barStatsVouchers = null;
-  _barStatsDeals = -1;
-}
-
-async function prefetchAllData() {
-  var s = sessionGet();
-  if (!s) return;
-  // Fire all requests in parallel, don't await individually
-  var promises = [];
-  if (!_dataCache.deals) {
-    _dataCache.dealsLoading = true;
-    promises.push(api({ action: 'getBarDeals', token: s.token, bar_id: s.barId }).then(function(r) {
-      _dataCache.dealsLoading = false;
-      if (r.success) _dataCache.deals = r.deals || [];
-    }).catch(function() { _dataCache.dealsLoading = false; }));
-  }
-  if (!_dataCache.vouchers) {
-    _dataCache.vouchersLoading = true;
-    promises.push(api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId }).then(function(r) {
-      _dataCache.vouchersLoading = false;
-      if (r.success) _dataCache.vouchers = r.vouchers || [];
-    }).catch(function() { _dataCache.vouchersLoading = false; }));
-  }
-  if (!_dataCache.profile) {
-    _dataCache.profileLoading = true;
-    promises.push(api({ action: 'getBarProfile', token: s.token }).then(function(r) {
-      _dataCache.profileLoading = false;
-      if (r.success && r.profile) _dataCache.profile = r.profile;
-    }).catch(function() { _dataCache.profileLoading = false; }));
-  }
-  await Promise.all(promises);
-}
-
-// ── AUTH ─────────────────────────────────────────────────────────────────
+// =============================================
+// LOGIN / REGISTER
+// =============================================
 async function doBarLogin() {
-  var email = document.getElementById('loginEmail').value.trim();
-  var pass  = document.getElementById('loginPassword').value;
-  var err   = document.getElementById('loginErr');
+  const email = normText(document.getElementById('loginEmail').value).toLowerCase();
+  const password = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginErr');
   err.textContent = '';
-  if (!email || !pass) { err.textContent = 'Bitte alle Felder ausfüllen.'; return; }
+  if (!email || !password) { err.textContent = currentLang === 'de' ? 'Email und Passwort eingeben.' : currentLang === 'fr' ? 'Veuillez saisir email et mot de passe.' : currentLang === 'it' ? 'Inserisci email e password.' : 'Please enter email and password.'; return; }
+
+  const loginBtn = document.getElementById('btnBarLogin');
+  if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = currentLang === 'de' ? 'Wird eingeloggt...' : currentLang === 'fr' ? 'Connexion...' : currentLang === 'it' ? 'Accesso...' : 'Logging in...'; }
+
   try {
-    document.getElementById('btnBarLogin').disabled = true; document.getElementById('btnBarLogin').textContent = '⏳...';
-    var r = await api({ action: 'barLogin', email, password: pass });
-    document.getElementById('btnBarLogin').disabled = false; document.getElementById('btnBarLogin').textContent = t('loginBtn') || 'Einloggen';
-    if (r.success) {
-      sessionSet(r.token, r.bar.id, r.bar.name);
-      document.getElementById('loginPassword').value = '';
-      showAuthScreen(false);
-      clearDataCache();
-      prefetchAllData(); // Start loading all data in parallel
-      loadBarStats();
-    } else {
-      err.textContent = r.error || 'Ungültige Zugangsdaten.';
-      document.getElementById('loginPassword').value = '';
+    const r = await api({ action: 'barLogin', email, password });
+    if (!r.success) {
+      err.textContent = r.error || 'Login fehlgeschlagen';
+      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = t('loginBtn'); }
+      return;
     }
-  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
+    sessionSet({ token: r.token, barName: r.bar_name || '', barId: r.bar_id || '' });
+    showAuthScreen(false);
+    document.getElementById('barNameDisplay').textContent = r.bar_name || '';
+    document.getElementById('btnLogout').style.display = 'block';
+    if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = t('loginBtn'); }
+    prefetchAllData();
+    loadBarStats();
+  } catch (e) {
+    err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'fr' ? 'Erreur de connexion.' : currentLang === 'it' ? 'Errore di connessione.' : 'Connection error.';
+    if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = t('loginBtn'); }
+  }
 }
 
 async function doBarRegister() {
-  var name    = normText(document.getElementById('regBarName').value);
-  var phone   = normText(document.getElementById('regPhone').value);
-  var email   = normText(document.getElementById('regBarEmail').value);
-  var pass    = document.getElementById('regBarPass').value;
-  var ibanRaw = normText(document.getElementById('regIban').value);
-  var mwstLiable = !(document.getElementById('regNoMwst') && document.getElementById('regNoMwst').checked);
-  var mwstRaw = document.getElementById('regMwstNumber') ? normText(document.getElementById('regMwstNumber').value) : '';
-  var consent = document.getElementById('regConsent').checked;
-  var err     = document.getElementById('regErr');
-  var addr    = parseSelectedAddress('reg');
+  const bar_name = normText(document.getElementById('regBarName').value);
+  const addr = parseSelectedAddress('reg');
+  const phone = normText(document.getElementById('regPhone').value);
+  const email = normText(document.getElementById('regBarEmail').value).toLowerCase();
+  const password = document.getElementById('regBarPass').value;
+  const password2 = document.getElementById('regBarPassConfirm').value;
+  const consent = document.getElementById('regConsent').checked;
+  const err = document.getElementById('regErr');
+  const noMwst = document.getElementById('regNoMwst') && document.getElementById('regNoMwst').checked;
+  const ibanRaw = normText(document.getElementById('regIban').value);
+  const mwstRaw = normText(document.getElementById('regMwstNumber').value);
+
   err.textContent = '';
 
-  if (!name || !addr.city || !addr.address || !addr.zip || !email || !pass || !ibanRaw) {
-    err.textContent = 'Alle Pflichtfelder ausfüllen.';
+  if (!bar_name || !addr.address || !addr.city || !addr.zip || !email || !password || !password2) {
+    err.textContent = currentLang === 'de' ? 'Bitte alle Pflichtfelder ausfüllen.' :
+      currentLang === 'fr' ? 'Veuillez remplir tous les champs obligatoires.' :
+      currentLang === 'it' ? 'Compila tutti i campi obbligatori.' :
+      'Please fill in all required fields.';
     return;
   }
-  if (!(document.getElementById('regAddressSearch') || {}).dataset.selected || !addr.latitude || !addr.longitude) {
-    err.textContent = 'Bitte Adresse aus der Vorschlagsliste auswählen.';
+  if (!addr.latitude || !addr.longitude) {
+    err.textContent = currentLang === 'de' ? 'Bitte die Adresse aus der Vorschlagsliste wählen.' :
+      currentLang === 'fr' ? 'Veuillez choisir l’adresse dans la liste des suggestions.' :
+      currentLang === 'it' ? 'Seleziona l’indirizzo dalla lista dei suggerimenti.' :
+      'Please choose the address from the suggestion list.';
     return;
   }
-  if (!isValidIban(ibanRaw)) { err.textContent = 'Bitte eine gültige IBAN eingeben.'; return; }
-  if (mwstLiable && !isValidMwst(mwstRaw)) { err.textContent = 'Bitte eine gültige MWST-Nummer eingeben.'; return; }
-  if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
-  var passConfirm = document.getElementById('regBarPassConfirm') ? document.getElementById('regBarPassConfirm').value : pass;
-  if (pass !== passConfirm) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
-  if (!consent) { err.textContent = 'Bitte AGB & Datenschutz akzeptieren.'; return; }
+  if (password.length < 8) {
+    err.textContent = currentLang === 'de' ? 'Passwort muss mindestens 8 Zeichen haben.' :
+      currentLang === 'fr' ? 'Le mot de passe doit contenir au moins 8 caractères.' :
+      currentLang === 'it' ? 'La password deve contenere almeno 8 caratteri.' :
+      'Password must be at least 8 characters.';
+    return;
+  }
+  if (password !== password2) {
+    err.textContent = currentLang === 'de' ? 'Passwörter stimmen nicht überein.' :
+      currentLang === 'fr' ? 'Les mots de passe ne correspondent pas.' :
+      currentLang === 'it' ? 'Le password non coincidono.' :
+      'Passwords do not match.';
+    return;
+  }
+  if (!isValidIban(ibanRaw)) {
+    err.textContent = currentLang === 'de' ? 'Bitte eine gültige IBAN eingeben.' :
+      currentLang === 'fr' ? 'Veuillez saisir un IBAN valide.' :
+      currentLang === 'it' ? 'Inserisci un IBAN valido.' :
+      'Please enter a valid IBAN.';
+    return;
+  }
+  if (!noMwst && !isValidMwst(mwstRaw)) {
+    err.textContent = currentLang === 'de' ? 'Bitte eine gültige MWST-Nummer eingeben.' :
+      currentLang === 'fr' ? 'Veuillez saisir un numéro TVA valide.' :
+      currentLang === 'it' ? 'Inserisci un numero IVA valido.' :
+      'Please enter a valid VAT number.';
+    return;
+  }
+  if (!consent) {
+    err.textContent = currentLang === 'de' ? 'Bitte AGB und Datenschutz akzeptieren.' :
+      currentLang === 'fr' ? 'Veuillez accepter les CGV et la confidentialité.' :
+      currentLang === 'it' ? 'Accetta termini e privacy.' :
+      'Please accept terms and privacy.';
+    return;
+  }
 
-  var btn = document.getElementById('btnBarRegister');
+  const registerBtn = document.getElementById('btnBarRegister');
+  if (registerBtn) { registerBtn.disabled = true; registerBtn.textContent = currentLang === 'de' ? 'Wird registriert...' : currentLang === 'fr' ? 'Inscription...' : currentLang === 'it' ? 'Registrazione...' : 'Registering...'; }
+
   try {
-    if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
-    var r = await api({
+    const r = await api({
       action: 'barRegister',
-      name: name,
-      city: addr.city,
+      bar_name,
       address: addr.address,
+      city: addr.city,
       zip: addr.zip,
-      phone: phone,
-      email: email,
-      password: pass,
+      phone,
+      email,
+      password,
       iban: normalizeIban(ibanRaw),
-      mwst_liable: mwstLiable,
-      mwst_number: mwstLiable ? normalizeMwst(mwstRaw) : '',
+      mwst_liable: !noMwst,
+      mwst_number: !noMwst ? normalizeMwst(mwstRaw) : '',
       latitude: addr.latitude,
       longitude: addr.longitude
     });
-    if (r.success) {
-      showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
-      document.getElementById('regBarPass').value = '';
-      document.getElementById('regBarPassConfirm').value = '';
-      document.getElementById('regIban').value = '';
-      document.getElementById('regMwstNumber').value = '';
-      clearSelectedAddress('reg');
-      if (document.getElementById('regAddressSearch')) document.getElementById('regAddressSearch').value = '';
-      if (document.getElementById('regBarName')) document.getElementById('regBarName').value = '';
-      if (document.getElementById('regPhone')) document.getElementById('regPhone').value = '';
-      if (document.getElementById('regBarEmail')) document.getElementById('regBarEmail').value = '';
-      if (document.getElementById('regConsent')) document.getElementById('regConsent').checked = false;
-    } else {
-      err.textContent = r.error || 'Fehler bei der Registrierung.';
+
+    if (!r.success) {
+      err.textContent = r.error || 'Registrierung fehlgeschlagen';
+      if (registerBtn) { registerBtn.disabled = false; registerBtn.textContent = t('registerBtn'); }
+      return;
     }
-  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
-  finally { if (btn) { btn.disabled = false; btn.textContent = t('registerBtn'); } }
-}
 
-async function doLogout() {
-  var s = sessionGet();
-  if (s) { try { await api({ action: 'logout', token: s.token }); } catch (e) {} }
-  sessionClear();
-  showAuthScreen(true);
-}
+    showToast(r.message || (currentLang === 'de' ? 'Registrierung erfolgreich. Bitte auf Freischaltung warten.' :
+      currentLang === 'fr' ? 'Inscription réussie. Veuillez attendre l’activation.' :
+      currentLang === 'it' ? 'Registrazione avvenuta. Attendi l’attivazione.' :
+      'Registration successful. Please wait for activation.'));
+    document.getElementById('regBarName').value = '';
+    clearSelectedAddress('reg');
+    document.getElementById('regPhone').value = '';
+    document.getElementById('regBarEmail').value = '';
+    document.getElementById('regBarPass').value = '';
+    document.getElementById('regBarPassConfirm').value = '';
+    document.getElementById('regConsent').checked = false;
+    document.getElementById('regNoMwst').checked = false;
+    document.getElementById('regIban').value = '';
+    document.getElementById('regMwstNumber').value = '';
+    updateMwstVisibility('reg');
+    var regMapWrap = document.getElementById('regMapWrap');
+    if (regMapWrap) regMapWrap.style.display = 'none';
 
-function showAuthScreen(show) {
-  document.getElementById('loginScreen').style.display  = show ? 'block' : 'none';
-  document.getElementById('barDashboard').style.display = show ? 'none'  : 'block';
-}
-
-
-async function deleteDeal(dealId) {
-  if (!confirm(t('deleteDealConfirm'))) return;
-  var s = sessionGet();
-  if (!s) { doLogout(); return; }
-  try {
-    var r = await api({ action: 'deleteDeal', token: s.token, deal_id: dealId });
-    if (r.success) { showToast(r.message || 'Deal gelöscht'); _dataCache.deals = null; _barStatsDeals = -1; loadMyDeals(); }
-    else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast('Verbindungsfehler', true); }
-}
-
-// ── OVERVIEW ─────────────────────────────────────────────────────────────
-var _barStatsVouchers = null;
-var _barStatsDeals = -1;
-var _barStatsPeriod = 'all';
-var _barCustomFrom = '';
-var _barCustomTo = '';
-
-function barFilterDate(period) {
-  var now = new Date();
-  if (period === 'day') { var d = new Date(now); d.setHours(0,0,0,0); return d; }
-  if (period === 'week') { var d = new Date(now); d.setDate(d.getDate() - 7); return d; }
-  if (period === 'month') { var d = new Date(now); d.setMonth(d.getMonth() - 1); return d; }
-  if (period === 'year') { var d = new Date(now); d.setFullYear(d.getFullYear() - 1); return d; }
-  if (period === 'custom' && _barCustomFrom) return new Date(_barCustomFrom);
-  return null;
-}
-
-function barFilterDateTo(period) {
-  if (period === 'custom' && _barCustomTo) { var d = new Date(_barCustomTo); d.setHours(23,59,59,999); return d; }
-  return null;
-}
-
-function ensureBarFilterBar() {
-  var bar = document.getElementById('barStatsFilterBar');
-  if (!bar || bar.children.length > 0) return;
-  var wrap = document.createElement('div');
-  wrap.style.cssText = 'display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center';
-  [['day',{de:'Heute',en:'Today',it:'Oggi',fr:"Aujourd'hui"}],
-   ['week',{de:'Woche',en:'Week',it:'Settimana',fr:'Semaine'}],
-   ['month',{de:'Monat',en:'Month',it:'Mese',fr:'Mois'}],
-   ['year',{de:'Jahr',en:'Year',it:'Anno',fr:'Année'}],
-   ['all',{de:'Alle',en:'All',it:'Tutti',fr:'Tous'}]
-  ].forEach(function(f) {
-    var btn = document.createElement('button');
-    btn.className = 'bar-stats-filter-btn';
-    btn.dataset.period = f[0];
-    btn.textContent = f[1][currentLang] || f[1].de;
-    btn.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
-    btn.addEventListener('click', function() { _barStatsPeriod = f[0]; highlightBarFilterBtn(f[0]); renderBarStats(f[0]); });
-    wrap.appendChild(btn);
-  });
-  var fromInp = document.createElement('input'); fromInp.type='date'; fromInp.id='barSfFrom';
-  fromInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
-  wrap.appendChild(fromInp);
-  var span = document.createElement('span'); span.textContent='–'; span.style.cssText='color:#666;font-size:12px';
-  wrap.appendChild(span);
-  var toInp = document.createElement('input'); toInp.type='date'; toInp.id='barSfTo';
-  toInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
-  wrap.appendChild(toInp);
-  var applyBtn = document.createElement('button'); applyBtn.textContent='OK';
-  applyBtn.style.cssText = 'background:#FF3366;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
-  applyBtn.addEventListener('click', function() {
-    var f = document.getElementById('barSfFrom'), tt = document.getElementById('barSfTo');
-    if (!f || !f.value) { showToast('Bitte Von-Datum wählen', true); return; }
-    _barCustomFrom = f.value;
-    _barCustomTo = tt ? tt.value || new Date().toISOString().split('T')[0] : '';
-    _barStatsPeriod = 'custom';
-    highlightBarFilterBtn('custom');
-    renderBarStats('custom');
-  });
-  wrap.appendChild(applyBtn);
-  bar.appendChild(wrap);
-  highlightBarFilterBtn(_barStatsPeriod);
-}
-
-function highlightBarFilterBtn(period) {
-  document.querySelectorAll('.bar-stats-filter-btn').forEach(function(b) {
-    if (b.dataset.period === period) { b.style.background='#FF3366'; b.style.color='#fff'; b.style.borderColor='#FF3366'; }
-    else { b.style.background='#222'; b.style.color='#ccc'; b.style.borderColor='#333'; }
-  });
-}
-
-async function loadBarStats(period) {
-  var s = sessionGet();
-  if (!s) { doLogout(); return; }
-  period = period || _barStatsPeriod || 'all';
-  _barStatsPeriod = period;
-
-  // Use cached data if available for instant render
-  if (_barStatsVouchers && _barStatsDeals >= 0) {
-    renderBarStats(period);
-    return;
+    document.querySelector('[data-auth-tab="login"]').click();
+    if (registerBtn) { registerBtn.disabled = false; registerBtn.textContent = t('registerBtn'); }
+  } catch (e) {
+    err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'fr' ? 'Erreur de connexion.' : currentLang === 'it' ? 'Errore di connessione.' : 'Connection error.';
+    if (registerBtn) { registerBtn.disabled = false; registerBtn.textContent = t('registerBtn'); }
   }
+}
 
-  // Try to use prefetched cache
-  if (_dataCache.vouchers && _dataCache.deals) {
-    _barStatsVouchers = _dataCache.vouchers;
-    _barStatsDeals = 0;
-    _dataCache.deals.forEach(function(d) { if (d.active) _barStatsDeals++; });
-    renderBarStats(period);
-    return;
+// =============================================
+// DATA LOADING / CACHING
+// =============================================
+async function prefetchAllData() {
+  const s = sessionGet();
+  if (!s) return;
+
+  loadBarStats();
+  loadMyDeals();
+  loadMyVouchers();
+  loadProfile();
+}
+
+async function loadBarStats() {
+  const s = sessionGet();
+  if (!s) { doLogout(); return; }
+
+  if (_dataCache.stats) {
+    renderBarStats(_dataCache.stats);
   }
-
-  var grid = document.getElementById('statsGrid');
-  grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
-
   if (_dataCache.statsLoading) return;
   _dataCache.statsLoading = true;
+
   try {
-    var [vr, dr] = await Promise.all([
-      api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId }),
-      api({ action: 'getBarDeals', token: s.token, bar_id: s.barId })
-    ]);
+    const r = await api({ action: 'getBarStats', token: s.token });
     _dataCache.statsLoading = false;
-    _barStatsVouchers = (vr.success && vr.vouchers) ? vr.vouchers : [];
-    _dataCache.vouchers = _barStatsVouchers;
-    _barStatsDeals = 0;
-    var deals = (dr.success && dr.deals) ? dr.deals : [];
-    _dataCache.deals = deals;
-    deals.forEach(function(d) { if (d.active) _barStatsDeals++; });
-  } catch(e) { _dataCache.statsLoading = false; _barStatsVouchers = []; _barStatsDeals = 0; }
-
-  renderBarStats(period);
-}
-
-function renderBarStats(period) {
-  ensureBarFilterBar();
-  var cutoff = barFilterDate(period);
-  var dateTo = barFilterDateTo(period);
-  var vouchers = _barStatsVouchers;
-  if (cutoff) {
-    vouchers = vouchers.filter(function(v) {
-      var d = new Date(v.created_at);
-      return d >= cutoff && (!dateTo || d <= dateTo);
-    });
+    if (!r.success) {
+      if (r.error === 'INVALID_TOKEN') doLogout();
+      return;
+    }
+    _dataCache.stats = r;
+    renderBarStats(r);
+  } catch (e) {
+    _dataCache.statsLoading = false;
+    showToast(currentLang === 'de' ? 'Stats konnten nicht geladen werden' :
+      currentLang === 'fr' ? 'Impossible de charger les statistiques' :
+      currentLang === 'it' ? 'Impossibile caricare le statistiche' :
+      'Could not load statistics', true);
   }
-
-  var sold = vouchers.length, redeemed = 0, notRedeemed = 0, pending = 0, paid = 0;
-  vouchers.forEach(function(v) {
-    if (v.status === 'redeemed') { redeemed++; if (v.payout_status === 'pending') pending += Number(v.bar_payout) || 0; }
-    else { notRedeemed++; }
-    if (v.payout_status === 'paid') paid += Number(v.bar_payout) || 0;
-  });
-
-  var grid = document.getElementById('statsGrid');
-  grid.innerHTML = '';
-
-  var cardsDiv = document.createElement('div');
-  cardsDiv.className = 'stats-grid';
-  [
-    [t('soldCount') || 'Verkauft', sold, '#fff', 'sold'],
-    [t('redeemed') || 'Eingelöst', redeemed, '#22c55e', 'redeemed'],
-    [t('notRedeemed') || 'Nicht eingelöst', notRedeemed, '#f59e0b', 'not_redeemed'],
-    [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
-    [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
-    [t('activeDeals') || 'Aktive Deals', _barStatsDeals, '#fff', null],
-  ].forEach(function(s) {
-    var card = document.createElement('div'); card.className = 'stat-card';
-    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function() { showBarStatDetail(s[0], s[3], vouchers); }); }
-    var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
-    var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]);
-    if (s[2]) vEl.style.color = s[2];
-    card.append(lEl, vEl); cardsDiv.appendChild(card);
-  });
-  grid.appendChild(cardsDiv);
 }
 
-function showBarStatDetail(label, filterKey, filteredVouchers) {
-  var detailEl = document.getElementById('barStatsDetail');
-  if (!detailEl) return;
-  var items = [];
-  if (filterKey === 'sold') items = filteredVouchers;
-  else if (filterKey === 'redeemed') items = filteredVouchers.filter(function(v) { return v.status === 'redeemed'; });
-  else if (filterKey === 'not_redeemed') items = filteredVouchers.filter(function(v) { return v.status !== 'redeemed' && v.status !== 'refunded'; });
-  else if (filterKey === 'pending_payout') items = filteredVouchers.filter(function(v) { return v.status === 'redeemed' && v.payout_status === 'pending'; });
-  else if (filterKey === 'paid_out') items = filteredVouchers.filter(function(v) { return v.payout_status === 'paid'; });
-  else { detailEl.innerHTML = ''; return; }
-
-  if (!items.length) { detailEl.innerHTML = '<div style="color:#666;text-align:center;padding:20px">Keine Daten für diesen Zeitraum</div>'; return; }
-  var html = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + label + ' (' + items.length + ')</div>';
-  html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>Datum</th><th>Code</th><th>Deal</th><th>Preis</th><th>Status</th><th>Auszahl.</th></tr></thead><tbody>';
-  items.forEach(function(v) {
-    var sc = v.status === 'redeemed' ? '#22c55e' : v.status === 'refunded' ? '#ef4444' : '#f59e0b';
-    var st = v.status === 'redeemed' ? 'Eingelöst' : v.status === 'refunded' ? 'Erstattet' : 'Offen';
-    var pc = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
-    var pt = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
-    html += '<tr><td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-') + '</td><td style="font-family:monospace">' + ((v.code_display || v.code) || '-') + '</td><td>' + (v.deal_title || '-') + '</td><td style="text-align:right">' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + st + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td></tr>';
-  });
-  html += '</tbody></table></div>';
-  detailEl.innerHTML = html;
+function dateInputValue(v) {
+  if (!v) return '';
+  try {
+    var d = new Date(v);
+    if (!isNaN(d)) return d.toISOString().slice(0,10);
+  } catch(e) {}
+  return String(v).slice(0,10);
 }
-
-// ── MY DEALS ──────────────────────────────────────────────────────────────
-async function loadMyDeals() {
-  var s = sessionGet();
+function getSelectedStatsRange() {
+  var from = document.getElementById('statsDateFrom');
+  var to = document.getElementById('statsDateTo');
+  return {
+    date_from: from && from.value ? from.value : '',
+    date_to: to && to.value ? to.value : ''
+  };
+}
+function buildStatsFilterBar(filter) {
+  var target = document.getElementById('barStatsFilterBar');
+  if (!target) return;
+  filter = filter || {};
+  var fromVal = dateInputValue(filter.date_from);
+  var toVal = dateInputValue(filter.date_to);
+  target.innerHTML =
+    '<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:16px;margin-bottom:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:end">' +
+      '<div style="min-width:170px"><label class="form-label" style="margin-bottom:6px">' + (currentLang === 'de' ? 'Von' : currentLang === 'fr' ? 'De' : currentLang === 'it' ? 'Da' : 'From') + '</label><input type="date" class="form-input" id="statsDateFrom" value="' + escapeHtml(fromVal) + '"></div>' +
+      '<div style="min-width:170px"><label class="form-label" style="margin-bottom:6px">' + (currentLang === 'de' ? 'Bis' : currentLang === 'fr' ? 'À' : currentLang === 'it' ? 'A' : 'To') + '</label><input type="date" class="form-input" id="statsDateTo" value="' + escapeHtml(toVal) + '"></div>' +
+      '<button class="btn-pink" id="btnApplyStatsRange" style="width:auto;padding:12px 18px">' + (currentLang === 'de' ? 'Anwenden' : currentLang === 'fr' ? 'Appliquer' : currentLang === 'it' ? 'Applica' : 'Apply') + '</button>' +
+      '<button class="btn-ghost" id="btnThisWeekStats" style="width:auto;padding:12px 18px;margin-top:0">' + (currentLang === 'de' ? 'Diese Woche' : currentLang === 'fr' ? 'Cette semaine' : currentLang === 'it' ? 'Questa settimana' : 'This week') + '</button>' +
+      '<button class="btn-ghost" id="btnThisMonthStats" style="width:auto;padding:12px 18px;margin-top:0">' + (currentLang === 'de' ? 'Dieser Monat' : currentLang === 'fr' ? 'Ce mois' : currentLang === 'it' ? 'Questo mese' : 'This month') + '</button>' +
+      '<button class="btn-ghost" id="btnResetStatsRange" style="width:auto;padding:12px 18px;margin-top:0">' + (currentLang === 'de' ? 'Zurücksetzen' : currentLang === 'fr' ? 'Réinitialiser' : currentLang === 'it' ? 'Reset' : 'Reset') + '</button>' +
+    '</div>';
+  document.getElementById('btnApplyStatsRange').onclick = function() { reloadBarStatsWithRange(); };
+  document.getElementById('btnThisWeekStats').onclick = function() { presetStatsRange('week'); };
+  document.getElementById('btnThisMonthStats').onclick = function() { presetStatsRange('month'); };
+  document.getElementById('btnResetStatsRange').onclick = function() { presetStatsRange('reset'); };
+}
+function presetStatsRange(type) {
+  var from = document.getElementById('statsDateFrom');
+  var to = document.getElementById('statsDateTo');
+  var now = new Date();
+  if (type === 'week') {
+    var day = now.getDay();
+    var diff = day === 0 ? 6 : day - 1;
+    var monday = new Date(now);
+    monday.setDate(now.getDate() - diff);
+    var sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    from.value = monday.toISOString().slice(0,10);
+    to.value = sunday.toISOString().slice(0,10);
+  } else if (type === 'month') {
+    var first = new Date(now.getFullYear(), now.getMonth(), 1);
+    var last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    from.value = first.toISOString().slice(0,10);
+    to.value = last.toISOString().slice(0,10);
+  } else {
+    from.value = '';
+    to.value = '';
+  }
+  reloadBarStatsWithRange();
+}
+async function reloadBarStatsWithRange(detailType) {
+  const s = sessionGet();
   if (!s) { doLogout(); return; }
-  // Show cached data instantly
-  if (_dataCache.deals) { renderMyDeals(_dataCache.deals); }
-  else {
-    var el = document.getElementById('dealList');
-    el.innerHTML = '<div class="empty" style="padding:20px;color:#999">Laden...</div>';
+  var range = getSelectedStatsRange();
+  try {
+    const r = await api({
+      action: 'getBarStats',
+      token: s.token,
+      date_from: range.date_from,
+      date_to: range.date_to,
+      detail_type: detailType || ''
+    });
+    if (!r.success) {
+      if (r.error === 'INVALID_TOKEN') doLogout();
+      else showToast(r.error || 'Fehler', true);
+      return;
+    }
+    _dataCache.stats = r;
+    renderBarStats(r);
+  } catch (e) {
+    showToast('Verbindungsfehler', true);
   }
-  // Refresh in background
+}
+function renderBarStats(r) {
+  buildStatsFilterBar({ date_from: r.date_from, date_to: r.date_to });
+  const grid = document.getElementById('statsGrid');
+  const vals = [
+    { key:'soldCount', value:r.sold || 0, detail:'sold' },
+    { key:'notRedeemed', value:r.not_redeemed || 0, detail:'not_redeemed' },
+    { key:'paidOut', value:r.paid_out || 0, detail:'paid_out' },
+    { key:'activeDeals', value:r.active_deals || 0, detail:'active_deals' },
+    { key:'earnings', value:'CHF ' + Number(r.earnings || 0).toFixed(2), detail:'earnings' },
+    { key:'redeemed', value:r.redeemed || 0, detail:'redeemed' },
+    { key:'pendingPayout', value:'CHF ' + Number(r.pending_payout || 0).toFixed(2), detail:'pending_payout' }
+  ];
+  grid.innerHTML = vals.map(function(it) {
+    return '<div class="stat-card" style="cursor:pointer" data-detail="' + it.detail + '">' +
+      '<div class="stat-label">' + t(it.key) + '</div>' +
+      '<div class="stat-value">' + escapeHtml(String(it.value)) + '</div>' +
+    '</div>';
+  }).join('');
+  Array.from(grid.querySelectorAll('.stat-card')).forEach(function(el) {
+    el.onclick = function() { reloadBarStatsWithRange(this.dataset.detail); };
+  });
+
+  var detail = document.getElementById('barStatsDetail');
+  if (!detail) return;
+  if (!r.detail_items || !r.detail_items.length) {
+    detail.innerHTML = '';
+    return;
+  }
+  var titleMap = {
+    sold: t('soldCount'),
+    not_redeemed: t('notRedeemed'),
+    paid_out: t('paidOut'),
+    active_deals: t('activeDeals'),
+    earnings: t('earnings'),
+    redeemed: t('redeemed'),
+    pending_payout: t('pendingPayout')
+  };
+  detail.innerHTML =
+    '<div style="margin-top:18px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:18px">' +
+      '<div style="font-weight:700;font-size:16px;margin-bottom:12px">' + escapeHtml(titleMap[r.detail_type] || (currentLang === 'de' ? 'Details' : 'Details')) + '</div>' +
+      '<div class="overflow-x"><table class="voucher-table"><thead><tr>' +
+      '<th>' + (currentLang === 'de' ? 'Datum' : currentLang === 'fr' ? 'Date' : currentLang === 'it' ? 'Data' : 'Date') + '</th>' +
+      '<th>' + t('dealLbl') + '</th>' +
+      '<th>' + t('priceLbl') + '</th>' +
+      '<th>Status</th></tr></thead><tbody>' +
+      r.detail_items.map(function(it) {
+        return '<tr><td>' + escapeHtml(String(it.date || '')) + '</td><td>' + escapeHtml(String(it.deal_title || '')) + '</td><td>' + escapeHtml(String(it.amount || '')) + '</td><td>' + escapeHtml(String(it.status || '')) + '</td></tr>';
+      }).join('') +
+      '</tbody></table></div>' +
+    '</div>';
+}
+
+async function loadMyDeals() {
+  const s = sessionGet();
+  if (!s) { doLogout(); return; }
+
+  if (_dataCache.deals) {
+    renderMyDeals(_dataCache.deals);
+  }
   if (_dataCache.dealsLoading) return;
   _dataCache.dealsLoading = true;
+
   try {
-    var r = await api({ action: 'getBarDeals', token: s.token, bar_id: s.barId });
+    const r = await api({ action: 'getMyDeals', token: s.token });
     _dataCache.dealsLoading = false;
-    if (!r.success) { if (!_dataCache.deals) showToast(r.error || 'Fehler', true); return; }
+    if (!r.success) {
+      if (r.error === 'INVALID_TOKEN') doLogout();
+      return;
+    }
     _dataCache.deals = r.deals || [];
     renderMyDeals(_dataCache.deals);
-  } catch (e) { _dataCache.dealsLoading = false; if (!_dataCache.deals) showToast('Verbindungsfehler', true); }
+  } catch (e) {
+    _dataCache.dealsLoading = false;
+    showToast(currentLang === 'de' ? 'Deals konnten nicht geladen werden' :
+      currentLang === 'fr' ? 'Impossible de charger les deals' :
+      currentLang === 'it' ? 'Impossibile caricare i deal' :
+      'Could not load deals', true);
+  }
 }
 
 function renderMyDeals(deals) {
-  var el = document.getElementById('dealList');
-  el.innerHTML = '';
-  if (!deals.length) {
-    var div = document.createElement('div');
-    div.className = 'empty'; div.textContent = t('noDeals');
-    el.appendChild(div); return;
+  const list = document.getElementById('dealList');
+  if (!list) return;
+
+  if (!deals || deals.length === 0) {
+    list.innerHTML = '<div class="empty">' + t('noDeals') + '</div>';
+    return;
   }
-  deals.forEach(function(d) {
-    var item = document.createElement('div');
-    item.className = 'deal-item';
-    if (d.image_url) {
-      var thumb = document.createElement('img');
-      var iUrl = d.image_url;
-      if (iUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var fid = iUrl.split('/d/')[1]; if (fid) iUrl = 'https://drive.google.com/thumbnail?id=' + fid + '&sz=w200'; }
-      thumb.src = iUrl;
-      thumb.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0';
-      thumb.referrerPolicy = 'no-referrer';
-      thumb.onerror = function() { this.style.display='none'; };
-      item.appendChild(thumb);
+
+  list.innerHTML = deals.map(function(d) {
+    var activeBadge = d.active ? '<span class="badge b-active">' + (currentLang === 'de' ? 'Aktiv' : currentLang === 'fr' ? 'Actif' : currentLang === 'it' ? 'Attivo' : 'Active') + '</span>' :
+      '<span class="badge b-inactive">' + (currentLang === 'de' ? 'Inaktiv' : currentLang === 'fr' ? 'Inactif' : currentLang === 'it' ? 'Inattivo' : 'Inactive') + '</span>';
+
+    var validity;
+    if (String(d.valid_type || '') === 'single' && d.single_date) {
+      validity = d.single_date;
+    } else {
+      validity = (d.weekdays || '').replace(/,/g, ', ') || '—';
     }
-    var info = document.createElement('div');
-    var title = document.createElement('div'); title.className = 'deal-item-title'; title.textContent = d.title;
-    var meta  = document.createElement('div'); meta.className  = 'deal-item-meta';
-    meta.textContent = Number(d.deal_price).toFixed(2) + ' CHF · ' + (d.active ? '✅ Aktiv' : '⏸ Inaktiv');
-    info.append(title, meta);
+    var timeInfo = [d.time_from, d.time_to].filter(Boolean).join(' - ');
+    var meta = [
+      activeBadge,
+      escapeHtml(validity),
+      timeInfo ? escapeHtml(timeInfo) : '',
+      (d.categories || []).length ? escapeHtml((d.categories || []).join(', ')) : ''
+    ].filter(Boolean).join(' · ');
 
-    var actions = document.createElement('div');
-    actions.className = 'deal-actions';
-
-    var btnToggle = document.createElement('button');
-    btnToggle.className = 'btn-sm ' + (d.active ? 'btn-orange' : 'btn-green');
-    btnToggle.textContent = d.active ? t('deactivateBtn') : t('activeBtn');
-    btnToggle.addEventListener('click', function() { toggleDeal(d.id, !d.active); });
-
-    var btnEdit = document.createElement('button');
-    btnEdit.className = 'btn-sm btn-blue';
-    btnEdit.textContent = t('editBtn');
-    btnEdit.addEventListener('click', function() { openEditModal(d); });
-
-    var btnDel = document.createElement('button');
-    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#2a2a2a;color:#ef4444;border:1px solid #ef4444;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
-    btnDel.textContent = t('deleteDealBtn') || 'Löschen';
-    (function(dealId) { btnDel.addEventListener('click', function() { deleteDeal(dealId); }); })(d.id);
-
-    actions.append(btnToggle, btnEdit, btnDel);
-    item.append(info, actions);
-    el.appendChild(item);
-  });
+    return '<div class="deal-item">' +
+      '<div>' +
+        '<div class="deal-item-title">' + escapeHtml(d.title || '') + '</div>' +
+        '<div class="deal-item-meta">' + meta + '</div>' +
+        '<div class="deal-item-meta">CHF ' + Number(d.deal_price || 0).toFixed(2) + (d.original_price ? ' <span style="text-decoration:line-through;opacity:.6;margin-left:6px">CHF ' + Number(d.original_price).toFixed(2) + '</span>' : '') + '</div>' +
+      '</div>' +
+      '<div class="deal-actions">' +
+        '<button class="btn-sm btn-blue" onclick="openEditModal(\'' + escapeHtml(String(d.id || '')) + '\')">' + t('editBtn') + '</button>' +
+        '<button class="btn-sm ' + (d.active ? 'btn-orange' : 'btn-green') + '" onclick="toggleDeal(\'' + escapeHtml(String(d.id || '')) + '\',' + (!!d.active) + ')">' + (d.active ? t('deactivateBtn') : t('activeBtn')) + '</button>' +
+        '<button class="btn-sm btn-red" onclick="deleteDeal(\'' + escapeHtml(String(d.id || '')) + '\')">' + t('deleteDealBtn') + '</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
-async function toggleDeal(dealId, active) {
-  var s = sessionGet();
+async function loadMyVouchers() {
+  const s = sessionGet();
+  if (!s) { doLogout(); return; }
+
+  if (_dataCache.vouchers) {
+    renderMyVouchers(_dataCache.vouchers);
+  }
+  if (_dataCache.vouchersLoading) return;
+  _dataCache.vouchersLoading = true;
+
+  try {
+    const r = await api({ action: 'getMyBarVouchers', token: s.token });
+    _dataCache.vouchersLoading = false;
+    if (!r.success) {
+      if (r.error === 'INVALID_TOKEN') doLogout();
+      return;
+    }
+    _dataCache.vouchers = r.vouchers || [];
+    renderMyVouchers(_dataCache.vouchers);
+  } catch (e) {
+    _dataCache.vouchersLoading = false;
+    showToast(currentLang === 'de' ? 'Gutscheine konnten nicht geladen werden' :
+      currentLang === 'fr' ? 'Impossible de charger les bons' :
+      currentLang === 'it' ? 'Impossibile caricare i voucher' :
+      'Could not load vouchers', true);
+  }
+}
+
+function renderMyVouchers(vouchers) {
+  const body = document.getElementById('voucherBody');
+  if (!body) return;
+
+  if (!vouchers || vouchers.length === 0) {
+    body.innerHTML = '<tr><td colspan="6" class="empty">' + t('noVouchers') + '</td></tr>';
+    return;
+  }
+
+  body.innerHTML = vouchers.map(function(v) {
+    var status = String(v.status || '').toLowerCase();
+    var badgeClass = status === 'redeemed' ? 'b-redeemed' : status === 'sent' ? 'b-sent' : 'b-issued';
+    var code = v.code_masked || (status === 'redeemed' ? (v.code || '—') : '••••-••••-••••');
+    var redeemedAt = v.redeemed_at ? escapeHtml(String(v.redeemed_at)) : '—';
+
+    return '<tr>' +
+      '<td style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace">' + escapeHtml(code) + '</td>' +
+      '<td>' + escapeHtml(String(v.deal_title || '')) + '</td>' +
+      '<td>CHF ' + Number(v.amount || 0).toFixed(2) + '</td>' +
+      '<td><span class="badge ' + badgeClass + '">' + escapeHtml(String(v.status_label || v.status || '')) + '</span></td>' +
+      '<td>' + escapeHtml(String(v.created_at || '')) + '</td>' +
+      '<td>' + redeemedAt + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+// =============================================
+// DEAL ACTIONS
+// =============================================
+async function toggleDeal(id, isActive) {
+  const s = sessionGet();
   if (!s) { doLogout(); return; }
   try {
-    var r = await api({ action: 'updateDealStatus', token: s.token, deal_id: dealId, active: active });
-    if (r.success) { showToast(active ? '✅ Aktiviert' : '⏸ Deaktiviert'); _dataCache.deals = null; _barStatsDeals = -1; loadMyDeals(); }
-    else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast('Verbindungsfehler', true); }
+    const r = await api({
+      action: 'toggleDeal',
+      token: s.token,
+      deal_id: id,
+      active: !isActive
+    });
+    if (!r.success) {
+      showToast(r.error || 'Fehler', true);
+      return;
+    }
+    _dataCache.deals = null;
+    _dataCache.stats = null;
+    loadMyDeals();
+    loadBarStats();
+    showToast(currentLang === 'de' ? 'Deal aktualisiert' :
+      currentLang === 'fr' ? 'Deal mis à jour' :
+      currentLang === 'it' ? 'Deal aggiornato' :
+      'Deal updated');
+  } catch (e) {
+    showToast('Verbindungsfehler', true);
+  }
 }
 
-// ── EDIT MODAL ────────────────────────────────────────────────────────────
-function openEditModal(deal) {
-  document.getElementById('editDealId').value       = deal.id;
-  document.getElementById('editTitle').value        = deal.title || '';
-  document.getElementById('editDesc').value         = deal.description || '';
-  document.getElementById('editOrigPrice').value    = deal.original_price || 0;
-  document.getElementById('editDealPrice').value    = deal.deal_price || '';
-  document.getElementById('editQty').value          = deal.max_quantity || 0;
-  document.getElementById('editImageUrl').value     = deal.image_url || '';
-  // Image preview
-  var editPreview = document.getElementById('editImagePreview');
-  var editPreviewImg = document.getElementById('editImagePreviewImg');
-  if (editPreview && editPreviewImg && deal.image_url) {
-    var previewUrl = deal.image_url;
-    if (previewUrl.indexOf('lh3.googleusercontent.com/d/') >= 0) { var pfid = previewUrl.split('/d/')[1]; if (pfid) previewUrl = 'https://drive.google.com/thumbnail?id=' + pfid + '&sz=w400'; }
-    editPreviewImg.src = previewUrl; editPreviewImg.referrerPolicy = 'no-referrer'; editPreview.style.display = 'block';
-  } else if (editPreview) { editPreview.style.display = 'none'; }
-  var editFile = document.getElementById('editImageFile');
-  if (editFile) editFile.value = '';
-  document.getElementById('editActive').checked = !!deal.active;
+async function deleteDeal(id) {
+  if (!confirm(t('deleteDealConfirm'))) return;
+  const s = sessionGet();
+  if (!s) { doLogout(); return; }
+  try {
+    const r = await api({
+      action: 'deleteDeal',
+      token: s.token,
+      deal_id: id
+    });
+    if (!r.success) {
+      showToast(r.error || 'Fehler', true);
+      return;
+    }
+    _dataCache.deals = null;
+    _dataCache.stats = null;
+    loadMyDeals();
+    loadBarStats();
+    showToast(currentLang === 'de' ? 'Deal gelöscht' :
+      currentLang === 'fr' ? 'Deal supprimé' :
+      currentLang === 'it' ? 'Deal eliminato' :
+      'Deal deleted');
+  } catch (e) {
+    showToast('Verbindungsfehler', true);
+  }
+}
 
-  // Validity type
-  var vType = deal.validity_type || 'recurring';
-  var vRecurring = document.getElementById('editVTypeRecurring');
-  var vSingle = document.getElementById('editVTypeSingle');
-  if (vRecurring) vRecurring.checked = (vType === 'recurring');
-  if (vSingle) vSingle.checked = (vType === 'single');
-  var ef1 = document.getElementById('editRecurringFields');
-  var ef2 = document.getElementById('editSingleFields');
-  if (ef1) ef1.style.display = vType === 'recurring' ? 'block' : 'none';
-  if (ef2) ef2.style.display = vType === 'single' ? 'block' : 'none';
+// =============================================
+// EDIT MODAL
+// =============================================
+function openEditModal(id) {
+  const deals = _dataCache.deals || [];
+  const d = deals.find(function(x) { return String(x.id) === String(id); });
+  if (!d) return;
 
-  // Weekdays
-  var wds = deal.valid_weekdays || [];
-  document.querySelectorAll('#editWeekdays .wd-btn').forEach(function(b) {
-    b.classList.toggle('selected', wds.indexOf(b.getAttribute('data-wd')) !== -1);
-  });
+  document.getElementById('editDealId').value = d.id || '';
+  document.getElementById('editTitle').value = d.title || '';
+  document.getElementById('editDesc').value = d.description || '';
+  document.getElementById('editOrigPrice').value = d.original_price || '';
+  document.getElementById('editDealPrice').value = d.deal_price || '';
+  document.getElementById('editQty').value = d.max_qty != null ? d.max_qty : 0;
+  document.getElementById('editTimeFrom').value = d.time_from || '';
+  document.getElementById('editTimeTo').value = d.time_to || '';
+  document.getElementById('editActive').checked = !!d.active;
+  document.getElementById('editImageUrl').value = d.image_url || '';
 
-  // Single date
-  var sd = document.getElementById('editSingleDate');
-  if (sd) sd.value = deal.valid_single_date || '';
+  var prev = document.getElementById('editImagePreview');
+  var prevImg = document.getElementById('editImagePreviewImg');
+  if (d.image_url) {
+    prevImg.src = d.image_url;
+    prev.style.display = 'block';
+  } else {
+    prev.style.display = 'none';
+  }
 
-  // Time from/to
-  var tf = document.getElementById('editTimeFrom');
-  var tt = document.getElementById('editTimeTo');
-  if (tf) tf.value = deal.valid_from_time || '';
-  if (tt) tt.value = deal.valid_to_time || '';
+  if (String(d.valid_type || '') === 'single') {
+    document.getElementById('editVTypeSingle').checked = true;
+    document.getElementById('editSingleFields').style.display = 'block';
+    document.getElementById('editRecurringFields').style.display = 'none';
+    document.getElementById('editSingleDate').value = dateInputValue(d.single_date);
+  } else {
+    document.getElementById('editVTypeRecurring').checked = true;
+    document.getElementById('editSingleFields').style.display = 'none';
+    document.getElementById('editRecurringFields').style.display = 'block';
+    const weekdays = String(d.weekdays || '').split(',').map(function(x) { return x.trim(); });
+    document.querySelectorAll('#editWeekdays .wd-btn').forEach(function(btn) {
+      btn.classList.toggle('selected', weekdays.indexOf(btn.dataset.wd) >= 0);
+    });
+  }
 
-  // Time slots
-  var ts = deal.time_slots || [];
-  document.querySelectorAll('input[name="editTimeSlot"]').forEach(function(c) {
-    c.checked = ts.indexOf(c.value) !== -1;
+  const timeSlots = Array.isArray(d.time_slots) ? d.time_slots : String(d.time_slots || '').split(',').map(function(x) { return x.trim(); }).filter(Boolean);
+  document.querySelectorAll('input[name="editTimeSlot"]').forEach(function(cb) {
+    cb.checked = timeSlots.indexOf(cb.value) >= 0;
   });
 
   document.getElementById('editModal').classList.add('active');
@@ -869,253 +1171,261 @@ function closeEditModal() {
 }
 
 async function saveEditDeal() {
-  var s = sessionGet();
+  const s = sessionGet();
   if (!s) { doLogout(); return; }
-  var dealId = document.getElementById('editDealId').value;
-  var price  = parseFloat(document.getElementById('editDealPrice').value);
-  if (isNaN(price) || price <= 0) { showToast('Ungültiger Preis', true); return; }
 
-  var payload = {
-    action: 'updateDeal', token: s.token,
-    deal_id: dealId,
-    title:          document.getElementById('editTitle').value.trim(),
-    description:    document.getElementById('editDesc').value.trim(),
-    original_price: parseFloat(document.getElementById('editOrigPrice').value) || 0,
-    deal_price:     price,
-    max_quantity:   parseInt(document.getElementById('editQty').value) || 0,
-    image_url:      document.getElementById('editImageUrl').value.trim(),
-    active:         document.getElementById('editActive').checked,
-    validity_type:  (document.querySelector('input[name="editValidType"]:checked') || {}).value || 'recurring',
-    valid_weekdays: Array.from(document.querySelectorAll('#editWeekdays .wd-btn.selected')).map(function(b) { return b.getAttribute('data-wd'); }),
-    valid_single_date: (document.getElementById('editSingleDate') || {}).value || '',
-    valid_from_time: (document.getElementById('editTimeFrom') || {}).value || '',
-    valid_to_time:   (document.getElementById('editTimeTo') || {}).value || '',
-    time_slots:     Array.from(document.querySelectorAll('input[name="editTimeSlot"]:checked')).map(function(c) { return c.value; }),
-  };
+  const id = document.getElementById('editDealId').value;
+  const title = normText(document.getElementById('editTitle').value);
+  const description = normText(document.getElementById('editDesc').value);
+  const original_price = Number(document.getElementById('editOrigPrice').value || 0);
+  const deal_price = Number(document.getElementById('editDealPrice').value || 0);
+  const max_qty = Number(document.getElementById('editQty').value || 0);
+  const active = document.getElementById('editActive').checked;
+  const valid_type = document.querySelector('input[name="editValidType"]:checked').value;
+  const single_date = document.getElementById('editSingleDate').value;
+  const weekdays = Array.from(document.querySelectorAll('#editWeekdays .wd-btn.selected')).map(function(b) { return b.dataset.wd; });
+  const time_from = document.getElementById('editTimeFrom').value;
+  const time_to = document.getElementById('editTimeTo').value;
+  const time_slots = Array.from(document.querySelectorAll('input[name="editTimeSlot"]:checked')).map(function(cb) { return cb.value; });
+  const imageFile = document.getElementById('editImageFile').files[0];
+  let image_url = document.getElementById('editImageUrl').value || '';
 
-  try {
-    var _sBtn = document.getElementById('btnSaveEdit');
-    if (_sBtn) { _sBtn.disabled = true; _sBtn.textContent = '\u23F3...'; }
-    // Handle image file upload for edit
-    var editImgFile = document.getElementById('editImageFile');
-    if (editImgFile && editImgFile.files && editImgFile.files[0]) {
-      var file = editImgFile.files[0];
-      if (file.size <= 5*1024*1024) {
-        var b64 = await new Promise(function(resolve, reject) {
-          var reader = new FileReader();
-          reader.onload = function() { resolve(reader.result.split(',')[1]); };
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-        var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: file.name });
-        if (uR.success) payload.image_url = uR.url;
-      }
-    }
-    var r = await api(payload);
-    if (r.success) {
-      showToast('✅ ' + t('saveLbl'));
-      _dataCache.deals = null;
-      closeEditModal();
-      loadMyDeals();
-    } else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast('Verbindungsfehler', true); }
-}
-
-// ── VOUCHERS TAB ──────────────────────────────────────────────────────────
-async function loadMyVouchers() {
-  var s = sessionGet();
-  if (!s) { doLogout(); return; }
-  if (_dataCache.vouchers) { renderVouchers(_dataCache.vouchers); }
-  else {
-    var tbody = document.getElementById('voucherBody');
-    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#999">Laden...</td></tr>';
+  if (!title || !deal_price) {
+    showToast(currentLang === 'de' ? 'Bitte Titel und Deal-Preis eingeben.' :
+      currentLang === 'fr' ? 'Veuillez saisir le titre et le prix du deal.' :
+      currentLang === 'it' ? 'Inserisci titolo e prezzo del deal.' :
+      'Please enter title and deal price.', true);
+    return;
   }
-  if (_dataCache.vouchersLoading) return;
-  _dataCache.vouchersLoading = true;
-  try {
-    var r = await api({ action: 'getBarVouchers', token: s.token, bar_id: s.barId });
-    _dataCache.vouchersLoading = false;
-    if (!r.success) { if (!_dataCache.vouchers) showToast(r.error || 'Fehler', true); return; }
-    _dataCache.vouchers = r.vouchers || [];
-    renderVouchers(_dataCache.vouchers);
-  } catch (e) { _dataCache.vouchersLoading = false; if (!_dataCache.vouchers) showToast('Verbindungsfehler', true); }
-}
-
-function renderVouchers(vouchers) {
-  var tbody = document.getElementById('voucherBody');
-  tbody.innerHTML = '';
-  if (!vouchers.length) {
-    var tr = document.createElement('tr');
-    var td = document.createElement('td');
-    td.colSpan = 6; td.style.padding = '30px'; td.style.textAlign = 'center';
-    td.style.color = '#555'; td.textContent = t('noVouchers');
-    tr.appendChild(td); tbody.appendChild(tr); return;
+  if (valid_type === 'single' && !single_date) {
+    showToast(currentLang === 'de' ? 'Bitte ein Datum wählen.' :
+      currentLang === 'fr' ? 'Veuillez choisir une date.' :
+      currentLang === 'it' ? 'Scegli una data.' :
+      'Please choose a date.', true);
+    return;
   }
-  var statusMap = { sent:'b-sent', issued:'b-issued', redeemed:'b-redeemed', active:'b-active' };
-  vouchers.forEach(function(v) {
-    var tr = document.createElement('tr');
-    var badge = document.createElement('span');
-    badge.className = 'badge ' + (statusMap[v.status] || 'b-inactive');
-    badge.textContent = v.status;
-    var statusTd = document.createElement('td'); statusTd.appendChild(badge);
+  if (valid_type === 'recurring' && weekdays.length === 0) {
+    showToast(currentLang === 'de' ? 'Bitte mindestens einen Wochentag wählen.' :
+      currentLang === 'fr' ? 'Veuillez choisir au moins un jour.' :
+      currentLang === 'it' ? 'Scegli almeno un giorno.' :
+      'Please choose at least one weekday.', true);
+    return;
+  }
 
-    tr.append(
-      mkTd(v.code_display || v.code),
-      mkTd(v.deal_title),
-      mkTd(Number(v.price_paid).toFixed(2) + ' CHF'),
-      statusTd,
-      mkTd(v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '–'),
-      mkTd(v.redeemed_at ? new Date(v.redeemed_at).toLocaleDateString('de-CH') : '–')
-    );
-    tbody.appendChild(tr);
-  });
-}
-
-function mkTd(val) {
-  var td = document.createElement('td');
-  td.textContent = String(val ?? '');
-  return td;
-}
-
-// ── REDEEM ────────────────────────────────────────────────────────────────
-async function doRedeem() {
-  var s = sessionGet();
-  if (!s) { doLogout(); return; }
-  var code = document.getElementById('redeemCode').value.trim().toUpperCase();
-  var err  = document.getElementById('redeemErr');
-  var result = document.getElementById('redeemResult');
-  err.textContent = ''; result.style.display = 'none';
-
-  if (!code) { err.textContent = 'Code eingeben.'; return; }
-  try {
-    var r = await api({ action: 'redeemVoucher', token: s.token, code: code });
-    if (r.success) {
-      document.getElementById('redeemDeal').textContent = r.deal_title || code;
-      result.style.display = 'block';
-      document.getElementById('redeemCode').value = '';
-      showToast('✅ ' + t('redeemSuccess'));
-      _dataCache.vouchers = null; _barStatsVouchers = null;
-    } else {
-      err.textContent = r.error || 'Ungültiger Gutschein.';
-    }
-  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
-}
-
-// ── CHANGE PASSWORD ───────────────────────────────────────────────────────
-async function doChangePassword() {
-  var s = sessionGet();
-  if (!s) { doLogout(); return; }
-  var oldPw  = document.getElementById('pwOld').value;
-  var newPw  = document.getElementById('pwNew').value;
-  var confPw = document.getElementById('pwConfirm').value;
-  var err    = document.getElementById('pwErr');
-  err.textContent = '';
-
-  if (!oldPw || !newPw || !confPw) { err.textContent = 'Alle Felder ausfüllen.'; return; }
-  if (newPw.length < 8) { err.textContent = 'Neues Passwort mind. 8 Zeichen.'; return; }
-  if (newPw !== confPw) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
+  const btn = document.getElementById('btnSaveEdit');
+  if (btn) { btn.disabled = true; btn.textContent = currentLang === 'de' ? 'Speichern...' : currentLang === 'fr' ? 'Enregistrement...' : currentLang === 'it' ? 'Salvataggio...' : 'Saving...'; }
 
   try {
-    var r = await api({ action: 'changePassword', token: s.token, old_password: oldPw, new_password: newPw });
-    if (r.success) {
-      showToast('✅ Passwort geändert!');
-      document.getElementById('pwOld').value = '';
-      document.getElementById('pwNew').value = '';
-      document.getElementById('pwConfirm').value = '';
-    } else {
-      err.textContent = r.error || 'Fehler.';
+    if (imageFile) {
+      const base64 = await fileToBase64(imageFile);
+      const up = await api({
+        action: 'uploadImage',
+        token: s.token,
+        filename: imageFile.name,
+        mime_type: imageFile.type,
+        base64_data: base64
+      });
+      if (!up.success) throw new Error(up.error || 'Image upload failed');
+      image_url = up.url || '';
     }
-  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
+
+    const r = await api({
+      action: 'updateDeal',
+      token: s.token,
+      deal_id: id,
+      title,
+      description,
+      original_price,
+      deal_price,
+      max_qty,
+      active,
+      valid_type,
+      single_date,
+      weekdays: weekdays.join(','),
+      time_from,
+      time_to,
+      time_slots: time_slots.join(','),
+      image_url
+    });
+
+    if (!r.success) {
+      showToast(r.error || 'Fehler', true);
+      if (btn) { btn.disabled = false; btn.textContent = t('saveLbl'); }
+      return;
+    }
+
+    closeEditModal();
+    _dataCache.deals = null;
+    _dataCache.stats = null;
+    loadMyDeals();
+    loadBarStats();
+    showToast(currentLang === 'de' ? 'Deal gespeichert' :
+      currentLang === 'fr' ? 'Deal enregistré' :
+      currentLang === 'it' ? 'Deal salvato' :
+      'Deal saved');
+    if (btn) { btn.disabled = false; btn.textContent = t('saveLbl'); }
+  } catch (e) {
+    showToast(e.message || 'Verbindungsfehler', true);
+    if (btn) { btn.disabled = false; btn.textContent = t('saveLbl'); }
+  }
 }
 
-// ── DEAL CREATION ─────────────────────────────────────────────────────────
+// =============================================
+// CREATE DEAL
+// =============================================
 function toggleValidity() {
-  var isRecurring = document.querySelector('input[name="validType"]:checked').value === 'recurring';
+  const isRecurring = document.getElementById('vTypeRecurring').checked;
   document.getElementById('recurringFields').style.display = isRecurring ? 'block' : 'none';
-  document.getElementById('singleFields').style.display    = isRecurring ? 'none'  : 'block';
+  document.getElementById('singleFields').style.display = isRecurring ? 'none' : 'block';
 }
 
 async function doCreateDeal() {
-  var s = sessionGet();
+  const s = sessionGet();
   if (!s) { doLogout(); return; }
 
-  var title  = document.getElementById('dealTitle').value.trim();
-  var origP  = parseFloat(document.getElementById('dealOrigPrice').value) || 0;
-  var price  = parseFloat(document.getElementById('dealPrice').value);
-  var qty    = parseInt(document.getElementById('dealQty').value) || 0;
-  var desc   = document.getElementById('dealDesc').value.trim();
-  var active = document.getElementById('dealActive').checked;
-  var fromT  = document.getElementById('timeFrom').value;
-  var toT    = document.getElementById('timeTo').value;
-  var cats   = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(function(c) { return c.value; });
-  var isPauschal = cats.indexOf('pauschalgutscheine') !== -1;
+  const title = normText(document.getElementById('dealTitle').value);
+  const description = normText(document.getElementById('dealDesc').value);
+  const original_price = Number(document.getElementById('dealOrigPrice').value || 0);
+  const deal_price = Number(document.getElementById('dealPrice').value || 0);
+  const max_qty = Number(document.getElementById('dealQty').value || 0);
+  const active = document.getElementById('dealActive').checked;
+  const categories = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(function(cb) { return cb.value; });
+  const valid_type = document.querySelector('input[name="validType"]:checked').value;
+  const weekdays = Array.from(document.querySelectorAll('#weekdays .wd-btn.selected')).map(function(b) { return b.dataset.weekday; });
+  const single_date = document.getElementById('singleDate').value;
+  const time_from = document.getElementById('timeFrom').value;
+  const time_to = document.getElementById('timeTo').value;
+  const time_slots = Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(function(cb) { return cb.value; });
+  const imageFile = document.getElementById('dealImageFile').files[0];
+  const imageUrlField = document.getElementById('dealImageUrl');
 
-  if (isPauschal) { price = 2.50; }
-  if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
-  if (isNaN(price)) { showToast('Deal-Preis ist Pflichtfeld', true); return; }
-  if (isPauschal && (parseInt(document.getElementById('discountPercent').value)||0) < 15) { showToast('Rabatt mind. 15%', true); return; }
-  if (isPauschal && (parseInt(document.getElementById('minOrder').value)||0) > 0 && (parseInt(document.getElementById('minOrder').value)||0) < 40) { showToast('Mindestbestellung mind. 40 CHF', true); return; }
-  if (!cats.length) { showToast('Mind. 1 Kategorie wählen', true); return; }
+  let image_url = imageUrlField ? imageUrlField.value : '';
 
-  var validType  = document.querySelector('input[name="validType"]:checked').value;
-  var weekdays   = Array.from(document.querySelectorAll('.wd-btn.selected')).map(function(b) { return b.textContent; });
-  var singleDate = document.getElementById('singleDate').value;
-  if (validType === 'single' && !singleDate) { showToast('Datum wählen', true); return; }
+  if (!title || !deal_price) {
+    showToast(currentLang === 'de' ? 'Bitte Titel und Deal-Preis eingeben.' :
+      currentLang === 'fr' ? 'Veuillez saisir le titre et le prix du deal.' :
+      currentLang === 'it' ? 'Inserisci titolo e prezzo del deal.' :
+      'Please enter title and deal price.', true);
+    return;
+  }
+  if (!categories.length) {
+    showToast(currentLang === 'de' ? 'Bitte mindestens eine Kategorie wählen.' :
+      currentLang === 'fr' ? 'Veuillez choisir au moins une catégorie.' :
+      currentLang === 'it' ? 'Scegli almeno una categoria.' :
+      'Please choose at least one category.', true);
+    return;
+  }
+  if (valid_type === 'single' && !single_date) {
+    showToast(currentLang === 'de' ? 'Bitte ein Datum wählen.' :
+      currentLang === 'fr' ? 'Veuillez choisir une date.' :
+      currentLang === 'it' ? 'Scegli una data.' :
+      'Please choose a date.', true);
+    return;
+  }
+  if (valid_type === 'recurring' && weekdays.length === 0) {
+    showToast(currentLang === 'de' ? 'Bitte mindestens einen Wochentag wählen.' :
+      currentLang === 'fr' ? 'Veuillez choisir au moins un jour.' :
+      currentLang === 'it' ? 'Scegli almeno un giorno.' :
+      'Please choose at least one weekday.', true);
+    return;
+  }
+
+  const isPauschal = categories.indexOf('pauschalgutscheine') >= 0;
+  let pauschal_config = null;
+  if (isPauschal) {
+    const discountPercent = Number(document.getElementById('discountPercent').value || 0);
+    const minOrder = Number(document.getElementById('minOrder').value || 0);
+    const appliesTo = document.getElementById('appliesTo').value;
+    if (discountPercent < 15) {
+      showToast(currentLang === 'de' ? 'Pauschalgutschein: Rabatt muss mindestens 15% sein.' :
+        currentLang === 'fr' ? 'Bon forfaitaire : la remise doit être d’au moins 15%.' :
+        currentLang === 'it' ? 'Buono forfait: lo sconto deve essere almeno del 15%.' :
+        'Flat voucher: discount must be at least 15%.', true);
+      return;
+    }
+    if (minOrder < 40) {
+      showToast(currentLang === 'de' ? 'Pauschalgutschein: Mindestbestellung muss mindestens 40 CHF sein.' :
+        currentLang === 'fr' ? 'Bon forfaitaire : la commande minimale doit être d’au moins 40 CHF.' :
+        currentLang === 'it' ? 'Buono forfait: l’ordine minimo deve essere almeno di 40 CHF.' :
+        'Flat voucher: minimum order must be at least CHF 40.', true);
+      return;
+    }
+    pauschal_config = { discount_percent: discountPercent, min_order: minOrder, applies_to: appliesTo };
+  }
+
+  const btn = document.getElementById('btnCreateDeal');
+  if (btn) { btn.disabled = true; btn.textContent = currentLang === 'de' ? 'Wird erstellt...' : currentLang === 'fr' ? 'Création...' : currentLang === 'it' ? 'Creazione...' : 'Creating...'; }
 
   try {
-    // Upload image if file selected
-    var imageUrl = document.getElementById('dealImageUrl') ? document.getElementById('dealImageUrl').value : '';
-    var imgF = document.getElementById('dealImageFile');
-    if (imgF && imgF.files.length > 0) {
-      var file = imgF.files[0];
-      if (file.size > 5 * 1024 * 1024) { showToast('Bild zu gross (max 5MB)', true); return; }
-      try {
-        var b64 = await fileToBase64(file);
-        var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: file.name });
-        if (uR.success) { imageUrl = uR.url; }
-        else { showToast('Bild-Upload: ' + (uR.error || 'Fehler'), true); return; }
-      } catch(e) { showToast('Bild-Upload fehlgeschlagen', true); return; }
+    if (imageFile) {
+      const base64 = await fileToBase64(imageFile);
+      const up = await api({
+        action: 'uploadImage',
+        token: s.token,
+        filename: imageFile.name,
+        mime_type: imageFile.type,
+        base64_data: base64
+      });
+      if (!up.success) throw new Error(up.error || 'Image upload failed');
+      image_url = up.url || '';
     }
 
-    var _cBtn = document.getElementById('btnCreateDeal');
-    if (_cBtn) { _cBtn.disabled = true; _cBtn.textContent = '\u23F3 Wird erstellt...'; }
-    var r = await api({
-      action: 'createDeal', token: s.token,
-      time_slots: Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(function(c){return c.value;}),
-      discount_percent: isPauschal ? (parseInt(document.getElementById('discountPercent').value)||0) : 0,
-      min_order: isPauschal ? (parseInt(document.getElementById('minOrder').value)||0) : 0,
-      applies_to: isPauschal ? document.getElementById('appliesTo').value : '',
-      bar_id: s.barId, bar_name: s.barName,
-      title: title, description: desc,
-      original_price: origP, deal_price: price,
-      max_quantity: qty, categories: cats,
-      image_url: imageUrl,
-      validity_type: validType, valid_weekdays: weekdays,
-      valid_from_time: fromT, valid_to_time: toT,
-      valid_single_date: singleDate, active: active
+    const r = await api({
+      action: 'createDeal',
+      token: s.token,
+      title,
+      description,
+      original_price,
+      deal_price,
+      max_qty,
+      active,
+      categories: categories.join(','),
+      valid_type,
+      weekdays: weekdays.join(','),
+      single_date,
+      time_from,
+      time_to,
+      time_slots: time_slots.join(','),
+      image_url,
+      pauschal_config: pauschal_config ? JSON.stringify(pauschal_config) : ''
     });
+
     if (r.success) {
-      showToast('✅ Deal erstellt!');
-      _dataCache.deals = null; _barStatsVouchers = null; _barStatsDeals = -1;
-      ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo']
-        .forEach(function(id) { document.getElementById(id).value = ''; });
-      var imgEl = document.getElementById('dealImageFile'); if(imgEl) imgEl.value = '';
-      var pvEl = document.getElementById('imagePreview'); if(pvEl) pvEl.style.display = 'none';
+      _dataCache.deals = null;
+      _dataCache.stats = null;
+      loadMyDeals();
+      loadBarStats();
+      showToast(currentLang === 'de' ? 'Deal erstellt!' :
+        currentLang === 'fr' ? 'Deal créé !' :
+        currentLang === 'it' ? 'Deal creato!' :
+        'Deal created!');
+      document.getElementById('dealTitle').value = '';
+      document.getElementById('dealDesc').value = '';
+      document.getElementById('dealOrigPrice').value = '';
+      document.getElementById('dealPrice').value = '';
+      document.getElementById('timeFrom').value = '';
+      document.getElementById('timeTo').value = '';
+      document.getElementById('singleDate').value = '';
+      var imgEl = document.getElementById('dealImageFile');
+      if (imgEl) imgEl.value = '';
+      var pvEl = document.getElementById('imagePreview'); if (pvEl) pvEl.style.display = 'none';
       document.querySelectorAll('input[name="timeSlot"]').forEach(function(c){c.checked=false;});
-      var pf = document.getElementById('pauschalFields'); if(pf) pf.style.display = 'none';
+      var pf = document.getElementById('pauschalFields'); if (pf) pf.style.display = 'none';
       document.querySelectorAll('input[name="cat"]').forEach(function(c) { c.checked = false; });
       document.querySelectorAll('.wd-btn').forEach(function(b) { b.classList.remove('selected'); });
       document.getElementById('dealQty').value = '0';
     } else showToast(r.error || 'Fehler', true);
-    if (_cBtn) { _cBtn.disabled = false; _cBtn.textContent = t('createDeal') || 'Deal erstellen'; }
+    if (btn) { btn.disabled = false; btn.textContent = t('createDeal') || 'Deal erstellen'; }
   } catch (e) {
     showToast('Verbindungsfehler', true);
-    var _rb = document.getElementById('btnCreateDeal');
-    if (_rb) { _rb.disabled = false; _rb.textContent = t('createDeal') || 'Deal erstellen'; }
+    var rb = document.getElementById('btnCreateDeal');
+    if (rb) { rb.disabled = false; rb.textContent = t('createDeal') || 'Deal erstellen'; }
   }
 }
 
-// ── TAB SWITCHING ─────────────────────────────────────────────────────────
+// =============================================
+// TAB SWITCHING
+// =============================================
 function switchAuthTab(name, btn) {
   document.getElementById('loginForm').classList.toggle('active', name === 'login');
   document.getElementById('registerForm').classList.toggle('active', name === 'register');
@@ -1144,7 +1454,9 @@ function switchDashTab(name, btn) {
   if (TAB_LOADERS[name]) TAB_LOADERS[name]();
 }
 
-// ── API / TOAST ───────────────────────────────────────────────────────────
+// =============================================
+// API / TOAST
+// =============================================
 async function api(body) {
   var r = await fetch(BACKEND_URL, { method: 'POST', body: JSON.stringify(body) });
   return r.json();
@@ -1159,14 +1471,16 @@ function showToast(msg, isError) {
   _toastTimer = setTimeout(function() { el.classList.remove('show'); }, 3500);
 }
 
-// ── PASSWORD RESET ────────────────────────────────────────────────────────
+// =============================================
+// PASSWORD RESET
+// =============================================
 async function sendBarResetCode() {
   var email = document.getElementById('barResetEmail').value.trim();
-  if (!email) { showToast('Bitte Email eingeben', true); return; }
+  if (!email) { showToast(currentLang === 'de' ? 'Bitte Email eingeben' : currentLang === 'fr' ? 'Veuillez saisir un email' : currentLang === 'it' ? 'Inserisci l’email' : 'Please enter email', true); return; }
   try {
     var r = await api({ action: 'requestPasswordReset', email: email, role: 'bar' });
     if (r.success) {
-      showToast(r.message || 'Code gesendet!');
+      showToast(r.message || currentLang === 'de' ? 'Code gesendet!' : currentLang === 'fr' ? 'Code envoyé !' : currentLang === 'it' ? 'Codice inviato!' : 'Code sent!');
       document.getElementById('barResetStep1').style.display = 'none';
       document.getElementById('barResetStep2').style.display = 'block';
     } else {
@@ -1179,12 +1493,12 @@ async function resetBarPassword() {
   var email = document.getElementById('barResetEmail').value.trim();
   var code = document.getElementById('barResetCode').value.trim();
   var newPassword = document.getElementById('barResetNewPassword').value;
-  if (!code || !newPassword) { showToast('Alle Felder ausfüllen', true); return; }
-  if (newPassword.length < 8) { showToast('Passwort mind. 8 Zeichen', true); return; }
+  if (!code || !newPassword) { showToast(currentLang === 'de' ? 'Alle Felder ausfüllen' : currentLang === 'fr' ? 'Veuillez remplir tous les champs' : currentLang === 'it' ? 'Compila tutti i campi' : 'Fill in all fields', true); return; }
+  if (newPassword.length < 8) { showToast(currentLang === 'de' ? 'Passwort mind. 8 Zeichen' : currentLang === 'fr' ? 'Mot de passe min. 8 caractères' : currentLang === 'it' ? 'Password min. 8 caratteri' : 'Password min. 8 characters', true); return; }
   try {
     var r = await api({ action: 'resetPassword', email: email, code: code, new_password: newPassword, role: 'bar' });
     if (r.success) {
-      showToast('✅ Passwort geändert!');
+      showToast(currentLang === 'de' ? '✅ Passwort geändert!' : currentLang === 'fr' ? '✅ Mot de passe changé !' : currentLang === 'it' ? '✅ Password cambiata!' : '✅ Password changed!');
       closeBarResetModal();
       document.getElementById('barResetEmail').value = '';
       document.getElementById('barResetCode').value = '';
@@ -1210,7 +1524,9 @@ function barBackToResetStep1() {
   document.getElementById('barResetStep1').style.display = 'block';
 }
 
-// ── AUTO-LOGIN ON LOAD ────────────────────────────────────────────────────
+// =============================================
+// AUTO-LOGIN ON LOAD
+// =============================================
 window.addEventListener('load', function() {
   var s = sessionGet();
   if (s) {
@@ -1219,22 +1535,21 @@ window.addEventListener('load', function() {
     if (el) el.textContent = s.barName || '';
     var logBtn = document.getElementById('btnLogout');
     if (logBtn) logBtn.style.display = 'block';
-    prefetchAllData(); // Pre-load all data in background
+    prefetchAllData();
     loadBarStats();
   } else {
     showAuthScreen(true);
   }
-  // Apply language on load
   var savedLang = localStorage.getItem('barsclusive_bar_lang') || 'de';
   setLang(savedLang);
 });
 
-
-// ── PROFILE ───────────────────────────────────────────────────────────────
+// =============================================
+// PROFILE
+// =============================================
 async function loadProfile() {
   var s = sessionGet();
   if (!s) return;
-  // Show cached profile instantly
   if (_dataCache.profile) { applyProfileToForm(_dataCache.profile); }
   if (_dataCache.profileLoading) return;
   _dataCache.profileLoading = true;
@@ -1261,7 +1576,7 @@ function applyProfileToForm(b) {
   setMaskedInputValue('profMwstNumber', b.mwst_number || '', formatMwstDisplay);
   if (el('profLat')) el('profLat').value = b.latitude || '';
   if (el('profLng')) el('profLng').value = b.longitude || '';
-  setAddressMeta('prof', [b.address, b.zip, b.city].filter(Boolean).join(', ') || 'Noch keine Adresse gewählt');
+  setAddressMeta('prof', [b.address, b.zip, b.city].filter(Boolean).join(', ') || t('addressNotSelected'));
   if (el('profAddressSearch')) el('profAddressSearch').dataset.selected = b.address ? '1' : '';
 }
 
@@ -1273,10 +1588,10 @@ async function saveProfile() {
   var mwstLiable = !(document.getElementById('profNoMwst') && document.getElementById('profNoMwst').checked);
   var mwstRaw = document.getElementById('profMwstNumber') ? normText(document.getElementById('profMwstNumber').value) : '';
 
-  if (!addr.address || !addr.city || !addr.zip) { showToast('Bitte zuerst eine Adresse auswählen.', true); return; }
-  if (!addr.latitude || !addr.longitude) { showToast('Für die Adresse fehlen Koordinaten.', true); return; }
-  if (ibanRaw && !isValidIban(ibanRaw)) { showToast('Bitte eine gültige IBAN eingeben.', true); return; }
-  if (mwstLiable && !isValidMwst(mwstRaw)) { showToast('Bitte eine gültige MWST-Nummer eingeben.', true); return; }
+  if (!addr.address || !addr.city || !addr.zip) { showToast(currentLang === 'de' ? 'Bitte zuerst eine Adresse auswählen.' : currentLang === 'fr' ? 'Veuillez d’abord sélectionner une adresse.' : currentLang === 'it' ? 'Seleziona prima un indirizzo.' : 'Please select an address first.', true); return; }
+  if (!addr.latitude || !addr.longitude) { showToast(currentLang === 'de' ? 'Für die Adresse fehlen Koordinaten.' : currentLang === 'fr' ? 'Les coordonnées manquent pour cette adresse.' : currentLang === 'it' ? 'Mancano le coordinate per questo indirizzo.' : 'Coordinates are missing for this address.', true); return; }
+  if (ibanRaw && !isValidIban(ibanRaw)) { showToast(currentLang === 'de' ? 'Bitte eine gültige IBAN eingeben.' : currentLang === 'fr' ? 'Veuillez saisir un IBAN valide.' : currentLang === 'it' ? 'Inserisci un IBAN valido.' : 'Please enter a valid IBAN.', true); return; }
+  if (mwstLiable && !isValidMwst(mwstRaw)) { showToast(currentLang === 'de' ? 'Bitte eine gültige MWST-Nummer eingeben.' : currentLang === 'fr' ? 'Veuillez saisir un numéro TVA valide.' : currentLang === 'it' ? 'Inserisci un numero IVA valido.' : 'Please enter a valid VAT number.', true); return; }
 
   var payload = {
     action: 'updateBarProfile',
@@ -1317,9 +1632,113 @@ async function deleteBarAccount() {
   } catch(e) { showToast('Verbindungsfehler', true); }
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────
+// =============================================
+// REDEEM
+// =============================================
+async function doRedeem() {
+  const s = sessionGet();
+  if (!s) { doLogout(); return; }
+  const code = normText(document.getElementById('redeemCode').value).toUpperCase();
+  const err = document.getElementById('redeemErr');
+  const res = document.getElementById('redeemResult');
+  err.textContent = '';
+  res.style.display = 'none';
+
+  if (!code) {
+    err.textContent = currentLang === 'de' ? 'Bitte Code eingeben.' :
+      currentLang === 'fr' ? 'Veuillez saisir un code.' :
+      currentLang === 'it' ? 'Inserisci un codice.' :
+      'Please enter a code.';
+    return;
+  }
+
+  try {
+    const r = await api({ action: 'redeemVoucher', token: s.token, code: code });
+    if (!r.success) {
+      err.textContent = r.error || 'Fehler';
+      return;
+    }
+
+    document.getElementById('redeemDeal').textContent = r.deal_title || '';
+    res.style.display = 'block';
+    document.getElementById('redeemCode').value = '';
+    _dataCache.stats = null;
+    _dataCache.vouchers = null;
+    loadBarStats();
+    loadMyVouchers();
+  } catch (e) {
+    err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' :
+      currentLang === 'fr' ? 'Erreur de connexion.' :
+      currentLang === 'it' ? 'Errore di connessione.' :
+      'Connection error.';
+  }
+}
+
+// =============================================
+// CHANGE PASSWORD
+// =============================================
+async function doChangePassword() {
+  const s = sessionGet();
+  if (!s) { doLogout(); return; }
+  const oldPassword = document.getElementById('pwOld').value;
+  const newPassword = document.getElementById('pwNew').value;
+  const confirmPassword = document.getElementById('pwConfirm').value;
+  const err = document.getElementById('pwErr');
+  err.textContent = '';
+
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    err.textContent = currentLang === 'de' ? 'Bitte alle Felder ausfüllen.' :
+      currentLang === 'fr' ? 'Veuillez remplir tous les champs.' :
+      currentLang === 'it' ? 'Compila tutti i campi.' :
+      'Please fill all fields.';
+    return;
+  }
+  if (newPassword.length < 8) {
+    err.textContent = currentLang === 'de' ? 'Neues Passwort muss mindestens 8 Zeichen haben.' :
+      currentLang === 'fr' ? 'Le nouveau mot de passe doit contenir au moins 8 caractères.' :
+      currentLang === 'it' ? 'La nuova password deve contenere almeno 8 caratteri.' :
+      'New password must be at least 8 characters.';
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    err.textContent = currentLang === 'de' ? 'Passwörter stimmen nicht überein.' :
+      currentLang === 'fr' ? 'Les mots de passe ne correspondent pas.' :
+      currentLang === 'it' ? 'Le password non coincidono.' :
+      'Passwords do not match.';
+    return;
+  }
+
+  try {
+    const r = await api({
+      action: 'changeBarPassword',
+      token: s.token,
+      old_password: oldPassword,
+      new_password: newPassword
+    });
+    if (!r.success) {
+      err.textContent = r.error || 'Fehler';
+      return;
+    }
+
+    document.getElementById('pwOld').value = '';
+    document.getElementById('pwNew').value = '';
+    document.getElementById('pwConfirm').value = '';
+    showToast(currentLang === 'de' ? 'Passwort geändert' :
+      currentLang === 'fr' ? 'Mot de passe modifié' :
+      currentLang === 'it' ? 'Password cambiata' :
+      'Password changed');
+  } catch (e) {
+    err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' :
+      currentLang === 'fr' ? 'Erreur de connexion.' :
+      currentLang === 'it' ? 'Errore di connessione.' :
+      'Connection error.';
+  }
+}
+
+// =============================================
+// INIT
+// =============================================
 document.addEventListener('DOMContentLoaded', function() {
-  // Language
   var langDE = document.getElementById('langDE');
   var langEN = document.getElementById('langEN');
   var langIT = document.getElementById('langIT');
@@ -1329,60 +1748,48 @@ document.addEventListener('DOMContentLoaded', function() {
   if (langIT) langIT.addEventListener('click', function() { setLang('it'); });
   if (langFR) langFR.addEventListener('click', function() { setLang('fr'); });
 
-  // Logout
   document.querySelectorAll('.btn-logout').forEach(function(b) { b.addEventListener('click', doLogout); });
 
-  // Auth tabs
   document.querySelectorAll('[data-auth-tab]').forEach(function(btn) {
     btn.addEventListener('click', function() { switchAuthTab(this.dataset.authTab, this); });
   });
 
-  // Login / Register
   var btnBarLogin    = document.getElementById('btnBarLogin');
   var btnBarRegister = document.getElementById('btnBarRegister');
   if (btnBarLogin)    btnBarLogin.addEventListener('click', doBarLogin);
   if (btnBarRegister) btnBarRegister.addEventListener('click', doBarRegister);
 
-  // Enter key on password
   var loginPw = document.getElementById('loginPassword');
   if (loginPw) loginPw.addEventListener('keydown', function(e) { if (e.key === 'Enter') doBarLogin(); });
 
-  // Dashboard tabs
   document.querySelectorAll('[data-dash-tab]').forEach(function(btn) {
     btn.addEventListener('click', function() { switchDashTab(this.dataset.dashTab, this); });
   });
 
-  // Weekday toggles
   document.querySelectorAll('[data-weekday]').forEach(function(div) {
     div.addEventListener('click', function() { this.classList.toggle('selected'); });
   });
 
-  // Validity toggle
   document.querySelectorAll('input[name="validType"]').forEach(function(radio) {
     radio.addEventListener('change', toggleValidity);
   });
 
-  // Create deal
   var btnCreateDeal = document.getElementById('btnCreateDeal');
   if (btnCreateDeal) btnCreateDeal.addEventListener('click', doCreateDeal);
 
-  // Redeem
   var btnRedeem = document.getElementById('btnRedeem');
   if (btnRedeem) btnRedeem.addEventListener('click', doRedeem);
   var redeemCode = document.getElementById('redeemCode');
   if (redeemCode) redeemCode.addEventListener('keydown', function(e) { if (e.key === 'Enter') doRedeem(); });
 
-  // Change password
   var btnChangePw = document.getElementById('btnChangePassword');
   if (btnChangePw) btnChangePw.addEventListener('click', doChangePassword);
 
-  // Profile save + delete account
   var btnSavePr = document.getElementById('btnSaveProfile');
   if (btnSavePr) btnSavePr.addEventListener('click', saveProfile);
   var btnDelAcc = document.getElementById('btnDeleteAccount');
   if (btnDelAcc) btnDelAcc.addEventListener('click', deleteBarAccount);
 
-  // Edit modal
   var btnCloseEdit  = document.getElementById('btnCloseEditModal');
   var btnCancelEdit = document.getElementById('btnCancelEdit');
   var btnSaveEdit   = document.getElementById('btnSaveEdit');
@@ -1390,15 +1797,13 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btnCancelEdit) btnCancelEdit.addEventListener('click', closeEditModal);
   if (btnSaveEdit)   btnSaveEdit.addEventListener('click', saveEditDeal);
 
-  // Close modal on backdrop click
   var editModal = document.getElementById('editModal');
   if (editModal) editModal.addEventListener('click', function(e) { if (e.target === this) closeEditModal(); });
 
-  // Edit modal: weekday toggles
   document.querySelectorAll('#editWeekdays .wd-btn').forEach(function(btn) {
     btn.addEventListener('click', function() { this.classList.toggle('selected'); });
   });
-  // Edit modal: validity type toggle
+
   document.querySelectorAll('input[name="editValidType"]').forEach(function(r) {
     r.addEventListener('change', function() {
       var isRec = this.value === 'recurring';
@@ -1409,7 +1814,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Password reset
   var linkBarForgotPassword = document.getElementById('linkBarForgotPassword');
   if (linkBarForgotPassword) linkBarForgotPassword.addEventListener('click', openBarResetPasswordModal);
   var btnBarSendResetCode = document.getElementById('btnBarSendResetCode');
@@ -1423,14 +1827,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var btnBarCancelReset1 = document.getElementById('btnBarCancelReset1');
   if (btnBarCancelReset1) btnBarCancelReset1.addEventListener('click', closeBarResetModal);
 
-  // Bar reset modal backdrop click
   var barResetModal = document.getElementById('barResetPasswordModal');
   if (barResetModal) barResetModal.addEventListener('click', function(e) { if (e.target === this) closeBarResetModal(); });
 });
 
-// ── IMAGE UPLOAD PREVIEW ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-  // MWST and formatting
   bindMaskedInput('regIban', formatIbanDisplay);
   bindMaskedInput('profIban', formatIbanDisplay);
   bindMaskedInput('regMwstNumber', formatMwstDisplay);
@@ -1446,11 +1847,10 @@ document.addEventListener('DOMContentLoaded', function() {
   bindAddressAutocomplete('reg');
   bindAddressAutocomplete('prof');
 
-  // Geocode + map helper
-  var _profMap = null, _profMarker = null;
-  var _regMap = null, _regMarker = null;
+  var profMap = null, profMarker = null;
+  var regMap = null, regMarker = null;
 
-  function showMapPin(mapId, wrapId, lat, lng, existingMap, existingMarker) {
+  function showMapPin(mapId, wrapId, lat, lng, existingMap, existingMarker, prefix) {
     var wrap = document.getElementById(wrapId);
     if (!wrap) return { map: existingMap, marker: existingMarker };
     wrap.style.display = 'block';
@@ -1466,41 +1866,35 @@ document.addEventListener('DOMContentLoaded', function() {
       existingMarker.setLatLng([lat, lng]);
     }
     setTimeout(function() { existingMap.invalidateSize(); }, 200);
+    existingMarker.off('dragend');
+    existingMarker.on('dragend', function(e) {
+      var p = e.target.getLatLng();
+      var latEl = document.getElementById(prefix + 'Lat');
+      var lngEl = document.getElementById(prefix + 'Lng');
+      if (latEl) latEl.value = p.lat.toFixed(6);
+      if (lngEl) lngEl.value = p.lng.toFixed(6);
+    });
     return { map: existingMap, marker: existingMarker };
   }
 
-  // Settings geocode button
   var btnGeocode = document.getElementById('btnGeocode');
   if (btnGeocode) btnGeocode.addEventListener('click', async function() {
     var addr = parseSelectedAddress('prof');
-    if (!addr.latitude || !addr.longitude) { showToast('Bitte zuerst eine Adresse aus der Liste wählen', true); return; }
+    if (!addr.latitude || !addr.longitude) { showToast(currentLang === 'de' ? 'Bitte zuerst eine Adresse aus der Liste wählen' : currentLang === 'fr' ? 'Veuillez d’abord choisir une adresse dans la liste' : currentLang === 'it' ? 'Seleziona prima un indirizzo dalla lista' : 'Please choose an address from the list first', true); return; }
     var lat = Number(addr.latitude), lng = Number(addr.longitude);
-    var r = showMapPin('profMap', 'profMapWrap', lat, lng, _profMap, _profMarker);
-    _profMap = r.map; _profMarker = r.marker;
-    _profMarker.off('dragend');
-    _profMarker.on('dragend', function(e) {
-      var p = e.target.getLatLng();
-      document.getElementById('profLat').value = p.lat.toFixed(6);
-      document.getElementById('profLng').value = p.lng.toFixed(6);
-    });
-    showToast('📍 Standort geladen');
+    var r = showMapPin('profMap', 'profMapWrap', lat, lng, profMap, profMarker, 'prof');
+    profMap = r.map; profMarker = r.marker;
+    showToast(currentLang === 'de' ? '📍 Standort geladen' : currentLang === 'fr' ? '📍 Emplacement chargé' : currentLang === 'it' ? '📍 Posizione caricata' : '📍 Location loaded');
   });
 
-  // Registration geocode button
   var btnRegGeo = document.getElementById('btnRegGeocode');
   if (btnRegGeo) btnRegGeo.addEventListener('click', async function() {
     var addr = parseSelectedAddress('reg');
-    if (!addr.latitude || !addr.longitude) { showToast('Bitte zuerst eine Adresse aus der Liste wählen', true); return; }
+    if (!addr.latitude || !addr.longitude) { showToast(currentLang === 'de' ? 'Bitte zuerst eine Adresse aus der Liste wählen' : currentLang === 'fr' ? 'Veuillez d’abord choisir une adresse dans la liste' : currentLang === 'it' ? 'Seleziona prima un indirizzo dalla lista' : 'Please choose an address from the list first', true); return; }
     var lat = Number(addr.latitude), lng = Number(addr.longitude);
-    var r = showMapPin('regMap', 'regMapWrap', lat, lng, _regMap, _regMarker);
-    _regMap = r.map; _regMarker = r.marker;
-    _regMarker.off('dragend');
-    _regMarker.on('dragend', function(e) {
-      var p = e.target.getLatLng();
-      document.getElementById('regLat').value = p.lat.toFixed(6);
-      document.getElementById('regLng').value = p.lng.toFixed(6);
-    });
-    showToast('📍 Standort geladen – Pin verschiebbar!');
+    var r = showMapPin('regMap', 'regMapWrap', lat, lng, regMap, regMarker, 'reg');
+    regMap = r.map; regMarker = r.marker;
+    showToast(currentLang === 'de' ? '📍 Standort geladen – Pin verschiebbar!' : currentLang === 'fr' ? '📍 Emplacement chargé – marqueur déplaçable !' : currentLang === 'it' ? '📍 Posizione caricata – pin trascinabile!' : '📍 Location loaded – pin can be moved!');
   });
 
   var imgFile = document.getElementById('dealImageFile');
@@ -1517,7 +1911,7 @@ document.addEventListener('DOMContentLoaded', function() {
       } else { preview.style.display='none'; }
     });
   }
-  // Pauschalgutschein toggle
+
   var cp = document.getElementById('catPauschal');
   if (cp) {
     cp.addEventListener('change', function() {
