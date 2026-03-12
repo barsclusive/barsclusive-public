@@ -88,29 +88,17 @@
     .suggestion-title{font-size:13px;font-weight:600;color:#fff}
     .suggestion-meta{font-size:12px;color:#999;margin-top:2px}
     .input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
-    .segmented-input{--slots:26;position:relative;width:100%;height:50px;padding:14px 12px;border-radius:12px;border:1px solid #494949;color:#fff;background-color:#2a2a2a;background-image:linear-gradient(to right,rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));background-repeat:repeat-x,no-repeat;background-size:calc((100% - 24px)/var(--slots)) 100%,100% 100%;background-position:12px 0,0 0;font-family:'Courier New',Courier,monospace;font-variant-numeric:tabular-nums;letter-spacing:0;font-size:14px;font-weight:700;line-height:20px;white-space:nowrap;overflow:hidden;text-transform:uppercase;caret-color:#fff}
-    .segmented-input:focus{outline:none;border-color:#ff3366;box-shadow:0 0 0 3px rgba(255,51,102,.15)}
-    .segmented-input::placeholder{color:#8e8e8e;letter-spacing:0;font-weight:500}
-    .segmented-input::-webkit-scrollbar{display:none}
-    .segmented-input.iban-input{--slots:26;font-size:14px}
-    .segmented-input.mwst-input{--slots:20;font-size:14px}
-    .filter-panel{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:16px;margin-top:18px}
-    .filter-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
-    .click-row{cursor:pointer}
-    .click-row:hover{background:#121212}
-    .timeline-list{display:flex;flex-direction:column;gap:12px}
-    .timeline-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:#202020;border:1px solid #2f2f2f;border-radius:12px}
-    .timeline-dot{width:10px;height:10px;border-radius:999px;background:#FF3366;margin-top:5px;flex-shrink:0}
-    .timeline-title{font-size:14px;font-weight:700}
-    .timeline-meta{font-size:12px;color:#999;margin-top:3px}
-    .money-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
-    .money-card{background:#202020;border:1px solid #303030;border-radius:12px;padding:12px}
-    .money-label{font-size:12px;color:#999;margin-bottom:4px}
-    .money-value{font-size:18px;font-weight:700}
-    .toggle-check{display:flex;align-items:flex-start;gap:10px;padding:12px;background:#202020;border:1px solid #303030;border-radius:12px}
-    .toggle-check input{margin-top:2px}
-    .inline-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#232323;border:1px solid #333;color:#ccc;font-size:12px}
+    .box-input-wrap{position:relative}
+    .box-input-wrap.is-focused .box-cell{border-color:#ff3366;box-shadow:0 0 0 2px rgba(255,51,102,.12) inset}
+    .box-input-wrap.is-focused .box-cell.active{background:#2d1620}
+    .box-input-native{position:absolute;inset:0;opacity:0;z-index:3;width:100%;height:100%;cursor:text}
+    .box-cells{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:54px}
+    .box-cell{width:40px;height:52px;border-radius:12px;background:#222;border:1px solid #3a3a3a;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:17px;font-weight:700;color:#fff;transition:border-color .15s ease,background .15s ease,transform .15s ease}
+    .box-cell.placeholder{color:#666}
+    .box-cell.active{border-color:#666;background:#292929}
+    .box-cell.group-gap{margin-right:10px}
+    .box-cell.fixed{background:#262626;color:#d1d1d1}
+    .box-input-wrap.compact .box-cell{width:38px;height:50px;font-size:16px}
 
     @media(max-width:768px){
       .header{flex-wrap:wrap;gap:10px;padding:12px 15px}
@@ -130,9 +118,10 @@
       .stat-card{padding:14px}
       .stat-value{font-size:22px}
       .stats-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-      .segmented-input{height:46px;padding:12px 10px;background-size:calc((100% - 20px)/var(--slots)) 100%,100% 100%;background-position:10px 0,0 0;font-size:12px;line-height:18px}
-      .segmented-input.iban-input{font-size:12px}
-      .segmented-input.mwst-input{font-size:12px}
+      .box-cells{gap:5px;min-height:46px}
+      .box-cell{width:30px;height:40px;border-radius:10px;font-size:13px}
+      .box-cell.group-gap{margin-right:8px}
+      .box-input-wrap.compact .box-cell{width:28px;height:38px;font-size:12px}
     }
     @media(max-width:480px){
       .header h1 span{display:none}
@@ -237,7 +226,7 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="regIban" data-i18n="ibanPayoutLabel">IBAN * (für Auszahlungen)</label>
-          <input type="text" class="form-input segmented-input iban-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+          <div class="box-input-wrap" data-box-wrap="regIban"><input type="text" class="box-input-native" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="regIban"></div></div>
           <small class="input-help" data-i18n="ibanHelp">Nur gültige IBAN-Zeichen. Die Eingabe wird automatisch formatiert.</small>
         </div>
         <div class="form-group">
@@ -249,7 +238,7 @@
         </div>
         <div class="form-group" id="regMwstNumGroup">
           <label class="form-label" for="regMwstNumber" data-i18n="mwstNumberReq">MWST-Nummer *</label>
-          <input type="text" class="form-input segmented-input mwst-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+          <div class="box-input-wrap compact" data-box-wrap="regMwstNumber"><input type="text" class="box-input-native" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="regMwstNumber"></div></div>
           <small class="input-help" data-i18n="mwstHelp">Die UID wird automatisch formatiert. Beispiel: CHE-123.456.789 MWST</small>
         </div>
         <div class="form-check">
@@ -469,7 +458,7 @@
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="ibanLbl">IBAN</label>
-            <input type="text" class="form-input segmented-input iban-input" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+            <div class="box-input-wrap" data-box-wrap="profIban"><input type="text" class="box-input-native" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="profIban"></div></div>
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="twintLbl">Twint</label>
@@ -485,7 +474,7 @@
         </div>
         <div class="form-group" id="profMwstNumGroup">
           <label class="form-label" data-i18n="mwstNumberLabel">MWST-Nummer</label>
-          <input type="text" class="form-input segmented-input mwst-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+          <div class="box-input-wrap compact" data-box-wrap="profMwstNumber"><input type="text" class="box-input-native" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="profMwstNumber"></div></div>
         </div>
         <div style="margin-bottom:18px">
           <label class="form-label">📍 <span data-i18n="locationLabel">Standort</span></label>
