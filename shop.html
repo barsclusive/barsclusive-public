@@ -173,6 +173,17 @@
     .cart-panel.active{right:0}
     .cart-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000}
     .cart-panel.active~.cart-overlay{display:block}
+
+    .search-select-wrap{position:relative;display:flex;flex:1;max-width:320px}
+    .suggestions-box{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#151515;border:1px solid #333;border-radius:12px;max-height:220px;overflow:auto;z-index:150;display:none;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+    .suggestion-item{padding:12px 14px;border-bottom:1px solid #232323;cursor:pointer}
+    .suggestion-item:last-child{border-bottom:none}
+    .suggestion-item:hover,.suggestion-item.active{background:#222}
+    .suggestion-title{font-size:13px;font-weight:600;color:#fff}
+    .suggestion-meta{font-size:12px;color:#999;margin-top:2px}
+    .location-status{font-size:12px;color:#999}
+    .location-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#222;border:1px solid #333;color:#ccc;font-size:12px}
+
     .add-cart-btn{background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;margin-left:8px}
     .add-cart-btn:hover{background:#FF3366;border-color:#FF3366}
   </style>
@@ -254,9 +265,14 @@
     </div>
     <div class="filter-row">
       <span class="filter-label" data-i18n="standort">📍 Standort</span>
-      <input type="text" class="form-input" id="locationInput" placeholder="PLZ oder Ort..." style="flex:1;max-width:220px;padding:8px 12px;font-size:13px;border-radius:20px">
+      <div class="search-select-wrap">
+        <input type="text" class="form-input" id="locationInput" placeholder="Ort oder Adresse suchen..." style="flex:1;padding:8px 12px;font-size:13px;border-radius:20px" autocomplete="off">
+        <div id="locationSuggestions" class="suggestions-box"></div>
+      </div>
       <button class="filter-btn" id="btnApplyLocation" data-shop-i18n="suchenBtn">Suchen</button>
+      <button class="filter-btn" id="btnUseMyLocation">Mein Standort</button>
       <button class="filter-btn" id="btnClearLocation" style="display:none">✕</button>
+      <span class="location-pill" id="locationStatus" style="display:none"></span>
     </div>
   </div>
 </div>
