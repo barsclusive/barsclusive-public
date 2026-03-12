@@ -797,6 +797,7 @@ async function doLogin() {
   const password = document.getElementById('loginPassword').value;
   if (!email || !password) { showToast('Bitte Email und Passwort eingeben', true); return; }
   var _loginBtn = document.getElementById('btnLoginSubmit');
+  var defaultLabel = shopT('loginSubmitBtn') || 'Einloggen';
   if (_loginBtn) { _loginBtn.disabled = true; _loginBtn.textContent = '⏳...'; }
   try {
     const r = await api({ action: 'customerLogin', email, password });
@@ -805,11 +806,19 @@ async function doLogin() {
       closeModal('loginModal');
       document.getElementById('loginPassword').value = '';
       showToast('✅ Eingeloggt!');
+      Promise.resolve().then(loadFavorites).catch(function(){});
+      if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') {
+        Promise.resolve().then(loadOrders).catch(function(){});
+      }
     } else {
       showToast(r.error || 'Ungültige Zugangsdaten', true);
       document.getElementById('loginPassword').value = '';
     }
-  } catch (e) { showToast('Verbindungsfehler', true); }
+  } catch (e) {
+    showToast('Verbindungsfehler', true);
+  } finally {
+    if (_loginBtn) { _loginBtn.disabled = false; _loginBtn.textContent = defaultLabel; }
+  }
 }
 
 async function doRegister() {
@@ -1133,9 +1142,12 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Nur am', giltFuer:'Gilt für:', getraenke:'Getränke', essen:'Essen', alles:'Alles',
     refundReq:'Rückerstattung anfordern', refundRequested:'Rückerstattung angefordert', refunded:'Rückerstattet',
     remaining:'verbleibend', anmelden:'Anmelden', registrieren:'Registrieren',
-    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars \u2192 Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden', searchBarDeal:'Bar oder Deal suchen...', searchPLZ:'PLZ oder Ort...',
+    fUeberUns:'Über uns', fSoFunktionierts:'So funktionierts', fImpressum:'Impressum', fDatenschutz:'Datenschutz', fAGB:'AGB', fKontakt:'Kontakt', fFuerBars:'Für Bars → Bar-Portal', loginSubmitBtn:'Einloggen', cancelLoginBtn:'Abbrechen', suchenBtn:'Suchen', anmeldenTitle:'Anmelden', searchBarDeal:'Bar oder Deal suchen...', searchPLZ:'PLZ oder Ort...',
     gutscheinAnzeigen:'Anzeigen', linkKopieren:'Link kopieren', linkKopiert:'Link kopiert!',
     warenkorbLeer:'Warenkorb ist leer', jetztBezahlen:'Jetzt bezahlen', total:'Total', deinName:'Dein Name:', deineEmail:'Deine Email:', pwBestaetigen:'Passwort bestätigen',
+    viewDeals:'🏠 Deals', viewMap:'🗺️ Karte', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Rabatt',
+    myLocationBtn:'Mein Standort', clearLocationBtn:'Zurücksetzen', geoEnableBtn:'Standort freigeben', geoBannerText:'Deals in deiner Nähe anzeigen?', mapStateText:'Deals direkt auf der Karte der Schweiz', mapCountryBadge:'🇨🇭 Schweiz',
+    emailLbl:'Email', passwordLbl:'Passwort', loginModalTitle:'🔐 Anmelden', resetModalTitle:'🔑 Passwort zurücksetzen', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', backBtn:'Zurück',
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -1157,9 +1169,12 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Only on', giltFuer:'Applies to:', getraenke:'Drinks', essen:'Food', alles:'Everything',
     refundReq:'Request refund', refundRequested:'Refund requested', refunded:'Refunded',
     remaining:'remaining', anmelden:'Login', registrieren:'Register',
-    fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars \u2192 Bar Portal', loginSubmitBtn:'Login', cancelLoginBtn:'Cancel', suchenBtn:'Search', anmeldenTitle:'Login', searchBarDeal:'Search bar or deal...', searchPLZ:'ZIP or city...',
+    fUeberUns:'About Us', fSoFunktionierts:'How It Works', fImpressum:'Legal Notice', fDatenschutz:'Privacy', fAGB:'Terms', fKontakt:'Contact', fFuerBars:'For Bars → Bar Portal', loginSubmitBtn:'Login', cancelLoginBtn:'Cancel', suchenBtn:'Search', anmeldenTitle:'Login', searchBarDeal:'Search bar or deal...', searchPLZ:'ZIP or city...',
     gutscheinAnzeigen:'View', linkKopieren:'Copy link', linkKopiert:'Link copied!',
     warenkorbLeer:'Cart is empty', jetztBezahlen:'Pay now', total:'Total', deinName:'Your name:', deineEmail:'Your email:', pwBestaetigen:'Confirm password',
+    viewDeals:'🏠 Deals', viewMap:'🗺️ Map', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Discount',
+    myLocationBtn:'My location', clearLocationBtn:'Reset', geoEnableBtn:'Enable location', geoBannerText:'Show deals near you?', mapStateText:'Deals directly on the map of Switzerland', mapCountryBadge:'🇨🇭 Switzerland',
+    emailLbl:'Email', passwordLbl:'Password', loginModalTitle:'🔐 Login', resetModalTitle:'🔑 Reset password', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', backBtn:'Back',
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -1180,9 +1195,12 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Solo il', giltFuer:'Valido per:', getraenke:'Bevande', essen:'Cibo', alles:'Tutto',
     refundReq:'Richiedi rimborso', refundRequested:'Rimborso richiesto', refunded:'Rimborsato',
     remaining:'rimanenti', anmelden:'Accedi', registrieren:'Registrati',
-    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar \u2192 Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi', searchBarDeal:'Cerca bar o offerta...', searchPLZ:'CAP o città...',
+    fUeberUns:'Chi siamo', fSoFunktionierts:'Come funziona', fImpressum:'Impressum', fDatenschutz:'Privacy', fAGB:'Condizioni', fKontakt:'Contatto', fFuerBars:'Per bar → Portale Bar', loginSubmitBtn:'Accedi', cancelLoginBtn:'Annulla', suchenBtn:'Cerca', anmeldenTitle:'Accedi', searchBarDeal:'Cerca bar o offerta...', searchPLZ:'CAP o città...',
     gutscheinAnzeigen:'Visualizza', linkKopieren:'Copia link', linkKopiert:'Link copiato!',
     warenkorbLeer:'Carrello vuoto', jetztBezahlen:'Paga ora', total:'Totale', deinName:'Il tuo nome:', deineEmail:'La tua email:', pwBestaetigen:'Conferma password',
+    viewDeals:'🏠 Deals', viewMap:'🗺️ Mappa', catBreakfast:'🥐 Colazione', catLunch:'🍽️ Pranzo', catAperitif:'🍹 Aperitivo', catDinner:'🍷 Cena', catEvents:'🎉 Eventi', catDiscount:'🏷️ Sconto',
+    myLocationBtn:'La mia posizione', clearLocationBtn:'Reimposta', geoEnableBtn:'Attiva posizione', geoBannerText:'Mostrare i deal vicino a te?', mapStateText:'Deal direttamente sulla mappa della Svizzera', mapCountryBadge:'🇨🇭 Svizzera',
+    emailLbl:'Email', passwordLbl:'Password', loginModalTitle:'🔐 Accedi', resetModalTitle:'🔑 Reimposta password', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', backBtn:'Indietro',
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -1202,9 +1220,12 @@ const SHOP_TRANSLATIONS = {
     nurAm:'Uniquement le', giltFuer:'Valable pour:', getraenke:'Boissons', essen:'Nourriture', alles:'Tout',
     refundReq:'Demander remboursement', refundRequested:'Remboursement demandé', refunded:'Remboursé',
     remaining:'restant', anmelden:'Connexion', registrieren:'Inscription',
-    fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars \u2192 Portail Bar', loginSubmitBtn:'Connexion', cancelLoginBtn:'Annuler', suchenBtn:'Chercher', anmeldenTitle:'Connexion', searchBarDeal:'Chercher bar ou offre...', searchPLZ:'NPA ou ville...',
+    fUeberUns:'À propos', fSoFunktionierts:'Comment ça marche', fImpressum:'Mentions légales', fDatenschutz:'Confidentialité', fAGB:'CGV', fKontakt:'Contact', fFuerBars:'Pour bars → Portail Bar', loginSubmitBtn:'Connexion', cancelLoginBtn:'Annuler', suchenBtn:'Chercher', anmeldenTitle:'Connexion', searchBarDeal:'Chercher bar ou offre...', searchPLZ:'NPA ou ville...',
     gutscheinAnzeigen:'Afficher', linkKopieren:'Copier le lien', linkKopiert:'Lien copié!',
     alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
+    viewDeals:'🏠 Deals', viewMap:'🗺️ Carte', catBreakfast:'🥐 Petit-déjeuner', catLunch:'🍽️ Déjeuner', catAperitif:'🍹 Apéritif', catDinner:'🍷 Dîner', catEvents:'🎉 Événements', catDiscount:'🏷️ Réduction',
+    myLocationBtn:'Ma position', clearLocationBtn:'Réinitialiser', geoEnableBtn:'Activer la position', geoBannerText:'Afficher les deals près de vous ?', mapStateText:'Deals directement sur la carte de la Suisse', mapCountryBadge:'🇨🇭 Suisse',
+    emailLbl:'Email', passwordLbl:'Mot de passe', loginModalTitle:'🔐 Connexion', resetModalTitle:'🔑 Réinitialiser le mot de passe', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', backBtn:'Retour',
   }
 };
 
@@ -1231,24 +1252,34 @@ function applyShopTranslations() {
   if (btnDeals) btnDeals.textContent = '🏠 ' + st('deals');
   const btnOrders = document.getElementById('btnOrders');
   if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
-  // Translate footer links
   document.querySelectorAll('[data-shop-i18n]').forEach(function(el) {
     var k = el.getAttribute('data-shop-i18n');
-    var t = st(k);
-    if (t && t !== k) el.textContent = t;
+    var tr = st(k);
+    if (tr && tr !== k) el.textContent = tr;
   });
-  // Translate data-i18n elements (filter labels etc)
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var k = el.getAttribute('data-i18n');
     var trans = (SHOP_TRANSLATIONS[shopLang] || {})[k];
     if (trans) el.textContent = trans;
   });
-  // Translate placeholders
   var ss = document.getElementById('shopSearch');
   if (ss) ss.placeholder = st('searchBarDeal');
   var li = document.getElementById('locationInput');
   if (li) li.placeholder = st('searchPLZ');
+  var viewGrid = document.getElementById('viewGrid');
+  if (viewGrid) viewGrid.textContent = st('viewDeals');
+  var viewMap = document.getElementById('viewMap');
+  if (viewMap) viewMap.textContent = st('viewMap');
+  var loginModalTitle = document.getElementById('loginModalTitle');
+  if (loginModalTitle) loginModalTitle.textContent = st('loginModalTitle');
+  var resetModalTitle = document.getElementById('resetModalTitle');
+  if (resetModalTitle) resetModalTitle.textContent = st('resetModalTitle');
+  var mapStateText = document.getElementById('mapStateText');
+  if (mapStateText) mapStateText.textContent = st('mapStateText');
+  var mapCountryBadge = document.getElementById('mapCountryBadge');
+  if (mapCountryBadge) mapCountryBadge.textContent = st('mapCountryBadge');
   renderDeals();
+  if (_shopMap && _mapView) updateShopMapMarkers();
 }
 
 // =============================================
@@ -1819,68 +1850,120 @@ document.addEventListener('DOMContentLoaded', function() {
 var _shopMap = null;
 var _shopMapMarkers = [];
 var _mapView = false;
+var _swissBounds = L.latLngBounds([[45.75, 5.85], [47.92, 10.75]]);
 
 function initShopMap() {
   if (_shopMap) return;
   var el = document.getElementById('shopMap');
   if (!el) return;
-  // Default to Switzerland center
-  _shopMap = L.map('shopMap').setView([47.37, 8.54], 8);
+  _shopMap = L.map('shopMap', {
+    zoomControl: true,
+    minZoom: 7,
+    maxZoom: 18,
+    maxBounds: _swissBounds,
+    maxBoundsViscosity: 1.0,
+    worldCopyJump: false
+  }).setView([46.8182, 8.2275], 8);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap',
-    maxZoom: 19
+    maxZoom: 19,
+    noWrap: true
   }).addTo(_shopMap);
+}
+
+function buildMapPopupHtml(barEntry) {
+  var html = '<div class="map-popup"><div class="map-popup-head">' + escHtml(barEntry.name || '') + '</div><div class="map-popup-sub">' + escHtml(barEntry.city || '') + '</div><div class="map-popup-list">';
+  barEntry.deals.slice(0, 6).forEach(function(d) {
+    html += '<div class="map-popup-item" data-map-deal-id="' + d.id + '"><span>' + escHtml(d.title || '') + '</span><span class="map-popup-price">' + Number(d.deal_price || 0).toFixed(2) + ' CHF</span></div>';
+  });
+  if (barEntry.deals.length > 6) {
+    html += '<div style="font-size:12px;color:#666;padding-top:2px">+' + (barEntry.deals.length - 6) + ' weitere Deals</div>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+function buildPricePinIcon(barEntry) {
+  var cheapest = barEntry.deals.reduce(function(min, d) {
+    var p = Number(d.deal_price || 0);
+    return min === null || p < min ? p : min;
+  }, null);
+  var label = Number(cheapest || 0).toFixed(2) + ' CHF';
+  var count = barEntry.deals.length > 1 ? '<small>+' + (barEntry.deals.length - 1) + '</small>' : '';
+  return L.divIcon({
+    className: 'map-pin-wrapper',
+    html: '<div class="map-price-pin"><span>' + label + '</span>' + count + '</div>',
+    iconSize: [94, 34],
+    iconAnchor: [47, 17],
+    popupAnchor: [0, -12]
+  });
 }
 
 function updateShopMapMarkers() {
   if (!_shopMap) return;
-  _shopMapMarkers.forEach(function(m) { _shopMap.removeLayer(m); });
+  _shopMapMarkers.forEach(function(m) { try { _shopMap.removeLayer(m); } catch(e) {} });
   _shopMapMarkers = [];
   var visibleDeals = getVisibleDeals();
   var barMap = {};
   visibleDeals.forEach(function(d) {
     var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
     if (!isValidCoord(lat) || !isValidCoord(lng)) return;
-    var key = d.bar_id || (lat + ',' + lng);
-    if (!barMap[key]) barMap[key] = { lat: lat, lng: lng, name: d.bar_name, city: d.bar_city, deals: [] };
+    if (!_swissBounds.contains([lat, lng])) return;
+    var key = String(d.bar_id || (lat + ',' + lng));
+    if (!barMap[key]) barMap[key] = { key: key, lat: lat, lng: lng, name: d.bar_name, city: d.bar_city, deals: [] };
     barMap[key].deals.push(d);
   });
 
   var bounds = [];
-  if (isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng))) {
-    var userMarker = L.circleMarker([Number(_userLat), Number(_userLng)], { radius: 8 }).addTo(_shopMap);
-    userMarker.bindPopup('Dein Standort');
+  if (isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng)) && _swissBounds.contains([Number(_userLat), Number(_userLng)])) {
+    var userMarker = L.marker([Number(_userLat), Number(_userLng)], {
+      icon: L.divIcon({ className: 'map-user-wrapper', html: '<div class="map-user-pin"></div>', iconSize: [16,16], iconAnchor: [8,8] })
+    }).addTo(_shopMap);
+    userMarker.bindPopup(st('myLocationBtn'));
     _shopMapMarkers.push(userMarker);
     bounds.push([Number(_userLat), Number(_userLng)]);
   }
 
   Object.keys(barMap).forEach(function(key) {
     var b = barMap[key];
-    var popupHtml = '<div style="min-width:180px"><strong style="font-size:14px">' + escHtml(b.name || '') + '</strong><div style="color:#666;font-size:12px;margin-bottom:6px">' + escHtml(b.city || '') + '</div>';
-    b.deals.forEach(function(d) {
-      popupHtml += '<div style="padding:4px 0;border-top:1px solid #eee;cursor:pointer" data-deal-id="' + d.id + '"><span style="font-weight:600">' + escHtml(d.title) + '</span><span style="color:#FF3366;float:right">' + Number(d.deal_price).toFixed(2) + ' CHF</span></div>';
+    b.deals.sort(function(a,b2){ return Number(a.deal_price||0) - Number(b2.deal_price||0); });
+    var marker = L.marker([b.lat, b.lng], { icon: buildPricePinIcon(b) }).addTo(_shopMap);
+    marker.bindPopup(buildMapPopupHtml(b), { closeButton: true, autoPanPadding: [24,24] });
+    marker.on('click', function() {
+      try { marker.openPopup(); } catch(e) {}
     });
-    popupHtml += '</div>';
-    var marker = L.marker([b.lat, b.lng]).addTo(_shopMap);
-    marker.bindPopup(popupHtml);
     marker.on('popupopen', function() {
       setTimeout(function() {
-        document.querySelectorAll('[data-deal-id]').forEach(function(el) {
+        document.querySelectorAll('[data-map-deal-id]').forEach(function(el) {
           el.addEventListener('click', function() {
-            var dealId = this.getAttribute('data-deal-id');
-            var deal = visibleDeals.find(function(dd) { return dd.id === dealId; });
-            if (deal) { _shopMap.closePopup(); openDealDetail(deal); }
+            var dealId = this.getAttribute('data-map-deal-id');
+            var deal = visibleDeals.find(function(dd) { return String(dd.id) === String(dealId); });
+            if (deal) {
+              _shopMap.closePopup();
+              openDealDetail(deal);
+            }
           });
         });
-      }, 60);
+      }, 30);
     });
     _shopMapMarkers.push(marker);
     bounds.push([b.lat, b.lng]);
   });
 
-  if (bounds.length > 1) _shopMap.fitBounds(bounds, { padding: [30, 30] });
-  else if (bounds.length === 1) _shopMap.setView(bounds[0], 14);
-  else _shopMap.setView([47.37, 8.54], 8);
+  var mapStateText = document.getElementById('mapStateText');
+  if (mapStateText) {
+    var dealsWord = (st('deals') || 'Deals').replace(/^.*?\s/, '').trim() || 'Deals';
+    var countryLabel = (st('mapCountryBadge') || '🇨🇭 Schweiz').replace('🇨🇭 ', '');
+    mapStateText.textContent = visibleDeals.length ? (visibleDeals.length + ' ' + dealsWord + ' · ' + countryLabel) : st('mapStateText');
+  }
+
+  if (bounds.length > 1) {
+    _shopMap.fitBounds(L.latLngBounds(bounds).pad(0.18), { padding: [20, 20], maxZoom: 13 });
+  } else if (bounds.length === 1) {
+    _shopMap.setView(bounds[0], 13);
+  } else {
+    _shopMap.setView([46.8182, 8.2275], 8);
+  }
 }
 
 function toggleMapView(showMap) {
@@ -1896,7 +1979,7 @@ function toggleMapView(showMap) {
     if (btnMap) { btnMap.style.background = '#FF3366'; btnMap.style.color = '#fff'; btnMap.style.borderColor = '#FF3366'; }
     if (btnGrid) { btnGrid.style.background = '#2a2a2a'; btnGrid.style.color = '#ccc'; btnGrid.style.borderColor = '#3a3a3a'; }
     initShopMap();
-    setTimeout(function() { if (_shopMap) _shopMap.invalidateSize(); updateShopMapMarkers(); }, 200);
+    setTimeout(function() { if (_shopMap) _shopMap.invalidateSize(); updateShopMapMarkers(); }, 120);
   } else {
     if (mapWrap) mapWrap.style.display = 'none';
     if (dealsView) dealsView.style.display = 'block';
