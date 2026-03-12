@@ -79,6 +79,21 @@
     .modal-box{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:16px;padding:28px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto}
     .modal-title{font-size:20px;font-weight:700;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
     .modal-close{background:none;border:none;color:#aaa;font-size:22px;cursor:pointer;line-height:1;flex-shrink:0}
+
+    .search-select-wrap{position:relative}
+    .suggestions-box{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#151515;border:1px solid #333;border-radius:12px;max-height:220px;overflow:auto;z-index:50;display:none;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+    .suggestion-item{padding:12px 14px;border-bottom:1px solid #232323;cursor:pointer}
+    .suggestion-item:last-child{border-bottom:none}
+    .suggestion-item:hover,.suggestion-item.active{background:#222}
+    .suggestion-title{font-size:13px;font-weight:600;color:#fff}
+    .suggestion-meta{font-size:12px;color:#999;margin-top:2px}
+    .input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
+    .segmented-input{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;letter-spacing:2px;background-image:repeating-linear-gradient(90deg,transparent 0,transparent 31px,rgba(255,255,255,.08) 31px,rgba(255,255,255,.08) 32px);background-size:32px 100%;padding-left:14px}
+    .toggle-check{display:flex;align-items:flex-start;gap:10px;padding:12px;background:#202020;border:1px solid #303030;border-radius:12px}
+    .toggle-check input{margin-top:2px}
+    .inline-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#232323;border:1px solid #333;color:#ccc;font-size:12px}
+
     @media(max-width:768px){
       .header{flex-wrap:wrap;gap:10px;padding:12px 15px}
       .header h1{font-size:16px}
@@ -157,25 +172,31 @@
           <input type="text" class="form-input" id="regBarName">
         </div>
         <div class="form-group">
-          <label class="form-label" for="regCity" data-i18n="city">Stadt *</label>
-          <input type="text" class="form-input" id="regCity">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="regAddress" data-i18n="address">Adresse *</label>
-          <input type="text" class="form-input" id="regAddress" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="regZip">PLZ *</label>
-          <input type="text" class="form-input" id="regZip" maxlength="10">
-        </div>
-        <div class="form-group">
-          <button type="button" id="btnRegGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;width:100%">📍 Adresse auf Karte prüfen</button>
+          <label class="form-label" for="regAddressSearch" data-i18n="address">Adresse *</label>
+          <div class="search-select-wrap">
+            <input type="text" class="form-input" id="regAddressSearch" placeholder="Adresse suchen und auswählen" autocomplete="off">
+            <div id="regAddressSuggestions" class="suggestions-box"></div>
+          </div>
+          <input type="hidden" id="regAddress">
+          <input type="hidden" id="regZip">
+          <input type="hidden" id="regLat">
+          <input type="hidden" id="regLng">
+          <small class="input-help">Bitte die Adresse aus der Vorschlagsliste wählen. Adresse, PLZ, Ort und Koordinaten werden automatisch übernommen.</small>
+          <div class="inline-meta">
+            <span class="pill" id="regAddressMeta">Noch keine Adresse gewählt</span>
+            <button type="button" id="btnRegGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px">📍 Auswahl auf Karte prüfen</button>
+          </div>
           <div id="regMapWrap" style="display:none;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid #3a3a3a">
             <div id="regMap" style="height:200px;width:100%"></div>
           </div>
-          <input type="hidden" id="regLat">
-          <input type="hidden" id="regLng">
-          <small style="color:#666;font-size:11px;margin-top:4px;display:block">Prüfe deine Adresse – der Pin wird im Shop auf der Karte angezeigt.</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regCity" data-i18n="city">Stadt *</label>
+          <input type="text" class="form-input" id="regCity" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regZipVisible">PLZ *</label>
+          <input type="text" class="form-input" id="regZipVisible" readonly>
         </div>
         <div class="form-group">
           <label class="form-label" for="regPhone" data-i18n="phone">Telefon</label>
@@ -195,18 +216,20 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="regIban">IBAN * (für Auszahlungen)</label>
-          <input type="text" class="form-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" pattern="[A-Z]{2}[0-9]{2}[\s0-9]{12,30}" style="text-transform:uppercase;letter-spacing:1px">
+          <input type="text" class="form-input segmented-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+          <small class="input-help">Nur gültige IBAN-Zeichen. Die Eingabe wird automatisch formatiert.</small>
         </div>
         <div class="form-group">
-          <label class="form-label">MWST-pflichtig?</label>
-          <div style="display:flex;gap:16px;margin-top:6px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="no" id="regMwstNo"> Nein</label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="regMwst" value="yes" checked id="regMwstYes"> Ja</label>
-          </div>
+          <label class="form-label">MWST</label>
+          <label class="toggle-check" for="regNoMwst">
+            <input type="checkbox" id="regNoMwst">
+            <span>Ich bin nicht MWST-pflichtig</span>
+          </label>
         </div>
         <div class="form-group" id="regMwstNumGroup">
           <label class="form-label" for="regMwstNumber">MWST-Nummer *</label>
-          <input type="text" class="form-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" style="letter-spacing:0.5px" pattern="CHE-\d{3}\.\d{3}\.\d{3}\s?(MWST|TVA|IVA)?">
+          <input type="text" class="form-input segmented-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+          <small class="input-help">Die UID wird automatisch formatiert. Beispiel: CHE-123.456.789 MWST</small>
         </div>
         <div class="form-check">
           <input type="checkbox" id="regConsent">
@@ -416,17 +439,22 @@
         <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="profileTitle">Stammdaten</h3>
         <div class="err-msg" id="profErr" aria-live="polite"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-group">
+          <div class="form-group" style="grid-column:1 / -1">
             <label class="form-label" data-i18n="addressLbl">Adresse</label>
-            <input type="text" class="form-input" id="profAddress" placeholder="Strasse Nr.">
+            <div class="search-select-wrap">
+              <input type="text" class="form-input" id="profAddressSearch" placeholder="Adresse suchen und auswählen" autocomplete="off">
+              <div id="profAddressSuggestions" class="suggestions-box"></div>
+            </div>
+            <input type="hidden" id="profAddress">
+            <small class="input-help">Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.</small>
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="zipLbl">PLZ</label>
-            <input type="text" class="form-input" id="profZip" placeholder="4000">
+            <input type="text" class="form-input" id="profZip" placeholder="4000" readonly>
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="cityLbl">Stadt</label>
-            <input type="text" class="form-input" id="profCity" placeholder="Basel">
+            <input type="text" class="form-input" id="profCity" placeholder="Basel" readonly>
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="phoneLbl">Telefon</label>
@@ -434,7 +462,7 @@
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="ibanLbl">IBAN</label>
-            <input type="text" class="form-input" id="profIban" placeholder="CH...">
+            <input type="text" class="form-input segmented-input" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="twintLbl">Twint</label>
@@ -442,27 +470,30 @@
           </div>
         </div>
         <div style="margin-bottom:18px">
-          <label class="form-label">MWST-pflichtig?</label>
-          <div style="display:flex;gap:16px;margin-top:6px">
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="no" id="profMwstNo"> Nein</label>
-            <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="profMwst" value="yes" checked id="profMwstYes"> Ja</label>
-          </div>
+          <label class="form-label">MWST</label>
+          <label class="toggle-check" for="profNoMwst">
+            <input type="checkbox" id="profNoMwst">
+            <span>Ich bin nicht MWST-pflichtig</span>
+          </label>
         </div>
         <div class="form-group" id="profMwstNumGroup">
           <label class="form-label">MWST-Nummer</label>
-          <input type="text" class="form-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST">
+          <input type="text" class="form-input segmented-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
         </div>
         <div style="margin-bottom:18px">
           <label class="form-label">📍 Standort</label>
-          <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+          <div class="inline-meta">
+            <span class="pill" id="profAddressMeta">Noch keine Adresse gewählt</span>
+            <button type="button" id="btnGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">📍 Auswahl auf Karte prüfen</button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
             <input type="text" class="form-input" id="profLat" placeholder="Breitengrad" style="width:120px" readonly>
             <input type="text" class="form-input" id="profLng" placeholder="Längengrad" style="width:120px" readonly>
-            <button type="button" id="btnGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">📍 Standort prüfen</button>
           </div>
           <div id="profMapWrap" style="display:none;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid #3a3a3a">
             <div id="profMap" style="height:200px;width:100%"></div>
           </div>
-          <small style="color:#666;font-size:11px">Wird automatisch aus deiner Adresse berechnet</small>
+          <small class="input-help">Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.</small>
         </div>
         <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
         <hr style="border:none;border-top:1px solid #333;margin:24px 0">
