@@ -125,8 +125,199 @@ fr: {
 }
 };
 
+
 let currentLang = 'de';
 function t(key) { return TRANSLATIONS[currentLang][key] || TRANSLATIONS.de[key] || key; }
+
+function normText(v) { return String(v || '').trim(); }
+function onlyAlphaNum(v) { return String(v || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase(); }
+function onlyDigits(v) { return String(v || '').replace(/\D/g, ''); }
+function formatIbanDisplay(v) {
+  var raw = onlyAlphaNum(v).slice(0, 34);
+  return raw.replace(/(.{4})/g, '$1 ').trim();
+}
+function ibanToNumeric(iban) {
+  var moved = iban.slice(4) + iban.slice(0, 4);
+  var out = '';
+  for (var i = 0; i < moved.length; i++) {
+    var ch = moved.charCodeAt(i);
+    if (ch >= 48 && ch <= 57) out += moved[i];
+    else if (ch >= 65 && ch <= 90) out += String(ch - 55);
+    else return '';
+  }
+  return out;
+}
+function mod97(numStr) {
+  var rem = 0;
+  for (var i = 0; i < numStr.length; i += 7) {
+    rem = Number(String(rem) + numStr.substring(i, i + 7)) % 97;
+  }
+  return rem;
+}
+function isValidIban(v) {
+  var raw = onlyAlphaNum(v);
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(raw)) return false;
+  var numeric = ibanToNumeric(raw);
+  return numeric && mod97(numeric) === 1;
+}
+function normalizeIban(v) { return formatIbanDisplay(v); }
+
+function formatMwstDisplay(v) {
+  var up = String(v || '').toUpperCase().replace(/\s+/g, ' ').trim();
+  var suffix = /(?:MWST|TVA|IVA)$/.test(up) ? up.match(/(MWST|TVA|IVA)$/)[1] : 'MWST';
+  var digits = onlyDigits(up).slice(0, 9);
+  if (!digits) return '';
+  var parts = [];
+  if (digits.slice(0,3)) parts.push(digits.slice(0,3));
+  if (digits.slice(3,6)) parts.push(digits.slice(3,6));
+  if (digits.slice(6,9)) parts.push(digits.slice(6,9));
+  var base = 'CHE-' + parts.join('.');
+  if (digits.length === 9) base += ' ' + suffix;
+  return base;
+}
+function normalizeMwst(v) { return formatMwstDisplay(v); }
+function isValidMwst(v) { return /^CHE-\d{3}\.\d{3}\.\d{3} (MWST|TVA|IVA)$/.test(formatMwstDisplay(v)); }
+
+function setMaskedInputValue(id, value, formatter) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.value = formatter ? formatter(value) : String(value || '');
+}
+function bindMaskedInput(id, formatter) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
+    var start = this.selectionStart || 0;
+    var before = this.value.length;
+    this.value = formatter(this.value);
+    var after = this.value.length;
+    try { this.setSelectionRange(start + (after - before), start + (after - before)); } catch(e) {}
+  });
+  el.addEventListener('blur', function() { this.value = formatter(this.value); });
+}
+function updateMwstVisibility(prefix) {
+  var cb = document.getElementById(prefix + 'NoMwst');
+  var group = document.getElementById(prefix + 'MwstNumGroup');
+  var input = document.getElementById(prefix + 'MwstNumber');
+  var liable = !(cb && cb.checked);
+  if (group) group.style.display = liable ? 'block' : 'none';
+  if (input) {
+    input.required = liable;
+    if (!liable) input.value = '';
+  }
+}
+function parseSelectedAddress(prefix) {
+  return {
+    address: normText((document.getElementById(prefix + 'Address') || {}).value),
+    city: normText((document.getElementById(prefix + 'City') || {}).value),
+    zip: normText((document.getElementById(prefix + 'Zip') || document.getElementById(prefix + 'ZipVisible') || {}).value),
+    latitude: normText((document.getElementById(prefix + 'Lat') || {}).value),
+    longitude: normText((document.getElementById(prefix + 'Lng') || {}).value)
+  };
+}
+function setAddressMeta(prefix, text) {
+  var el = document.getElementById(prefix + 'AddressMeta');
+  if (el) el.textContent = text || 'Noch keine Adresse gewählt';
+}
+function setSelectedAddress(prefix, place) {
+  var sInput = document.getElementById(prefix + 'AddressSearch');
+  var aInput = document.getElementById(prefix + 'Address');
+  var zipEl = document.getElementById(prefix + 'Zip');
+  var zipVisibleEl = document.getElementById(prefix + 'ZipVisible');
+  var cityEl = document.getElementById(prefix + 'City');
+  var latEl = document.getElementById(prefix + 'Lat');
+  var lngEl = document.getElementById(prefix + 'Lng');
+  if (sInput) sInput.value = place.label || '';
+  if (aInput) aInput.value = place.address || '';
+  if (zipEl) zipEl.value = place.zip || '';
+  if (zipVisibleEl) zipVisibleEl.value = place.zip || '';
+  if (cityEl) cityEl.value = place.city || '';
+  if (latEl) latEl.value = place.latitude || '';
+  if (lngEl) lngEl.value = place.longitude || '';
+  if (sInput) sInput.dataset.selected = '1';
+  setAddressMeta(prefix, [place.address, place.zip, place.city].filter(Boolean).join(', '));
+}
+function clearSelectedAddress(prefix, keepSearch) {
+  var sInput = document.getElementById(prefix + 'AddressSearch');
+  if (sInput && !keepSearch) sInput.value = '';
+  if (sInput) sInput.dataset.selected = '';
+  ['Address','Zip','City','Lat','Lng'].forEach(function(suffix) {
+    var el = document.getElementById(prefix + suffix);
+    if (el) el.value = '';
+  });
+  var zv = document.getElementById(prefix + 'ZipVisible');
+  if (zv) zv.value = '';
+  setAddressMeta(prefix, 'Noch keine Adresse gewählt');
+}
+function extractAddressParts(item) {
+  var a = item.address || {};
+  return {
+    address: item.display_name ? item.display_name.split(',').slice(0,2).join(',').trim() : [a.road, a.house_number].filter(Boolean).join(' '),
+    zip: a.postcode || '',
+    city: a.city || a.town || a.village || a.hamlet || a.municipality || '',
+    latitude: item.lat ? Number(item.lat).toFixed(6) : '',
+    longitude: item.lon ? Number(item.lon).toFixed(6) : '',
+    label: item.display_name || ''
+  };
+}
+function debounce(fn, wait) {
+  var tmr = null;
+  return function() {
+    var args = arguments, ctx = this;
+    clearTimeout(tmr);
+    tmr = setTimeout(function() { fn.apply(ctx, args); }, wait);
+  };
+}
+function bindAddressAutocomplete(prefix) {
+  var input = document.getElementById(prefix + 'AddressSearch');
+  var box = document.getElementById(prefix + 'AddressSuggestions');
+  if (!input || !box) return;
+  var currentResults = [];
+  function closeBox() { box.style.display = 'none'; box.innerHTML = ''; }
+  function openBox() { if (box.innerHTML.trim()) box.style.display = 'block'; }
+  function renderResults(items) {
+    currentResults = items || [];
+    box.innerHTML = '';
+    if (!currentResults.length) { closeBox(); return; }
+    currentResults.forEach(function(item) {
+      var place = extractAddressParts(item);
+      var row = document.createElement('div');
+      row.className = 'suggestion-item';
+      row.innerHTML = '<div class="suggestion-title">' + esc(place.address || place.label) + '</div><div class="suggestion-meta">' + esc([place.zip, place.city].filter(Boolean).join(' ')) + '</div>';
+      row.addEventListener('click', function() {
+        setSelectedAddress(prefix, place);
+        closeBox();
+      });
+      box.appendChild(row);
+    });
+    openBox();
+  }
+  var runSearch = debounce(async function() {
+    var q = normText(input.value);
+    if (q.length < 3) { closeBox(); if (!q) clearSelectedAddress(prefix, true); return; }
+    if (input.dataset.selected === '1' && q === input.value) {
+      // continue searching only if user edits after selection
+    }
+    input.dataset.selected = '';
+    try {
+      var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=ch&q=' + encodeURIComponent(q);
+      var resp = await fetch(url, { headers: { 'Accept-Language': 'de' } });
+      var data = await resp.json();
+      renderResults(Array.isArray(data) ? data : []);
+    } catch (e) {
+      closeBox();
+    }
+  }, 250);
+  input.addEventListener('input', runSearch);
+  input.addEventListener('focus', function() { if (box.innerHTML.trim()) box.style.display = 'block'; });
+  document.addEventListener('click', function(e) { if (!e.target.closest('.search-select-wrap')) closeBox(); });
+}
+
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
 
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -135,14 +326,17 @@ function applyTranslations() {
   });
   // Translate placeholders
   var ph = {
-    profAddress: {de:'Strasse Nr.',en:'Street No.',it:'Via Nr.',fr:'Rue No.'},
+    profAddressSearch: {de:'Adresse suchen und auswählen',en:'Search and select address',it:'Cerca e seleziona indirizzo',fr:'Rechercher et sélectionner une adresse'},
     profZip: {de:'PLZ',en:'ZIP',it:'CAP',fr:'NPA'},
     profCity: {de:'Stadt',en:'City',it:'Città',fr:'Ville'},
     profPhone: {de:'+41...',en:'+41...',it:'+41...',fr:'+41...'},
-    profIban: {de:'CH...',en:'CH...',it:'CH...',fr:'CH...'},
+    profIban: {de:'CH00 0000 0000 0000 0000 0',en:'CH00 0000 0000 0000 0000 0',it:'CH00 0000 0000 0000 0000 0',fr:'CH00 0000 0000 0000 0000 0'},
     profTwint: {de:'+41...',en:'+41...',it:'+41...',fr:'+41...'},
+    regAddressSearch: {de:'Adresse suchen und auswählen',en:'Search and select address',it:'Cerca e seleziona indirizzo',fr:'Rechercher et sélectionner une adresse'},
     dealTitle: {de:'z.B. 2 Cocktails für 1',en:'e.g. 2 Cocktails for 1',it:'es. 2 Cocktail per 1',fr:'ex. 2 Cocktails pour 1'},
-    regIban: {de:'CH00 0000 0000 0000 0000 0',en:'CH00 0000 0000 0000 0000 0',it:'CH00 0000 0000 0000 0000 0',fr:'CH00 0000 0000 0000 0000 0'}
+    regIban: {de:'CH00 0000 0000 0000 0000 0',en:'CH00 0000 0000 0000 0000 0',it:'CH00 0000 0000 0000 0000 0',fr:'CH00 0000 0000 0000 0000 0'},
+    regMwstNumber: {de:'CHE-123.456.789 MWST',en:'CHE-123.456.789 VAT',it:'CHE-123.456.789 IVA',fr:'CHE-123.456.789 TVA'},
+    profMwstNumber: {de:'CHE-123.456.789 MWST',en:'CHE-123.456.789 VAT',it:'CHE-123.456.789 IVA',fr:'CHE-123.456.789 TVA'}
   };
   Object.keys(ph).forEach(function(id) {
     var el = document.getElementById(id);
@@ -255,45 +449,63 @@ async function doBarLogin() {
 }
 
 async function doBarRegister() {
-  var name    = document.getElementById('regBarName').value.trim();
-  var city    = document.getElementById('regCity').value.trim();
-  var address = document.getElementById('regAddress').value.trim();
-  var zip     = document.getElementById('regZip') ? document.getElementById('regZip').value.trim() : '';
-  var phone   = document.getElementById('regPhone').value.trim();
-  var email   = document.getElementById('regBarEmail').value.trim();
+  var name    = normText(document.getElementById('regBarName').value);
+  var phone   = normText(document.getElementById('regPhone').value);
+  var email   = normText(document.getElementById('regBarEmail').value);
   var pass    = document.getElementById('regBarPass').value;
-  var iban    = document.getElementById('regIban') ? document.getElementById('regIban').value.trim() : '';
-  var mwstYes = document.getElementById('regMwstYes');
-  var mwstLiable = mwstYes && mwstYes.checked;
-  var mwstNumber = document.getElementById('regMwstNumber') ? document.getElementById('regMwstNumber').value.trim() : '';
-  if (mwstLiable && !mwstNumber) { showToast('MWST-Nummer ist Pflichtfeld', true); return; }
+  var ibanRaw = normText(document.getElementById('regIban').value);
+  var mwstLiable = !(document.getElementById('regNoMwst') && document.getElementById('regNoMwst').checked);
+  var mwstRaw = document.getElementById('regMwstNumber') ? normText(document.getElementById('regMwstNumber').value) : '';
   var consent = document.getElementById('regConsent').checked;
   var err     = document.getElementById('regErr');
+  var addr    = parseSelectedAddress('reg');
   err.textContent = '';
-  if (!name || !city || !address || !zip || !email || !pass || !iban) { err.textContent = 'Alle Pflichtfelder ausfüllen (Name, Stadt, Adresse, PLZ, Email, Passwort, IBAN).'; return; }
+
+  if (!name || !addr.city || !addr.address || !addr.zip || !email || !pass || !ibanRaw) {
+    err.textContent = 'Alle Pflichtfelder ausfüllen.';
+    return;
+  }
+  if (!(document.getElementById('regAddressSearch') || {}).dataset.selected || !addr.latitude || !addr.longitude) {
+    err.textContent = 'Bitte Adresse aus der Vorschlagsliste auswählen.';
+    return;
+  }
+  if (!isValidIban(ibanRaw)) { err.textContent = 'Bitte eine gültige IBAN eingeben.'; return; }
+  if (mwstLiable && !isValidMwst(mwstRaw)) { err.textContent = 'Bitte eine gültige MWST-Nummer eingeben.'; return; }
   if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
   var passConfirm = document.getElementById('regBarPassConfirm') ? document.getElementById('regBarPassConfirm').value : pass;
   if (pass !== passConfirm) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
   if (!consent) { err.textContent = 'Bitte AGB & Datenschutz akzeptieren.'; return; }
+
   var btn = document.getElementById('btnBarRegister');
   try {
     if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
-    var r = await api({ action: 'barRegister', name, city, address, zip, phone, email, password: pass, iban, mwst_liable: mwstLiable, mwst_number: mwstNumber,
-      latitude: document.getElementById('regLat') ? document.getElementById('regLat').value : '',
-      longitude: document.getElementById('regLng') ? document.getElementById('regLng').value : ''
+    var r = await api({
+      action: 'barRegister',
+      name: name,
+      city: addr.city,
+      address: addr.address,
+      zip: addr.zip,
+      phone: phone,
+      email: email,
+      password: pass,
+      iban: normalizeIban(ibanRaw),
+      mwst_liable: mwstLiable,
+      mwst_number: mwstLiable ? normalizeMwst(mwstRaw) : '',
+      latitude: addr.latitude,
+      longitude: addr.longitude
     });
     if (r.success) {
       showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
       document.getElementById('regBarPass').value = '';
-      // Auto-geocode the address
-      try {
-        var q = [address, zip, city, 'Switzerland'].filter(Boolean).join(', ');
-        var geoResp = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
-        var geoData = await geoResp.json();
-        if (geoData && geoData.length > 0 && r.bar_id) {
-          // We can't save yet since bar is pending, but coordinates will be set on first profile save
-        }
-      } catch(ge) {}
+      document.getElementById('regBarPassConfirm').value = '';
+      document.getElementById('regIban').value = '';
+      document.getElementById('regMwstNumber').value = '';
+      clearSelectedAddress('reg');
+      if (document.getElementById('regAddressSearch')) document.getElementById('regAddressSearch').value = '';
+      if (document.getElementById('regBarName')) document.getElementById('regBarName').value = '';
+      if (document.getElementById('regPhone')) document.getElementById('regPhone').value = '';
+      if (document.getElementById('regBarEmail')) document.getElementById('regBarEmail').value = '';
+      if (document.getElementById('regConsent')) document.getElementById('regConsent').checked = false;
     } else {
       err.textContent = r.error || 'Fehler bei der Registrierung.';
     }
@@ -501,7 +713,7 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
     var st = v.status === 'redeemed' ? 'Eingelöst' : v.status === 'refunded' ? 'Erstattet' : 'Offen';
     var pc = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
     var pt = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
-    html += '<tr><td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-') + '</td><td style="font-family:monospace">' + (v.code || '-') + '</td><td>' + (v.deal_title || '-') + '</td><td style="text-align:right">' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + st + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td></tr>';
+    html += '<tr><td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-') + '</td><td style="font-family:monospace">' + ((v.code_display || v.code) || '-') + '</td><td>' + (v.deal_title || '-') + '</td><td style="text-align:right">' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + st + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td></tr>';
   });
   html += '</tbody></table></div>';
   detailEl.innerHTML = html;
@@ -743,7 +955,7 @@ function renderVouchers(vouchers) {
     var statusTd = document.createElement('td'); statusTd.appendChild(badge);
 
     tr.append(
-      mkTd(v.code),
+      mkTd(v.code_display || v.code),
       mkTd(v.deal_title),
       mkTd(Number(v.price_paid).toFixed(2) + ' CHF'),
       statusTd,
@@ -1031,43 +1243,49 @@ async function loadProfile() {
 }
 
 function applyProfileToForm(b) {
-    var el = function(id) { return document.getElementById(id); };
-    if (el('profAddress')) el('profAddress').value = b.address || '';
-    if (el('profZip')) el('profZip').value = b.zip || '';
-    if (el('profCity')) el('profCity').value = b.city || '';
-    if (el('profPhone')) el('profPhone').value = b.phone || '';
-    if (el('profIban')) el('profIban').value = b.iban || '';
-    if (el('profTwint')) el('profTwint').value = b.twint || '';
-    // MWST
-    if (b.mwst_liable === true || b.mwst_liable === 'true') {
-      if (el('profMwstYes')) el('profMwstYes').checked = true;
-      if (el('profMwstNumGroup')) el('profMwstNumGroup').style.display = 'block';
-    } else if (b.mwst_liable === false || b.mwst_liable === 'false') {
-      if (el('profMwstNo')) el('profMwstNo').checked = true;
-      if (el('profMwstNumGroup')) el('profMwstNumGroup').style.display = 'none';
-    }
-    if (el('profMwstNumber')) el('profMwstNumber').value = b.mwst_number || '';
-    // Coordinates
-    if (el('profLat') && b.latitude) el('profLat').value = b.latitude;
-    if (el('profLng') && b.longitude) el('profLng').value = b.longitude;
+  var el = function(id) { return document.getElementById(id); };
+  if (el('profAddressSearch')) el('profAddressSearch').value = b.address || '';
+  if (el('profAddress')) el('profAddress').value = b.address || '';
+  if (el('profZip')) el('profZip').value = b.zip || '';
+  if (el('profCity')) el('profCity').value = b.city || '';
+  if (el('profPhone')) el('profPhone').value = b.phone || '';
+  setMaskedInputValue('profIban', b.iban || '', formatIbanDisplay);
+  if (el('profTwint')) el('profTwint').value = b.twint || '';
+  if (el('profNoMwst')) el('profNoMwst').checked = !(b.mwst_liable === true || b.mwst_liable === 'true');
+  updateMwstVisibility('prof');
+  setMaskedInputValue('profMwstNumber', b.mwst_number || '', formatMwstDisplay);
+  if (el('profLat')) el('profLat').value = b.latitude || '';
+  if (el('profLng')) el('profLng').value = b.longitude || '';
+  setAddressMeta('prof', [b.address, b.zip, b.city].filter(Boolean).join(', ') || 'Noch keine Adresse gewählt');
+  if (el('profAddressSearch')) el('profAddressSearch').dataset.selected = b.address ? '1' : '';
 }
 
 async function saveProfile() {
   var s = sessionGet();
   if (!s) { doLogout(); return; }
+  var addr = parseSelectedAddress('prof');
+  var ibanRaw = normText(document.getElementById('profIban').value);
+  var mwstLiable = !(document.getElementById('profNoMwst') && document.getElementById('profNoMwst').checked);
+  var mwstRaw = document.getElementById('profMwstNumber') ? normText(document.getElementById('profMwstNumber').value) : '';
+
+  if (!addr.address || !addr.city || !addr.zip) { showToast('Bitte zuerst eine Adresse auswählen.', true); return; }
+  if (!addr.latitude || !addr.longitude) { showToast('Für die Adresse fehlen Koordinaten.', true); return; }
+  if (ibanRaw && !isValidIban(ibanRaw)) { showToast('Bitte eine gültige IBAN eingeben.', true); return; }
+  if (mwstLiable && !isValidMwst(mwstRaw)) { showToast('Bitte eine gültige MWST-Nummer eingeben.', true); return; }
+
   var payload = {
     action: 'updateBarProfile',
     token: s.token,
-    address: document.getElementById('profAddress').value.trim(),
-    zip: document.getElementById('profZip').value.trim(),
-    city: document.getElementById('profCity').value.trim(),
-    phone: document.getElementById('profPhone').value.trim(),
-    iban: document.getElementById('profIban').value.trim(),
-    twint: document.getElementById('profTwint').value.trim(),
-    mwst_liable: document.getElementById('profMwstYes') && document.getElementById('profMwstYes').checked,
-    mwst_number: document.getElementById('profMwstNumber') ? document.getElementById('profMwstNumber').value.trim() : '',
-    latitude: document.getElementById('profLat') ? document.getElementById('profLat').value : '',
-    longitude: document.getElementById('profLng') ? document.getElementById('profLng').value : ''
+    address: addr.address,
+    zip: addr.zip,
+    city: addr.city,
+    phone: normText(document.getElementById('profPhone').value),
+    iban: normalizeIban(ibanRaw),
+    twint: normText(document.getElementById('profTwint').value),
+    mwst_liable: mwstLiable,
+    mwst_number: mwstLiable ? normalizeMwst(mwstRaw) : '',
+    latitude: addr.latitude,
+    longitude: addr.longitude
   };
   try {
     var r = await api(payload);
@@ -1207,19 +1425,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ── IMAGE UPLOAD PREVIEW ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-  // MWST toggle in registration (default is now Yes/visible)
-  var regMwstYes = document.getElementById('regMwstYes');
-  var regMwstNo = document.getElementById('regMwstNo');
-  var regMwstGroup = document.getElementById('regMwstNumGroup');
-  if (regMwstYes) regMwstYes.addEventListener('change', function() { if (regMwstGroup) regMwstGroup.style.display = 'block'; });
-  if (regMwstNo) regMwstNo.addEventListener('change', function() { if (regMwstGroup) regMwstGroup.style.display = 'none'; });
-  // MWST toggle in settings (default is now Yes/visible)
-  var profMwstYes = document.getElementById('profMwstYes');
-  var profMwstNo = document.getElementById('profMwstNo');
-  var profMwstGroup = document.getElementById('profMwstNumGroup');
-  if (profMwstYes) profMwstYes.addEventListener('change', function() { if (profMwstGroup) profMwstGroup.style.display = 'block'; });
-  if (profMwstNo) profMwstNo.addEventListener('change', function() { if (profMwstGroup) profMwstGroup.style.display = 'none'; });
+  // MWST and formatting
+  bindMaskedInput('regIban', formatIbanDisplay);
+  bindMaskedInput('profIban', formatIbanDisplay);
+  bindMaskedInput('regMwstNumber', formatMwstDisplay);
+  bindMaskedInput('profMwstNumber', formatMwstDisplay);
 
+  var regNoMwst = document.getElementById('regNoMwst');
+  if (regNoMwst) regNoMwst.addEventListener('change', function() { updateMwstVisibility('reg'); });
+  var profNoMwst = document.getElementById('profNoMwst');
+  if (profNoMwst) profNoMwst.addEventListener('change', function() { updateMwstVisibility('prof'); });
+  updateMwstVisibility('reg');
+  updateMwstVisibility('prof');
+
+  bindAddressAutocomplete('reg');
+  bindAddressAutocomplete('prof');
 
   // Geocode + map helper
   var _profMap = null, _profMarker = null;
@@ -1244,60 +1464,38 @@ document.addEventListener('DOMContentLoaded', function() {
     return { map: existingMap, marker: existingMarker };
   }
 
-  async function geocodeAddress(addr, zip, city, callback) {
-    if (!addr && !city) { showToast('Bitte zuerst Adresse eingeben', true); return; }
-    var q = [addr, zip, city, 'Schweiz'].filter(Boolean).join(', ');
-    try {
-      var resp = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
-      var data = await resp.json();
-      if (data && data.length > 0) {
-        callback(Number(data[0].lat), Number(data[0].lon), data[0].display_name);
-      } else { showToast('Adresse nicht gefunden – bitte prüfen', true); }
-    } catch(e) { showToast('Geocoding fehlgeschlagen', true); }
-  }
-
   // Settings geocode button
   var btnGeocode = document.getElementById('btnGeocode');
   if (btnGeocode) btnGeocode.addEventListener('click', async function() {
-    var addr = (document.getElementById('profAddress') || {}).value || '';
-    var zip = (document.getElementById('profZip') || {}).value || '';
-    var city = (document.getElementById('profCity') || {}).value || '';
-    btnGeocode.textContent = '⏳ Suche...'; btnGeocode.disabled = true;
-    await geocodeAddress(addr, zip, city, function(lat, lng, display) {
-      document.getElementById('profLat').value = lat.toFixed(6);
-      document.getElementById('profLng').value = lng.toFixed(6);
-      var r = showMapPin('profMap', 'profMapWrap', lat, lng, _profMap, _profMarker);
-      _profMap = r.map; _profMarker = r.marker;
-      _profMarker.on('dragend', function(e) {
-        var p = e.target.getLatLng();
-        document.getElementById('profLat').value = p.lat.toFixed(6);
-        document.getElementById('profLng').value = p.lng.toFixed(6);
-      });
-      showToast('📍 Standort gefunden');
+    var addr = parseSelectedAddress('prof');
+    if (!addr.latitude || !addr.longitude) { showToast('Bitte zuerst eine Adresse aus der Liste wählen', true); return; }
+    var lat = Number(addr.latitude), lng = Number(addr.longitude);
+    var r = showMapPin('profMap', 'profMapWrap', lat, lng, _profMap, _profMarker);
+    _profMap = r.map; _profMarker = r.marker;
+    _profMarker.off('dragend');
+    _profMarker.on('dragend', function(e) {
+      var p = e.target.getLatLng();
+      document.getElementById('profLat').value = p.lat.toFixed(6);
+      document.getElementById('profLng').value = p.lng.toFixed(6);
     });
-    btnGeocode.textContent = '📍 Standort prüfen'; btnGeocode.disabled = false;
+    showToast('📍 Standort geladen');
   });
 
   // Registration geocode button
   var btnRegGeo = document.getElementById('btnRegGeocode');
   if (btnRegGeo) btnRegGeo.addEventListener('click', async function() {
-    var addr = (document.getElementById('regAddress') || {}).value || '';
-    var zip = (document.getElementById('regZip') || {}).value || '';
-    var city = (document.getElementById('regCity') || {}).value || '';
-    btnRegGeo.textContent = '⏳ Suche...'; btnRegGeo.disabled = true;
-    await geocodeAddress(addr, zip, city, function(lat, lng, display) {
-      document.getElementById('regLat').value = lat.toFixed(6);
-      document.getElementById('regLng').value = lng.toFixed(6);
-      var r = showMapPin('regMap', 'regMapWrap', lat, lng, _regMap, _regMarker);
-      _regMap = r.map; _regMarker = r.marker;
-      _regMarker.on('dragend', function(e) {
-        var p = e.target.getLatLng();
-        document.getElementById('regLat').value = p.lat.toFixed(6);
-        document.getElementById('regLng').value = p.lng.toFixed(6);
-      });
-      showToast('📍 Standort gefunden – Pin verschiebbar!');
+    var addr = parseSelectedAddress('reg');
+    if (!addr.latitude || !addr.longitude) { showToast('Bitte zuerst eine Adresse aus der Liste wählen', true); return; }
+    var lat = Number(addr.latitude), lng = Number(addr.longitude);
+    var r = showMapPin('regMap', 'regMapWrap', lat, lng, _regMap, _regMarker);
+    _regMap = r.map; _regMarker = r.marker;
+    _regMarker.off('dragend');
+    _regMarker.on('dragend', function(e) {
+      var p = e.target.getLatLng();
+      document.getElementById('regLat').value = p.lat.toFixed(6);
+      document.getElementById('regLng').value = p.lng.toFixed(6);
     });
-    btnRegGeo.textContent = '📍 Adresse auf Karte prüfen'; btnRegGeo.disabled = false;
+    showToast('📍 Standort geladen – Pin verschiebbar!');
   });
 
   var imgFile = document.getElementById('dealImageFile');
