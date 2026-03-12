@@ -25,7 +25,7 @@ de: {
   codeLbl:'Code', dealLbl:'Deal', priceLbl:'Preis', createdLbl:'Erstellt', redeemedLbl:'Eingelöst',
   redeemTitle:'Gutschein einlösen', redeemHint:'Gutschein-Code des Kunden eingeben',
   redeemBtn:'Einlösen', redeemSuccess:'✅ Gutschein eingelöst!',
-  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', profileTitle:'Stammdaten', addressLbl:'Adresse', zipLbl:'PLZ', cityLbl:'Stadt', phoneLbl:'Telefon', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Speichern', profileSaved:'Profil gespeichert', deleteAccountTitle:'Account löschen', deleteAccountWarning:'Alle Deals werden deaktiviert. Diese Aktion ist endgültig.', deleteAccountBtn:'Account endgültig löschen', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Netto ausbezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Impressum', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
+  changePassword:'Passwort ändern', oldPassword:'Altes Passwort', profileTitle:'Stammdaten', addressLbl:'Adresse', zipLbl:'PLZ', cityLbl:'Stadt', phoneLbl:'Telefon', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Speichern', profileSaved:'Profil gespeichert', deleteAccountTitle:'Account löschen', deleteAccountWarning:'Alle Deals werden deaktiviert. Diese Aktion ist endgültig.', deleteAccountBtn:'Account endgültig löschen', soldCount:'Verkauft', notRedeemed:'Nicht eingel\xf6st', paidOut:'Netto ausbezahlt', activeDeals:'Aktive Deals', earnings:'Einnahmen', redeemed:'Eingelöst', pendingPayout:'Ausstehend', deleteDealBtn:'Deal löschen', deleteDealConfirm:'Deal endgültig löschen?', shop:'Shop', aboutUs:'Über uns', howItWorks:'So funktionierts', legalNotice:'Note legali', privacy:'Datenschutz', termsBars:'AGB Bars', contact:'Kontakt',
   newPasswordLbl:'Neues Passwort (mind. 8 Zeichen)', confirmPassword:'Passwort bestätigen',
   changePasswordBtn:'Passwort ändern', editDeal:'Deal bearbeiten',
   saveLbl:'Speichern', cancelLbl:'Abbrechen',
@@ -85,7 +85,7 @@ it: {
   codeLbl:'Codice', dealLbl:'Deal', priceLbl:'Prezzo', createdLbl:'Creato', redeemedLbl:'Riscattato',
   redeemTitle:'Riscatta Voucher', redeemHint:'Inserisci il codice voucher del cliente',
   redeemBtn:'Riscatta', redeemSuccess:'✅ Voucher riscattato!',
-  changePassword:'Cambia Password', oldPassword:'Vecchia Password', profileTitle:'Dati anagrafici', addressLbl:'Indirizzo', zipLbl:'CAP', cityLbl:'Città', phoneLbl:'Telefono', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Salva', profileSaved:'Profilo salvato', deleteAccountTitle:'Elimina account', deleteAccountWarning:'Tutti i deal saranno disattivati. Questa azione è definitiva.', deleteAccountBtn:'Elimina account definitivamente', soldCount:'Venduti', notRedeemed:'Non riscattati', paidOut:'Netto pagato', activeDeals:'Deal attivi', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Impressum', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
+  changePassword:'Cambia Password', oldPassword:'Vecchia Password', profileTitle:'Dati anagrafici', addressLbl:'Indirizzo', zipLbl:'CAP', cityLbl:'Città', phoneLbl:'Telefono', ibanLbl:'IBAN', twintLbl:'Twint', saveProfile:'Salva', profileSaved:'Profilo salvato', deleteAccountTitle:'Elimina account', deleteAccountWarning:'Tutti i deal saranno disattivati. Questa azione è definitiva.', deleteAccountBtn:'Elimina account definitivamente', soldCount:'Venduti', notRedeemed:'Non riscattati', paidOut:'Netto pagato', activeDeals:'Deal attivi', earnings:'Entrate', redeemed:'Riscattati', pendingPayout:'In sospeso', deleteDealBtn:'Elimina Deal', deleteDealConfirm:'Eliminare definitivamente questo deal?', shop:'Shop', aboutUs:'Chi siamo', howItWorks:'Come funziona', legalNotice:'Note legali', privacy:'Privacy', termsBars:'Condizioni Bar', contact:'Contatto',
   newPasswordLbl:'Nuova Password (min. 8 car.)', confirmPassword:'Conferma Password',
   changePasswordBtn:'Cambia Password', editDeal:'Modifica Deal',
   saveLbl:'Salva', cancelLbl:'Annulla',
@@ -129,6 +129,44 @@ fr: {
 }
 };
 
+
+
+Object.assign(TRANSLATIONS.de, {
+  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)',
+  regAddressHelp:'Bitte die Adresse aus der Vorschlagsliste wählen. Adresse, PLZ, Ort und Koordinaten werden automatisch übernommen.',
+  addressNotSelected:'Noch keine Adresse gewählt', checkMapSelection:'Auswahl auf Karte prüfen', zipReq:'PLZ *', confirmPasswordReq:'Passwort bestätigen *',
+  ibanPayoutLabel:'IBAN * (für Auszahlungen)', ibanHelp:'Nur gültige IBAN-Zeichen. Die Eingabe wird automatisch formatiert.',
+  mwstLabel:'MWST', notMwstLiable:'Ich bin nicht MWST-pflichtig', mwstNumberReq:'MWST-Nummer *', mwstNumberLabel:'MWST-Nummer', mwstHelp:'Die UID wird automatisch formatiert. Beispiel: CHE-123.456.789 MWST',
+  acceptTerms:'Ich akzeptiere die', locationLabel:'Standort', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
+  profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
+});
+Object.assign(TRANSLATIONS.en, {
+  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)',
+  regAddressHelp:'Please choose the address from the suggestion list. Address, ZIP, city and coordinates are filled automatically.',
+  addressNotSelected:'No address selected yet', checkMapSelection:'Check selection on map', zipReq:'ZIP *', confirmPasswordReq:'Confirm password *',
+  ibanPayoutLabel:'IBAN * (for payouts)', ibanHelp:'Only valid IBAN characters are allowed. Input is formatted automatically.',
+  mwstLabel:'VAT', notMwstLiable:'I am not liable for VAT', mwstNumberReq:'VAT number *', mwstNumberLabel:'VAT number', mwstHelp:'The UID is formatted automatically. Example: CHE-123.456.789 VAT',
+  acceptTerms:'I accept the', locationLabel:'Location', locationHelp:'Taken from the selected address and can be fine-tuned on the map.',
+  profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
+});
+Object.assign(TRANSLATIONS.it, {
+  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)',
+  regAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Indirizzo, CAP, città e coordinate vengono compilati automaticamente.',
+  addressNotSelected:'Nessun indirizzo selezionato', checkMapSelection:'Controlla la selezione sulla mappa', zipReq:'CAP *', confirmPasswordReq:'Conferma password *',
+  ibanPayoutLabel:'IBAN * (per i pagamenti)', ibanHelp:'Sono ammessi solo caratteri IBAN validi. L’inserimento viene formattato automaticamente.',
+  mwstLabel:'IVA', notMwstLiable:'Non sono soggetto a IVA', mwstNumberReq:'Numero IVA *', mwstNumberLabel:'Numero IVA', mwstHelp:'L’UID viene formattato automaticamente. Esempio: CHE-123.456.789 IVA',
+  acceptTerms:'Accetto i', locationLabel:'Posizione', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.',
+  profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
+});
+Object.assign(TRANSLATIONS.fr, {
+  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)',
+  regAddressHelp:'Veuillez choisir l’adresse dans la liste des suggestions. L’adresse, le NPA, la ville et les coordonnées sont remplies automatiquement.',
+  addressNotSelected:'Aucune adresse sélectionnée', checkMapSelection:'Vérifier la sélection sur la carte', zipReq:'NPA *', confirmPasswordReq:'Confirmer le mot de passe *',
+  ibanPayoutLabel:'IBAN * (pour les paiements)', ibanHelp:'Seuls les caractères IBAN valides sont autorisés. La saisie est formatée automatiquement.',
+  mwstLabel:'TVA', notMwstLiable:'Je ne suis pas assujetti à la TVA', mwstNumberReq:'Numéro TVA *', mwstNumberLabel:'Numéro TVA', mwstHelp:'L’UID est formaté automatiquement. Exemple : CHE-123.456.789 TVA',
+  acceptTerms:'J’accepte les', locationLabel:'Emplacement', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.',
+  profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
+});
 
 let currentLang = 'de';
 function t(key) { return TRANSLATIONS[currentLang][key] || TRANSLATIONS.de[key] || key; }
@@ -221,7 +259,7 @@ function parseSelectedAddress(prefix) {
 }
 function setAddressMeta(prefix, text) {
   var el = document.getElementById(prefix + 'AddressMeta');
-  if (el) el.textContent = text || 'Noch keine Adresse gewählt';
+  if (el) el.textContent = text || t('addressNotSelected');
 }
 function setSelectedAddress(prefix, place) {
   var sInput = document.getElementById(prefix + 'AddressSearch');
@@ -251,7 +289,7 @@ function clearSelectedAddress(prefix, keepSearch) {
   });
   var zv = document.getElementById(prefix + 'ZipVisible');
   if (zv) zv.value = '';
-  setAddressMeta(prefix, 'Noch keine Adresse gewählt');
+  setAddressMeta(prefix, t('addressNotSelected'));
 }
 function extractAddressParts(item) {
   var a = item.address || {};
@@ -305,7 +343,7 @@ function bindAddressAutocomplete(prefix) {
     input.dataset.selected = '';
     try {
       var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6&countrycodes=ch&q=' + encodeURIComponent(q);
-      var resp = await fetch(url, { headers: { 'Accept-Language': 'de' } });
+      var resp = await fetch(url, { headers: { 'Accept-Language': currentLang || 'de' } });
       var data = await resp.json();
       renderResults(Array.isArray(data) ? data : []);
     } catch (e) {
