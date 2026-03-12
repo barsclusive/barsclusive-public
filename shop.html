@@ -401,30 +401,30 @@
 <!-- REGISTER MODAL -->
 <div id="registerModal" class="modal" role="dialog" aria-modal="true" aria-label="Registrieren">
   <div class="modal-box">
-    <div class="modal-title">✨ Registrieren</div>
+    <div class="modal-title" id="registerModalTitle" data-shop-i18n="registerModalTitle">✨ Registrieren</div>
     <div class="form-group">
-      <label class="form-label" for="regName">Name</label>
+      <label class="form-label" for="regName" data-shop-i18n="nameLbl">Name</label>
       <input type="text" class="form-input" id="regName" autocomplete="name">
     </div>
     <div class="form-group">
-      <label class="form-label" for="regEmail">Email</label>
+      <label class="form-label" for="regEmail" data-shop-i18n="emailLbl">Email</label>
       <input type="email" class="form-input" id="regEmail" autocomplete="email">
     </div>
     <div class="form-group">
-      <label class="form-label" for="regPassword">Passwort (mind. 8 Zeichen)</label>
+      <label class="form-label" for="regPassword" data-shop-i18n="registerPasswordLbl">Passwort (mind. 8 Zeichen)</label>
       <input type="password" class="form-input" id="regPassword" autocomplete="new-password">
     </div>
     <div class="form-group">
-      <label class="form-label" for="regPasswordConfirm">Passwort bestätigen</label>
+      <label class="form-label" for="regPasswordConfirm" data-shop-i18n="registerConfirmLbl">Passwort bestätigen</label>
       <input type="password" class="form-input" id="regPasswordConfirm" autocomplete="new-password">
     </div>
     <div class="form-check" style="margin-bottom:16px">
       <input type="checkbox" id="regConsent">
-      <label for="regConsent">Ich akzeptiere die <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutzerklärung</a></label>
+      <label for="regConsent"><span data-shop-i18n="acceptPrivacyOnly">Ich akzeptiere die</span> <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="privacyOnly">Datenschutzerklärung</a></label>
     </div>
-    <button class="btn-pink" id="btnRegisterSubmit">Registrieren</button>
-    <button class="btn-ghost" data-close-modal="registerModal">Abbrechen</button>
-    <p class="text-muted">Schon registriert? <span class="text-link" id="linkToLogin">Zum Login</span></p>
+    <button class="btn-pink" id="btnRegisterSubmit" data-shop-i18n="registerSubmitBtn">Registrieren</button>
+    <button class="btn-ghost" data-close-modal="registerModal" data-shop-i18n="cancelBtn">Abbrechen</button>
+    <p class="text-muted"><span data-shop-i18n="alreadyRegistered">Schon registriert?</span> <span class="text-link" id="linkToLogin" data-shop-i18n="goToLogin">Zum Login</span></p>
   </div>
 </div>
 
@@ -501,7 +501,7 @@
 <!-- Cart Panel -->
 <div id="cartPanel" class="cart-panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-    <h2 style="font-size:18px">🛒 Warenkorb</h2>
+    <h2 style="font-size:18px" id="cartTitle" data-shop-i18n="cartTitle">🛒 Warenkorb</h2>
     <button id="cartCloseBtn" style="background:none;border:none;color:#999;font-size:22px;cursor:pointer">✕</button>
   </div>
   <div id="cartBody"></div>
