@@ -88,7 +88,10 @@
     .suggestion-title{font-size:13px;font-weight:600;color:#fff}
     .suggestion-meta{font-size:12px;color:#999;margin-top:2px}
     .input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
-    .segmented-input{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;letter-spacing:2px;background-image:repeating-linear-gradient(90deg,transparent 0,transparent 31px,rgba(255,255,255,.08) 31px,rgba(255,255,255,.08) 32px);background-size:32px 100%;padding-left:14px}
+    .segmented-input{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-variant-numeric:tabular-nums;letter-spacing:.08em;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0,rgba(255,255,255,.02) 42px,rgba(255,255,255,.09) 42px,rgba(255,255,255,.09) 43px);background-size:43px 100%;padding:14px 16px;white-space:nowrap;overflow-x:auto;scrollbar-width:none;font-size:17px;line-height:1.2}
+    .segmented-input::-webkit-scrollbar{display:none}
+    .segmented-input.iban-input{letter-spacing:.09em;background-size:44px 100%}
+    .segmented-input.mwst-input{letter-spacing:.07em;background-size:38px 100%;font-size:16px}
     .toggle-check{display:flex;align-items:flex-start;gap:10px;padding:12px;background:#202020;border:1px solid #303030;border-radius:12px}
     .toggle-check input{margin-top:2px}
     .inline-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
@@ -112,6 +115,8 @@
       .stat-card{padding:14px}
       .stat-value{font-size:22px}
       .stats-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+      .segmented-input{font-size:15px;padding:13px 14px;background-size:36px 100%}
+      .segmented-input.mwst-input{font-size:14px;background-size:32px 100%}
     }
     @media(max-width:480px){
       .header h1 span{display:none}
@@ -127,7 +132,7 @@
 <div class="header">
   <div class="logo" style="display:flex;align-items:center;gap:8px">
     <img src="logo.png" alt="BarSclusive" style="height:60px">
-    <span>Bar-Portal</span>
+    <span id="barPortalTitle" data-i18n="portalTitle">Bar-Portal</span>
   </div>
   <div class="header-right">
     <button class="lang-btn active" id="langDE">DE</button>
@@ -159,7 +164,7 @@
         </div>
         <button class="btn-pink" id="btnBarLogin" data-i18n="loginBtn">Einloggen</button>
         <p style="margin-top:16px;text-align:center;color:#999;font-size:14px">
-          <span class="text-link" id="linkBarForgotPassword">Passwort vergessen?</span>
+          <span class="text-link" id="linkBarForgotPassword" data-i18n="forgotPw">Passwort vergessen?</span>
         </p>
       </div>
     </div>
@@ -216,7 +221,7 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="regIban">IBAN * (für Auszahlungen)</label>
-          <input type="text" class="form-input segmented-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+          <input type="text" class="form-input segmented-input iban-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
           <small class="input-help">Nur gültige IBAN-Zeichen. Die Eingabe wird automatisch formatiert.</small>
         </div>
         <div class="form-group">
@@ -228,7 +233,7 @@
         </div>
         <div class="form-group" id="regMwstNumGroup">
           <label class="form-label" for="regMwstNumber">MWST-Nummer *</label>
-          <input type="text" class="form-input segmented-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+          <input type="text" class="form-input segmented-input mwst-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
           <small class="input-help">Die UID wird automatisch formatiert. Beispiel: CHE-123.456.789 MWST</small>
         </div>
         <div class="form-check">
@@ -462,7 +467,7 @@
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="ibanLbl">IBAN</label>
-            <input type="text" class="form-input segmented-input" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+            <input type="text" class="form-input segmented-input iban-input" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="twintLbl">Twint</label>
@@ -478,7 +483,7 @@
         </div>
         <div class="form-group" id="profMwstNumGroup">
           <label class="form-label">MWST-Nummer</label>
-          <input type="text" class="form-input segmented-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+          <input type="text" class="form-input segmented-input mwst-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
         </div>
         <div style="margin-bottom:18px">
           <label class="form-label">📍 Standort</label>
@@ -615,28 +620,28 @@
     
     <!-- Step 1: Email eingeben -->
     <div id="barResetStep1">
-      <p style="color:#999;margin-bottom:16px">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
+      <p style="color:#999;margin-bottom:16px" id="barResetInfo1" data-i18n="resetInfo1">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
       <div class="form-group">
         <label class="form-label" for="barResetEmail" data-i18n="email">Email</label>
         <input type="email" class="form-input" id="barResetEmail" autocomplete="email">
       </div>
-      <button class="btn-pink" id="btnBarSendResetCode">Code senden</button>
-      <button class="btn-ghost" id="btnBarCancelReset1">Abbrechen</button>
+      <button class="btn-pink" id="btnBarSendResetCode" data-i18n="sendCode">Code senden</button>
+      <button class="btn-ghost" id="btnBarCancelReset1" data-i18n="cancelLbl">Abbrechen</button>
     </div>
     
     <!-- Step 2: Code + neues Passwort -->
     <div id="barResetStep2" style="display:none">
-      <p style="color:#999;margin-bottom:16px">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
+      <p style="color:#999;margin-bottom:16px" id="barResetInfo2" data-i18n="resetInfo2">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
       <div class="form-group">
-        <label class="form-label" for="barResetCode">Code (6-stellig)</label>
+        <label class="form-label" for="barResetCode" data-i18n="code6">Code (6-stellig)</label>
         <input type="text" class="form-input" id="barResetCode" maxlength="6" placeholder="123456">
       </div>
       <div class="form-group">
         <label class="form-label" for="barResetNewPassword" data-i18n="newPassword">Neues Passwort (mind. 8 Zeichen)</label>
         <input type="password" class="form-input" id="barResetNewPassword" autocomplete="new-password">
       </div>
-      <button class="btn-pink" id="btnBarResetPassword">Passwort ändern</button>
-      <button class="btn-ghost" id="btnBarBackToStep1">Zurück</button>
+      <button class="btn-pink" id="btnBarResetPassword" data-i18n="changePasswordBtn">Passwort ändern</button>
+      <button class="btn-ghost" id="btnBarBackToStep1" data-i18n="backBtn">Zurück</button>
     </div>
   </div>
 </div>
