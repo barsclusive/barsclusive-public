@@ -88,17 +88,21 @@
     .suggestion-title{font-size:13px;font-weight:600;color:#fff}
     .suggestion-meta{font-size:12px;color:#999;margin-top:2px}
     .input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
-    .box-input-wrap{position:relative}
-    .box-input-wrap.is-focused .box-cell{border-color:#ff3366;box-shadow:0 0 0 2px rgba(255,51,102,.12) inset}
-    .box-input-wrap.is-focused .box-cell.active{background:#2d1620}
-    .box-input-native{position:absolute;inset:0;opacity:0;z-index:3;width:100%;height:100%;cursor:text}
-    .box-cells{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:54px}
-    .box-cell{width:40px;height:52px;border-radius:12px;background:#222;border:1px solid #3a3a3a;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:17px;font-weight:700;color:#fff;transition:border-color .15s ease,background .15s ease,transform .15s ease}
-    .box-cell.placeholder{color:#666}
-    .box-cell.active{border-color:#666;background:#292929}
-    .box-cell.group-gap{margin-right:10px}
-    .box-cell.fixed{background:#262626;color:#d1d1d1}
-    .box-input-wrap.compact .box-cell{width:38px;height:50px;font-size:16px}
+    
+.codebox-field{position:relative;width:100%}
+.codebox-input{position:absolute;inset:0;width:100%;height:100%;opacity:1;z-index:3;border:none;background:transparent;color:transparent;caret-color:#fff;cursor:text;text-transform:uppercase}
+.codebox-input:focus{outline:none}
+.codebox-grid{display:grid;grid-template-columns:repeat(var(--slots), minmax(0,1fr));gap:4px;width:100%}
+.codebox-slot{height:48px;border:1px solid #3b3b3b;border-radius:10px;background:#242424;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:18px;font-weight:700;color:#fff;transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;user-select:none}
+.codebox-slot.gap-after{margin-right:8px}
+.codebox-slot.filled{border-color:#575757;background:#1f1f1f}
+.codebox-field.is-focused .codebox-slot{border-color:#535353}
+.codebox-field.is-focused .codebox-slot.active{border-color:#ff3366;box-shadow:0 0 0 2px rgba(255,51,102,.18);background:#191919}
+.codebox-field.mwst-field .codebox-slot{font-size:16px}
+.toggle-check{display:flex;align-items:flex-start;gap:10px;padding:12px;background:#202020;border:1px solid #303030;border-radius:12px}
+    .toggle-check input{margin-top:2px}
+    .inline-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#232323;border:1px solid #333;color:#ccc;font-size:12px}
 
     @media(max-width:768px){
       .header{flex-wrap:wrap;gap:10px;padding:12px 15px}
@@ -118,10 +122,8 @@
       .stat-card{padding:14px}
       .stat-value{font-size:22px}
       .stats-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-      .box-cells{gap:5px;min-height:46px}
-      .box-cell{width:30px;height:40px;border-radius:10px;font-size:13px}
-      .box-cell.group-gap{margin-right:8px}
-      .box-input-wrap.compact .box-cell{width:28px;height:38px;font-size:12px}
+      .codebox-slot{height:42px;font-size:15px}
+      .codebox-field.mwst-field .codebox-slot{font-size:13px}
     }
     @media(max-width:480px){
       .header h1 span{display:none}
@@ -226,7 +228,10 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="regIban" data-i18n="ibanPayoutLabel">IBAN * (für Auszahlungen)</label>
-          <div class="box-input-wrap" data-box-wrap="regIban"><input type="text" class="box-input-native" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="regIban"></div></div>
+          <div class="codebox-field iban-field" id="regIbanField" style="--slots:21">
+            <input type="text" class="codebox-input" id="regIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+            <div class="codebox-grid" id="regIbanGrid"></div>
+          </div>
           <small class="input-help" data-i18n="ibanHelp">Nur gültige IBAN-Zeichen. Die Eingabe wird automatisch formatiert.</small>
         </div>
         <div class="form-group">
@@ -238,7 +243,10 @@
         </div>
         <div class="form-group" id="regMwstNumGroup">
           <label class="form-label" for="regMwstNumber" data-i18n="mwstNumberReq">MWST-Nummer *</label>
-          <div class="box-input-wrap compact" data-box-wrap="regMwstNumber"><input type="text" class="box-input-native" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="regMwstNumber"></div></div>
+          <div class="codebox-field mwst-field" id="regMwstField" style="--slots:15">
+            <input type="text" class="codebox-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+            <div class="codebox-grid" id="regMwstGrid"></div>
+          </div>
           <small class="input-help" data-i18n="mwstHelp">Die UID wird automatisch formatiert. Beispiel: CHE-123.456.789 MWST</small>
         </div>
         <div class="form-check">
@@ -458,7 +466,10 @@
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="ibanLbl">IBAN</label>
-            <div class="box-input-wrap" data-box-wrap="profIban"><input type="text" class="box-input-native" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="profIban"></div></div>
+            <div class="codebox-field iban-field" id="profIbanField" style="--slots:21">
+              <input type="text" class="codebox-input" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+              <div class="codebox-grid" id="profIbanGrid"></div>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="twintLbl">Twint</label>
@@ -474,7 +485,10 @@
         </div>
         <div class="form-group" id="profMwstNumGroup">
           <label class="form-label" data-i18n="mwstNumberLabel">MWST-Nummer</label>
-          <div class="box-input-wrap compact" data-box-wrap="profMwstNumber"><input type="text" class="box-input-native" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false"><div class="box-cells" data-box-for="profMwstNumber"></div></div>
+          <div class="codebox-field mwst-field" id="profMwstField" style="--slots:15">
+            <input type="text" class="codebox-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+            <div class="codebox-grid" id="profMwstGrid"></div>
+          </div>
         </div>
         <div style="margin-bottom:18px">
           <label class="form-label">📍 <span data-i18n="locationLabel">Standort</span></label>
