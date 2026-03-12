@@ -434,18 +434,18 @@
     <div class="modal-title" id="buyModalTitle">Deal kaufen</div>
     <div id="buyModalInfo" style="background:#2a2a2a;padding:14px;border-radius:10px;margin-bottom:18px"></div>
     <div class="form-group">
-      <label class="form-label" for="buyName">Name</label>
+      <label class="form-label" for="buyName" id="buyNameLbl" data-shop-i18n="buyNameLbl">Name</label>
       <input type="text" class="form-input" id="buyName" autocomplete="name">
     </div>
     <div class="form-group">
-      <label class="form-label" for="buyEmail">Email</label>
+      <label class="form-label" for="buyEmail" id="buyEmailLbl" data-shop-i18n="buyEmailLbl">Email</label>
       <input type="email" class="form-input" id="buyEmail" autocomplete="email">
     </div>
     <div class="form-check" style="margin-bottom:16px">
       <input type="checkbox" id="buyConsent">
-      <label for="buyConsent">Ich akzeptiere die <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">AGB</a> &amp; <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutz</a></label>
+      <label for="buyConsent"><span id="buyConsentIntro" data-shop-i18n="buyConsentIntro">Ich akzeptiere die</span> <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="fAGB">AGB</a> &amp; <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="fDatenschutz">Datenschutz</a></label>
     </div>
-    <button class="btn-pink" id="btnBuySubmit">💳 Jetzt bezahlen</button>
+    <button class="btn-pink" id="btnBuySubmit" data-shop-i18n="buyNowBtn">💳 Jetzt bezahlen</button>
     <button class="btn-ghost" data-close-modal="buyModal">Abbrechen</button>
   </div>
 </div>
