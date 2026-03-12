@@ -35,6 +35,7 @@ de: {
   soldCount:'verkauft',
   resetPasswordTitle:'Passwort zurücksetzen',
   newPassword:'Neues Passwort',
+  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
 },
 en: {
   logout:'Logout', login:'Login', register:'Register',
@@ -64,6 +65,7 @@ en: {
   soldCount:'sold',
   resetPasswordTitle:'Reset Password',
   newPassword:'New Password',
+  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)'
 },
 it: {
   logout:'Esci', login:'Login', register:'Registrati',
@@ -93,6 +95,7 @@ it: {
   soldCount:'venduti',
   resetPasswordTitle:'Reimposta Password',
   newPassword:'Nuova Password',
+  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)'
 },
 fr: {
   logout:'Déconnexion', login:'Connexion', register:'Inscription',
@@ -122,6 +125,7 @@ fr: {
   soldCount:'vendus',
   resetPasswordTitle:'Réinitialiser le mot de passe',
   newPassword:'Nouveau mot de passe',
+  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)'
 }
 };
 
@@ -324,6 +328,7 @@ function applyTranslations() {
     const key = el.dataset.i18n;
     if (key) el.textContent = t(key);
   });
+  document.title = 'BarSclusive – ' + t('portalTitle');
   // Translate placeholders
   var ph = {
     profAddressSearch: {de:'Adresse suchen und auswählen',en:'Search and select address',it:'Cerca e seleziona indirizzo',fr:'Rechercher et sélectionner une adresse'},
