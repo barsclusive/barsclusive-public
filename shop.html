@@ -325,11 +325,11 @@
     <div id="dealsList" class="deals-grid" style="display:none"></div>
   </div>
   <div id="favoritesView" style="display:none">
-    <h2 style="margin-bottom:24px">❤️ Meine Favoriten</h2>
+    <h2 style="margin-bottom:24px" id="favoritesHeading" data-shop-i18n="favoritesHeading">❤️ Meine Favoriten</h2>
     <div id="favoritesList" class="deals-grid"></div>
   </div>
   <div id="ordersView" style="display:none">
-    <h2 style="margin-bottom:24px">📦 Meine Bestellungen</h2>
+    <h2 style="margin-bottom:24px" id="ordersHeading" data-shop-i18n="ordersHeading">📦 Meine Bestellungen</h2>
     <div id="ordersList"></div>
   </div>
 </div>
@@ -362,7 +362,7 @@
     </div>
     <button class="btn-pink" id="btnLoginSubmit" data-shop-i18n="loginSubmitBtn">Einloggen</button>
     <button class="btn-ghost" data-close-modal="loginModal" data-shop-i18n="cancelLoginBtn">Abbrechen</button>
-    <p class="text-muted">Noch kein Konto? <span class="text-link" id="linkToRegister">Registrieren</span></p>
+    <p class="text-muted"><span id="loginNoAccountText" data-shop-i18n="noAccountYet">Noch kein Konto?</span> <span class="text-link" id="linkToRegister" data-shop-i18n="register">Registrieren</span></p>
     <p class="text-muted" style="margin-top:8px"><span class="text-link" id="linkForgotPassword" data-shop-i18n="forgotPw">Passwort vergessen?</span></p>
   </div>
 </div>
@@ -379,8 +379,8 @@
         <label class="form-label" for="resetEmail" data-shop-i18n="emailLbl">Email</label>
         <input type="email" class="form-input" id="resetEmail" autocomplete="email">
       </div>
-      <button class="btn-pink" id="btnSendResetCode">Code senden</button>
-      <button class="btn-ghost" data-close-modal="resetPasswordModal" data-shop-i18n="abbrechen">Abbrechen</button>
+      <button class="btn-pink" id="btnSendResetCode" data-shop-i18n="sendCode">Code senden</button>
+      <button class="btn-ghost" data-close-modal="resetPasswordModal" data-shop-i18n="cancelBtn">Abbrechen</button>
     </div>
     
     <!-- Step 2: Code + neues Passwort -->
@@ -391,7 +391,7 @@
         <input type="text" class="form-input" id="resetCode" maxlength="6" placeholder="123456">
       </div>
       <div class="form-group">
-        <label class="form-label" for="resetNewPassword">Neues Passwort (mind. 8 Zeichen)</label>
+        <label class="form-label" for="resetNewPassword" id="resetNewPasswordLabel" data-shop-i18n="neuesPw">Neues Passwort (mind. 8 Zeichen)</label>
         <input type="password" class="form-input" id="resetNewPassword" autocomplete="new-password">
       </div>
       <button class="btn-pink" id="btnResetPassword" data-shop-i18n="pwAendern">Passwort ändern</button>
@@ -433,22 +433,22 @@
 <!-- BUY MODAL -->
 <div id="buyModal" class="modal" role="dialog" aria-modal="true" aria-label="Deal kaufen">
   <div class="modal-box">
-    <div class="modal-title" id="buyModalTitle">Deal kaufen</div>
+    <div class="modal-title" id="buyModalTitle" data-shop-i18n="buyDealTitle">Deal kaufen</div>
     <div id="buyModalInfo" style="background:#2a2a2a;padding:14px;border-radius:10px;margin-bottom:18px"></div>
     <div class="form-group">
-      <label class="form-label" for="buyName">Name</label>
+      <label class="form-label" for="buyName" data-shop-i18n="nameLbl">Name</label>
       <input type="text" class="form-input" id="buyName" autocomplete="name">
     </div>
     <div class="form-group">
-      <label class="form-label" for="buyEmail">Email</label>
+      <label class="form-label" for="buyEmail" data-shop-i18n="emailLbl">Email</label>
       <input type="email" class="form-input" id="buyEmail" autocomplete="email">
     </div>
     <div class="form-check" style="margin-bottom:16px">
       <input type="checkbox" id="buyConsent">
-      <label for="buyConsent">Ich akzeptiere die <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">AGB</a> &amp; <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">Datenschutz</a></label>
+      <label for="buyConsent"><span data-shop-i18n="acceptTermsCart">Ich akzeptiere die</span> <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="fAGB">AGB</a> <span id="buyConsentConnector">und</span> <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="fDatenschutz">Datenschutz</a></label>
     </div>
-    <button class="btn-pink" id="btnBuySubmit">💳 Jetzt bezahlen</button>
-    <button class="btn-ghost" data-close-modal="buyModal">Abbrechen</button>
+    <button class="btn-pink" id="btnBuySubmit" data-shop-i18n="payNowBtn">💳 Jetzt bezahlen</button>
+    <button class="btn-ghost" data-close-modal="buyModal" data-shop-i18n="cancelBtn">Abbrechen</button>
   </div>
 </div>
 
@@ -456,24 +456,24 @@
 <div id="changePwModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <span style="font-size:20px;font-weight:700">🔑 Passwort ändern</span>
+      <span style="font-size:20px;font-weight:700" id="changePwTitle" data-shop-i18n="changePasswordTitle">🔑 Passwort ändern</span>
       <button id="btnClosePwModal" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
     <div id="cpwErr" style="color:#EF4444;font-size:13px;margin-bottom:12px;min-height:18px"></div>
     <div class="form-group">
-      <label class="form-label" for="cpwOld">Altes Passwort</label>
+      <label class="form-label" for="cpwOld" data-shop-i18n="oldPassword">Altes Passwort</label>
       <input type="password" class="form-input" id="cpwOld" autocomplete="current-password">
     </div>
     <div class="form-group">
-      <label class="form-label" for="cpwNew">Neues Passwort (mind. 8 Zeichen)</label>
+      <label class="form-label" for="cpwNew" data-shop-i18n="registerPasswordLbl">Neues Passwort (mind. 8 Zeichen)</label>
       <input type="password" class="form-input" id="cpwNew" autocomplete="new-password">
     </div>
     <div class="form-group">
-      <label class="form-label" for="cpwConfirm">Passwort bestätigen</label>
+      <label class="form-label" for="cpwConfirm" data-shop-i18n="confirmPassword">Passwort bestätigen</label>
       <input type="password" class="form-input" id="cpwConfirm" autocomplete="new-password">
     </div>
-    <button class="btn-pink" id="btnSavePassword">Speichern</button>
-    <button class="btn-ghost" id="btnCancelPwModal" style="margin-top:8px">Abbrechen</button>
+    <button class="btn-pink" id="btnSavePassword" data-shop-i18n="savePw">Speichern</button>
+    <button class="btn-ghost" id="btnCancelPwModal" style="margin-top:8px" data-shop-i18n="cancelBtn">Abbrechen</button>
   </div>
 </div>
 
@@ -495,7 +495,7 @@
       </div>
       <div class="deal-modal-info" id="ddInfo"></div>
       <div class="share-row" id="ddShare"></div>
-      <button class="btn-buy" id="ddBuyBtn" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer">Jetzt kaufen</button>
+      <button class="btn-buy" id="ddBuyBtn" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer" data-shop-i18n="buyBtn">Jetzt kaufen</button>
     </div>
   </div>
 </div>
