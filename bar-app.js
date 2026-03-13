@@ -1671,16 +1671,16 @@ function escHtml(v) {
 // =============================================
 (function(){
   Object.assign(TRANSLATIONS.de, {
-    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
+    grossSales:'Eingelöster Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', earnedHint:'Umsatz, Provision und Netto beziehen sich nur auf eingelöste, nicht erstattete Gutscheine.', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
   });
   Object.assign(TRANSLATIONS.en, {
-    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
+    grossSales:'Redeemed sales', commissionLbl:'Commission', netRevenue:'Net for the bar', earnedHint:'Sales, commission and net only include redeemed, non-refunded vouchers.', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
   });
   Object.assign(TRANSLATIONS.it, {
-    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
+    grossSales:'Fatturato riscattato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', earnedHint:'Fatturato, commissione e netto includono solo voucher riscattati e non rimborsati.', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
   });
   Object.assign(TRANSLATIONS.fr, {
-    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
+    grossSales:'Chiffre d’affaires encaissé', commissionLbl:'Commission', netRevenue:'Net pour le bar', earnedHint:'Le chiffre d’affaires, la commission et le net ne comptent que les bons utilisés et non remboursés.', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
   });
 })();
 
@@ -1701,6 +1701,74 @@ function fmtDateTime_(v) {
   if (!v) return '–';
   try { return new Date(v).toLocaleString(currentLang === 'en' ? 'en-GB' : currentLang === 'it' ? 'it-CH' : currentLang === 'fr' ? 'fr-CH' : 'de-CH'); } catch(e) { return String(v); }
 }
+
+function voucherState_(v) {
+  var status = String((v && v.status) || '').toLowerCase();
+  var refundStatus = String((v && v.refund_status) || 'none').toLowerCase();
+  var refunded = status === 'refunded' || refundStatus === 'completed';
+  var redeemed = status === 'redeemed' && !refunded;
+  var open = !redeemed && !refunded;
+  var payoutPaid = redeemed && String((v && v.payout_status) || '').toLowerCase() === 'paid';
+  var payoutPending = redeemed && !payoutPaid;
+  return { refunded: refunded, redeemed: redeemed, open: open, payoutPaid: payoutPaid, payoutPending: payoutPending };
+}
+function voucherMetricDate_(v, metricKey) {
+  switch (metricKey) {
+    case 'redeemed':
+    case 'gross':
+    case 'commission':
+    case 'net':
+    case 'pending_payout':
+      return v.redeemed_at || v.order_created_at || v.created_at || '';
+    case 'paid_out':
+      return v.payout_paid_at || v.redeemed_at || v.order_created_at || v.created_at || '';
+    case 'refunded':
+      return v.refunded_at || v.order_created_at || v.created_at || '';
+    case 'not_redeemed':
+    case 'sold':
+    default:
+      return v.order_created_at || v.created_at || v.paid_at || '';
+  }
+}
+function voucherMetricMatch_(v, metricKey) {
+  var state = voucherState_(v);
+  switch (metricKey) {
+    case 'sold': return true;
+    case 'redeemed': return state.redeemed;
+    case 'not_redeemed': return state.open;
+    case 'gross':
+    case 'commission':
+    case 'net': return state.redeemed;
+    case 'pending_payout': return state.payoutPending;
+    case 'paid_out': return state.payoutPaid;
+    case 'refunded': return state.refunded;
+    default: return true;
+  }
+}
+function voucherDateInRange_(rawDate, fromDate, toDate) {
+  if (!rawDate) return !fromDate && !toDate;
+  var d = new Date(rawDate);
+  if (!(d instanceof Date) || isNaN(d.getTime())) return !fromDate && !toDate;
+  if (fromDate && d < fromDate) return false;
+  if (toDate && d > toDate) return false;
+  return true;
+}
+function filterVouchersByMetric_(vouchers, metricKey, fromDate, toDate) {
+  return (vouchers || []).filter(function(v) {
+    if (!voucherMetricMatch_(v, metricKey)) return false;
+    return voucherDateInRange_(voucherMetricDate_(v, metricKey), fromDate, toDate);
+  });
+}
+function sumVoucherField_(vouchers, fieldName) {
+  return (vouchers || []).reduce(function(acc, v) { return acc + (Number(v[fieldName]) || 0); }, 0);
+}
+function voucherFilterDateForPanel_(v, filters) {
+  if (filters.payout === 'paid') return voucherMetricDate_(v, 'paid_out');
+  if (filters.payout === 'pending') return voucherMetricDate_(v, 'pending_payout');
+  if (filters.status === 'redeemed') return voucherMetricDate_(v, 'redeemed');
+  if (filters.status === 'refunded') return voucherMetricDate_(v, 'refunded');
+  return voucherMetricDate_(v, 'sold');
+}
 function getCurrentVoucherFilters_() {
   return {
     from: (document.getElementById('voucherFilterFrom') || {}).value || '',
@@ -1711,14 +1779,12 @@ function getCurrentVoucherFilters_() {
 }
 function applyVoucherFilters_(vouchers) {
   var f = getCurrentVoucherFilters_();
+  var fromDate = f.from ? new Date(f.from + 'T00:00:00') : null;
+  var toDate = f.to ? new Date(f.to + 'T23:59:59') : null;
   return (vouchers || []).filter(function(v) {
-    var baseDate = v.order_created_at || v.created_at || '';
-    var d = baseDate ? new Date(baseDate) : null;
-    if (f.from && d && d < new Date(f.from + 'T00:00:00')) return false;
-    if (f.to && d && d > new Date(f.to + 'T23:59:59')) return false;
     if (f.status !== 'all' && String(v.status || '') !== f.status) return false;
     if (f.payout !== 'all' && String(v.payout_status || '') !== f.payout) return false;
-    return true;
+    return voucherDateInRange_(voucherFilterDateForPanel_(v, f), fromDate, toDate);
   });
 }
 function renderVoucherPanel_(targetId, vouchers) {
@@ -1727,14 +1793,17 @@ function renderVoucherPanel_(targetId, vouchers) {
   vouchers = vouchers || [];
   var f = getCurrentVoucherFilters_();
   var filtered = applyVoucherFilters_(vouchers);
+  var earned = filtered.filter(function(v){ return voucherMetricMatch_(v, 'net'); });
   var rows = filtered.map(function(v) {
+    var displayDate = voucherFilterDateForPanel_(v, f) || v.order_created_at || v.created_at;
+    var state = voucherState_(v);
     return '<tr class="click-row" data-voucher-id="' + escHtml(String(v.id || '')) + '">' +
-      '<td>' + escHtml(fmtDate_(v.order_created_at || v.created_at)) + '</td>' +
+      '<td>' + escHtml(fmtDate_(displayDate)) + '</td>' +
       '<td style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</td>' +
       '<td>' + escHtml(String(v.deal_title || '')) + '</td>' +
       '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#ef4444">CHF ' + (state.redeemed ? Number(v.platform_fee || 0).toFixed(2) : '0.00') + '</td>' +
+      '<td style="text-align:right;color:#22c55e">CHF ' + (state.redeemed ? Number(v.bar_payout || 0).toFixed(2) : '0.00') + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
       '<td>' + escHtml(trPayout_(v.payout_status)) + '</td>' +
       '</tr>';
@@ -1752,11 +1821,11 @@ function renderVoucherPanel_(targetId, vouchers) {
       '</div>' +
     '</div>' +
     '<div class="money-grid">' +
-      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.price_paid)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + sumVoucherField_(earned, 'price_paid').toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + sumVoucherField_(earned, 'platform_fee').toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + sumVoucherField_(earned, 'bar_payout').toFixed(2) + '</div></div>' +
     '</div>' +
-    '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
+    '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('earnedHint') + ' ' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
@@ -1817,18 +1886,22 @@ function renderBarStats(period) {
   ensureBarFilterBar();
   var cutoff = barFilterDate(period);
   var dateTo = barFilterDateTo(period);
-  var vouchers = (_barStatsVouchers || []).filter(function(v) {
-    var d = new Date(v.order_created_at || v.created_at || '');
-    return !cutoff || (d >= cutoff && (!dateTo || d <= dateTo));
-  });
-  var sold = vouchers.length;
-  var redeemed = vouchers.filter(function(v){ return v.status === 'redeemed'; }).length;
-  var notRedeemed = vouchers.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; }).length;
-  var gross = vouchers.reduce(function(a,v){ return a + (Number(v.price_paid)||0); }, 0);
-  var fees = vouchers.reduce(function(a,v){ return a + (Number(v.platform_fee)||0); }, 0);
-  var net = vouchers.reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
-  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
-  var paid = vouchers.filter(function(v){ return v.payout_status === 'paid'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var allVouchers = _barStatsVouchers || [];
+  var soldItems = filterVouchersByMetric_(allVouchers, 'sold', cutoff, dateTo);
+  var redeemedItems = filterVouchersByMetric_(allVouchers, 'redeemed', cutoff, dateTo);
+  var openItems = filterVouchersByMetric_(allVouchers, 'not_redeemed', cutoff, dateTo);
+  var earnedItems = filterVouchersByMetric_(allVouchers, 'net', cutoff, dateTo);
+  var pendingItems = filterVouchersByMetric_(allVouchers, 'pending_payout', cutoff, dateTo);
+  var paidItems = filterVouchersByMetric_(allVouchers, 'paid_out', cutoff, dateTo);
+
+  var sold = soldItems.length;
+  var redeemed = redeemedItems.length;
+  var notRedeemed = openItems.length;
+  var gross = sumVoucherField_(earnedItems, 'price_paid');
+  var fees = sumVoucherField_(earnedItems, 'platform_fee');
+  var net = sumVoucherField_(earnedItems, 'bar_payout');
+  var pending = sumVoucherField_(pendingItems, 'bar_payout');
+  var paid = sumVoucherField_(paidItems, 'bar_payout');
 
   var grid = document.getElementById('statsGrid'); if (!grid) return;
   grid.innerHTML = '';
@@ -1837,9 +1910,9 @@ function renderBarStats(period) {
     [t('soldCount'), sold, '#fff', 'sold'],
     [t('redeemed'), redeemed, '#22c55e', 'redeemed'],
     [t('notRedeemed'), notRedeemed, '#f59e0b', 'not_redeemed'],
-    [t('grossSales'), gross.toFixed(2) + ' CHF', '#fff', 'all'],
-    [t('commissionLbl'), fees.toFixed(2) + ' CHF', '#ef4444', 'all'],
-    [t('netRevenue'), net.toFixed(2) + ' CHF', '#22c55e', 'all'],
+    [t('grossSales'), gross.toFixed(2) + ' CHF', '#fff', 'gross'],
+    [t('commissionLbl'), fees.toFixed(2) + ' CHF', '#ef4444', 'commission'],
+    [t('netRevenue'), net.toFixed(2) + ' CHF', '#22c55e', 'net'],
     [t('pendingPayout'), pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
     [t('paidOut'), paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
     [t('activeDeals'), _barStatsDeals, '#fff', null]
@@ -1848,7 +1921,7 @@ function renderBarStats(period) {
     var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
     var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]); if (s[2]) vEl.style.color = s[2];
     card.append(lEl, vEl);
-    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function(){ showBarStatDetail(s[0], s[3], vouchers); }); }
+    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function(){ showBarStatDetail(s[0], s[3], allVouchers); }); }
     cardsDiv.appendChild(card);
   });
   grid.appendChild(cardsDiv);
@@ -1856,11 +1929,9 @@ function renderBarStats(period) {
 function showBarStatDetail(label, filterKey, filteredVouchers) {
   var detailEl = document.getElementById('barStatsDetail');
   if (!detailEl) return;
-  var items = filteredVouchers || [];
-  if (filterKey === 'redeemed') items = items.filter(function(v){ return v.status === 'redeemed'; });
-  else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
-  else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
-  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
+  var cutoff = barFilterDate(_barStatsPeriod || 'all');
+  var dateTo = barFilterDateTo(_barStatsPeriod || 'all');
+  var items = filterVouchersByMetric_(filteredVouchers || [], filterKey || 'sold', cutoff, dateTo);
   detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
   renderVoucherPanel_('overviewVoucherPanel', items);
 }
