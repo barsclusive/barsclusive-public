@@ -30,7 +30,7 @@ function sessionGet() {
 function sessionClear() {
   _session = null;
   try { localStorage.removeItem('barsclusive_customer_session'); } catch(e) {}
-  document.getElementById('userBtn').textContent = '👤 ' + st('loginBtn');
+  document.getElementById('userBtn').textContent = '👤 Login';
   document.getElementById('btnOrders').style.display = 'none';
   var bf2 = document.getElementById('btnFavorites'); if(bf2) bf2.style.display = 'none';
   _favorites = [];
@@ -195,11 +195,23 @@ function clearLocation() {
   updateLocationUi();
   renderDeals();
 }
+function isSwissCoordPair(lat, lng) {
+  return isValidCoord(lat) && isValidCoord(lng) && !!(_swissBounds && _swissBounds.contains([lat, lng]));
+}
+function getDealBaseCoords(deal) {
+  var lat = Number(deal && deal.bar_lat), lng = Number(deal && deal.bar_lng);
+  if (!isSwissCoordPair(lat, lng)) return null;
+  return { lat: lat, lng: lng };
+}
+function hasDisplayDistance(deal) {
+  return typeof (deal && deal._dist) === 'number' && isFinite(deal._dist) && deal._dist >= 0 && deal._dist <= 500 && !!getDealBaseCoords(deal);
+}
 function attachDistances() {
-  var hasCoords = isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng));
+  var userLat = Number(_userLat), userLng = Number(_userLng);
+  var hasCoords = isSwissCoordPair(userLat, userLng);
   allDeals.forEach(function(d) {
-    var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
-    if (hasCoords && isValidCoord(lat) && isValidCoord(lng)) d._dist = haversine(Number(_userLat), Number(_userLng), lat, lng);
+    var coords = getDealBaseCoords(d);
+    if (hasCoords && coords) d._dist = haversine(userLat, userLng, coords.lat, coords.lng);
     else delete d._dist;
   });
 }
@@ -294,10 +306,10 @@ async function loadDeals(forceRefresh = false) {
       var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
       renderDeals();
     } else {
-      showToast(shopT('loadDealsError') || 'Fehler beim Laden der Deals', true);
+      showToast('Fehler beim Laden der Deals', true);
     }
   } catch (e) {
-    showToast(shopT('reloadError') || 'Verbindungsfehler - bitte neu laden', true);
+    showToast('Verbindungsfehler - bitte neu laden', true);
   }
 }
 
@@ -452,12 +464,8 @@ function buildDealCard(deal) {
     b.textContent = (CAT_EMOJI[mainCat] || '') + ' ' + (CAT_NAME[mainCat] || mainCat);
     imgDiv.appendChild(b);
   }
-  if (deal._dist !== undefined && deal._dist < 200) {
-    const b = document.createElement('div');
-    b.className = 'badge-dist';
-    b.textContent = formatDistanceLabel(deal._dist);
-    imgDiv.appendChild(b);
-  }
+  // Distanz wird bewusst nur einmal unter der Adresse angezeigt,
+  // damit es keine inkonsistente Doppelanzeige auf derselben Karte gibt.
 
   // Content area
   const content = document.createElement('div');
@@ -488,7 +496,7 @@ function buildDealCard(deal) {
     const dateParts = parseDateString(deal.valid_single_date);
     if (dateParts) {
       const d = dateParts.day + '.' + dateParts.month + '.' + dateParts.year;
-      validity.textContent = '📅 ' + (shopT('nurAm') || 'Nur am') + ' ' + d
+      validity.textContent = '📅 Nur am ' + d
         + (deal.valid_from_time && deal.valid_to_time ? ' · ' + deal.valid_from_time + '–' + deal.valid_to_time : '');
     }
   } else if (deal.valid_from_time && deal.valid_to_time) {
@@ -499,7 +507,7 @@ function buildDealCard(deal) {
     const applies = document.createElement('div');
     applies.style.cssText = 'color:#aaa;font-size:12px;margin-bottom:8px';
     const applyMap = { drinks: shopT('getraenke') || 'Getränke', food: shopT('essen') || 'Essen', all: shopT('alles') || 'Alles' };
-    applies.textContent = '✅ ' + (shopT('giltFuer') || 'Gilt für:') + ' ' + (applyMap[deal.applies_to] || deal.applies_to);
+    applies.textContent = '✅ Gilt für: ' + (applyMap[deal.applies_to] || deal.applies_to);
     content.appendChild(applies);
   }
 
@@ -510,7 +518,7 @@ function buildDealCard(deal) {
   var cartBtn = document.createElement('button');
   cartBtn.className = 'add-cart-btn';
   cartBtn.textContent = '🛒+';
-  cartBtn.title = shopT('cartAddTitle') || 'In den Warenkorb';
+  cartBtn.title = 'In den Warenkorb';
   cartBtn.addEventListener('click', function(e) { e.stopPropagation(); addToCart(deal); });
   card.style.cursor = 'pointer';
   card.addEventListener('click', function() { openDealDetail(deal); });
@@ -519,7 +527,7 @@ function buildDealCard(deal) {
   var tsContainer = document.createElement('div');
   if (deal.time_slots && deal.time_slots.length > 0) {
     tsContainer.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px';
-    var tsLabels = {morning:shopT('timeMorning') || '🌅 Morgen', midday:shopT('timeMidday') || '☀️ Mittag', evening:shopT('timeEvening') || '🌙 Abend'};
+    var tsLabels = {morning:'\u{1F305} Morgen', midday:'\u2600\uFE0F Mittag', evening:'\u{1F319} Abend'};
     deal.time_slots.forEach(function(slot) {
       var sp = document.createElement('span');
       sp.style.cssText = 'background:#2a2a2a;padding:3px 8px;border-radius:8px;font-size:11px;color:#ccc';
@@ -544,7 +552,7 @@ function buildDealCard(deal) {
 
   var distLine = document.createElement('div');
   distLine.className = 'deal-distance-line';
-  if (typeof deal._dist === 'number' && isFinite(deal._dist)) {
+  if (hasDisplayDistance(deal)) {
     distLine.textContent = '📍 ' + formatDistanceLabel(deal._dist);
   } else {
     distLine.style.display = 'none';
@@ -599,11 +607,11 @@ async function doBuy() {
   var email = document.getElementById('buyEmail').value.trim();
   var consent = document.getElementById('buyConsent').checked;
   var deal = window._currentDeal;
-  if (!name || !email) { showToast(shopT('nameEmailRequired') || 'Name und Email sind Pflichtfelder', true); return; }
-  if (!consent) { showToast(shopT('acceptTermsPrivacyError') || 'Bitte AGB & Datenschutz akzeptieren', true); return; }
+  if (!name || !email) { showToast('Name und Email sind Pflichtfelder', true); return; }
+  if (!consent) { showToast('Bitte AGB & Datenschutz akzeptieren', true); return; }
   if (!deal) return;
   var btn = document.getElementById('btnBuySubmit');
-  if (btn) { btn.disabled = true; btn.textContent = shopT('validityRedirecting') || '⏳ Weiterleitung...'; }
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Weiterleitung...'; }
   var s = sessionGet();
   try {
     var r = await api({
@@ -616,13 +624,13 @@ async function doBuy() {
     });
     if (!r.success) {
       showToast(r.error || 'Fehler', true);
-      if (btn) { btn.disabled = false; btn.textContent = shopT('payNowBtn') || '💳 Jetzt bezahlen'; }
+      if (btn) { btn.disabled = false; btn.textContent = '💳 Jetzt bezahlen'; }
       return;
     }
     if (r.checkout_url) { window.location.href = r.checkout_url; }
   } catch(e) {
-    showToast(shopT('networkError') || 'Verbindungsfehler', true);
-    if (btn) { btn.disabled = false; btn.textContent = shopT('payNowBtn') || '💳 Jetzt bezahlen'; }
+    showToast('Verbindungsfehler', true);
+    if (btn) { btn.disabled = false; btn.textContent = '💳 Jetzt bezahlen'; }
   }
 }
 
@@ -638,7 +646,7 @@ async function loadOrders() {
     if (!r.success) { showToast(r.error || 'Fehler', true); return; }
     renderOrders(r.orders);
   } catch (e) {
-    showToast(shopT('networkError') || 'Verbindungsfehler', true);
+    showToast('Verbindungsfehler', true);
   }
 }
 
@@ -668,7 +676,7 @@ function buildOrderCard(o) {
   titleEl.textContent = o.deal_title;
 
   const STATUS_CLASS = { pending:'s-pending', created:'s-pending', paid:'s-paid', redeemed:'s-redeemed' };
-  const STATUS_TEXT  = { pending:shopT('orderStatusPending') || '⏳ Ausstehend', created:shopT('orderStatusPending') || '⏳ Ausstehend', paid:shopT('orderStatusPaid') || '✅ Gekauft', redeemed:shopT('orderStatusRedeemed') || '🎉 Eingelöst' };
+  const STATUS_TEXT  = { pending:'⏳ Ausstehend', created:'⏳ Ausstehend', paid:'✅ Gekauft', redeemed:'🎉 Eingelöst' };
   const pill = document.createElement('div');
   pill.className = 'status-pill ' + (STATUS_CLASS[o.status] || 's-pending');
   pill.textContent = STATUS_TEXT[o.status] || o.status;
@@ -719,35 +727,35 @@ function buildOrderCard(o) {
 
       var waBtn = document.createElement('button');
       waBtn.className = 'share-btn';
-      waBtn.textContent = shopT('shareWhatsApp') || '💬 WhatsApp';
+      waBtn.textContent = '💬 WhatsApp';
       waBtn.addEventListener('click', (function(c, t) { return function() { shareVoucher(c, t, 'whatsapp'); }; })(vc, o.deal_title || ''));
       actions.appendChild(waBtn);
 
       var tgBtn = document.createElement('button');
       tgBtn.className = 'share-btn';
-      tgBtn.textContent = shopT('shareTelegram') || '✈️ Telegram';
+      tgBtn.textContent = '✈️ Telegram';
       tgBtn.addEventListener('click', (function(c, t) { return function() { shareVoucher(c, t, 'telegram'); }; })(vc, o.deal_title || ''));
       actions.appendChild(tgBtn);
 
       var igBtn = document.createElement('button');
       igBtn.className = 'share-btn';
-      igBtn.textContent = shopT('shareInstagram') || '📸 Instagram';
-      igBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast(shopT('instagramPasteHint') || 'Link kopiert – in Instagram einfügen!'); }; })(vc));
+      igBtn.textContent = '📸 Instagram';
+      igBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast('Link kopiert – in Instagram einfügen!'); }; })(vc));
       actions.appendChild(igBtn);
 
       var tkBtn = document.createElement('button');
       tkBtn.className = 'share-btn';
-      tkBtn.textContent = shopT('shareTikTok') || '🎵 TikTok';
-      tkBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast(shopT('tiktokPasteHint') || 'Link kopiert – in TikTok einfügen!'); }; })(vc));
+      tkBtn.textContent = '🎵 TikTok';
+      tkBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast('Link kopiert – in TikTok einfügen!'); }; })(vc));
       actions.appendChild(tkBtn);
 
       if (navigator.share) {
         var nsBtn = document.createElement('button');
         nsBtn.className = 'share-btn';
-        nsBtn.textContent = shopT('shareNative') || '📱 Teilen';
+        nsBtn.textContent = '📱 Teilen';
         nsBtn.addEventListener('click', (function(c, t) { return function() {
           var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(c);
-          navigator.share({ title: t || shopT('nativeShareTitle') || 'BarSclusive Gutschein', url: vUrl }).catch(function() {});
+          navigator.share({ title: t || 'BarSclusive Gutschein', url: vUrl }).catch(function() {});
         }; })(vc, o.deal_title || ''));
         actions.appendChild(nsBtn);
       }
@@ -759,17 +767,17 @@ function buildOrderCard(o) {
   if (o.refund_status === 'requested') {
     const info = document.createElement('div');
     info.style.cssText = 'color:#FFC107;margin-top:12px;font-size:14px';
-    info.textContent = shopT('refundRequestedInfo') || '⏳ Rückerstattung angefordert';
+    info.textContent = '⏳ Rückerstattung angefordert';
     card.appendChild(info);
   } else if (o.refund_status === 'completed') {
     const info = document.createElement('div');
     info.style.cssText = 'color:#4CAF50;margin-top:12px;font-size:14px';
-    info.textContent = shopT('refundedInfo') || '↩️ Rückerstattet';
+    info.textContent = '↩️ Rückerstattet';
     card.appendChild(info);
   } else if (o.can_refund) {
     const btn = document.createElement('button');
     btn.className = 'btn-refund';
-    btn.textContent = '💰 ' + (shopT('refundReq') || 'Rückerstattung anfordern');
+    btn.textContent = '💰 Rückerstattung anfordern';
     btn.addEventListener('click', () => doRefund(o.id));
     const hint = document.createElement('div');
     hint.className = 'refund-hint';
@@ -783,13 +791,13 @@ function buildOrderCard(o) {
 async function doRefund(orderId) {
   if (!confirm('Rückerstattung anfordern?\nDer Gutschein wird ungültig.')) return;
   const s = sessionGet();
-  if (!s) { showToast(shopT('notLoggedIn') || 'Nicht eingeloggt', true); return; }
+  if (!s) { showToast('Nicht eingeloggt', true); return; }
 
   try {
     const r = await api({ action: 'requestRefund', token: s.token, order_id: orderId });
-    if (r.success) { showToast('✅ ' + (shopT('refundRequested') || 'Rückerstattung angefordert')); loadOrders(); }
+    if (r.success) { showToast('✅ Rückerstattung angefordert'); loadOrders(); }
     else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast(shopT('networkError') || 'Verbindungsfehler', true); }
+  } catch (e) { showToast('Verbindungsfehler', true); }
 }
 
 // =============================================
@@ -803,7 +811,7 @@ function onUserButtonClick() {
 async function doLogin() {
   const email    = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
-  if (!email || !password) { showToast(shopT('fillEmailPassword') || 'Bitte Email und Passwort eingeben', true); return; }
+  if (!email || !password) { showToast('Bitte Email und Passwort eingeben', true); return; }
   var _loginBtn = document.getElementById('btnLoginSubmit');
   var defaultLabel = shopT('loginSubmitBtn') || 'Einloggen';
   if (_loginBtn) { _loginBtn.disabled = true; _loginBtn.textContent = '⏳...'; }
@@ -813,17 +821,17 @@ async function doLogin() {
       sessionSet(r.token, r.customer.name, r.customer.email, 'customer');
       closeModal('loginModal');
       document.getElementById('loginPassword').value = '';
-      showToast(shopT('loginSuccess') || '✅ Eingeloggt!');
+      showToast('✅ Eingeloggt!');
       Promise.resolve().then(loadFavorites).catch(function(){});
       if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') {
         Promise.resolve().then(loadOrders).catch(function(){});
       }
     } else {
-      showToast(r.error || (shopT('invalidCredentials') || 'Ungültige Zugangsdaten'), true);
+      showToast(r.error || 'Ungültige Zugangsdaten', true);
       document.getElementById('loginPassword').value = '';
     }
   } catch (e) {
-    showToast(shopT('networkError') || 'Verbindungsfehler', true);
+    showToast('Verbindungsfehler', true);
   } finally {
     if (_loginBtn) { _loginBtn.disabled = false; _loginBtn.textContent = defaultLabel; }
   }
@@ -835,11 +843,11 @@ async function doRegister() {
   const password = document.getElementById('regPassword').value;
   const consent  = document.getElementById('regConsent').checked;
 
-  if (!name || !email || !password) { showToast(shopT('fillAllFields') || 'Alle Felder ausfüllen', true); return; }
-  if (password.length < 8)           { showToast(shopT('pwMinToast') || 'Passwort mind. 8 Zeichen', true); return; }
+  if (!name || !email || !password) { showToast('Alle Felder ausfüllen', true); return; }
+  if (password.length < 8)           { showToast('Passwort mind. 8 Zeichen', true); return; }
   var passConfirm = document.getElementById('regPasswordConfirm') ? document.getElementById('regPasswordConfirm').value : password;
-  if (password !== passConfirm)      { showToast(shopT('pwMismatch') || 'Passwörter stimmen nicht überein', true); return; }
-  if (!consent)                       { showToast(shopT('acceptPrivacyError') || 'Datenschutz akzeptieren', true); return; }
+  if (password !== passConfirm)      { showToast('Passwörter stimmen nicht überein', true); return; }
+  if (!consent)                       { showToast('Datenschutz akzeptieren', true); return; }
 
   try {
     const r = await api({ action: 'customerRegister', name, email, password });
@@ -847,11 +855,11 @@ async function doRegister() {
       sessionSet(r.token, name, email, 'customer');
       closeModal('registerModal');
       document.getElementById('regPassword').value = '';
-      showToast(shopT('registerSuccess') || '✅ Registrierung erfolgreich!');
+      showToast('✅ Registrierung erfolgreich!');
     } else {
       showToast(r.error || 'Fehler', true);
     }
-  } catch (e) { showToast(shopT('networkError') || 'Verbindungsfehler', true); }
+  } catch (e) { showToast('Verbindungsfehler', true); }
 }
 
 async function doLogout() {
@@ -861,7 +869,7 @@ async function doLogout() {
   }
   sessionClear();
   showView('deals');
-  showToast(shopT('logoutSuccess') || 'Ausgeloggt');
+  showToast('Ausgeloggt');
 }
 
 // =============================================
@@ -899,7 +907,7 @@ function closeModal(id) {
   el.classList.remove('active');
   if (id === 'buyModal') {
     var btn = document.getElementById('btnBuySubmit');
-    if (btn) { btn.disabled = false; btn.textContent = shopT('payNowBtn') || '💳 Jetzt bezahlen'; }
+    if (btn) { btn.disabled = false; btn.textContent = '💳 Jetzt bezahlen'; }
   }
 }
 
@@ -960,7 +968,7 @@ function showToast(msg, isError) {
 async function sendResetCode() {
   const email = document.getElementById('resetEmail').value.trim();
   if (!email) {
-    showToast(shopT('emailRequired') || 'Bitte Email eingeben', true);
+    showToast('Bitte Email eingeben', true);
     return;
   }
   
@@ -974,7 +982,7 @@ async function sendResetCode() {
       showToast(r.error || 'Fehler', true);
     }
   } catch (e) {
-    showToast(shopT('networkError') || 'Verbindungsfehler', true);
+    showToast('Verbindungsfehler', true);
   }
 }
 
@@ -984,12 +992,12 @@ async function resetPasswordSubmit() {
   const newPassword = document.getElementById('resetNewPassword').value;
   
   if (!code || !newPassword) {
-    showToast(shopT('fillAllFields') || 'Alle Felder ausfüllen', true);
+    showToast('Alle Felder ausfüllen', true);
     return;
   }
   
   if (newPassword.length < 8) {
-    showToast(shopT('pwMinToast') || 'Passwort mind. 8 Zeichen', true);
+    showToast('Passwort mind. 8 Zeichen', true);
     return;
   }
   
@@ -1002,7 +1010,7 @@ async function resetPasswordSubmit() {
       role: 'customer' 
     });
     if (r.success) {
-      showToast(shopT('passwordChanged') || '✅ Passwort geändert!');
+      showToast('✅ Passwort geändert!');
       closeModal('resetPasswordModal');
       document.getElementById('resetEmail').value = '';
       document.getElementById('resetCode').value = '';
@@ -1013,7 +1021,7 @@ async function resetPasswordSubmit() {
       showToast(r.error || 'Fehler', true);
     }
   } catch (e) {
-    showToast(shopT('networkError') || 'Verbindungsfehler', true);
+    showToast('Verbindungsfehler', true);
   }
 }
 
@@ -1156,7 +1164,6 @@ const SHOP_TRANSLATIONS = {
     viewDeals:'🏠 Deals', viewMap:'🗺️ Karte', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Rabatt',
     myLocationBtn:'Mein Standort', clearLocationBtn:'Zurücksetzen', geoEnableBtn:'Standort freigeben', geoBannerText:'Deals in deiner Nähe anzeigen?', mapStateText:'Deals direkt auf der Karte der Schweiz', mapCountryBadge:'🇨🇭 Schweiz', distanceAway:'entfernt',
     emailLbl:'Email', passwordLbl:'Passwort', nameLbl:'Name', registerPasswordLbl:'Passwort (mind. 8 Zeichen)', registerConfirmLbl:'Passwort bestätigen', registerModalTitle:'✨ Registrieren', registerSubmitBtn:'Registrieren', acceptPrivacyOnly:'Ich akzeptiere die', privacyOnly:'Datenschutzerklärung', alreadyRegistered:'Schon registriert?', goToLogin:'Zum Login', cartTitle:'🛒 Warenkorb', checkoutTitle:'Checkout', acceptTermsCart:'Ich akzeptiere die', processing:'⏳ Wird verarbeitet...', nameEmailRequired:'Name und Email sind Pflichtfelder', checkoutFailed:'Checkout fehlgeschlagen', loginModalTitle:'🔐 Anmelden', resetModalTitle:'🔑 Passwort zurücksetzen', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', backBtn:'Zurück',
-    register:'Registrieren', noAccountYet:'Noch kein Konto?', favoritesHeading:'❤️ Meine Favoriten', ordersHeading:'📦 Meine Bestellungen', payNowBtn:'💳 Jetzt bezahlen', addToCart:'In den Warenkorb', addedToCart:'zum Warenkorb hinzugefügt', acceptTermsPrivacyError:'Bitte AGB und Datenschutz akzeptieren', acceptPrivacyError:'Bitte Datenschutz akzeptieren', locationUnavailable:'Standort nicht verfügbar', instagramPasteHint:'Link kopiert – jetzt in Instagram Story einfügen!', tiktokPasteHint:'Link kopiert – jetzt in TikTok einfügen!', orderStatusPending:'⏳ Ausstehend', orderStatusPaid:'✅ Gekauft', orderStatusRedeemed:'🎉 Eingelöst', noFavoritesYet:'Noch keine Favoriten', clickHeart:'Klicke ❤️ bei einem Deal', noActiveFavorites:'Keine aktiven Deals von Favoriten', addressLabel:'Adresse', discountLabel:'Rabatt', minOrderLabel:'Mindestbestellung', typeLabel:'Typ', voucherTypeFlat:'Pauschalgutschein', weekdaysLabel:'Wochentage', timeLabel:'Zeit', availableLabel:'Verfügbar', noMoreDetails:'Keine weiteren Details', shareCopy:'📋 Link kopieren', shareFacebook:'📘 Facebook', shareTelegram:'✈️ Telegram', shareWhatsApp:'💬 WhatsApp', shareInstagram:'📸 Instagram', shareTikTok:'🎵 TikTok', shareNative:'📱 Teilen', cartAddTitle:'In den Warenkorb', loginSuccess:'✅ Eingeloggt!', logoutSuccess:'Ausgeloggt', fillEmailPassword:'Bitte Email und Passwort eingeben', fillAllFields:'Alle Felder ausfüllen', pwMinToast:'Passwort mind. 8 Zeichen', pwMismatch:'Passwörter stimmen nicht überein', registerSuccess:'✅ Registrierung erfolgreich!', passwordChanged:'✅ Passwort geändert!', networkError:'Verbindungsfehler', loadDealsError:'Fehler beim Laden der Deals', reloadError:'Verbindungsfehler - bitte neu laden', refundConfirm:'Rückerstattung anfordern?\nDer Gutschein wird ungültig.', refundRequestedInfo:'⏳ Rückerstattung angefordert', refundedInfo:'↩️ Rückerstattet', nativeShareTitle:'BarSclusive Gutschein', andConnector:'und', timeMorning:'🌅 Morgen', timeMidday:'☀️ Mittag', timeEvening:'🌙 Abend', validityRedirecting:'⏳ Weiterleitung...', invalidCredentials:'Ungültige Zugangsdaten', emailRequired:'Bitte Email eingeben', newPwMin:'Neues Passwort mind. 8 Zeichen', favoritesNoneTitle:'Keine aktiven Deals von Favoriten', notLoggedIn:'Nicht eingeloggt', loginRequired:'Bitte einloggen', sortedByDistance:'📍 Deals werden nach Nähe sortiert'
   },
   en: {
     deals:'Deals', orders:'Orders',
@@ -1184,7 +1191,6 @@ const SHOP_TRANSLATIONS = {
     viewDeals:'🏠 Deals', viewMap:'🗺️ Map', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Discount',
     myLocationBtn:'My location', clearLocationBtn:'Reset', geoEnableBtn:'Enable location', geoBannerText:'Show deals near you?', mapStateText:'Deals directly on the map of Switzerland', mapCountryBadge:'🇨🇭 Switzerland', distanceAway:'away',
     emailLbl:'Email', passwordLbl:'Password', nameLbl:'Name', registerPasswordLbl:'Password (min. 8 chars)', registerConfirmLbl:'Confirm password', registerModalTitle:'✨ Register', registerSubmitBtn:'Register', acceptPrivacyOnly:'I accept the', privacyOnly:'Privacy Policy', alreadyRegistered:'Already registered?', goToLogin:'Go to login', cartTitle:'🛒 Cart', checkoutTitle:'Checkout', acceptTermsCart:'I accept the', processing:'⏳ Processing...', nameEmailRequired:'Name and email are required', checkoutFailed:'Checkout failed', loginModalTitle:'🔐 Login', resetModalTitle:'🔑 Reset password', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', backBtn:'Back',
-    register:'Register', noAccountYet:'No account yet?', favoritesHeading:'❤️ My favorites', ordersHeading:'📦 My orders', payNowBtn:'💳 Pay now', addToCart:'Add to cart', addedToCart:'added to cart', acceptTermsPrivacyError:'Please accept terms and privacy', acceptPrivacyError:'Please accept the privacy policy', locationUnavailable:'Location not available', instagramPasteHint:'Link copied – now paste it into Instagram Story!', tiktokPasteHint:'Link copied – now paste it into TikTok!', orderStatusPending:'⏳ Pending', orderStatusPaid:'✅ Purchased', orderStatusRedeemed:'🎉 Redeemed', noFavoritesYet:'No favorites yet', clickHeart:'Tap ❤️ on a deal', noActiveFavorites:'No active deals from favorites', addressLabel:'Address', discountLabel:'Discount', minOrderLabel:'Minimum order', typeLabel:'Type', voucherTypeFlat:'Flat discount voucher', weekdaysLabel:'Weekdays', timeLabel:'Time', availableLabel:'Available', noMoreDetails:'No more details', shareCopy:'📋 Copy link', shareFacebook:'📘 Facebook', shareTelegram:'✈️ Telegram', shareWhatsApp:'💬 WhatsApp', shareInstagram:'📸 Instagram', shareTikTok:'🎵 TikTok', shareNative:'📱 Share', cartAddTitle:'Add to cart', loginSuccess:'✅ Logged in!', logoutSuccess:'Logged out', fillEmailPassword:'Please enter email and password', fillAllFields:'Please fill in all fields', pwMinToast:'Password must be at least 8 characters', pwMismatch:'Passwords do not match', registerSuccess:'✅ Registration successful!', passwordChanged:'✅ Password changed!', networkError:'Connection error', loadDealsError:'Failed to load deals', reloadError:'Connection error - please reload', refundConfirm:'Request a refund?\nThe voucher will be invalidated.', refundRequestedInfo:'⏳ Refund requested', refundedInfo:'↩️ Refunded', nativeShareTitle:'BarSclusive voucher', andConnector:'and', timeMorning:'🌅 Morning', timeMidday:'☀️ Midday', timeEvening:'🌙 Evening', validityRedirecting:'⏳ Redirecting...', invalidCredentials:'Invalid credentials', emailRequired:'Please enter your email', newPwMin:'New password must be at least 8 characters', notLoggedIn:'Not logged in', loginRequired:'Please log in', sortedByDistance:'📍 Deals are now sorted by distance'
   },
   it: {
     deals:'Deals', orders:'Ordini',
@@ -1211,7 +1217,6 @@ const SHOP_TRANSLATIONS = {
     viewDeals:'🏠 Deals', viewMap:'🗺️ Mappa', catBreakfast:'🥐 Colazione', catLunch:'🍽️ Pranzo', catAperitif:'🍹 Aperitivo', catDinner:'🍷 Cena', catEvents:'🎉 Eventi', catDiscount:'🏷️ Sconto',
     myLocationBtn:'La mia posizione', clearLocationBtn:'Reimposta', geoEnableBtn:'Attiva posizione', geoBannerText:'Mostrare i deal vicino a te?', mapStateText:'Deal direttamente sulla mappa della Svizzera', mapCountryBadge:'🇨🇭 Svizzera', distanceAway:'di distanza',
     emailLbl:'Email', passwordLbl:'Password', nameLbl:'Nome', registerPasswordLbl:'Password (min. 8 caratteri)', registerConfirmLbl:'Conferma password', registerModalTitle:'✨ Registrati', registerSubmitBtn:'Registrati', acceptPrivacyOnly:'Accetto la', privacyOnly:'Privacy', alreadyRegistered:'Già registrato?', goToLogin:'Vai al login', cartTitle:'🛒 Carrello', checkoutTitle:'Checkout', acceptTermsCart:'Accetto', processing:'⏳ Elaborazione...', nameEmailRequired:'Nome ed email sono obbligatori', checkoutFailed:'Checkout non riuscito', loginModalTitle:'🔐 Accedi', resetModalTitle:'🔑 Reimposta password', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', backBtn:'Indietro',
-    register:'Registrati', noAccountYet:'Nessun account?', favoritesHeading:'❤️ I miei preferiti', ordersHeading:'📦 I miei ordini', payNowBtn:'💳 Paga ora', addToCart:'Aggiungi al carrello', addedToCart:'aggiunto al carrello', acceptTermsPrivacyError:'Accetta condizioni e privacy', acceptPrivacyError:'Accetta la privacy', locationUnavailable:'Posizione non disponibile', instagramPasteHint:'Link copiato – ora incollalo nella storia Instagram!', tiktokPasteHint:'Link copiato – ora incollalo in TikTok!', orderStatusPending:'⏳ In sospeso', orderStatusPaid:'✅ Acquistato', orderStatusRedeemed:'🎉 Riscattato', noFavoritesYet:'Nessun preferito', clickHeart:'Tocca ❤️ su un deal', noActiveFavorites:'Nessun deal attivo tra i preferiti', addressLabel:'Indirizzo', discountLabel:'Sconto', minOrderLabel:'Ordine minimo', typeLabel:'Tipo', voucherTypeFlat:'Voucher sconto forfettario', weekdaysLabel:'Giorni', timeLabel:'Orario', availableLabel:'Disponibile', noMoreDetails:'Nessun altro dettaglio', shareCopy:'📋 Copia link', shareFacebook:'📘 Facebook', shareTelegram:'✈️ Telegram', shareWhatsApp:'💬 WhatsApp', shareInstagram:'📸 Instagram', shareTikTok:'🎵 TikTok', shareNative:'📱 Condividi', cartAddTitle:'Aggiungi al carrello', loginSuccess:'✅ Accesso effettuato!', logoutSuccess:'Disconnesso', fillEmailPassword:'Inserisci email e password', fillAllFields:'Compila tutti i campi', pwMinToast:'La password deve contenere almeno 8 caratteri', pwMismatch:'Le password non coincidono', registerSuccess:'✅ Registrazione riuscita!', passwordChanged:'✅ Password cambiata!', networkError:'Errore di connessione', loadDealsError:'Errore durante il caricamento dei deal', reloadError:'Errore di connessione - ricarica la pagina', refundConfirm:'Richiedere il rimborso?\nIl voucher verrà annullato.', refundRequestedInfo:'⏳ Rimborso richiesto', refundedInfo:'↩️ Rimborsato', nativeShareTitle:'Voucher BarSclusive', andConnector:'e', timeMorning:'🌅 Mattina', timeMidday:'☀️ Pranzo', timeEvening:'🌙 Sera', validityRedirecting:'⏳ Reindirizzamento...', invalidCredentials:'Credenziali non valide', emailRequired:'Inserisci l\'email', newPwMin:'La nuova password deve contenere almeno 8 caratteri', notLoggedIn:'Non hai effettuato l\'accesso', loginRequired:'Effettua il login', sortedByDistance:'📍 I deal sono ora ordinati per distanza'
   },
   fr: {
     deals:'Deals', orders:'Commandes',
@@ -1237,7 +1242,6 @@ const SHOP_TRANSLATIONS = {
     viewDeals:'🏠 Deals', viewMap:'🗺️ Carte', catBreakfast:'🥐 Petit-déjeuner', catLunch:'🍽️ Déjeuner', catAperitif:'🍹 Apéritif', catDinner:'🍷 Dîner', catEvents:'🎉 Événements', catDiscount:'🏷️ Réduction',
     myLocationBtn:'Ma position', clearLocationBtn:'Réinitialiser', geoEnableBtn:'Activer la position', geoBannerText:'Afficher les deals près de vous ?', mapStateText:'Deals directement sur la carte de la Suisse', mapCountryBadge:'🇨🇭 Suisse', distanceAway:'de distance',
     emailLbl:'Email', passwordLbl:'Mot de passe', nameLbl:'Nom', registerPasswordLbl:'Mot de passe (min. 8 car.)', registerConfirmLbl:'Confirmer le mot de passe', registerModalTitle:'✨ Inscription', registerSubmitBtn:"S'inscrire", acceptPrivacyOnly:"J'accepte la", privacyOnly:'Confidentialité', alreadyRegistered:'Déjà inscrit ?', goToLogin:'Vers la connexion', cartTitle:'🛒 Panier', checkoutTitle:'Checkout', acceptTermsCart:"J'accepte les", processing:'⏳ Traitement...', nameEmailRequired:'Nom et email sont obligatoires', checkoutFailed:'Échec du checkout', loginModalTitle:'🔐 Connexion', resetModalTitle:'🔑 Réinitialiser le mot de passe', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', backBtn:'Retour',
-    register:'Inscription', noAccountYet:'Pas encore de compte ?', favoritesHeading:'❤️ Mes favoris', ordersHeading:'📦 Mes commandes', payNowBtn:'💳 Payer maintenant', addToCart:'Ajouter au panier', addedToCart:'ajouté au panier', acceptTermsPrivacyError:'Veuillez accepter les CGV et la confidentialité', acceptPrivacyError:'Veuillez accepter la confidentialité', locationUnavailable:'Position non disponible', instagramPasteHint:'Lien copié – collez-le maintenant dans la story Instagram !', tiktokPasteHint:'Lien copié – collez-le maintenant dans TikTok !', orderStatusPending:'⏳ En attente', orderStatusPaid:'✅ Acheté', orderStatusRedeemed:'🎉 Utilisé', noFavoritesYet:'Aucun favori', clickHeart:'Touchez ❤️ sur une offre', noActiveFavorites:'Aucune offre active dans les favoris', addressLabel:'Adresse', discountLabel:'Réduction', minOrderLabel:'Commande minimum', typeLabel:'Type', voucherTypeFlat:'Bon de réduction forfaitaire', weekdaysLabel:'Jours', timeLabel:'Heure', availableLabel:'Disponible', noMoreDetails:'Pas d\'autres détails', shareCopy:'📋 Copier le lien', shareFacebook:'📘 Facebook', shareTelegram:'✈️ Telegram', shareWhatsApp:'💬 WhatsApp', shareInstagram:'📸 Instagram', shareTikTok:'🎵 TikTok', shareNative:'📱 Partager', cartAddTitle:'Ajouter au panier', loginSuccess:'✅ Connecté !', logoutSuccess:'Déconnecté', fillEmailPassword:'Veuillez saisir l\'email et le mot de passe', fillAllFields:'Veuillez remplir tous les champs', pwMinToast:'Le mot de passe doit contenir au moins 8 caractères', pwMismatch:'Les mots de passe ne correspondent pas', registerSuccess:'✅ Inscription réussie !', passwordChanged:'✅ Mot de passe modifié !', networkError:'Erreur de connexion', loadDealsError:'Erreur lors du chargement des offres', reloadError:'Erreur de connexion - veuillez recharger', refundConfirm:'Demander un remboursement ?\nLe bon sera invalidé.', refundRequestedInfo:'⏳ Remboursement demandé', refundedInfo:'↩️ Remboursé', nativeShareTitle:'Bon BarSclusive', andConnector:'et', timeMorning:'🌅 Matin', timeMidday:'☀️ Midi', timeEvening:'🌙 Soir', validityRedirecting:'⏳ Redirection...', invalidCredentials:'Identifiants invalides', emailRequired:'Veuillez saisir votre email', newPwMin:'Le nouveau mot de passe doit contenir au moins 8 caractères', notLoggedIn:'Non connecté', loginRequired:'Veuillez vous connecter', sortedByDistance:'📍 Les offres sont maintenant triées par distance'
   }
 };
 
@@ -1269,12 +1273,6 @@ function applyShopTranslations() {
   if (btnDeals) btnDeals.textContent = '🏠 ' + st('deals');
   const btnOrders = document.getElementById('btnOrders');
   if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
-  const btnFavorites = document.getElementById('btnFavorites');
-  if (btnFavorites) btnFavorites.textContent = '❤️ ' + (st('favoritesHeading') || 'Favoriten').replace(/^❤️\s*/, '');
-  var dropdownChangePw = document.getElementById('dropdownChangePw');
-  if (dropdownChangePw) dropdownChangePw.textContent = '🔑 ' + st('changePw');
-  var dropdownLogout = document.getElementById('dropdownLogout');
-  if (dropdownLogout) dropdownLogout.textContent = st('logoutBtn');
   document.querySelectorAll('[data-shop-i18n]').forEach(function(el) {
     var k = el.getAttribute('data-shop-i18n');
     var tr = st(k);
@@ -1305,8 +1303,6 @@ function applyShopTranslations() {
   if (mapStateText) mapStateText.textContent = st('mapStateText');
   var mapCountryBadge = document.getElementById('mapCountryBadge');
   if (mapCountryBadge) mapCountryBadge.textContent = st('mapCountryBadge');
-  var buyConsentConnector = document.getElementById('buyConsentConnector');
-  if (buyConsentConnector) buyConsentConnector.textContent = shopT('andConnector') || 'und';
   renderDeals();
   if (_shopMap && _mapView) updateShopMapMarkers();
 }
@@ -1335,18 +1331,18 @@ async function doChangePassword() {
   const confPw = document.getElementById('cpwConfirm').value;
   const err    = document.getElementById('cpwErr');
   err.textContent = '';
-  if (!oldPw || !newPw || !confPw) { err.textContent = shopT('fillAllFields') || 'Alle Felder ausfüllen.'; return; }
-  if (newPw.length < 8) { err.textContent = shopT('newPwMin') || 'Neues Passwort mind. 8 Zeichen.'; return; }
-  if (newPw !== confPw) { err.textContent = shopT('pwMismatch') || 'Passwörter stimmen nicht überein.'; return; }
+  if (!oldPw || !newPw || !confPw) { err.textContent = 'Alle Felder ausfüllen.'; return; }
+  if (newPw.length < 8) { err.textContent = 'Neues Passwort mind. 8 Zeichen.'; return; }
+  if (newPw !== confPw) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
   try {
     const r = await api({ action: 'changePassword', token: s.token, old_password: oldPw, new_password: newPw });
     if (r.success) {
-      showToast(shopT('passwordChanged') || '✅ Passwort geändert!');
+      showToast('✅ Passwort geändert!');
       closeChangePwModal();
     } else {
       err.textContent = r.error || 'Fehler.';
     }
-  } catch (e) { err.textContent = shopT('networkError') || 'Verbindungsfehler.'; }
+  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
 }
 
 // Bind lang + password change on DOMContentLoaded
@@ -1449,7 +1445,7 @@ async function loadFavorites() {
 
 async function toggleFavorite(dealId, btn) {
   var s = sessionGet();
-  if (!s) { showToast(shopT('loginRequired') || 'Bitte einloggen', true); return; }
+  if (!s) { showToast('Bitte einloggen', true); return; }
   var isFav = _favorites.indexOf(dealId) !== -1;
   try {
     var r = await api({ action: isFav ? 'removeFavorite' : 'addFavorite', token: s.token, deal_id: dealId });
@@ -1465,9 +1461,9 @@ function showFavorites() {
   var el = document.getElementById('favoritesList');
   if (!el) return;
   el.innerHTML = '';
-  if (!_favorites.length) { el.innerHTML = '<div class="empty"><h3>' + (shopT('noFavoritesYet') || 'Noch keine Favoriten') + '</h3><p>' + (shopT('clickHeart') || 'Klicke ❤️ bei einem Deal') + '</p></div>'; return; }
+  if (!_favorites.length) { el.innerHTML = '<div class="empty"><h3>Noch keine Favoriten</h3><p>Klicke \u2764\uFE0F bei einem Deal</p></div>'; return; }
   var favDeals = allDeals.filter(function(d) { return _favorites.indexOf(d.id) !== -1; });
-  if (!favDeals.length) { el.innerHTML = '<div class="empty"><h3>' + (shopT('noActiveFavorites') || 'Keine aktiven Deals von Favoriten') + '</h3></div>'; return; }
+  if (!favDeals.length) { el.innerHTML = '<div class="empty"><h3>Keine aktiven Deals von Favoriten</h3></div>'; return; }
   favDeals.forEach(function(d) { el.appendChild(buildDealCard(d)); });
 }
 
@@ -1517,17 +1513,17 @@ function openDealDetail(deal) {
   
   // Info section
   var info = '';
-  if (deal.bar_address) info += '<div><span style="color:#999">' + escHtml(shopT('addressLabel') || 'Adresse') + '</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
+  if (deal.bar_address) info += '<div><span style="color:#999">Adresse</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
   if (isPauschal) {
-    if (deal.discount_percent) info += '<div><span style="color:#999">' + escHtml(shopT('discountLabel') || 'Rabatt') + '</span><span style="color:#FF3366;font-weight:700">' + deal.discount_percent + '%</span></div>';
-    if (deal.min_order) info += '<div><span style="color:#999">' + escHtml(shopT('minOrderLabel') || 'Mindestbestellung') + '</span><span>' + deal.min_order + ' CHF</span></div>';
-    info += '<div><span style="color:#999">' + escHtml(shopT('typeLabel') || 'Typ') + '</span><span>' + escHtml(shopT('voucherTypeFlat') || 'Pauschalgutschein') + '</span></div>';
+    if (deal.discount_percent) info += '<div><span style="color:#999">Rabatt</span><span style="color:#FF3366;font-weight:700">' + deal.discount_percent + '%</span></div>';
+    if (deal.min_order) info += '<div><span style="color:#999">Mindestbestellung</span><span>' + deal.min_order + ' CHF</span></div>';
+    info += '<div><span style="color:#999">Typ</span><span>Pauschalgutschein</span></div>';
   }
   var weekdays = deal.valid_weekdays || [];
-  if (weekdays.length) info += '<div><span style="color:#999">' + escHtml(shopT('weekdaysLabel') || 'Wochentage') + '</span><span>' + weekdays.join(', ') + '</span></div>';
-  if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">' + escHtml(shopT('timeLabel') || 'Zeit') + '</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
-  if (deal.max_quantity > 0) info += '<div><span style="color:#999">' + escHtml(shopT('availableLabel') || 'Verfügbar') + '</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
-  document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">' + escHtml(shopT('noMoreDetails') || 'Keine weiteren Details') + '</div>';
+  if (weekdays.length) info += '<div><span style="color:#999">Wochentage</span><span>' + weekdays.join(', ') + '</span></div>';
+  if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">Zeit</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
+  if (deal.max_quantity > 0) info += '<div><span style="color:#999">Verfügbar</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
+  document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">Keine weiteren Details</div>';
   
   // Share buttons
   var shareUrl = window.location.origin + window.location.pathname + '?deal=' + deal.id;
@@ -1535,15 +1531,15 @@ function openDealDetail(deal) {
   var shareEl = document.getElementById('ddShare');
   shareEl.innerHTML = '';
   var shareItems = [
-    [shopT('shareCopy') || '📋 Link kopieren', function() { copyDealLink(); }],
-    [shopT('shareWhatsApp') || '💬 WhatsApp', function() { shareDeal('whatsapp'); }],
-    [shopT('shareFacebook') || '📘 Facebook', function() { shareDeal('facebook'); }],
-    [shopT('shareTelegram') || '✈️ Telegram', function() { shareDeal('telegram'); }],
-    [shopT('shareInstagram') || '📸 Instagram', function() { copyDealLink(); showToast(shopT('instagramPasteHint') || 'Link kopiert – jetzt in Instagram Story einfügen!'); }],
-    [shopT('shareTikTok') || '🎵 TikTok', function() { copyDealLink(); showToast(shopT('tiktokPasteHint') || 'Link kopiert – jetzt in TikTok einfügen!'); }]
+    ['📋 Link kopieren', function() { copyDealLink(); }],
+    ['💬 WhatsApp', function() { shareDeal('whatsapp'); }],
+    ['📘 Facebook', function() { shareDeal('facebook'); }],
+    ['✈️ Telegram', function() { shareDeal('telegram'); }],
+    ['📸 Instagram', function() { copyDealLink(); showToast('Link kopiert – jetzt in Instagram Story einfügen!'); }],
+    ['🎵 TikTok', function() { copyDealLink(); showToast('Link kopiert – jetzt in TikTok einfügen!'); }]
   ];
   if (navigator.share) {
-    shareItems.unshift([shopT('shareNative') || '📱 Teilen', function() {
+    shareItems.unshift(['📱 Teilen', function() {
       navigator.share({ title: deal.title, text: shareText, url: shareUrl }).catch(function() {});
     }]);
   }
@@ -1565,7 +1561,7 @@ function openDealDetail(deal) {
     ddCartBtn.style.cssText = 'width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
     document.getElementById('ddBuyBtn').after(ddCartBtn);
   }
-  ddCartBtn.textContent = '🛒 ' + (shopT('addToCart') || 'In den Warenkorb');
+  ddCartBtn.textContent = '🛒 In den Warenkorb';
   ddCartBtn.onclick = function() { addToCart(deal); closeDealDetail(); };
   
   modal.classList.add('active');
@@ -1582,7 +1578,7 @@ function closeDealDetail() {
 function copyDealLink() {
   if (!_detailDeal) return;
   var url = window.location.origin + window.location.pathname + '?deal=' + _detailDeal.id;
-  navigator.clipboard.writeText(url).then(function() { showToast(shopT('linkKopiert') || 'Link kopiert!'); }).catch(function() { showToast('Link: ' + url); });
+  navigator.clipboard.writeText(url).then(function() { showToast('Link kopiert!'); }).catch(function() { showToast('Link: ' + url); });
 }
 
 function shareDeal(platform) {
@@ -1605,7 +1601,7 @@ function copyVoucherLink(code) {
 
 function shareVoucher(code, dealTitle, platform) {
   var url = encodeURIComponent(window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + code);
-  var text = encodeURIComponent((dealTitle || shopT('nativeShareTitle') || 'BarSclusive Gutschein') + ' - ' + code);
+  var text = encodeURIComponent((dealTitle || 'BarSclusive Gutschein') + ' - ' + code);
   var link = '';
   if (platform === 'whatsapp') link = 'https://wa.me/?text=' + text + '%20' + url;
   else if (platform === 'telegram') link = 'https://t.me/share/url?url=' + url + '&text=' + text;
@@ -1648,19 +1644,19 @@ function dismissGeoBanner() {
 }
 
 function requestGeoPermission() {
-  if (!navigator.geolocation) { showToast(shopT('locationUnavailable') || 'Standort nicht verfügbar', true); dismissGeoBanner(); return; }
+  if (!navigator.geolocation) { showToast('Standort nicht verfügbar', true); dismissGeoBanner(); return; }
   navigator.geolocation.getCurrentPosition(
     function(pos) {
       _userLat = pos.coords.latitude;
       _userLng = pos.coords.longitude;
-      _locationState = { label: st('myLocationBtn'), lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
+      _locationState = { label: 'Mein Standort', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
       saveLocationState();
       updateLocationUi();
       dismissGeoBanner();
-      showToast(shopT('sortedByDistance') || '📍 Deals werden nach Nähe sortiert');
+      showToast('📍 Deals werden nach Nähe sortiert');
       sortDealsByDistance();
     },
-    function() { dismissGeoBanner(); showToast(shopT('locationUnavailable') || 'Standort nicht verfügbar', true); },
+    function() { dismissGeoBanner(); showToast('Standort nicht verfügbar', true); },
     { enableHighAccuracy: false, timeout: 10000 }
   );
 }
@@ -1707,7 +1703,7 @@ function addToCart(deal) {
   else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
   saveCart();
   openCartPanel();
-  showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCart') || 'zum Warenkorb hinzugefügt'));
+  showToast('🛒 ' + deal.title + ' zum Warenkorb hinzugefügt');
 }
 
 function removeFromCart(dealId) {
@@ -1841,7 +1837,7 @@ async function checkoutCart() {
     }
     showToast(r.error || (shopT('checkoutFailed') || 'Checkout fehlgeschlagen'), true);
   } catch(e) {
-    showToast(shopT('networkError') || 'Verbindungsfehler', true);
+    showToast('Verbindungsfehler', true);
   } finally {
     _cartCheckoutBusy = false;
     renderCartPanel();
@@ -1932,27 +1928,28 @@ function buildPricePinIcon(barEntry) {
 function offsetDuplicateDealsForMap(deals) {
   var groups = {};
   deals.forEach(function(d) {
-    var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
-    if (!isValidCoord(lat) || !isValidCoord(lng)) return;
-    var key = lat.toFixed(5) + ',' + lng.toFixed(5);
+    var coords = getDealBaseCoords(d);
+    if (!coords) return;
+    var key = coords.lat.toFixed(5) + ',' + coords.lng.toFixed(5);
     if (!groups[key]) groups[key] = [];
     groups[key].push(d);
   });
   var out = [];
   Object.keys(groups).forEach(function(key) {
     var arr = groups[key];
+    var baseCoords = getDealBaseCoords(arr[0]);
+    if (!baseCoords) return;
     if (arr.length === 1) {
-      arr[0]._mapLat = Number(arr[0].bar_lat);
-      arr[0]._mapLng = Number(arr[0].bar_lng);
+      arr[0]._mapLat = baseCoords.lat;
+      arr[0]._mapLng = baseCoords.lng;
       out.push(arr[0]);
       return;
     }
-    var baseLat = Number(arr[0].bar_lat), baseLng = Number(arr[0].bar_lng);
     var radius = 0.00022;
     arr.forEach(function(d, idx) {
       var angle = (Math.PI * 2 * idx) / arr.length;
-      d._mapLat = baseLat + Math.sin(angle) * radius;
-      d._mapLng = baseLng + Math.cos(angle) * radius;
+      d._mapLat = baseCoords.lat + Math.sin(angle) * radius;
+      d._mapLng = baseCoords.lng + Math.cos(angle) * radius;
       out.push(d);
     });
   });
@@ -1986,16 +1983,17 @@ function updateShopMapMarkers() {
   }
 
   visibleDeals.forEach(function(d) {
-    var lat = Number(d._mapLat != null ? d._mapLat : d.bar_lat), lng = Number(d._mapLng != null ? d._mapLng : d.bar_lng);
-    if (!isValidCoord(lat) || !isValidCoord(lng)) return;
-    if (!_swissBounds.contains([lat, lng])) return;
+    var baseCoords = getDealBaseCoords(d);
+    var lat = Number(d._mapLat != null ? d._mapLat : (baseCoords && baseCoords.lat)), lng = Number(d._mapLng != null ? d._mapLng : (baseCoords && baseCoords.lng));
+    if (!isSwissCoordPair(lat, lng)) return;
+    var tooltipHtml = '<div style="font-weight:700">' + escHtml(d.title || '') + '</div>' +
+      '<div style="font-size:12px;color:#666">' + escHtml(d.bar_name || '') + '</div>';
+    if (hasDisplayDistance(d)) {
+      tooltipHtml += '<div style="font-size:12px;color:#666">' + escHtml(formatDistanceLabel(d._dist)) + '</div>';
+    }
     var marker = L.marker([lat, lng], { icon: buildDealPinIcon(d), keyboard: true, title: d.title || '' }).addTo(_shopMap);
     marker.on('click', function() { openDealDetail(d); });
-    marker.bindTooltip(
-      '<div style="font-weight:700">' + escHtml(d.title || '') + '</div>' +
-      '<div style="font-size:12px;color:#666">' + escHtml(d.bar_name || '') + '</div>',
-      { direction: 'top', offset: [0, -10], opacity: 0.96 }
-    );
+    marker.bindTooltip(tooltipHtml, { direction: 'top', offset: [0, -10], opacity: 0.96 });
     _shopMapMarkers.push(marker);
     bounds.push([lat, lng]);
   });
