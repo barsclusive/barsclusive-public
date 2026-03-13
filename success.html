@@ -7,26 +7,35 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:#0a0a0a; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; }
-    .card { background:#1a1a1a; border-radius:20px; max-width:440px; width:100%; padding:40px; text-align:center; }
+    .card { background:#1a1a1a; border-radius:20px; max-width:460px; width:100%; padding:40px; text-align:center; border:1px solid #2a2a2a; }
     .icon { font-size:60px; margin-bottom:16px; }
     h1 { font-size:22px; margin-bottom:8px; }
     p { color:#999; font-size:14px; line-height:1.6; margin-bottom:20px; }
-    .spinner { display:inline-block; width:40px; height:60px; border:3px solid #333; border-top-color:#FF3366; border-radius:50%; animation:spin 0.8s linear infinite; margin:20px 0; }
+    .spinner { display:inline-block; width:40px; height:40px; border:3px solid #333; border-top-color:#FF3366; border-radius:50%; animation:spin 0.8s linear infinite; margin:20px 0; }
     @keyframes spin { to { transform:rotate(360deg); } }
     .btn { display:inline-block; background:#FF3366; color:#fff; padding:14px 28px; border-radius:12px; text-decoration:none; font-weight:700; font-size:15px; margin-top:16px; }
     .btn:hover { background:#e6295a; }
     .btn-ghost { display:inline-block; color:#999; padding:10px 20px; text-decoration:none; font-size:13px; margin-top:8px; }
+    .btn-ghost:hover { color:#fff; }
     .error { color:#ef4444; }
-    .lang-switch{display:flex;gap:6px}
+    .lang-switch{display:flex;gap:6px;position:fixed;top:12px;right:12px;z-index:99}
     .lang-switch button{background:#333;color:#ccc;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
     .lang-switch button.active{background:#FF3366;color:#fff}
+    .receipt-note{background:#111;border:1px solid #2f2f2f;border-radius:12px;padding:14px;margin-top:18px;color:#b3b3b3;font-size:12px;line-height:1.6}
+    .footer{background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;font-size:13px;margin-top:auto;border-top:1px solid #333;width:100%;max-width:460px}
+    .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
   </style>
   <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
+<div class="lang-switch">
+  <button onclick="setLang('de')" id="langDe" class="active">DE</button>
+  <button onclick="setLang('en')" id="langEn">EN</button>
+  <button onclick="setLang('it')" id="langIt">IT</button>
+  <button onclick="setLang('fr')" id="langFr">FR</button>
+</div>
 
 <div class="card">
-  <!-- Loading State -->
   <div id="stateLoading">
     <div class="icon">💳</div>
     <h1 data-i18n="loading">Zahlung wird bestätigt...</h1>
@@ -34,86 +43,84 @@
     <p data-i18n="loadingText">Bitte warte einen Moment. Dein Gutschein wird erstellt.</p>
   </div>
 
-  <!-- Success State -->
   <div id="stateSuccess" style="display:none">
     <div class="icon">🎉</div>
     <h1 data-i18n="successTitle">Zahlung erfolgreich!</h1>
     <p data-i18n="successText">Dein Gutschein wurde erstellt und per Email gesendet.<br>Du kannst ihn auch direkt hier anzeigen:</p>
-    <a class="btn" id="linkVoucher" href="#">🎫 Gutschein anzeigen</a>
+    <a class="btn" id="linkVoucher" href="#" data-i18n="voucherBtn">🎫 Gutschein anzeigen</a>
+    <div class="receipt-note" data-i18n="legalNote">Bei Gutscheinen für konkrete Bar-Leistungen erbringt die Partnerbar die Leistung vor Ort. Pauschalrabattgutscheine sind ein eigenes Produkt von BarSclusive.</div>
     <br>
-    <a class="btn-ghost" href="shop.html">← Zurück zum Shop</a>
+    <a class="btn-ghost" href="shop.html" id="backShopLink" data-i18n="backShop">← Zurück zum Shop</a>
   </div>
 
-  <!-- Error State -->
   <div id="stateError" style="display:none">
     <div class="icon">⚠️</div>
     <h1 class="error" data-i18n="errorTitle">Fehler bei der Bestätigung</h1>
-    <p id="errorMsg" data-i18n="errorText">Die Zahlung konnte nicht bestätigt werden.</p>
-    <a class="btn-ghost" href="shop.html">← Zurück zum Shop</a>
+    <p id="errorMsg">Die Zahlung konnte nicht bestätigt werden.</p>
+    <a class="btn-ghost" href="shop.html" id="errorBackLink" data-i18n="backShop">← Zurück zum Shop</a>
   </div>
+</div>
+
+<div class="footer">
+  <p>&copy; 2026 BarSclusive</p>
+  <p style="margin-top:12px">
+    <a href="shop.html" id="fShop">Shop</a>
+    <a href="ueber-uns.html" id="fAbout">Über uns</a>
+    <a href="kontakt.html" id="fContact">Kontakt</a>
+  </p>
 </div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
-
+const T = {
+  de:{title:'Zahlung erfolgreich – BarSclusive',loading:'Zahlung wird bestätigt...',loadingText:'Bitte warte einen Moment. Dein Gutschein wird erstellt.',successTitle:'Zahlung erfolgreich!',successText:'Dein Gutschein wurde erstellt und per Email gesendet.<br>Du kannst ihn auch direkt hier anzeigen:',voucherBtn:'🎫 Gutschein anzeigen',backShop:'← Zurück zum Shop',errorTitle:'Fehler bei der Bestätigung',errorNoSession:'Keine Session-ID gefunden. Bitte prüfe deine Email für den Gutschein.',errorConfirm:'Die Zahlung konnte nicht bestätigt werden.',errorConn:'Verbindungsfehler. Dein Gutschein wurde trotzdem per Email gesendet.',legalNote:'Bei Gutscheinen für konkrete Bar-Leistungen erbringt die Partnerbar die Leistung vor Ort. Pauschalrabattgutscheine sind ein eigenes Produkt von BarSclusive.',fShop:'Shop',fAbout:'Über uns',fContact:'Kontakt'},
+  en:{title:'Payment successful – BarSclusive',loading:'Confirming payment...',loadingText:'Please wait a moment. Your voucher is being created.',successTitle:'Payment successful!',successText:'Your voucher has been created and sent by email.<br>You can also open it directly here:',voucherBtn:'🎫 View voucher',backShop:'← Back to shop',errorTitle:'Confirmation error',errorNoSession:'No session ID found. Please check your email for the voucher.',errorConfirm:'The payment could not be confirmed.',errorConn:'Connection error. Your voucher was still sent by email.',legalNote:'For vouchers covering a specific bar service, the partner bar provides the service on site. Flat discount vouchers are a BarSclusive product.',fShop:'Shop',fAbout:'About us',fContact:'Contact'},
+  it:{title:'Pagamento riuscito – BarSclusive',loading:'Conferma pagamento...',loadingText:'Attendi un momento. Il tuo voucher viene creato.',successTitle:'Pagamento riuscito!',successText:'Il tuo voucher è stato creato e inviato via email.<br>Puoi anche aprirlo direttamente qui:',voucherBtn:'🎫 Apri voucher',backShop:'← Torna allo shop',errorTitle:'Errore di conferma',errorNoSession:'Nessun ID sessione trovato. Controlla la tua email per il voucher.',errorConfirm:'Il pagamento non è stato confermato.',errorConn:'Errore di connessione. Il voucher è stato comunque inviato via email.',legalNote:'Per i voucher relativi a una prestazione concreta del bar, la prestazione è fornita dal partner bar sul posto. I voucher sconto forfettari sono un prodotto di BarSclusive.',fShop:'Shop',fAbout:'Chi siamo',fContact:'Contatto'},
+  fr:{title:'Paiement réussi – BarSclusive',loading:'Confirmation du paiement...',loadingText:'Veuillez patienter un instant. Votre bon est en cours de création.',successTitle:'Paiement réussi !',successText:'Votre bon a été créé et envoyé par email.<br>Vous pouvez aussi l’ouvrir directement ici :',voucherBtn:'🎫 Ouvrir le bon',backShop:'← Retour à la boutique',errorTitle:'Erreur de confirmation',errorNoSession:'Aucun identifiant de session trouvé. Vérifie ton email pour le bon.',errorConfirm:'Le paiement n’a pas pu être confirmé.',errorConn:'Erreur de connexion. Votre bon a quand même été envoyé par email.',legalNote:'Pour les bons portant sur une prestation concrète du bar, la prestation est fournie sur place par le bar partenaire. Les bons de réduction forfaitaires sont un produit de BarSclusive.',fShop:'Shop',fAbout:'À propos',fContact:'Contact'}
+};
+let currentLang = localStorage.getItem('barsclusive_lang') || 'de';
+function tt(k){ return (T[currentLang] && T[currentLang][k]) || T.de[k] || k; }
+function setLang(l){
+  currentLang = l;
+  localStorage.setItem('barsclusive_lang', l);
+  document.title = tt('title');
+  document.querySelectorAll('.lang-switch button').forEach(function(b){ b.classList.remove('active'); });
+  var btn = document.getElementById('lang' + l.charAt(0).toUpperCase() + l.slice(1));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ var k = el.getAttribute('data-i18n'); if (tt(k)) el.innerHTML = tt(k); });
+  document.getElementById('fShop').textContent = tt('fShop');
+  document.getElementById('fAbout').textContent = tt('fAbout');
+  document.getElementById('fContact').textContent = tt('fContact');
+}
+function showError(keyOrMsg, raw){
+  document.getElementById('stateLoading').style.display = 'none';
+  document.getElementById('stateSuccess').style.display = 'none';
+  document.getElementById('stateError').style.display = 'block';
+  document.getElementById('errorMsg').textContent = raw ? keyOrMsg : tt(keyOrMsg);
+}
 async function confirmPayment() {
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get('session_id');
-
-  if (!sessionId) {
-    showError('Keine Session-ID gefunden. Bitte prüfe deine Email für den Gutschein.');
-    return;
-  }
-
+  if (!sessionId) { showError('errorNoSession'); return; }
   try {
     const resp = await fetch(BACKEND_URL + '?action=confirmStripePayment&session_id=' + encodeURIComponent(sessionId));
     const data = await resp.json();
-
     if (!data.success) {
-      showError(data.error || 'Zahlung konnte nicht bestätigt werden.');
+      showError(data.error || tt('errorConfirm'), !!data.error);
       return;
     }
-
-    // Success!
     document.getElementById('stateLoading').style.display = 'none';
     document.getElementById('stateSuccess').style.display = 'block';
-
     if (data.voucher_code) {
       const base = window.location.pathname.replace(/\/[^\/]*$/, '');
-      document.getElementById('linkVoucher').href = base + '/voucher.html?code=' + data.voucher_code;
+      document.getElementById('linkVoucher').href = base + '/voucher.html?code=' + encodeURIComponent(data.voucher_code);
     }
-
   } catch (e) {
-    showError('Verbindungsfehler. Dein Gutschein wurde trotzdem per Email gesendet.');
+    showError('errorConn');
   }
 }
-
-function showError(msg) {
-  document.getElementById('stateLoading').style.display = 'none';
-  document.getElementById('stateError').style.display = 'block';
-  document.getElementById('errorMsg').textContent = msg;
-}
-
+setLang(currentLang);
 confirmPayment();
-</script>
-<!-- FOOTER -->
-<div style="background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;font-size:13px;margin-top:auto;border-top:1px solid #333;width:100%;max-width:420px">
-  <p>&copy; 2026 BarSclusive</p>
-  <p style="margin-top:12px">
-    <a href="shop.html" style="color:#FF3366;text-decoration:none;margin:0 12px">Shop</a>
-    <a href="ueber-uns.html" style="color:#FF3366;text-decoration:none;margin:0 12px">&Uuml;ber uns</a>
-    <a href="kontakt.html" style="color:#FF3366;text-decoration:none;margin:0 12px">Kontakt</a>
-  </p>
-</div>
-<script>
-var _T={
-de:{loading:'Zahlung wird bestätigt...',loadingText:'Bitte warte einen Moment. Dein Gutschein wird erstellt.',successTitle:'Zahlung erfolgreich!',successText:'Dein Gutschein wurde erstellt und per Email gesendet.<br>Du kannst ihn auch direkt hier anzeigen:',errorTitle:'Fehler bei der Bestätigung',errorText:'Die Zahlung konnte nicht bestätigt werden.'},
-en:{loading:'Confirming payment...',loadingText:'Please wait a moment. Your voucher is being created.',successTitle:'Payment successful!',successText:'Your voucher has been created and sent by email.<br>You can also view it directly here:',errorTitle:'Confirmation Error',errorText:'The payment could not be confirmed.'},
-it:{loading:'Conferma pagamento...',loadingText:'Attendere un momento. Il tuo voucher viene creato.',successTitle:'Pagamento riuscito!',successText:'Il tuo voucher è stato creato e inviato via email.<br>Puoi anche visualizzarlo direttamente qui:',errorTitle:'Errore di conferma',errorText:'Il pagamento non è stato confermato.'},
-fr:{loading:'Confirmation du paiement...',loadingText:'Veuillez patienter. Ton bon est en cours de création.',successTitle:'Paiement réussi !',successText:'Ton bon a été créé et envoyé par email.<br>Tu peux aussi le voir directement ici :',errorTitle:'Erreur de confirmation',errorText:'Le paiement n\'a pas pu être confirmé.'}
-};
-function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=_T[l]||_T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
-(function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
 </script>
 </body>
 </html>
