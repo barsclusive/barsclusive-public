@@ -8,7 +8,7 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:#0a0a0a; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; }
-    .voucher { background:#1a1a1a; border-radius:20px; max-width:420px; width:100%; overflow:hidden; border:2px solid #FF3366; }
+    .voucher { background:#1a1a1a; border-radius:20px; max-width:430px; width:100%; overflow:hidden; border:2px solid #FF3366; }
     .voucher-header { background:linear-gradient(135deg,#FF3366,#ff6b8a); padding:24px; text-align:center; }
     .voucher-header img { height:60px; margin-bottom:8px; }
     .voucher-header h1 { font-size:20px; font-weight:700; }
@@ -23,10 +23,11 @@
     .qr-wrap { text-align:center; margin:20px 0; }
     .qr-wrap canvas, .qr-wrap img { border-radius:8px; }
     .discount-badge { display:inline-block; background:#FF3366; color:#fff; padding:8px 16px; border-radius:20px; font-size:22px; font-weight:800; margin:12px 0; }
-    .voucher-info { background:#2a2a2a; border-radius:10px; padding:14px; margin-top:16px; font-size:13px; color:#ccc; }
+    .voucher-info, .voucher-legal { background:#2a2a2a; border-radius:10px; padding:14px; margin-top:16px; font-size:13px; color:#ccc; line-height:1.6; }
+    .voucher-legal { border-left:4px solid #FF3366; }
     .status-valid { color:#22c55e; }
     .status-redeemed { color:#f59e0b; }
-    .status-expired { color:#ef4444; }
+    .status-expired, .status-refunded { color:#ef4444; }
     .loading { text-align:center; padding:60px; }
     .loading p { color:#999; margin-top:12px; }
     .error { text-align:center; padding:60px; color:#ef4444; }
@@ -36,24 +37,26 @@
       .voucher-body { color:#000; }
       .voucher-field .value { color:#000; }
     }
-    .lang-switch{display:flex;gap:6px;position:absolute;top:20px;right:20px}
+    .lang-switch{display:flex;gap:6px;position:fixed;top:12px;right:12px;z-index:99}
     .lang-switch button{background:rgba(255,255,255,0.1);color:#ccc;border:none;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:11px}
     .lang-switch button.active{background:#FF3366;color:#fff}
+    .footer{background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;font-size:13px;margin-top:auto;border-top:1px solid #333;width:100%;max-width:430px}
+    .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
   </style>
   <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
-  <div class="lang-switch" style="position:fixed;top:12px;right:12px;z-index:99">
-    <button onclick="setLang('de')" id="langDe" class="active">DE</button>
-    <button onclick="setLang('en')" id="langEn">EN</button>
-    <button onclick="setLang('it')" id="langIt">IT</button>
-    <button onclick="setLang('fr')" id="langFr">FR</button>
-  </div>
+<div class="lang-switch">
+  <button onclick="setLang('de')" id="langDe" class="active">DE</button>
+  <button onclick="setLang('en')" id="langEn">EN</button>
+  <button onclick="setLang('it')" id="langIt">IT</button>
+  <button onclick="setLang('fr')" id="langFr">FR</button>
+</div>
 
 <div class="voucher" id="voucherCard" style="display:none">
   <div class="voucher-header">
     <img src="logo.png" alt="BarSclusive" onerror="this.style.display='none'">
-    <h1>🎫 Dein Gutschein</h1>
+    <h1 data-i18n="headerTitle">🎫 Dein Gutschein</h1>
     <p id="vBarName"></p>
   </div>
   <div class="voucher-body">
@@ -97,12 +100,9 @@
     </div>
 
     <div class="qr-wrap" id="qrCode"></div>
-
     <div id="shareRow" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0"></div>
-
-    <div class="voucher-info">
-      💡 Zeige diesen Gutschein dem Personal in der Bar. Der Code kann gescannt oder manuell eingegeben werden.
-    </div>
+    <div class="voucher-info" id="voucherInfo"></div>
+    <div class="voucher-legal" id="voucherLegal"></div>
   </div>
 </div>
 
@@ -113,139 +113,168 @@
 
 <div class="error" id="errorState" style="display:none">
   <div style="font-size:40px">❌</div>
-  <p id="errorMsg" data-i18n="notFound">Gutschein nicht gefunden</p>
-  <a href="shop.html" style="color:#FF3366;margin-top:16px;display:inline-block">← Zurück zum Shop</a>
+  <p id="errorMsg">Gutschein nicht gefunden</p>
+  <a href="shop.html" style="color:#FF3366;margin-top:16px;display:inline-block" id="backLink" data-i18n="backShop">← Zurück zum Shop</a>
+</div>
+
+<div class="footer">
+  <p>&copy; 2026 BarSclusive</p>
+  <p style="margin-top:12px">
+    <a href="shop.html" id="fShop">Shop</a>
+    <a href="ueber-uns.html" id="fAbout">Über uns</a>
+    <a href="kontakt.html" id="fContact">Kontakt</a>
+  </p>
 </div>
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
+let currentLang = localStorage.getItem('barsclusive_lang') || 'de';
+let currentVoucher = null;
+const T = {
+  de:{title:'BarSclusive Gutschein',headerTitle:'🎫 Dein Gutschein',lDeal:'Deal',lMin:'Mindestbestellung',lApplies:'Gilt für',lPaid:'Bezahlt',lMwst:'MWST',lStatus:'Status',hint:'Zeige diesen Code in der Bar vor',loading:'Gutschein wird geladen...',notFound:'Gutschein nicht gefunden',errorNoCode:'Kein Gutschein-Code angegeben.',errorConn:'Verbindungsfehler. Bitte erneut versuchen.',backShop:'← Zurück zum Shop',infoText:'💡 Zeige diesen Gutschein dem Personal in der Bar. Der Code kann gescannt oder manuell eingegeben werden.',shareNative:'📱 Teilen',shareCopy:'📋 Link kopieren',shareWhatsapp:'💬 WhatsApp',shareFacebook:'📘 Facebook',shareTelegram:'✈️ Telegram',shareInstagram:'📸 Instagram',shareTikTok:'🎵 TikTok',toastCopied:'Link kopiert!',toastInstagram:'Link kopiert – in Instagram einfügen!',toastTiktok:'Link kopiert – in TikTok einfügen!',appliesAll:'Alles',appliesDrinks:'Nur Getränke',appliesFood:'Nur Essen',statusIssued:'Gültig ✅',statusSent:'Gültig ✅',statusRedeemed:'Eingelöst ⚠️',statusExpired:'Abgelaufen ❌',statusRefunded:'Erstattet ❌',legalBar:'Die Leistung wird vor Ort durch die Partnerbar erbracht. Die Dokumentation orientiert sich an der Abgrenzung gemäss MWST-Info 04 sowie Art. 20 MWSTG und Art. 20a MWSTG.',legalDiscount:'Dieser Pauschalrabattgutschein ist ein Produkt von BarSclusive. Bei Einlösung gewährt die Partnerbar den beschriebenen Rabatt vor Ort.' ,fShop:'Shop',fAbout:'Über uns',fContact:'Kontakt'},
+  en:{title:'BarSclusive Voucher',headerTitle:'🎫 Your voucher',lDeal:'Deal',lMin:'Minimum order',lApplies:'Applies to',lPaid:'Paid',lMwst:'VAT',lStatus:'Status',hint:'Show this code at the bar',loading:'Loading voucher...',notFound:'Voucher not found',errorNoCode:'No voucher code provided.',errorConn:'Connection error. Please try again.',backShop:'← Back to shop',infoText:'💡 Show this voucher to the bar staff. The code can be scanned or entered manually.',shareNative:'📱 Share',shareCopy:'📋 Copy link',shareWhatsapp:'💬 WhatsApp',shareFacebook:'📘 Facebook',shareTelegram:'✈️ Telegram',shareInstagram:'📸 Instagram',shareTikTok:'🎵 TikTok',toastCopied:'Link copied!',toastInstagram:'Link copied – paste it into Instagram!',toastTiktok:'Link copied – paste it into TikTok!',appliesAll:'Everything',appliesDrinks:'Drinks only',appliesFood:'Food only',statusIssued:'Valid ✅',statusSent:'Valid ✅',statusRedeemed:'Redeemed ⚠️',statusExpired:'Expired ❌',statusRefunded:'Refunded ❌',legalBar:'The on-site service is provided by the partner bar. The wording follows the distinction in Swiss VAT Info 04 as well as Art. 20 and Art. 20a VATA.',legalDiscount:'This flat discount voucher is a BarSclusive product. On redemption, the partner bar grants the described discount on site.',fShop:'Shop',fAbout:'About us',fContact:'Contact'},
+  it:{title:'Voucher BarSclusive',headerTitle:'🎫 Il tuo voucher',lDeal:'Offerta',lMin:'Ordine minimo',lApplies:'Valido per',lPaid:'Pagato',lMwst:'IVA',lStatus:'Stato',hint:'Mostra questo codice al bar',loading:'Caricamento voucher...',notFound:'Voucher non trovato',errorNoCode:'Nessun codice voucher indicato.',errorConn:'Errore di connessione. Riprova.',backShop:'← Torna allo shop',infoText:'💡 Mostra questo voucher al personale del bar. Il codice può essere scansionato o inserito manualmente.',shareNative:'📱 Condividi',shareCopy:'📋 Copia link',shareWhatsapp:'💬 WhatsApp',shareFacebook:'📘 Facebook',shareTelegram:'✈️ Telegram',shareInstagram:'📸 Instagram',shareTikTok:'🎵 TikTok',toastCopied:'Link copiato!',toastInstagram:'Link copiato – incollalo in Instagram!',toastTiktok:'Link copiato – incollalo in TikTok!',appliesAll:'Tutto',appliesDrinks:'Solo bevande',appliesFood:'Solo cibo',statusIssued:'Valido ✅',statusSent:'Valido ✅',statusRedeemed:'Riscattato ⚠️',statusExpired:'Scaduto ❌',statusRefunded:'Rimborsato ❌',legalBar:'La prestazione sul posto è fornita dal partner bar. La formulazione segue la distinzione della MWST-Info 04 svizzera e degli art. 20 e 20a LIVA.',legalDiscount:'Questo voucher sconto forfettario è un prodotto di BarSclusive. Al momento del riscatto il partner bar applica lo sconto descritto sul posto.',fShop:'Shop',fAbout:'Chi siamo',fContact:'Contatto'},
+  fr:{title:'Bon BarSclusive',headerTitle:'🎫 Votre bon',lDeal:'Offre',lMin:'Commande minimum',lApplies:'Valable pour',lPaid:'Payé',lMwst:'TVA',lStatus:'Statut',hint:'Montre ce code au bar',loading:'Chargement du bon...',notFound:'Bon non trouvé',errorNoCode:'Aucun code de bon indiqué.',errorConn:'Erreur de connexion. Réessaie.',backShop:'← Retour à la boutique',infoText:'💡 Montrez ce bon au personnel du bar. Le code peut être scanné ou saisi manuellement.',shareNative:'📱 Partager',shareCopy:'📋 Copier le lien',shareWhatsapp:'💬 WhatsApp',shareFacebook:'📘 Facebook',shareTelegram:'✈️ Telegram',shareInstagram:'📸 Instagram',shareTikTok:'🎵 TikTok',toastCopied:'Lien copié !',toastInstagram:'Lien copié – colle-le dans Instagram !',toastTiktok:'Lien copié – colle-le dans TikTok !',appliesAll:'Tout',appliesDrinks:'Boissons uniquement',appliesFood:'Nourriture uniquement',statusIssued:'Valide ✅',statusSent:'Valide ✅',statusRedeemed:'Utilisé ⚠️',statusExpired:'Expiré ❌',statusRefunded:'Remboursé ❌',legalBar:'La prestation sur place est fournie par le bar partenaire. La formulation suit la distinction de l’Info TVA 04 suisse ainsi que les art. 20 et 20a LTVA.',legalDiscount:'Ce bon de réduction forfaitaire est un produit de BarSclusive. Lors de l’utilisation, le bar partenaire accorde la réduction décrite sur place.',fShop:'Shop',fAbout:'À propos',fContact:'Contact'}
+};
+function tt(k){ return (T[currentLang] && T[currentLang][k]) || T.de[k] || k; }
+function setLang(l){
+  currentLang = l;
+  localStorage.setItem('barsclusive_lang', l);
+  document.title = tt('title');
+  document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active');});
+  var btn = document.getElementById('lang' + l.charAt(0).toUpperCase() + l.slice(1));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ var k = el.getAttribute('data-i18n'); if (tt(k)) el.innerHTML = tt(k); });
+  document.getElementById('fShop').textContent = tt('fShop');
+  document.getElementById('fAbout').textContent = tt('fAbout');
+  document.getElementById('fContact').textContent = tt('fContact');
+  if (currentVoucher) renderVoucher(currentVoucher);
+}
+function showError(msgKey, raw){
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('voucherCard').style.display = 'none';
+  document.getElementById('errorState').style.display = 'block';
+  document.getElementById('errorMsg').textContent = raw ? msgKey : tt(msgKey);
+}
+function getAppliesLabel(val){
+  if (val === 'drinks') return tt('appliesDrinks');
+  if (val === 'food') return tt('appliesFood');
+  return tt('appliesAll');
+}
+function getStatusLabel(status){
+  return tt('status' + String(status || '').charAt(0).toUpperCase() + String(status || '').slice(1)) || status;
+}
+function getStatusClass(status){
+  return status === 'redeemed' ? 'status-redeemed' : status === 'expired' ? 'status-expired' : status === 'refunded' ? 'status-refunded' : 'status-valid';
+}
+function renderVoucher(v){
+  currentVoucher = v;
+  document.getElementById('vBarName').textContent = v.bar_name || '';
+  document.getElementById('vDealTitle').textContent = v.deal_title || '';
+  document.getElementById('vPrice').textContent = Number(v.price_paid || 0).toFixed(2) + ' CHF';
+  document.getElementById('vCode').textContent = v.code || '';
+  document.getElementById('voucherInfo').textContent = tt('infoText');
+  var isDiscountProduct = Number(v.discount_percent || 0) > 0 || Number(v.price_paid || 0) <= 2.50;
+  document.getElementById('voucherLegal').textContent = isDiscountProduct ? tt('legalDiscount') : tt('legalBar');
 
-const APPLIES_MAP = { all:'Alles', drinks:'Nur Getränke', food:'Nur Essen' };
-const STATUS_MAP  = { issued:'Gültig ✅', sent:'Gültig ✅', redeemed:'Eingelöst ⚠️', expired:'Abgelaufen ❌' };
-const STATUS_CLASS = { issued:'status-valid', sent:'status-valid', redeemed:'status-redeemed', expired:'status-expired' };
+  var mwstWrap = document.getElementById('vMwstWrap');
+  mwstWrap.style.display = 'none';
+  if (v.bar_mwst_liable && v.bar_mwst_number && Number(v.price_paid || 0) > 2.50) {
+    var mwstRate = 8.1;
+    var mwstAmount = (Number(v.price_paid || 0) * mwstRate / (100 + mwstRate));
+    mwstWrap.style.display = 'block';
+    document.getElementById('vMwst').textContent = 'inkl. ' + mwstRate + '% ' + tt('lMwst') + ' (CHF ' + mwstAmount.toFixed(2) + ') · UID: ' + v.bar_mwst_number;
+  }
 
+  var statusEl = document.getElementById('vStatus');
+  statusEl.textContent = getStatusLabel(v.status);
+  statusEl.className = 'value ' + getStatusClass(v.status);
+
+  var discountWrap = document.getElementById('vDiscountBadge');
+  discountWrap.style.display = 'none';
+  if (Number(v.discount_percent || 0) > 0) {
+    discountWrap.style.display = 'block';
+    document.getElementById('vDiscount').textContent = '-' + Number(v.discount_percent) + '%';
+  }
+
+  var minWrap = document.getElementById('vMinOrderWrap');
+  minWrap.style.display = 'none';
+  if (Number(v.min_order || 0) > 0) {
+    minWrap.style.display = 'block';
+    document.getElementById('vMinOrder').textContent = Number(v.min_order).toFixed(2) + ' CHF';
+  }
+
+  var appliesWrap = document.getElementById('vAppliesToWrap');
+  appliesWrap.style.display = 'none';
+  if (v.applies_to && v.applies_to !== 'all') {
+    appliesWrap.style.display = 'block';
+    document.getElementById('vAppliesTo').textContent = getAppliesLabel(v.applies_to);
+  }
+
+  var qrEl = document.getElementById('qrCode');
+  qrEl.innerHTML = '';
+  try {
+    var redeemUrl = window.location.href.replace(/voucher\.html.*/, 'redeem.html?code=' + encodeURIComponent(v.code || ''));
+    new QRCode(qrEl, { text: redeemUrl, width: 180, height: 180, colorDark: '#FF3366', colorLight: '#0a0a0a' });
+  } catch(e) { qrEl.textContent = ''; }
+
+  buildShareButtons();
+}
 async function loadVoucher() {
   const params = new URLSearchParams(window.location.search);
   const code = params.get('code') || params.get('v');
-  if (!code) { showError('Kein Gutschein-Code angegeben.'); return; }
-
+  if (!code) { showError('errorNoCode'); return; }
   try {
     const resp = await fetch(BACKEND_URL + '?action=getVoucherByCode&code=' + encodeURIComponent(code));
     const data = await resp.json();
-
     if (!data.success || !data.voucher) {
-      showError(data.error || 'Gutschein nicht gefunden.');
+      showError(data.error || tt('notFound'), !!data.error);
       return;
     }
-
-    const v = data.voucher;
-
-    document.getElementById('vBarName').textContent = v.bar_name;
-    document.getElementById('vDealTitle').textContent = v.deal_title;
-    document.getElementById('vPrice').textContent = Number(v.price_paid).toFixed(2) + ' CHF';
-    document.getElementById('vCode').textContent = v.code;
-
-    // MWST info (if bar is MWST-pflichtig and not a Pauschalgutschein)
-    if (v.bar_mwst_liable && v.bar_mwst_number && Number(v.price_paid) > 2.50) {
-      var mwstRate = 8.1;
-      var mwstAmount = (Number(v.price_paid) * mwstRate / (100 + mwstRate));
-      document.getElementById('vMwstWrap').style.display = 'block';
-      document.getElementById('vMwst').textContent = 'inkl. ' + mwstRate + '% MWST (CHF ' + mwstAmount.toFixed(2) + ') · UID: ' + v.bar_mwst_number;
-    }
-
-    const statusEl = document.getElementById('vStatus');
-    statusEl.textContent = STATUS_MAP[v.status] || v.status;
-    statusEl.className = 'value ' + (STATUS_CLASS[v.status] || '');
-
-    // Pauschalgutschein info
-    if (v.discount_percent > 0) {
-      document.getElementById('vDiscountBadge').style.display = 'block';
-      document.getElementById('vDiscount').textContent = '-' + v.discount_percent + '%';
-    }
-    if (v.min_order > 0) {
-      document.getElementById('vMinOrderWrap').style.display = 'block';
-      document.getElementById('vMinOrder').textContent = v.min_order + ' CHF';
-    }
-    if (v.applies_to && v.applies_to !== 'all') {
-      document.getElementById('vAppliesToWrap').style.display = 'block';
-      document.getElementById('vAppliesTo').textContent = APPLIES_MAP[v.applies_to] || v.applies_to;
-    }
-
-    // QR Code - links to redeem page for bars to scan
-    try {
-      var redeemUrl = window.location.href.replace(/voucher\.html.*/, 'redeem.html?code=' + v.code);
-      new QRCode(document.getElementById('qrCode'), {
-        text: redeemUrl,
-        width: 180, height: 180,
-        colorDark: '#FF3366', colorLight: '#0a0a0a'
-      });
-    } catch(e) {
-      document.getElementById('qrCode').textContent = '';
-    }
-
+    renderVoucher(data.voucher);
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('voucherCard').style.display = 'block';
-
-    // Build share buttons dynamically
-    buildShareButtons();
-
   } catch (e) {
-    showError('Verbindungsfehler. Bitte erneut versuchen.');
+    showError('errorConn');
   }
 }
-
-function showError(msg) {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('errorState').style.display = 'block';
-  document.getElementById('errorMsg').textContent = msg;
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 2500);
 }
-
 function copyVoucherLink() {
   var url = window.location.href;
-  navigator.clipboard.writeText(url).then(function() {
-    showToast('Link kopiert!');
-  }).catch(function() {
-    showToast('Link: ' + url);
-  });
+  navigator.clipboard.writeText(url).then(function() { showToast(tt('toastCopied')); }).catch(function() { showToast(url); });
 }
-
 function shareVoucher(platform) {
   var url = encodeURIComponent(window.location.href);
-  var title = document.getElementById('vDealTitle') ? document.getElementById('vDealTitle').textContent : 'BarSclusive Gutschein';
-  var bar = document.getElementById('vBarName') ? document.getElementById('vBarName').textContent : '';
-  var text = encodeURIComponent(title + (bar ? ' bei ' + bar : '') + ' - BarSclusive Gutschein');
+  var title = document.getElementById('vDealTitle').textContent || 'BarSclusive';
+  var bar = document.getElementById('vBarName').textContent || '';
+  var text = encodeURIComponent(title + (bar ? ' · ' + bar : ''));
   var link = '';
   if (platform === 'whatsapp') link = 'https://wa.me/?text=' + text + '%20' + url;
   else if (platform === 'telegram') link = 'https://t.me/share/url?url=' + url + '&text=' + text;
   else if (platform === 'facebook') link = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
   if (link) window.open(link, '_blank');
 }
-
-function showToast(msg) {
-  var t = document.createElement('div');
-  t.textContent = msg;
-  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999;animation:fadeIn .3s';
-  document.body.appendChild(t);
-  setTimeout(function() { t.remove(); }, 2500);
-}
-
 function buildShareButtons() {
   var row = document.getElementById('shareRow');
-  if (!row) return;
   row.innerHTML = '';
   var btnStyle = 'padding:8px 16px;border-radius:20px;border:1px solid #3a3a3a;background:#2a2a2a;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px';
   var items = [
-    ['📋 Link kopieren', function() { copyVoucherLink(); }],
-    ['💬 WhatsApp', function() { shareVoucher('whatsapp'); }],
-    ['📘 Facebook', function() { shareVoucher('facebook'); }],
-    ['✈️ Telegram', function() { shareVoucher('telegram'); }],
-    ['📸 Instagram', function() { copyVoucherLink(); showToast('Link kopiert – in Instagram einfügen!'); }],
-    ['🎵 TikTok', function() { copyVoucherLink(); showToast('Link kopiert – in TikTok einfügen!'); }]
+    [tt('shareCopy'), function() { copyVoucherLink(); }],
+    [tt('shareWhatsapp'), function() { shareVoucher('whatsapp'); }],
+    [tt('shareFacebook'), function() { shareVoucher('facebook'); }],
+    [tt('shareTelegram'), function() { shareVoucher('telegram'); }],
+    [tt('shareInstagram'), function() { copyVoucherLink(); showToast(tt('toastInstagram')); }],
+    [tt('shareTikTok'), function() { copyVoucherLink(); showToast(tt('toastTiktok')); }]
   ];
   if (navigator.share) {
-    items.unshift(['📱 Teilen', function() {
-      var title = document.getElementById('vDealTitle') ? document.getElementById('vDealTitle').textContent : 'BarSclusive Gutschein';
-      navigator.share({ title: title, url: window.location.href }).catch(function() {});
+    items.unshift([tt('shareNative'), function() {
+      navigator.share({ title: document.getElementById('vDealTitle').textContent || 'BarSclusive', url: window.location.href }).catch(function(){});
     }]);
   }
   items.forEach(function(s) {
@@ -256,27 +285,19 @@ function buildShareButtons() {
     row.appendChild(btn);
   });
 }
-
+setLang(currentLang);
 loadVoucher();
-</script>
-<!-- FOOTER -->
-<div style="background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;font-size:13px;margin-top:auto;border-top:1px solid #333;width:100%;max-width:420px">
-  <p>&copy; 2026 BarSclusive</p>
-  <p style="margin-top:12px">
-    <a href="shop.html" style="color:#FF3366;text-decoration:none;margin:0 12px">Shop</a>
-    <a href="ueber-uns.html" style="color:#FF3366;text-decoration:none;margin:0 12px">&Uuml;ber uns</a>
-    <a href="kontakt.html" style="color:#FF3366;text-decoration:none;margin:0 12px">Kontakt</a>
-  </p>
-</div>
-<script>
-var _T={
-de:{lDeal:'Deal',lMin:'Mindestbestellung',lApplies:'Gilt für',lPaid:'Bezahlt',lMwst:'MWST',lStatus:'Status',hint:'Zeige diesen Code in der Bar vor',loading:'Gutschein wird geladen...',notFound:'Gutschein nicht gefunden',sLink:'Link kopieren'},
-en:{lDeal:'Deal',lMin:'Minimum order',lApplies:'Applies to',lPaid:'Paid',lMwst:'VAT',lStatus:'Status',hint:'Show this code at the bar',loading:'Loading voucher...',notFound:'Voucher not found',sLink:'Copy link'},
-it:{lDeal:'Offerta',lMin:'Ordine minimo',lApplies:'Valido per',lPaid:'Pagato',lMwst:'IVA',lStatus:'Stato',hint:'Mostra questo codice al bar',loading:'Caricamento voucher...',notFound:'Voucher non trovato',sLink:'Copia link'},
-fr:{lDeal:'Offre',lMin:'Commande minimum',lApplies:'Valable pour',lPaid:'Payé',lMwst:'TVA',lStatus:'Statut',hint:'Montre ce code au bar',loading:'Chargement du bon...',notFound:'Bon non trouvé',sLink:'Copier le lien'}
-};
-function setLang(l){localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=_T[l]||_T.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
-(function(){setLang(localStorage.getItem('barsclusive_lang')||'de')})();
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
