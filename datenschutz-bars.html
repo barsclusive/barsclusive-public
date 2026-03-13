@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Datenschutz für Bars - BarSclusive</title>
+  <title>Datenschutzerklärung für Bars - BarSclusive</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -13,210 +13,117 @@
       line-height: 1.6;
       padding: 20px;
     }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #FF3366;
-    }
-    .logo img { height: 40px; }
-    .back-btn {
-      background: #333;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .back-btn:hover { background: #444; }
-    .content {
-      background: #2a2a2a;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    }
-    h1 {
-      color: #FF3366;
-      margin-bottom: 10px;
-      font-size: 32px;
-    }
-    .subtitle {
-      color: #999;
-      margin-bottom: 30px;
-      font-size: 14px;
-    }
-    h2 {
-      color: #FF3366;
-      margin-top: 40px;
-      margin-bottom: 15px;
-      font-size: 24px;
-    }
-    h3 {
-      color: #FF5588;
-      margin-top: 25px;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-    p {
-      margin-bottom: 15px;
-      color: #ddd;
-    }
-    ul {
-      margin-left: 25px;
-      margin-bottom: 15px;
-      color: #ddd;
-    }
-    li { margin-bottom: 8px; }
-    strong { color: #fff; }
-    a { color: #FF3366; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .section { margin-bottom: 30px; }
-  </style>
+    .container { max-width: 980px; margin: 0 auto; padding: 40px 20px; }
+    .header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:30px; padding-bottom:20px; border-bottom:2px solid #FF3366; flex-wrap:wrap; }
+    .logo-wrap { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+    .logo img { height:42px; }
+    .lang-switch { display:flex; gap:8px; flex-wrap:wrap; }
+    .lang-btn { background:#333; color:#fff; border:1px solid #444; border-radius:8px; padding:8px 12px; cursor:pointer; font-size:12px; font-weight:700; }
+    .lang-btn.active { background:#FF3366; border-color:#FF3366; }
+    .back-btn { background:#333; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; text-decoration:none; display:inline-block; }
+    .back-btn:hover { background:#444; }
+    .content { background:#2a2a2a; padding:40px; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.3); }
+    h1 { color:#FF3366; margin-bottom:10px; font-size:32px; }
+    .subtitle { color:#999; margin-bottom:30px; font-size:14px; }
+    h2 { color:#FF3366; margin-top:40px; margin-bottom:15px; font-size:24px; }
+    h3 { color:#FF5588; margin-top:25px; margin-bottom:12px; font-size:18px; }
+    p { margin-bottom:15px; color:#ddd; }
+    ul, ol { margin-left:25px; margin-bottom:15px; color:#ddd; }
+    li { margin-bottom:8px; }
+    strong { color:#fff; }
+    a { color:#FF3366; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .section { margin-bottom:30px; }
+    .highlight { background:#1a1a1a; padding:20px; border-radius:8px; border-left:4px solid #FF3366; margin:20px 0; }
+    .highlight strong { color:#FF3366; }
+    .footer { text-align:center; padding:30px; color:#666; font-size:13px; border-top:1px solid #333; margin-top:40px; }
+    @media(max-width:768px){ body { padding:12px; } .container { padding:24px 8px; } .content { padding:24px 18px; } h1 { font-size:28px; } h2 { font-size:22px; } .header { align-items:flex-start; } }
+</style>
   <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">
-        <img src="logo.png" alt="BarSclusive">
+      <div class="logo-wrap">
+        <div class="logo"><img src="logo.png" alt="BarSclusive"></div>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="de">DE</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="it">IT</button>
+          <button class="lang-btn" data-lang="fr">FR</button>
+        </div>
       </div>
-      <a href="bar-portal.html" class="back-btn">← Zurück zum Portal</a>
+      <a href="bar-portal.html" class="back-btn" id="backBtn">← Zurück zum Portal</a>
     </div>
-
     <div class="content">
-      <h1>Datenschutzerklärung für Bars</h1>
-      <p class="subtitle">BarSclusive | Stand: März 2026</p>
-
-      <div class="section">
-        <h2>1. Verantwortliche Stelle</h2>
-        <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a><br>
-        Basel, Schweiz</p>
-      </div>
-
-      <div class="section">
-        <h2>2. Welche Daten wir bearbeiten</h2>
-
-        <h3>2.1 Bei Registrierung und im Profil</h3>
-        <ul>
-          <li>Bar-Name</li>
-          <li>Adresse</li>
-          <li>PLZ</li>
-          <li>Stadt</li>
-          <li>Land, sofern vorgesehen</li>
-          <li>Email-Adresse</li>
-          <li>Telefonnummer, sofern angegeben</li>
-          <li>Passwort in verschlüsselter Form</li>
-          <li>IBAN oder weitere Auszahlungsdaten, sofern erfasst</li>
-          <li>MWST-pflichtig: Ja oder Nein</li>
-          <li>falls MWST-pflichtig: MWST-Nummer</li>
-          <li>Standortdaten wie latitude und longitude, soweit diese für Standort- und Distanzfunktionen verwendet werden</li>
-        </ul>
-
-        <h3>2.2 Bei Deal-Erstellung und Verwaltung</h3>
-        <ul>
-          <li>Deal-Titel</li>
-          <li>Beschreibung</li>
-          <li>Preise</li>
-          <li>Bilder</li>
-          <li>Gültigkeitsdaten</li>
-          <li>Status von Deals</li>
-          <li>Einlösungsdaten</li>
-          <li>Gutscheinzuordnungen</li>
-        </ul>
-
-        <h3>2.3 Technische Daten</h3>
-        <ul>
-          <li>Login-Daten</li>
-          <li>Session-Daten</li>
-          <li>technische Zugriffsdaten</li>
-          <li>sicherheitsrelevante Protokolldaten, soweit dies für Betrieb und Schutz der Plattform erforderlich ist</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>3. Zweck der Datenbearbeitung</h2>
-        <ul>
-          <li>Registrierung und Verwaltung von Partnerbars</li>
-          <li>Freischaltung und Betrieb des Bar-Portals</li>
-          <li>Erstellung und Veröffentlichung von Deals</li>
-          <li>Verwaltung von Gutscheinen und Einlösungen</li>
-          <li>Abwicklung von Auszahlungen bei eingelösten Fix-Preis-Deals</li>
-          <li>Erstellung von Belegen und Abrechnungen</li>
-          <li>Berücksichtigung des MWST-Status der Bar in der Beleglogik</li>
-          <li>Darstellung von Bars und Deals in Such-, Karten- oder Distanzfunktionen</li>
-          <li>Support, Sicherheit und Missbrauchsprävention</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>4. MWST-Status der Bar</h2>
-        <p>Der von der Partnerbar angegebene MWST-Status sowie eine allfällige MWST-Nummer werden bearbeitet, damit Belege, Rechnungsangaben und interne Abrechnungslogik korrekt ausgestaltet werden können.</p>
-        <p>Ist eine Partnerbar nicht MWST-pflichtig, wird dies entsprechend im System berücksichtigt.</p>
-      </div>
-
-      <div class="section">
-        <h2>5. Standortdaten der Bar</h2>
-        <p>Adress- und Standortdaten der Bar können verwendet werden, um die Bar und ihre Deals auf der Plattform anzuzeigen, Suchergebnisse zu verbessern und Distanz- oder Kartenfunktionen bereitzustellen.</p>
-        <p>Soweit im System vorgesehen, können aus einer eingegebenen Adresse auch technische Standortangaben wie latitude und longitude gespeichert werden.</p>
-      </div>
-
-      <div class="section">
-        <h2>6. Weitergabe von Daten</h2>
-        <p>Wir geben Daten nur weiter, soweit dies für den Betrieb der Plattform, die Zahlungsabwicklung, technische Bereitstellung oder Kommunikation erforderlich ist.</p>
-        <p>Wir verkaufen keine Daten und geben sie nicht zu eigenen Werbezwecken an Dritte weiter.</p>
-      </div>
-
-      <div class="section">
-        <h2>7. Speicherdauer</h2>
-        <p>Wir speichern Daten von Partnerbars nur so lange, wie dies für die Nutzung der Plattform, Auszahlungen, Abrechnungen, Sicherheit oder gesetzliche Pflichten erforderlich ist.</p>
-      </div>
-
-      <div class="section">
-        <h2>8. Datensicherheit</h2>
-        <p>Wir treffen angemessene technische und organisatorische Massnahmen zum Schutz der bearbeiteten Daten.</p>
-        <ul>
-          <li>Zugriffsbeschränkungen</li>
-          <li>verschlüsselte Passwortspeicherung</li>
-          <li>Session-Verwaltung</li>
-          <li>Sicherheitsmassnahmen im Rahmen des verwendeten Setups</li>
-          <li>Zwei-Faktor-Authentisierung bei genutzten Konten, soweit aktiviert</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>9. Rechte</h2>
-        <p>Im Rahmen des anwendbaren Rechts können Partnerbars insbesondere Auskunft, Berichtigung oder Löschung ihrer Daten verlangen.</p>
-        <p>Anfragen können an <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a> gerichtet werden.</p>
-      </div>
-
-      <div class="section">
-        <h2>10. Änderungen</h2>
-        <p>Wir können diese Datenschutzerklärung jederzeit anpassen. Massgebend ist die jeweils veröffentlichte Fassung.</p>
-      </div>
-
-      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
-        <h2>Kontakt</h2>
-        <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
-        <p style="margin-top:20px; color:#999; font-size:14px;">
-          Stand: März 2026 | BarSclusive, Basel, Schweiz
-        </p>
-      </div>
+      <h1 id="pageTitle"></h1>
+      <p class="subtitle" id="pageSubtitle"></p>
+      <div id="pageContent"></div>
     </div>
   </div>
-
-  <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
-    <p>&copy; 2026 BarSclusive</p>
-  </div>
+  <div class="footer" id="pageFooter"></div>
+  <script>
+    const PAGE_TRANSLATIONS = {
+  "de": {
+    "browserTitle": "Datenschutzerklärung für Bars - BarSclusive",
+    "title": "Datenschutzerklärung für Bars",
+    "subtitle": "BarSclusive | Stand: März 2026",
+    "back": "← Zurück zum Portal",
+    "footerLinks": "<a href=\"bar-portal.html\">Bar-Portal</a> · <a href=\"agb-bars.html\">AGB Bars</a> · <a href=\"kontakt.html\">Kontakt</a>",
+    "html": "<div class=\"section\">\n<h2>1. Verantwortliche Stelle</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Basel, Schweiz</p>\n</div>\n<div class=\"section\">\n<h2>2. Welche Daten wir bearbeiten</h2>\n<ul>\n<li>Bar-Name, Adresse, PLZ, Stadt, Email-Adresse und Passwort in verschlüsselter Form</li>\n<li>IBAN oder weitere Auszahlungsdaten, MWST-Status, MWST-Nummer</li>\n<li>Standortdaten wie latitude und longitude, soweit diese für Standort- und Distanzfunktionen verwendet werden</li>\n<li>Deal-Titel, Beschreibung, Preise, Bilder, Gültigkeitsdaten, Deal-Status, Einlösungsdaten und Gutscheinzuordnungen</li>\n<li>Login-Daten, Session-Daten und technische Zugriffsdaten</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>3. Zweck der Datenbearbeitung</h2>\n<ul>\n<li>Registrierung und Verwaltung von Partnerbars</li>\n<li>Freischaltung und Betrieb des Bar-Portals</li>\n<li>Erstellung und Veröffentlichung von Deals</li>\n<li>Verwaltung von Gutscheinen und Einlösungen</li>\n<li>Abwicklung von Auszahlungen bei eingelösten Fix-Preis-Deals</li>\n<li>Erstellung von Belegen und Abrechnungen</li>\n<li>Berücksichtigung des MWST-Status der Bar in der Beleglogik</li>\n<li>Darstellung von Bars und Deals in Such-, Karten- oder Distanzfunktionen</li>\n<li>Support, Sicherheit und Missbrauchsprävention</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. MWST-Status der Bar</h2>\n<p>Der von der Partnerbar angegebene MWST-Status sowie eine allfällige MWST-Nummer werden bearbeitet, damit Belege, Rechnungsangaben und interne Abrechnungslogik korrekt ausgestaltet werden können. Ist eine Partnerbar nicht MWST-pflichtig, wird dies entsprechend im System berücksichtigt.</p>\n</div>\n<div class=\"section\">\n<h2>5. Standortdaten der Bar</h2>\n<p>Adress- und Standortdaten der Bar können verwendet werden, um die Bar und ihre Deals auf der Plattform anzuzeigen, Suchergebnisse zu verbessern und Distanz- oder Kartenfunktionen bereitzustellen. Soweit im System vorgesehen, können aus einer eingegebenen Adresse auch technische Standortangaben gespeichert werden.</p>\n</div>\n<div class=\"section\">\n<h2>6. Weitergabe von Daten</h2>\n<p>Wir geben Daten nur weiter, soweit dies für den Betrieb der Plattform, die Zahlungsabwicklung, technische Bereitstellung oder Kommunikation erforderlich ist. Wir verkaufen keine Daten und geben sie nicht zu eigenen Werbezwecken an Dritte weiter.</p>\n</div>\n<div class=\"section\">\n<h2>7. Speicherdauer</h2>\n<p>Wir speichern Daten von Partnerbars nur so lange, wie dies für die Nutzung der Plattform, Auszahlungen, Abrechnungen, Sicherheit oder gesetzliche Pflichten erforderlich ist.</p>\n</div>\n<div class=\"section\">\n<h2>8. Datensicherheit</h2>\n<ul>\n<li>Zugriffsbeschränkungen</li>\n<li>verschlüsselte Passwortspeicherung</li>\n<li>Session-Verwaltung</li>\n<li>Sicherheitsmassnahmen im Rahmen des verwendeten Setups</li>\n<li>Zwei-Faktor-Authentisierung bei genutzten Konten, soweit aktiviert</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>9. Rechte</h2>\n<p>Im Rahmen des anwendbaren Rechts können Partnerbars insbesondere Auskunft, Berichtigung oder Löschung ihrer Daten verlangen. Anfragen können an <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a> gerichtet werden.</p>\n</div>\n<div class=\"section\">\n<h2>10. Änderungen</h2>\n<p>Wir können diese Datenschutzerklärung jederzeit anpassen. Massgebend ist die jeweils veröffentlichte Fassung.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Kontakt</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Stand: März 2026 | BarSclusive, Basel, Schweiz</p>\n</div>"
+  },
+  "en": {
+    "browserTitle": "Privacy policy for bars - BarSclusive",
+    "title": "Privacy policy for bars",
+    "subtitle": "BarSclusive | Version: March 2026",
+    "back": "← Back to portal",
+    "footerLinks": "<a href=\"bar-portal.html\">Bar portal</a> · <a href=\"agb-bars.html\">Terms for bars</a> · <a href=\"kontakt.html\">Contact</a>",
+    "html": "<div class=\"section\">\n<h2>1. Controller</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Basel, Switzerland</p>\n</div>\n<div class=\"section\">\n<h2>2. What data we process</h2>\n<ul>\n<li>Bar name, address, ZIP code, city, email address and encrypted password</li>\n<li>IBAN or other payout data, VAT status and VAT number</li>\n<li>Location data such as latitude and longitude insofar as they are used for location and distance functions</li>\n<li>Deal title, description, prices, images, validity data, deal status, redemption data and voucher allocations</li>\n<li>Login data, session data and technical access data</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>3. Purpose of processing</h2>\n<ul>\n<li>Registration and management of partner bars</li>\n<li>Activation and operation of the bar portal</li>\n<li>Creation and publication of deals</li>\n<li>Management of vouchers and redemptions</li>\n<li>Handling payouts for redeemed fixed-price deals</li>\n<li>Creation of receipts and statements</li>\n<li>Considering the bar’s VAT status in the receipt logic</li>\n<li>Displaying bars and deals in search, map or distance functions</li>\n<li>Support, security and fraud prevention</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. VAT status of the bar</h2>\n<p>The VAT status provided by the partner bar and any VAT number are processed so that receipts, invoice details and internal settlement logic can be structured correctly. If a partner bar is not liable for VAT, this is taken into account accordingly in the system.</p>\n</div>\n<div class=\"section\">\n<h2>5. Location data of the bar</h2>\n<p>The bar’s address and location data may be used to display the bar and its deals on the platform, improve search results and provide distance or map functions. Where provided by the system, technical location data may also be stored based on an entered address.</p>\n</div>\n<div class=\"section\">\n<h2>6. Disclosure of data</h2>\n<p>We disclose data only where this is necessary for operating the platform, payment processing, technical provision or communication. We do not sell data and do not disclose it to third parties for their own advertising purposes.</p>\n</div>\n<div class=\"section\">\n<h2>7. Storage period</h2>\n<p>We store partner bar data only as long as required for using the platform, payouts, statements, security or legal obligations.</p>\n</div>\n<div class=\"section\">\n<h2>8. Data security</h2>\n<ul>\n<li>Access restrictions</li>\n<li>Encrypted password storage</li>\n<li>Session management</li>\n<li>Security measures within the chosen setup</li>\n<li>Two-factor authentication for accounts where activated</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>9. Rights</h2>\n<p>Within the scope of applicable law, partner bars may request information, rectification or deletion of their data. Requests may be sent to <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>.</p>\n</div>\n<div class=\"section\">\n<h2>10. Changes</h2>\n<p>We may amend this privacy policy at any time. The published version in force is decisive.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Contact</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Version: March 2026 | BarSclusive, Basel, Switzerland</p>\n</div>"
+  },
+  "it": {
+    "browserTitle": "Informativa privacy per bar - BarSclusive",
+    "title": "Informativa privacy per bar",
+    "subtitle": "BarSclusive | Versione: marzo 2026",
+    "back": "← Torna al portale",
+    "footerLinks": "<a href=\"bar-portal.html\">Portale bar</a> · <a href=\"agb-bars.html\">Condizioni per bar</a> · <a href=\"kontakt.html\">Contatto</a>",
+    "html": "<div class=\"section\">\n<h2>1. Titolare del trattamento</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Basilea, Svizzera</p>\n</div>\n<div class=\"section\">\n<h2>2. Quali dati trattiamo</h2>\n<ul>\n<li>Nome del bar, indirizzo, CAP, città, email e password in forma criptata</li>\n<li>IBAN o altri dati di pagamento, status IVA e numero IVA</li>\n<li>Dati di posizione come latitude e longitude se utilizzati per funzioni di posizione e distanza</li>\n<li>Titolo del deal, descrizione, prezzi, immagini, dati di validità, stato dei deal, dati di riscatto e assegnazioni dei voucher</li>\n<li>Dati di login, dati di sessione e dati tecnici di accesso</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>3. Finalità del trattamento</h2>\n<ul>\n<li>Registrazione e gestione dei bar partner</li>\n<li>Attivazione e funzionamento del portale bar</li>\n<li>Creazione e pubblicazione dei deal</li>\n<li>Gestione di voucher e riscatti</li>\n<li>Gestione dei pagamenti per deal a prezzo fisso riscattati</li>\n<li>Creazione di giustificativi e conteggi</li>\n<li>Considerazione dello status IVA del bar nella logica dei giustificativi</li>\n<li>Rappresentazione di bar e deal nelle funzioni di ricerca, mappa o distanza</li>\n<li>Supporto, sicurezza e prevenzione degli abusi</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. Status IVA del bar</h2>\n<p>Lo status IVA indicato dal bar partner e un eventuale numero IVA vengono trattati per consentire una corretta impostazione di ricevute, dati di fatturazione e logica di conteggio interna. Se un bar partner non è soggetto a IVA, ciò viene considerato nel sistema.</p>\n</div>\n<div class=\"section\">\n<h2>5. Dati di posizione del bar</h2>\n<p>I dati di indirizzo e posizione del bar possono essere utilizzati per mostrare il bar e i suoi deal sulla piattaforma, migliorare i risultati di ricerca e fornire funzioni di distanza o di mappa. Se previsto dal sistema, a partire da un indirizzo inserito possono anche essere memorizzati dati tecnici di posizione.</p>\n</div>\n<div class=\"section\">\n<h2>6. Comunicazione dei dati</h2>\n<p>Comunichiamo dati soltanto nella misura necessaria per il funzionamento della piattaforma, la gestione dei pagamenti, la fornitura tecnica o la comunicazione. Non vendiamo dati e non li comunichiamo a terzi per loro finalità pubblicitarie.</p>\n</div>\n<div class=\"section\">\n<h2>7. Durata di conservazione</h2>\n<p>Conserviamo i dati dei bar partner soltanto per il tempo necessario all’uso della piattaforma, ai pagamenti, ai conteggi, alla sicurezza o agli obblighi legali.</p>\n</div>\n<div class=\"section\">\n<h2>8. Sicurezza dei dati</h2>\n<ul>\n<li>Limitazioni di accesso</li>\n<li>Conservazione cifrata delle password</li>\n<li>Gestione delle sessioni</li>\n<li>Misure di sicurezza nel setup utilizzato</li>\n<li>Autenticazione a due fattori per gli account, se attivata</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>9. Diritti</h2>\n<p>Nel quadro del diritto applicabile, i bar partner possono richiedere accesso, rettifica o cancellazione dei propri dati. Le richieste possono essere inviate a <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>.</p>\n</div>\n<div class=\"section\">\n<h2>10. Modifiche</h2>\n<p>Possiamo modificare in qualsiasi momento la presente informativa privacy. Fa stato la versione pubblicata di volta in volta.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Contatto</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Versione: marzo 2026 | BarSclusive, Basilea, Svizzera</p>\n</div>"
+  },
+  "fr": {
+    "browserTitle": "Politique de confidentialité pour les bars - BarSclusive",
+    "title": "Politique de confidentialité pour les bars",
+    "subtitle": "BarSclusive | Version : mars 2026",
+    "back": "← Retour au portail",
+    "footerLinks": "<a href=\"bar-portal.html\">Portail bars</a> · <a href=\"agb-bars.html\">Conditions bars</a> · <a href=\"kontakt.html\">Contact</a>",
+    "html": "<div class=\"section\">\n<h2>1. Responsable du traitement</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email : <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Bâle, Suisse</p>\n</div>\n<div class=\"section\">\n<h2>2. Quelles données nous traitons</h2>\n<ul>\n<li>Nom du bar, adresse, NPA, ville, email et mot de passe sous forme chiffrée</li>\n<li>IBAN ou autres données de versement, statut TVA et numéro TVA</li>\n<li>Données de localisation telles que latitude et longitude si elles sont utilisées pour les fonctions de localisation et de distance</li>\n<li>Titre du deal, description, prix, images, données de validité, statut des deals, données d’utilisation et attributions des bons</li>\n<li>Données de connexion, données de session et données techniques d’accès</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>3. Finalité du traitement</h2>\n<ul>\n<li>Inscription et gestion des bars partenaires</li>\n<li>Activation et exploitation du portail bars</li>\n<li>Création et publication de deals</li>\n<li>Gestion des bons et de leur utilisation</li>\n<li>Traitement des versements pour les deals à prix fixe utilisés</li>\n<li>Établissement de justificatifs et décomptes</li>\n<li>Prise en compte du statut TVA du bar dans la logique des justificatifs</li>\n<li>Présentation des bars et deals dans les fonctions de recherche, carte ou distance</li>\n<li>Support, sécurité et prévention des abus</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. Statut TVA du bar</h2>\n<p>Le statut TVA indiqué par le bar partenaire ainsi qu’un éventuel numéro TVA sont traités afin que les justificatifs, les données de facturation et la logique de décompte interne puissent être structurés correctement. Si un bar partenaire n’est pas assujetti à la TVA, cela est pris en compte dans le système.</p>\n</div>\n<div class=\"section\">\n<h2>5. Données de localisation du bar</h2>\n<p>Les données d’adresse et de localisation du bar peuvent être utilisées pour afficher le bar et ses deals sur la plateforme, améliorer les résultats de recherche et fournir des fonctions de distance ou de carte. Lorsque cela est prévu par le système, des données techniques de localisation peuvent également être enregistrées à partir d’une adresse saisie.</p>\n</div>\n<div class=\"section\">\n<h2>6. Transmission des données</h2>\n<p>Nous ne transmettons des données que dans la mesure nécessaire à l’exploitation de la plateforme, au traitement des paiements, à la mise à disposition technique ou à la communication. Nous ne vendons pas de données et ne les transmettons pas à des tiers pour leurs propres finalités publicitaires.</p>\n</div>\n<div class=\"section\">\n<h2>7. Durée de conservation</h2>\n<p>Nous conservons les données des bars partenaires uniquement aussi longtemps que nécessaire à l’utilisation de la plateforme, aux versements, aux décomptes, à la sécurité ou aux obligations légales.</p>\n</div>\n<div class=\"section\">\n<h2>8. Sécurité des données</h2>\n<ul>\n<li>Restrictions d’accès</li>\n<li>Stockage chiffré des mots de passe</li>\n<li>Gestion des sessions</li>\n<li>Mesures de sécurité dans le cadre du setup utilisé</li>\n<li>Authentification à deux facteurs pour les comptes lorsqu’elle est activée</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>9. Droits</h2>\n<p>Dans le cadre du droit applicable, les bars partenaires peuvent demander l’accès, la rectification ou la suppression de leurs données. Les demandes peuvent être adressées à <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>.</p>\n</div>\n<div class=\"section\">\n<h2>10. Modifications</h2>\n<p>Nous pouvons adapter la présente politique de confidentialité à tout moment. La version publiée fait foi.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Contact</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email : <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Version : mars 2026 | BarSclusive, Bâle, Suisse</p>\n</div>"
+  }
+};
+    const PAGE_STORAGE_KEY = "barsclusive_bar_lang";
+    const PAGE_STORAGE_FALLBACKS = ["barsclusive_bar_lang", "barsclusive_lang"];
+    function initialLang() {
+      const qs = new URLSearchParams(window.location.search);
+      const q = qs.get('lang');
+      if (q && PAGE_TRANSLATIONS[q]) return q;
+      for (const key of PAGE_STORAGE_FALLBACKS) {
+        try { const v = localStorage.getItem(key); if (v && PAGE_TRANSLATIONS[v]) return v; } catch (e) {}
+      }
+      return 'de';
+    }
+    function setPageLang(lang) {
+      const t = PAGE_TRANSLATIONS[lang] || PAGE_TRANSLATIONS.de;
+      document.documentElement.lang = lang;
+      document.title = t.browserTitle;
+      document.getElementById('pageTitle').textContent = t.title;
+      document.getElementById('pageSubtitle').textContent = t.subtitle;
+      document.getElementById('pageContent').innerHTML = t.html;
+      document.getElementById('backBtn').textContent = t.back;
+      document.getElementById('pageFooter').innerHTML = '<p>&copy; 2026 BarSclusive</p><p style="margin-top:8px">' + t.footerLinks + '</p>';
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+      try { localStorage.setItem(PAGE_STORAGE_KEY, lang); } catch (e) {}
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', function() { setPageLang(this.dataset.lang); }));
+      setPageLang(initialLang());
+    });
+  </script>
 </body>
 </html>
