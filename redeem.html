@@ -7,18 +7,18 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:#0a0a0a; color:#fff; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; }
-    .card { background:#1a1a1a; border-radius:20px; max-width:440px; width:100%; padding:32px; text-align:center; border:1px solid #2a2a2a; }
+    .card { background:#1a1a1a; border-radius:20px; max-width:460px; width:100%; padding:32px; text-align:center; border:1px solid #2a2a2a; }
     .icon { font-size:56px; margin-bottom:12px; }
     h1 { font-size:22px; margin-bottom:6px; }
     p { color:#999; font-size:14px; line-height:1.6; margin-bottom:12px; }
     .code { font-size:28px; font-weight:800; letter-spacing:4px; color:#FF3366; margin:16px 0; }
     .deal-info { background:#2a2a2a; border-radius:12px; padding:16px; margin:16px 0; text-align:left; }
-    .deal-info .row { display:flex; justify-content:space-between; padding:4px 0; color:#ccc; font-size:14px; }
+    .deal-info .row { display:flex; justify-content:space-between; gap:12px; padding:4px 0; color:#ccc; font-size:14px; }
     .deal-info .label { color:#999; }
-    .spinner { display:inline-block; width:40px; height:60px; border:3px solid #333; border-top-color:#FF3366; border-radius:50%; animation:spin .8s linear infinite; margin:20px 0; }
+    .spinner { display:inline-block; width:40px; height:40px; border:3px solid #333; border-top-color:#FF3366; border-radius:50%; animation:spin .8s linear infinite; margin:20px 0; }
     @keyframes spin { to { transform:rotate(360deg); } }
     .warn { background:#2a1a00; border:2px solid #f59e0b; border-radius:12px; padding:14px; margin:16px 0; }
-    .warn p { color:#fcd34d; margin:0; font-weight:600; font-size:15px; }
+    .warn p { color:#fcd34d; margin:0 0 6px 0; font-weight:600; font-size:15px; }
     .warn small { color:#d4a040; font-size:12px; }
     .swipe-track { position:relative; height:60px; background:#2a2a2a; border-radius:30px; margin:20px 0; overflow:hidden; touch-action:none; user-select:none; }
     .swipe-fill { position:absolute; left:0; top:0; height:100%; background:linear-gradient(90deg,#FF3366,#ff6b8a); border-radius:30px; width:0; transition:width .1s; }
@@ -31,54 +31,52 @@
     .already-box h2 { color:#f59e0b; font-size:20px; margin-bottom:4px; }
     .error-box { background:#2a0a0a; border:2px solid #ef4444; border-radius:12px; padding:20px; margin:16px 0; }
     .error-box h2 { color:#ef4444; margin-bottom:4px; }
-    .lang-switch{display:flex;gap:6px}
+    .lang-switch{display:flex;gap:6px;position:fixed;top:12px;right:12px;z-index:99}
     .lang-switch button{background:rgba(255,255,255,0.1);color:#ccc;border:none;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:11px}
     .lang-switch button.active{background:#FF3366;color:#fff}
+    .note{background:#111;border:1px solid #2e2e2e;border-radius:12px;padding:14px;color:#b9b9b9;font-size:12px;line-height:1.6;margin-top:16px}
   </style>
   <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
-  <div class="lang-switch" style="position:fixed;top:12px;right:12px;z-index:99">
-    <button onclick="setLang('de')" id="langDe" class="active">DE</button>
-    <button onclick="setLang('en')" id="langEn">EN</button>
-    <button onclick="setLang('it')" id="langIt">IT</button>
-    <button onclick="setLang('fr')" id="langFr">FR</button>
-  </div>
+<div class="lang-switch">
+  <button onclick="setLang('de')" id="langDe" class="active">DE</button>
+  <button onclick="setLang('en')" id="langEn">EN</button>
+  <button onclick="setLang('it')" id="langIt">IT</button>
+  <button onclick="setLang('fr')" id="langFr">FR</button>
+</div>
 
 <div class="card">
-  <!-- Loading -->
   <div id="stateLoading">
     <div class="icon">🔄</div>
     <h1 data-i18n="loading">Gutschein wird geladen...</h1>
     <div class="spinner"></div>
   </div>
 
-  <!-- Ready to redeem -->
   <div id="stateReady" style="display:none">
     <div class="icon">🎟️</div>
     <h1 data-i18n="redeemTitle">Gutschein einlösen</h1>
     <div class="code" id="readyCode"></div>
     <div class="deal-info" id="dealInfo"></div>
     <div class="warn">
-      <p>⚠️ Achtung: Nur einmal einlösbar!</p>
+      <p data-i18n="warnTitle">⚠️ Achtung: Nur einmal einlösbar!</p>
       <small data-i18n="redeemWarn">Nach dem Wischen ist der Gutschein verbraucht und kann nicht erneut verwendet werden.</small>
     </div>
     <div class="swipe-track" id="swipeTrack">
       <div class="swipe-fill" id="swipeFill"></div>
-      <div class="swipe-label">→ → Wischen zum Einlösen → →</div>
+      <div class="swipe-label" id="swipeLabel">→ → Wischen zum Einlösen → →</div>
       <div class="swipe-thumb" id="swipeThumb">🔓</div>
     </div>
     <p style="font-size:12px;color:#666" data-i18n="slideHint">Schiebe den Regler ganz nach rechts</p>
+    <div class="note" data-i18n="legalNote">Offene Gutscheine dürfen im Bar-Portal sichtbar sein, der Code wird aber erst bei diesem Einlöseprozess verwendet.</div>
   </div>
 
-  <!-- Redeeming -->
   <div id="stateRedeeming" style="display:none">
     <div class="icon">⏳</div>
     <h1 data-i18n="redeeming">Wird eingelöst...</h1>
     <div class="spinner"></div>
   </div>
 
-  <!-- Success -->
   <div id="stateSuccess" style="display:none">
     <div class="icon">✅</div>
     <div class="success-box">
@@ -89,7 +87,6 @@
     <div class="deal-info" id="successInfo"></div>
   </div>
 
-  <!-- Already redeemed -->
   <div id="stateAlready" style="display:none">
     <div class="icon">⚠️</div>
     <div class="already-box">
@@ -99,7 +96,6 @@
     <div class="code" id="alreadyCode"></div>
   </div>
 
-  <!-- Error -->
   <div id="stateError" style="display:none">
     <div class="icon">❌</div>
     <div class="error-box">
@@ -111,56 +107,71 @@
 
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
-var _code = '';
-
-async function loadVoucher() {
-  var params = new URLSearchParams(window.location.search);
-  _code = (params.get('code') || '').trim().toUpperCase();
-  if (!_code) { showError('Kein Gutschein-Code angegeben.'); return; }
-
-  try {
-    var resp = await fetch(BACKEND_URL + '?action=getVoucherByCode&code=' + encodeURIComponent(_code));
-    var data = await resp.json();
-    if (!data.success || !data.voucher) { showError(data.error || 'Gutschein nicht gefunden.'); return; }
-    var v = data.voucher;
-
-    if (v.status === 'redeemed') {
-      show('stateAlready');
-      document.getElementById('alreadyCode').textContent = v.code;
-      return;
-    }
-
-    document.getElementById('readyCode').textContent = v.code;
-    var info = '<div class="row"><span class="label">Deal</span><span>' + v.deal_title + '</span></div>'
-      + '<div class="row"><span class="label">Bar</span><span>' + v.bar_name + '</span></div>'
-      + '<div class="row"><span class="label">Bezahlt</span><span>' + Number(v.price_paid).toFixed(2) + ' CHF</span></div>';
-    if (v.discount_percent > 0) info += '<div class="row"><span class="label">Rabatt</span><span style="color:#FF3366;font-weight:700">' + v.discount_percent + '%</span></div>';
-    if (v.min_order > 0) info += '<div class="row"><span class="label">Mindestbestellung</span><span>' + v.min_order + ' CHF</span></div>';
-    document.getElementById('dealInfo').innerHTML = info;
-
-    show('stateReady');
-    initSwipe();
-  } catch(e) { showError('Verbindungsfehler.'); }
+let _code = '';
+let currentLang = localStorage.getItem('barsclusive_lang') || 'de';
+let voucherData = null;
+const T = {
+  de:{title:'Gutschein einlösen – BarSclusive',loading:'Gutschein wird geladen...',redeemTitle:'Gutschein einlösen',warnTitle:'⚠️ Achtung: Nur einmal einlösbar!',redeemWarn:'Nach dem Wischen ist der Gutschein verbraucht und kann nicht erneut verwendet werden.',slideHint:'Schiebe den Regler ganz nach rechts',redeeming:'Wird eingelöst...',successTitle:'Erfolgreich eingelöst!',successText:'Der Gutschein wurde soeben eingelöst.',alreadyTitle:'Bereits eingelöst',alreadyText:'Dieser Gutschein wurde bereits verwendet.',errorTitle:'Fehler',errorNoCode:'Kein Gutschein-Code angegeben.',errorNotFound:'Gutschein nicht gefunden.',errorConn:'Verbindungsfehler.',errorRedeem:'Einlösung fehlgeschlagen.',swipeLabel:'→ → Wischen zum Einlösen → →',legalNote:'Offene Gutscheine dürfen im Bar-Portal sichtbar sein, der Code wird aber erst bei diesem Einlöseprozess verwendet.',lDeal:'Deal',lBar:'Bar',lPaid:'Bezahlt',lDiscount:'Rabatt',lMin:'Mindestbestellung'},
+  en:{title:'Redeem voucher – BarSclusive',loading:'Loading voucher...',redeemTitle:'Redeem voucher',warnTitle:'⚠️ Warning: Redeemable only once!',redeemWarn:'After swiping, the voucher is consumed and cannot be used again.',slideHint:'Slide the control all the way to the right',redeeming:'Redeeming...',successTitle:'Successfully redeemed!',successText:'The voucher has just been redeemed.',alreadyTitle:'Already redeemed',alreadyText:'This voucher has already been used.',errorTitle:'Error',errorNoCode:'No voucher code provided.',errorNotFound:'Voucher not found.',errorConn:'Connection error.',errorRedeem:'Redemption failed.',swipeLabel:'→ → Slide to redeem → →',legalNote:'Open vouchers may be visible in the bar portal, but the actual code is only used during this redemption process.',lDeal:'Deal',lBar:'Bar',lPaid:'Paid',lDiscount:'Discount',lMin:'Minimum order'},
+  it:{title:'Riscatta voucher – BarSclusive',loading:'Caricamento voucher...',redeemTitle:'Riscatta voucher',warnTitle:'⚠️ Attenzione: utilizzabile una sola volta!',redeemWarn:'Dopo lo swipe il voucher è consumato e non può essere riutilizzato.',slideHint:'Sposta il cursore completamente a destra',redeeming:'Riscatto in corso...',successTitle:'Riscattato con successo!',successText:'Il voucher è stato appena riscattato.',alreadyTitle:'Già riscattato',alreadyText:'Questo voucher è già stato utilizzato.',errorTitle:'Errore',errorNoCode:'Nessun codice voucher indicato.',errorNotFound:'Voucher non trovato.',errorConn:'Errore di connessione.',errorRedeem:'Riscatto non riuscito.',swipeLabel:'→ → Scorri per riscattare → →',legalNote:'I voucher aperti possono essere visibili nel portale bar, ma il codice effettivo viene usato solo durante questo processo di riscatto.',lDeal:'Offerta',lBar:'Bar',lPaid:'Pagato',lDiscount:'Sconto',lMin:'Ordine minimo'},
+  fr:{title:'Utiliser le bon – BarSclusive',loading:'Chargement du bon...',redeemTitle:'Utiliser le bon',warnTitle:'⚠️ Attention : utilisable une seule fois !',redeemWarn:'Après le glissement, le bon est consommé et ne peut plus être réutilisé.',slideHint:'Glissez le curseur complètement vers la droite',redeeming:'Utilisation en cours...',successTitle:'Utilisé avec succès !',successText:'Le bon vient d’être utilisé.',alreadyTitle:'Déjà utilisé',alreadyText:'Ce bon a déjà été utilisé.',errorTitle:'Erreur',errorNoCode:'Aucun code de bon indiqué.',errorNotFound:'Bon non trouvé.',errorConn:'Erreur de connexion.',errorRedeem:'Échec de l’utilisation.',swipeLabel:'→ → Glisser pour utiliser → →',legalNote:'Les bons ouverts peuvent être visibles dans le portail bar, mais le code effectif n’est utilisé que pendant ce processus d’utilisation.',lDeal:'Offre',lBar:'Bar',lPaid:'Payé',lDiscount:'Réduction',lMin:'Commande minimum'}
+};
+function tt(k){ return (T[currentLang] && T[currentLang][k]) || T.de[k] || k; }
+function setLang(l){
+  currentLang = l;
+  localStorage.setItem('barsclusive_lang', l);
+  document.title = tt('title');
+  document.querySelectorAll('.lang-switch button').forEach(function(b){ b.classList.remove('active'); });
+  var btn = document.getElementById('lang' + l.charAt(0).toUpperCase() + l.slice(1));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ var k = el.getAttribute('data-i18n'); if (tt(k)) el.innerHTML = tt(k); });
+  document.getElementById('swipeLabel').textContent = tt('swipeLabel');
+  if (voucherData && document.getElementById('stateReady').style.display !== 'none') renderInfo(voucherData, 'dealInfo');
+  if (voucherData && document.getElementById('stateSuccess').style.display !== 'none') renderInfo(voucherData, 'successInfo');
 }
-
 function show(id) {
   ['stateLoading','stateReady','stateRedeeming','stateSuccess','stateAlready','stateError'].forEach(function(s) {
     document.getElementById(s).style.display = s === id ? 'block' : 'none';
   });
 }
-
-function showError(msg) {
+function showError(msgKey, raw) {
   show('stateError');
-  document.getElementById('errorMsg').textContent = msg;
+  document.getElementById('errorMsg').textContent = raw ? msgKey : tt(msgKey);
 }
-
+function renderInfo(v, targetId){
+  document.getElementById(targetId).innerHTML = ''
+    + '<div class="row"><span class="label">' + tt('lDeal') + '</span><span>' + (v.deal_title || '') + '</span></div>'
+    + '<div class="row"><span class="label">' + tt('lBar') + '</span><span>' + (v.bar_name || '') + '</span></div>'
+    + '<div class="row"><span class="label">' + tt('lPaid') + '</span><span>' + Number(v.price_paid || 0).toFixed(2) + ' CHF</span></div>'
+    + (Number(v.discount_percent || 0) > 0 ? '<div class="row"><span class="label">' + tt('lDiscount') + '</span><span style="color:#FF3366;font-weight:700">' + Number(v.discount_percent) + '%</span></div>' : '')
+    + (Number(v.min_order || 0) > 0 ? '<div class="row"><span class="label">' + tt('lMin') + '</span><span>' + Number(v.min_order).toFixed(2) + ' CHF</span></div>' : '');
+}
+async function loadVoucher() {
+  var params = new URLSearchParams(window.location.search);
+  _code = (params.get('code') || '').trim().toUpperCase();
+  if (!_code) { showError('errorNoCode'); return; }
+  try {
+    var resp = await fetch(BACKEND_URL + '?action=getVoucherByCode&code=' + encodeURIComponent(_code));
+    var data = await resp.json();
+    if (!data.success || !data.voucher) { showError(data.error || tt('errorNotFound'), !!data.error); return; }
+    voucherData = data.voucher;
+    if (voucherData.status === 'redeemed') {
+      show('stateAlready');
+      document.getElementById('alreadyCode').textContent = voucherData.code || _code;
+      return;
+    }
+    document.getElementById('readyCode').textContent = voucherData.code || _code;
+    renderInfo(voucherData, 'dealInfo');
+    show('stateReady');
+    initSwipe();
+  } catch(e) { showError('errorConn'); }
+}
 function initSwipe() {
   var track = document.getElementById('swipeTrack');
   var thumb = document.getElementById('swipeThumb');
   var fill  = document.getElementById('swipeFill');
   var dragging = false, startX = 0, triggered = false;
   var maxX = track.offsetWidth - thumb.offsetWidth - 8;
-
   function start(e) {
     if (triggered) return;
     dragging = true;
@@ -185,7 +196,6 @@ function initSwipe() {
     thumb.style.left = '4px';
     fill.style.width = '0';
   }
-
   thumb.addEventListener('mousedown', start);
   thumb.addEventListener('touchstart', start, { passive: true });
   window.addEventListener('mousemove', move);
@@ -193,7 +203,6 @@ function initSwipe() {
   window.addEventListener('mouseup', end);
   window.addEventListener('touchend', end);
 }
-
 async function doRedeem() {
   show('stateRedeeming');
   try {
@@ -203,34 +212,26 @@ async function doRedeem() {
       body: JSON.stringify({ action: 'redeemVoucher', code: _code })
     });
     var data = await resp.json();
-
     if (data.success) {
+      voucherData = Object.assign({}, voucherData || {}, { deal_title: data.deal_title || (voucherData && voucherData.deal_title) || '-', bar_name: data.bar_name || (voucherData && voucherData.bar_name) || '-' });
       show('stateSuccess');
       document.getElementById('successCode').textContent = _code;
-      document.getElementById('successInfo').innerHTML =
-        '<div class="row"><span class="label">Deal</span><span>' + (data.deal_title || '-') + '</span></div>'
-        + '<div class="row"><span class="label">Bar</span><span>' + (data.bar_name || '-') + '</span></div>';
-    } else if (data.error && data.error.indexOf('eingelöst') !== -1) {
+      renderInfo(voucherData, 'successInfo');
+    } else if (data.error && data.error.toLowerCase().indexOf('eingel') !== -1) {
       show('stateAlready');
       document.getElementById('alreadyCode').textContent = _code;
     } else {
-      showError(data.error || 'Einlösung fehlgeschlagen.');
+      showError(data.error || tt('errorRedeem'), !!data.error);
     }
-  } catch(e) { showError('Verbindungsfehler.'); }
+  } catch(e) { showError('errorConn'); }
 }
-
+setLang(currentLang);
 loadVoucher();
-</script>
-<script>
-var _lang='de';
-var _T2={
-de:{loading:'Gutschein wird geladen...',redeemTitle:'Gutschein einlösen',redeemWarn:'Nach dem Wischen ist der Gutschein verbraucht und kann nicht erneut verwendet werden.',slideHint:'Schiebe den Regler ganz nach rechts',redeeming:'Wird eingelöst...',successTitle:'Erfolgreich eingelöst!',successText:'Der Gutschein wurde soeben eingelöst.',alreadyTitle:'Bereits eingelöst',alreadyText:'Dieser Gutschein wurde bereits verwendet.',errorTitle:'Fehler',lDeal:'Deal',lBar:'Bar',lPaid:'Bezahlt',lDisc:'Rabatt'},
-en:{loading:'Loading voucher...',redeemTitle:'Redeem Voucher',redeemWarn:'After swiping, the voucher is used and cannot be reused.',slideHint:'Slide all the way to the right',redeeming:'Redeeming...',successTitle:'Successfully redeemed!',successText:'The voucher has just been redeemed.',alreadyTitle:'Already redeemed',alreadyText:'This voucher has already been used.',errorTitle:'Error',lDeal:'Deal',lBar:'Bar',lPaid:'Paid',lDisc:'Discount'},
-it:{loading:'Caricamento voucher...',redeemTitle:'Riscatta voucher',redeemWarn:'Dopo lo swipe, il voucher è utilizzato e non può essere riutilizzato.',slideHint:'Scorri fino in fondo a destra',redeeming:'Riscatto in corso...',successTitle:'Riscattato con successo!',successText:'Il voucher è appena stato riscattato.',alreadyTitle:'Già riscattato',alreadyText:'Questo voucher è già stato utilizzato.',errorTitle:'Errore',lDeal:'Offerta',lBar:'Bar',lPaid:'Pagato',lDisc:'Sconto'},
-fr:{loading:'Chargement du bon...',redeemTitle:'Utiliser le bon',redeemWarn:'Après le glissement, le bon est utilisé et ne peut pas être réutilisé.',slideHint:'Glisse le curseur tout à droite',redeeming:'Utilisation en cours...',successTitle:'Utilisé avec succès !',successText:'Le bon vient d\'être utilisé.',alreadyTitle:'Déjà utilisé',alreadyText:'Ce bon a déjà été utilisé.',errorTitle:'Erreur',lDeal:'Offre',lBar:'Bar',lPaid:'Payé',lDisc:'Réduction'}
-};
-function setLang(l){_lang=l;localStorage.setItem('barsclusive_lang',l);document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active')});var btn=document.getElementById('lang'+l.charAt(0).toUpperCase()+l.slice(1));if(btn)btn.classList.add('active');var t=_T2[l]||_T2.de;document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(t[k])el.innerHTML=t[k]});}
-(function(){_lang=localStorage.getItem('barsclusive_lang')||'de';setLang(_lang)})();
 </script>
 </body>
 </html>
+
+
+
+
+
