@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Datenschutz für Kundinnen und Kunden - BarSclusive</title>
+  <title>Datenschutzerklärung für Kundinnen und Kunden - BarSclusive</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -13,210 +13,117 @@
       line-height: 1.6;
       padding: 20px;
     }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid #FF3366;
-    }
-    .logo img { height: 40px; }
-    .back-btn {
-      background: #333;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .back-btn:hover { background: #444; }
-    .content {
-      background: #2a2a2a;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    }
-    h1 {
-      color: #FF3366;
-      margin-bottom: 10px;
-      font-size: 32px;
-    }
-    .subtitle {
-      color: #999;
-      margin-bottom: 30px;
-      font-size: 14px;
-    }
-    h2 {
-      color: #FF3366;
-      margin-top: 40px;
-      margin-bottom: 15px;
-      font-size: 24px;
-    }
-    h3 {
-      color: #FF5588;
-      margin-top: 25px;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-    p {
-      margin-bottom: 15px;
-      color: #ddd;
-    }
-    ul {
-      margin-left: 25px;
-      margin-bottom: 15px;
-      color: #ddd;
-    }
-    li { margin-bottom: 8px; }
-    strong { color: #fff; }
-    a { color: #FF3366; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .section { margin-bottom: 30px; }
-  </style>
+    .container { max-width: 980px; margin: 0 auto; padding: 40px 20px; }
+    .header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:30px; padding-bottom:20px; border-bottom:2px solid #FF3366; flex-wrap:wrap; }
+    .logo-wrap { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+    .logo img { height:42px; }
+    .lang-switch { display:flex; gap:8px; flex-wrap:wrap; }
+    .lang-btn { background:#333; color:#fff; border:1px solid #444; border-radius:8px; padding:8px 12px; cursor:pointer; font-size:12px; font-weight:700; }
+    .lang-btn.active { background:#FF3366; border-color:#FF3366; }
+    .back-btn { background:#333; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; text-decoration:none; display:inline-block; }
+    .back-btn:hover { background:#444; }
+    .content { background:#2a2a2a; padding:40px; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.3); }
+    h1 { color:#FF3366; margin-bottom:10px; font-size:32px; }
+    .subtitle { color:#999; margin-bottom:30px; font-size:14px; }
+    h2 { color:#FF3366; margin-top:40px; margin-bottom:15px; font-size:24px; }
+    h3 { color:#FF5588; margin-top:25px; margin-bottom:12px; font-size:18px; }
+    p { margin-bottom:15px; color:#ddd; }
+    ul, ol { margin-left:25px; margin-bottom:15px; color:#ddd; }
+    li { margin-bottom:8px; }
+    strong { color:#fff; }
+    a { color:#FF3366; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .section { margin-bottom:30px; }
+    .highlight { background:#1a1a1a; padding:20px; border-radius:8px; border-left:4px solid #FF3366; margin:20px 0; }
+    .highlight strong { color:#FF3366; }
+    .footer { text-align:center; padding:30px; color:#666; font-size:13px; border-top:1px solid #333; margin-top:40px; }
+    @media(max-width:768px){ body { padding:12px; } .container { padding:24px 8px; } .content { padding:24px 18px; } h1 { font-size:28px; } h2 { font-size:22px; } .header { align-items:flex-start; } }
+</style>
   <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="logo">
-        <img src="logo.png" alt="BarSclusive">
+      <div class="logo-wrap">
+        <div class="logo"><img src="logo.png" alt="BarSclusive"></div>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="de">DE</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="it">IT</button>
+          <button class="lang-btn" data-lang="fr">FR</button>
+        </div>
       </div>
-      <a href="shop.html" class="back-btn">← Zurück zum Shop</a>
+      <a href="shop.html" class="back-btn" id="backBtn">← Zurück zum Shop</a>
     </div>
-
     <div class="content">
-      <h1>Datenschutzerklärung für Kundinnen und Kunden</h1>
-      <p class="subtitle">BarSclusive | Stand: März 2026</p>
-
-      <div class="section">
-        <h2>1. Verantwortliche Stelle</h2>
-        <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a><br>
-        Basel, Schweiz</p>
-      </div>
-
-      <div class="section">
-        <h2>2. Welche Daten wir bearbeiten</h2>
-
-        <h3>2.1 Bei Registrierung</h3>
-        <ul>
-          <li>Name</li>
-          <li>Email-Adresse</li>
-          <li>Passwort in verschlüsselter Form</li>
-        </ul>
-
-        <h3>2.2 Bei Bestellung</h3>
-        <ul>
-          <li>Name</li>
-          <li>Email-Adresse</li>
-          <li>gegebenenfalls Telefonnummer, sofern sie im Bestellprozess erfasst wird</li>
-          <li>Bestellinformationen</li>
-          <li>Gutschein-Code</li>
-          <li>Zahlungsstatus</li>
-          <li>Zeitpunkt der Bestellung</li>
-        </ul>
-
-        <h3>2.3 Bei Rückerstattungen und Supportanfragen</h3>
-        <ul>
-          <li>Angaben zur Bestellung</li>
-          <li>Gutschein-Code</li>
-          <li>Kommunikationsinhalte</li>
-        </ul>
-
-        <h3>2.4 Technische Daten</h3>
-        <ul>
-          <li>Session-Daten</li>
-          <li>technische Zugriffsdaten</li>
-          <li>sicherheitsrelevante Protokolldaten, soweit dies für Betrieb und Schutz der Plattform erforderlich ist</li>
-        </ul>
-
-        <h3>2.5 Standortdaten</h3>
-        <p>Standortdaten Ihres Geräts werden nur verarbeitet, wenn Sie die Standortfreigabe aktiv erteilen. Ohne eine solche Freigabe funktioniert die Plattform weiterhin normal.</p>
-      </div>
-
-      <div class="section">
-        <h2>3. Zweck der Datenbearbeitung</h2>
-        <ul>
-          <li>Betrieb der Plattform</li>
-          <li>Registrierung und Login</li>
-          <li>Bestellabwicklung</li>
-          <li>technische Zahlungsabwicklung</li>
-          <li>Übermittlung von Gutschein-Codes</li>
-          <li>Bearbeitung von Rückerstattungen</li>
-          <li>Support</li>
-          <li>Sicherheit, Missbrauchsprävention und technische Stabilität</li>
-          <li>Verbesserung der Such- und Standortfunktionen, insbesondere bei freiwilliger Standortfreigabe</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>4. Weitergabe von Daten</h2>
-
-        <h3>4.1 An Partnerbars</h3>
-        <p>Bei Fix-Preis-Deals und bei Einlösungen können diejenigen Angaben weitergegeben werden, die zur Prüfung, Zuordnung und Einlösung des Gutscheins erforderlich sind.</p>
-
-        <h3>4.2 An technische Dienstleister</h3>
-        <p>Zur Zahlungsabwicklung, Speicherung, Kommunikation und technischen Bereitstellung der Plattform können Daten an eingesetzte Dienstleister weitergegeben werden, soweit dies für den Betrieb erforderlich ist.</p>
-
-        <h3>4.3 Keine Weitergabe zu Werbezwecken</h3>
-        <p>Wir verkaufen keine personenbezogenen Daten und geben diese nicht zu eigenen Werbezwecken an Dritte weiter.</p>
-      </div>
-
-      <div class="section">
-        <h2>5. Standort- und Distanzfunktionen</h2>
-        <p>Wenn Sie die Standortfreigabe aktiv erteilen, kann Ihr ungefährer oder genauer Standort verwendet werden, um Ihnen Bars oder Deals in Ihrer Nähe anzuzeigen oder Suchergebnisse nach Distanz zu sortieren.</p>
-        <p>Wenn Sie keine Standortfreigabe erteilen, können Sie weiterhin manuell nach Ort, Stadt oder PLZ suchen, soweit diese Funktion auf der Plattform angeboten wird.</p>
-      </div>
-
-      <div class="section">
-        <h2>6. Speicherdauer</h2>
-        <p>Wir speichern personenbezogene Daten nur so lange, wie dies für den Betrieb der Plattform, die Vertragsabwicklung, Support, Sicherheit oder gesetzliche Pflichten erforderlich ist.</p>
-      </div>
-
-      <div class="section">
-        <h2>7. Datensicherheit</h2>
-        <p>Wir treffen angemessene technische und organisatorische Massnahmen zum Schutz der bearbeiteten Daten.</p>
-        <ul>
-          <li>Zugriffsbeschränkungen</li>
-          <li>verschlüsselte Passwortspeicherung</li>
-          <li>Session-Verwaltung</li>
-          <li>Sicherheitsmassnahmen im Rahmen des verwendeten Setups</li>
-          <li>Zwei-Faktor-Authentisierung bei genutzten Konten, soweit aktiviert</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>8. Ihre Rechte</h2>
-        <p>Im Rahmen des anwendbaren Rechts können betroffene Personen insbesondere Auskunft, Berichtigung oder Löschung ihrer Daten verlangen.</p>
-        <p>Anfragen können an <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a> gerichtet werden.</p>
-      </div>
-
-      <div class="section">
-        <h2>9. Änderungen</h2>
-        <p>Wir können diese Datenschutzerklärung jederzeit anpassen. Massgebend ist die jeweils veröffentlichte Fassung.</p>
-      </div>
-
-      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
-        <h2>Kontakt</h2>
-        <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
-        <p style="margin-top:20px; color:#999; font-size:14px;">
-          Stand: März 2026 | BarSclusive, Basel, Schweiz
-        </p>
-      </div>
+      <h1 id="pageTitle"></h1>
+      <p class="subtitle" id="pageSubtitle"></p>
+      <div id="pageContent"></div>
     </div>
   </div>
-
-  <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
-    <p>&copy; 2026 BarSclusive</p>
-  </div>
+  <div class="footer" id="pageFooter"></div>
+  <script>
+    const PAGE_TRANSLATIONS = {
+  "de": {
+    "browserTitle": "Datenschutzerklärung für Kundinnen und Kunden - BarSclusive",
+    "title": "Datenschutzerklärung für Kundinnen und Kunden",
+    "subtitle": "BarSclusive | Stand: März 2026",
+    "back": "← Zurück zum Shop",
+    "footerLinks": "<a href=\"shop.html\">Shop</a> · <a href=\"agb.html\">AGB</a> · <a href=\"kontakt.html\">Kontakt</a>",
+    "html": "<div class=\"section\">\n<h2>1. Verantwortliche Stelle</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Basel, Schweiz</p>\n</div>\n<div class=\"section\">\n<h2>2. Welche Daten wir bearbeiten</h2>\n<ul>\n<li>Name, Email-Adresse und Passwort in verschlüsselter Form bei der Registrierung</li>\n<li>Bestellinformationen, Gutschein-Code, Zahlungsstatus und Zeitpunkt der Bestellung</li>\n<li>Kommunikationsinhalte bei Rückerstattungen und Supportanfragen</li>\n<li>Session-Daten, technische Zugriffsdaten und sicherheitsrelevante Protokolldaten</li>\n</ul>\n<p>Standortdaten Ihres Geräts werden nur verarbeitet, wenn Sie die Standortfreigabe aktiv erteilen. Ohne eine solche Freigabe funktioniert die Plattform weiterhin normal.</p>\n</div>\n<div class=\"section\">\n<h2>3. Zweck der Datenbearbeitung</h2>\n<ul>\n<li>Betrieb der Plattform</li>\n<li>Registrierung und Login</li>\n<li>Bestellabwicklung</li>\n<li>technische Zahlungsabwicklung</li>\n<li>Übermittlung von Gutschein-Codes</li>\n<li>Bearbeitung von Rückerstattungen</li>\n<li>Support</li>\n<li>Sicherheit, Missbrauchsprävention und technische Stabilität</li>\n<li>Verbesserung der Such- und Standortfunktionen</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. Weitergabe von Daten</h2>\n<p>Bei Fix-Preis-Deals und Einlösungen können diejenigen Angaben weitergegeben werden, die zur Prüfung, Zuordnung und Einlösung des Gutscheins erforderlich sind.</p>\n<p>Zur Zahlungsabwicklung, Speicherung, Kommunikation und technischen Bereitstellung der Plattform können Daten an eingesetzte Dienstleister weitergegeben werden, soweit dies für den Betrieb erforderlich ist.</p>\n<p>Wir verkaufen keine personenbezogenen Daten und geben diese nicht zu eigenen Werbezwecken an Dritte weiter.</p>\n</div>\n<div class=\"section\">\n<h2>5. Standort- und Distanzfunktionen</h2>\n<p>Wenn Sie die Standortfreigabe aktiv erteilen, kann Ihr ungefährer oder genauer Standort verwendet werden, um Bars oder Deals in Ihrer Nähe anzuzeigen oder Suchergebnisse nach Distanz zu sortieren. Ohne Freigabe können Sie weiterhin manuell nach Ort, Stadt oder PLZ suchen.</p>\n</div>\n<div class=\"section\">\n<h2>6. Speicherdauer</h2>\n<p>Wir speichern personenbezogene Daten nur so lange, wie dies für den Betrieb der Plattform, die Vertragsabwicklung, Support, Sicherheit oder gesetzliche Pflichten erforderlich ist.</p>\n</div>\n<div class=\"section\">\n<h2>7. Datensicherheit</h2>\n<ul>\n<li>Zugriffsbeschränkungen</li>\n<li>verschlüsselte Passwortspeicherung</li>\n<li>Session-Verwaltung</li>\n<li>Sicherheitsmassnahmen im Rahmen des verwendeten Setups</li>\n<li>Zwei-Faktor-Authentisierung bei genutzten Konten, soweit aktiviert</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>8. Ihre Rechte</h2>\n<p>Im Rahmen des anwendbaren Rechts können betroffene Personen insbesondere Auskunft, Berichtigung oder Löschung ihrer Daten verlangen. Anfragen können an <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a> gerichtet werden.</p>\n</div>\n<div class=\"section\">\n<h2>9. Änderungen</h2>\n<p>Wir können diese Datenschutzerklärung jederzeit anpassen. Massgebend ist die jeweils veröffentlichte Fassung.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Kontakt</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Stand: März 2026 | BarSclusive, Basel, Schweiz</p>\n</div>"
+  },
+  "en": {
+    "browserTitle": "Privacy policy for customers - BarSclusive",
+    "title": "Privacy policy for customers",
+    "subtitle": "BarSclusive | Version: March 2026",
+    "back": "← Back to shop",
+    "footerLinks": "<a href=\"shop.html\">Shop</a> · <a href=\"agb.html\">Terms</a> · <a href=\"kontakt.html\">Contact</a>",
+    "html": "<div class=\"section\">\n<h2>1. Controller</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Basel, Switzerland</p>\n</div>\n<div class=\"section\">\n<h2>2. What data we process</h2>\n<ul>\n<li>Name, email address and encrypted password during registration</li>\n<li>Order information, voucher code, payment status and order timestamp</li>\n<li>Communication contents for refunds and support requests</li>\n<li>Session data, technical access data and security-relevant log data</li>\n</ul>\n<p>Your device location is only processed if you actively grant location permission. Without such permission, the platform continues to work normally.</p>\n</div>\n<div class=\"section\">\n<h2>3. Purpose of processing</h2>\n<ul>\n<li>Operating the platform</li>\n<li>Registration and login</li>\n<li>Order processing</li>\n<li>Technical payment processing</li>\n<li>Transmission of voucher codes</li>\n<li>Handling refunds</li>\n<li>Support</li>\n<li>Security, fraud prevention and technical stability</li>\n<li>Improving search and location functions</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. Disclosure of data</h2>\n<p>For fixed-price deals and redemptions, data required for verification, allocation and redemption of the voucher may be shared.</p>\n<p>For payment processing, storage, communication and technical operation, data may be shared with service providers where this is necessary for operation.</p>\n<p>We do not sell personal data and do not disclose it to third parties for their own advertising purposes.</p>\n</div>\n<div class=\"section\">\n<h2>5. Location and distance functions</h2>\n<p>If you actively grant location permission, your approximate or precise location may be used to show bars or deals near you or to sort results by distance. Without location permission, you can still search manually by place, city or ZIP code.</p>\n</div>\n<div class=\"section\">\n<h2>6. Storage period</h2>\n<p>We store personal data only as long as required for operating the platform, contract execution, support, security or legal obligations.</p>\n</div>\n<div class=\"section\">\n<h2>7. Data security</h2>\n<ul>\n<li>Access restrictions</li>\n<li>Encrypted password storage</li>\n<li>Session management</li>\n<li>Security measures within the chosen setup</li>\n<li>Two-factor authentication for accounts where activated</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>8. Your rights</h2>\n<p>Within the scope of applicable law, data subjects may request information, rectification or deletion of their data. Requests may be sent to <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>.</p>\n</div>\n<div class=\"section\">\n<h2>9. Changes</h2>\n<p>We may amend this privacy policy at any time. The published version in force is decisive.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Contact</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Version: March 2026 | BarSclusive, Basel, Switzerland</p>\n</div>"
+  },
+  "it": {
+    "browserTitle": "Informativa privacy per clienti - BarSclusive",
+    "title": "Informativa privacy per clienti",
+    "subtitle": "BarSclusive | Versione: marzo 2026",
+    "back": "← Torna allo shop",
+    "footerLinks": "<a href=\"shop.html\">Shop</a> · <a href=\"agb.html\">Condizioni</a> · <a href=\"kontakt.html\">Contatto</a>",
+    "html": "<div class=\"section\">\n<h2>1. Titolare del trattamento</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Basilea, Svizzera</p>\n</div>\n<div class=\"section\">\n<h2>2. Quali dati trattiamo</h2>\n<ul>\n<li>Nome, indirizzo email e password in forma criptata durante la registrazione</li>\n<li>Informazioni sull’ordine, codice voucher, stato del pagamento e momento dell’ordine</li>\n<li>Contenuti della comunicazione per rimborsi e richieste di supporto</li>\n<li>Dati di sessione, dati tecnici di accesso e dati di log rilevanti per la sicurezza</li>\n</ul>\n<p>I dati di posizione del dispositivo vengono trattati soltanto se si concede attivamente l’autorizzazione alla localizzazione. Senza tale autorizzazione la piattaforma continua comunque a funzionare normalmente.</p>\n</div>\n<div class=\"section\">\n<h2>3. Finalità del trattamento</h2>\n<ul>\n<li>Gestione della piattaforma</li>\n<li>Registrazione e login</li>\n<li>Gestione degli ordini</li>\n<li>Gestione tecnica dei pagamenti</li>\n<li>Invio dei codici voucher</li>\n<li>Gestione dei rimborsi</li>\n<li>Supporto</li>\n<li>Sicurezza, prevenzione degli abusi e stabilità tecnica</li>\n<li>Miglioramento delle funzioni di ricerca e localizzazione</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. Comunicazione dei dati</h2>\n<p>Per i deal a prezzo fisso e per i riscatti possono essere comunicati i dati necessari alla verifica, all’attribuzione e al riscatto del voucher.</p>\n<p>Per il trattamento dei pagamenti, l’archiviazione, la comunicazione e la messa a disposizione tecnica della piattaforma, i dati possono essere comunicati a fornitori di servizi nella misura necessaria al funzionamento.</p>\n<p>Non vendiamo dati personali e non li comunichiamo a terzi per loro finalità pubblicitarie.</p>\n</div>\n<div class=\"section\">\n<h2>5. Funzioni di posizione e distanza</h2>\n<p>Se si concede attivamente l’autorizzazione alla localizzazione, la posizione approssimativa o precisa può essere utilizzata per mostrare bar o deal vicini o per ordinare i risultati per distanza. Senza autorizzazione, è comunque possibile cercare manualmente per località, città o CAP.</p>\n</div>\n<div class=\"section\">\n<h2>6. Durata di conservazione</h2>\n<p>Conserviamo i dati personali solo per il tempo necessario al funzionamento della piattaforma, all’esecuzione del contratto, al supporto, alla sicurezza o agli obblighi legali.</p>\n</div>\n<div class=\"section\">\n<h2>7. Sicurezza dei dati</h2>\n<ul>\n<li>Limitazioni di accesso</li>\n<li>Conservazione cifrata delle password</li>\n<li>Gestione delle sessioni</li>\n<li>Misure di sicurezza nel setup utilizzato</li>\n<li>Autenticazione a due fattori per gli account, se attivata</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>8. I vostri diritti</h2>\n<p>Nel quadro del diritto applicabile, le persone interessate possono richiedere accesso, rettifica o cancellazione dei propri dati. Le richieste possono essere inviate a <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>.</p>\n</div>\n<div class=\"section\">\n<h2>9. Modifiche</h2>\n<p>Possiamo modificare la presente informativa privacy in qualsiasi momento. Fa stato la versione pubblicata di volta in volta.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Contatto</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email: <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Versione: marzo 2026 | BarSclusive, Basilea, Svizzera</p>\n</div>"
+  },
+  "fr": {
+    "browserTitle": "Politique de confidentialité pour les clientes et clients - BarSclusive",
+    "title": "Politique de confidentialité pour les clientes et clients",
+    "subtitle": "BarSclusive | Version : mars 2026",
+    "back": "← Retour à la boutique",
+    "footerLinks": "<a href=\"shop.html\">Shop</a> · <a href=\"agb.html\">Conditions</a> · <a href=\"kontakt.html\">Contact</a>",
+    "html": "<div class=\"section\">\n<h2>1. Responsable du traitement</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email : <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n<br>Bâle, Suisse</p>\n</div>\n<div class=\"section\">\n<h2>2. Quelles données nous traitons</h2>\n<ul>\n<li>Nom, adresse email et mot de passe sous forme chiffrée lors de l’inscription</li>\n<li>Informations de commande, code du bon, statut du paiement et moment de la commande</li>\n<li>Contenus de communication pour les remboursements et demandes de support</li>\n<li>Données de session, données techniques d’accès et données de journal pertinentes pour la sécurité</li>\n</ul>\n<p>Les données de localisation de votre appareil ne sont traitées que si vous accordez activement l’autorisation de localisation. Sans cette autorisation, la plateforme continue de fonctionner normalement.</p>\n</div>\n<div class=\"section\">\n<h2>3. Finalité du traitement</h2>\n<ul>\n<li>Exploitation de la plateforme</li>\n<li>Inscription et connexion</li>\n<li>Traitement des commandes</li>\n<li>Traitement technique des paiements</li>\n<li>Transmission des codes de bons</li>\n<li>Traitement des remboursements</li>\n<li>Support</li>\n<li>Sécurité, prévention des abus et stabilité technique</li>\n<li>Amélioration des fonctions de recherche et de localisation</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>4. Transmission des données</h2>\n<p>Pour les deals à prix fixe et lors des utilisations, les données nécessaires à la vérification, à l’attribution et à l’utilisation du bon peuvent être transmises.</p>\n<p>Pour le traitement des paiements, le stockage, la communication et la mise à disposition technique, des données peuvent être transmises à des prestataires dans la mesure nécessaire au fonctionnement.</p>\n<p>Nous ne vendons pas de données personnelles et ne les transmettons pas à des tiers pour leurs propres finalités publicitaires.</p>\n</div>\n<div class=\"section\">\n<h2>5. Fonctions de localisation et de distance</h2>\n<p>Si vous accordez activement l’autorisation de localisation, votre position approximative ou précise peut être utilisée pour vous afficher des bars ou des deals proches ou pour trier les résultats par distance. Sans cette autorisation, vous pouvez toujours effectuer une recherche manuelle par lieu, ville ou NPA.</p>\n</div>\n<div class=\"section\">\n<h2>6. Durée de conservation</h2>\n<p>Nous conservons les données personnelles uniquement pendant la durée nécessaire à l’exploitation de la plateforme, à l’exécution du contrat, au support, à la sécurité ou aux obligations légales.</p>\n</div>\n<div class=\"section\">\n<h2>7. Sécurité des données</h2>\n<ul>\n<li>Restrictions d’accès</li>\n<li>Stockage chiffré des mots de passe</li>\n<li>Gestion des sessions</li>\n<li>Mesures de sécurité dans le cadre du setup utilisé</li>\n<li>Authentification à deux facteurs pour les comptes lorsqu’elle est activée</li>\n</ul>\n</div>\n<div class=\"section\">\n<h2>8. Vos droits</h2>\n<p>Dans le cadre du droit applicable, les personnes concernées peuvent demander l’accès, la rectification ou la suppression de leurs données. Les demandes peuvent être adressées à <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>.</p>\n</div>\n<div class=\"section\">\n<h2>9. Modifications</h2>\n<p>Nous pouvons adapter la présente politique de confidentialité à tout moment. La version publiée fait foi.</p>\n</div>\n<div class=\"section\" style=\"margin-top:50px; padding-top:30px; border-top:1px solid #444;\">\n<h2>Contact</h2>\n<p>\n<strong>BarSclusive</strong>\n<br>Email : <a href=\"mailto:barsclusive@gmail.com\">barsclusive@gmail.com</a>\n</p>\n<p style=\"margin-top:20px; color:#999; font-size:14px;\">Version : mars 2026 | BarSclusive, Bâle, Suisse</p>\n</div>"
+  }
+};
+    const PAGE_STORAGE_KEY = "barsclusive_lang";
+    const PAGE_STORAGE_FALLBACKS = ["barsclusive_lang", "barsclusive_shop_lang"];
+    function initialLang() {
+      const qs = new URLSearchParams(window.location.search);
+      const q = qs.get('lang');
+      if (q && PAGE_TRANSLATIONS[q]) return q;
+      for (const key of PAGE_STORAGE_FALLBACKS) {
+        try { const v = localStorage.getItem(key); if (v && PAGE_TRANSLATIONS[v]) return v; } catch (e) {}
+      }
+      return 'de';
+    }
+    function setPageLang(lang) {
+      const t = PAGE_TRANSLATIONS[lang] || PAGE_TRANSLATIONS.de;
+      document.documentElement.lang = lang;
+      document.title = t.browserTitle;
+      document.getElementById('pageTitle').textContent = t.title;
+      document.getElementById('pageSubtitle').textContent = t.subtitle;
+      document.getElementById('pageContent').innerHTML = t.html;
+      document.getElementById('backBtn').textContent = t.back;
+      document.getElementById('pageFooter').innerHTML = '<p>&copy; 2026 BarSclusive</p><p style="margin-top:8px">' + t.footerLinks + '</p>';
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+      try { localStorage.setItem(PAGE_STORAGE_KEY, lang); } catch (e) {}
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', function() { setPageLang(this.dataset.lang); }));
+      setPageLang(initialLang());
+    });
+  </script>
 </body>
 </html>
