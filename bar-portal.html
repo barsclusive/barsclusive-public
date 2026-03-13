@@ -323,12 +323,12 @@
             <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
             <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
             <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ Pauschalgutschein</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ <span data-i18n="flatVoucherCat">Pauschalgutschein</span></label>
           </div>
         </div>
         <!-- Pauschalgutschein fields -->
         <div id="pauschalFields" style="display:none;background:#2a2a2a;padding:16px;border-radius:10px;margin-bottom:18px;border:1px solid #FF3366">
-          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
+          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ <span data-i18n="flatVoucherSettings">Pauschalgutschein-Einstellungen</span></h3>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="form-group" style="margin-bottom:0">
               <label class="form-label" for="discountPercent">Rabatt % (mind. 15%)</label>
@@ -380,13 +380,13 @@
             </div>
           </div>
           <div style="margin-top:14px">
-            <label class="form-label">Zeitfenster (optional)</label>
+            <label class="form-label" data-i18n="timeWindowOptional">Zeitfenster (optional)</label>
             <div class="cats-grid" style="margin-bottom:10px">
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> 🌅 Morgen (06–12h)</label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> ☀️ Mittag (11–17h)</label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> 🌙 Abend (16–00h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> <span data-i18n="timeSlotMorningLong">🌅 Morgen (06–12h)</span></label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> <span data-i18n="timeSlotMiddayLong">☀️ Mittag (11–17h)</span></label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> <span data-i18n="timeSlotEveningLong">🌙 Abend (16–00h)</span></label>
             </div>
-            <small style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
+            <small style="color:#999;font-size:11px" data-i18n="customTimesHint">Oder eigene Zeiten:</small>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
             <div class="form-group">
@@ -564,46 +564,46 @@
       <input type="number" class="form-input" id="editQty" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label">Bild ändern (optional)</label>
+      <label class="form-label" data-i18n="changeImageOptional">Bild ändern (optional)</label>
       <input type="file" class="form-input" id="editImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
-      <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild"></div>
+      <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild" data-alt-i18n="currentImageAlt"></div>
       <input type="hidden" id="editImageUrl">
     </div>
     <div class="form-group">
-      <label class="form-label">Gültigkeitsdauer</label>
+      <label class="form-label" data-i18n="validityPlain">Gültigkeitsdauer</label>
       <div class="validity-toggle">
         <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> Wiederkehrend</label>
-        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> Einmaliges Datum</label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> <span data-i18n="singleDate">Einmaliges Datum</span></label>
       </div>
     </div>
     <div id="editRecurringFields" style="margin-top:8px">
-      <label class="form-label">Wochentage</label>
+      <label class="form-label" data-i18n="weekdaysLbl">Wochentage</label>
       <div class="weekdays" id="editWeekdays">
         <div class="wd-btn" data-wd="Mo">Mo</div><div class="wd-btn" data-wd="Di">Di</div><div class="wd-btn" data-wd="Mi">Mi</div><div class="wd-btn" data-wd="Do">Do</div><div class="wd-btn" data-wd="Fr">Fr</div><div class="wd-btn" data-wd="Sa">Sa</div><div class="wd-btn" data-wd="So">So</div>
       </div>
     </div>
     <div id="editSingleFields" style="display:none;margin-top:8px">
       <div class="form-group">
-        <label class="form-label">Datum</label>
+        <label class="form-label" data-i18n="dateLbl">Datum</label>
         <input type="date" class="form-input" id="editSingleDate">
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
       <div class="form-group">
-        <label class="form-label">Von (Uhrzeit)</label>
+        <label class="form-label" data-i18n="fromTimeLabel">Von (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeFrom">
       </div>
       <div class="form-group">
-        <label class="form-label">Bis (Uhrzeit)</label>
+        <label class="form-label" data-i18n="toTimeLabel">Bis (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeTo">
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Zeitfenster</label>
+      <label class="form-label" data-i18n="timeWindowLabel">Zeitfenster</label>
       <div class="cats-grid" style="margin-top:6px">
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> 🌅 Morgen</label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> ☀️ Mittag</label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> 🌙 Abend</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> <span data-i18n="timeSlotMorning">🌅 Morgen</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> <span data-i18n="timeSlotMidday">☀️ Mittag</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> <span data-i18n="timeSlotEvening">🌙 Abend</span></label>
       </div>
     </div>
     <div class="form-check" style="margin-bottom:20px">
