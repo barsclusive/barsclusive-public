@@ -166,12 +166,68 @@ async function loadOrders(force) {
     var [oR, vR] = await Promise.all([api({action:'getOrders',token:_token}), api({action:'getVouchers',token:_token})]);
     if (!oR.success) { showToast(oR.error, true); return; }
     var vMap = {};
-    if (vR.success && vR.vouchers) vR.vouchers.forEach(function(v) { vMap[v.id] = v; });
-    _ordersData = (oR.orders||[]).map(function(o) { o._voucher = o.voucher_id ? vMap[o.voucher_id] : null; return o; });
+    var vouchersByOrder = {};
+    if (vR.success && vR.vouchers) vR.vouchers.forEach(function(v) {
+      vMap[v.id] = v;
+      if (v.order_id) {
+        if (!vouchersByOrder[v.order_id]) vouchersByOrder[v.order_id] = [];
+        vouchersByOrder[v.order_id].push(v);
+      }
+    });
+    _ordersData = (oR.orders||[]).map(function(o) {
+      var linkedVouchers = vouchersByOrder[o.id] || [];
+      var grossCommission = 0, barPayoutTotal = 0;
+      linkedVouchers.forEach(function(v) {
+        grossCommission += Number(v.platform_fee || 0);
+        barPayoutTotal += Number(v.bar_payout || 0);
+      });
+      o._vouchers = linkedVouchers;
+      o._voucher = linkedVouchers[0] || (o.voucher_id ? vMap[o.voucher_id] : null) || null;
+      o._grossCommission = grossCommission;
+      o._stripeFee = Number(o.stripe_fee || 0);
+      o._platformNet = grossCommission - o._stripeFee;
+      o._barPayoutTotal = barPayoutTotal;
+      return o;
+    });
     if (force) _orderFilters = {};
     _adminLoaded.orders = true;
     renderOrders();
   } catch(e) { showToast('Ladefehler', true); }
+}
+
+function getOrderFinancials(order, barId) {
+  var vouchers = order && order._vouchers ? order._vouchers : [];
+  var relevantVouchers = barId ? vouchers.filter(function(v) { return String(v.bar_id) === String(barId); }) : vouchers.slice();
+  var voucherSales = 0, grossCommission = 0, barPayout = 0;
+  relevantVouchers.forEach(function(v) {
+    voucherSales += Number(v.price_paid || 0);
+    grossCommission += Number(v.platform_fee || 0);
+    barPayout += Number(v.bar_payout || 0);
+  });
+  var globalVoucherSales = 0;
+  vouchers.forEach(function(v) { globalVoucherSales += Number(v.price_paid || 0); });
+  var orderTotal = Number(order && order.price || 0);
+  if (orderTotal <= 0) orderTotal = globalVoucherSales;
+  if (!barId && voucherSales <= 0) voucherSales = orderTotal;
+  if (barId && voucherSales <= 0 && String(order.bar_id) === String(barId) && !vouchers.length) voucherSales = orderTotal;
+  var stripeFee = Number(order && order.stripe_fee || 0);
+  var allocatedStripeFee = 0;
+  if (barId) {
+    var shareBase = voucherSales;
+    var totalBase = globalVoucherSales > 0 ? globalVoucherSales : orderTotal;
+    allocatedStripeFee = totalBase > 0 ? stripeFee * (shareBase / totalBase) : 0;
+  } else {
+    allocatedStripeFee = stripeFee;
+  }
+  var included = !barId ? true : (voucherSales > 0 || String(order.bar_id) === String(barId));
+  return {
+    included: included,
+    sales: voucherSales,
+    grossCommission: grossCommission,
+    stripeFee: allocatedStripeFee,
+    platformNet: grossCommission - allocatedStripeFee,
+    barPayout: barPayout
+  };
 }
 
 function renderOrders() {
@@ -186,6 +242,9 @@ function renderOrders() {
       else if (k==='buyer') val = o.buyer_name||'';
       else if (k==='email') val = o.buyer_email||'';
       else if (k==='price') val = fmtChf(o.price);
+      else if (k==='gross_commission') val = fmtChf(o._grossCommission);
+      else if (k==='stripe_fee') val = fmtChf(o._stripeFee);
+      else if (k==='platform_net') val = fmtChf(o._platformNet);
       else if (k==='status') val = o.status||'';
       else if (k==='voucher') val = o._voucher ? o._voucher.status : '';
       else if (k==='refund') val = o.refund_status||'';
@@ -197,6 +256,9 @@ function renderOrders() {
     var va, vb;
     if (sc==='created_at') { va = new Date(a.created_at||0); vb = new Date(b.created_at||0); }
     else if (sc==='price') { va = Number(a.price||0); vb = Number(b.price||0); }
+    else if (sc==='gross_commission') { va = Number(a._grossCommission||0); vb = Number(b._grossCommission||0); }
+    else if (sc==='stripe_fee') { va = Number(a._stripeFee||0); vb = Number(b._stripeFee||0); }
+    else if (sc==='platform_net') { va = Number(a._platformNet||0); vb = Number(b._platformNet||0); }
     else if (sc==='deal') { va = (a.deal_title||'').toLowerCase(); vb = (b.deal_title||'').toLowerCase(); }
     else if (sc==='bar') { va = (a.bar_name||'').toLowerCase(); vb = (b.bar_name||'').toLowerCase(); }
     else if (sc==='buyer') { va = (a.buyer_name||'').toLowerCase(); vb = (b.buyer_name||'').toLowerCase(); }
@@ -207,7 +269,7 @@ function renderOrders() {
   tbody.innerHTML = '';
   // Filter row
   var ftr = document.createElement('tr'); ftr.style.background = '#1a1a1a';
-  ['date','deal','bar','buyer','email','price','status','voucher','refund',''].forEach(function(k) {
+  ['date','deal','bar','buyer','email','price','gross_commission','stripe_fee','platform_net','status','voucher','refund',''].forEach(function(k) {
     var ftd = document.createElement('td'); ftd.style.padding = '4px';
     if (k) {
       var inp = document.createElement('input'); inp.type='text'; inp.placeholder='🔍';
@@ -219,10 +281,13 @@ function renderOrders() {
     ftr.appendChild(ftd);
   });
   tbody.appendChild(ftr);
-  if (!data.length) { tbody.innerHTML += '<tr><td colspan="10" class="no-data">Keine Bestellungen</td></tr>'; return; }
-  var totalPrice = 0;
+  if (!data.length) { tbody.innerHTML += '<tr><td colspan="13" class="no-data">Keine Bestellungen</td></tr>'; return; }
+  var totalPrice = 0, totalCommission = 0, totalStripe = 0, totalNet = 0;
   data.forEach(function(o) {
     totalPrice += Number(o.price||0);
+    totalCommission += Number(o._grossCommission||0);
+    totalStripe += Number(o._stripeFee||0);
+    totalNet += Number(o._platformNet||0);
     var tr = document.createElement('tr');
     if (o.refund_status==='requested') tr.style.background='#2a2000';
     var sBadge = o.status==='paid' ? '<span class="badge b-paid">✓ Bezahlt</span>' : '<span class="badge b-pending">⏳</span>';
@@ -231,12 +296,12 @@ function renderOrders() {
     var aHtml = '';
     if (o.refund_status==='requested') aHtml += '<button class="btn-sm btn-red" data-refund-oid="'+o.id+'">Erstatten</button> ';
     aHtml += '<button class="btn-sm" style="background:#333;color:#999;font-size:10px" data-del-oid="'+o.id+'">🗑</button>';
-    tr.innerHTML = '<td style="font-size:11px">'+fmtDate(o.created_at)+'</td><td>'+esc(o.deal_title||'-')+'</td><td>'+esc(o.bar_name||'-')+'</td><td>'+esc(o.buyer_name||'-')+'</td><td style="font-size:11px">'+esc(o.buyer_email||'-')+'</td><td style="text-align:right">'+fmtChf(o.price)+'</td><td>'+sBadge+'</td><td>'+vBadge+'</td><td>'+refTxt+'</td><td>'+aHtml+'</td>';
+    tr.innerHTML = '<td style="font-size:11px">'+fmtDate(o.created_at)+'</td><td>'+esc(o.deal_title||'-')+'</td><td>'+esc(o.bar_name||'-')+'</td><td>'+esc(o.buyer_name||'-')+'</td><td style="font-size:11px">'+esc(o.buyer_email||'-')+'</td><td style="text-align:right">'+fmtChf(o.price)+'</td><td style="text-align:right;color:#f59e0b">'+fmtChf(o._grossCommission)+'</td><td style="text-align:right;color:#ef4444">'+fmtChf(o._stripeFee)+'</td><td style="text-align:right;color:#22c55e">'+fmtChf(o._platformNet)+'</td><td>'+sBadge+'</td><td>'+vBadge+'</td><td>'+refTxt+'</td><td>'+aHtml+'</td>';
     tbody.appendChild(tr);
   });
   var sumTr = document.createElement('tr');
   sumTr.style.cssText='background:#1a1a1a;font-weight:700;border-top:2px solid #FF3366';
-  sumTr.innerHTML='<td colspan="5" style="padding:8px;color:#FF3366">'+data.length+' Bestellungen</td><td style="text-align:right;padding:8px;color:#22c55e">'+totalPrice.toFixed(2)+' CHF</td><td colspan="4"></td>';
+  sumTr.innerHTML='<td colspan="5" style="padding:8px;color:#FF3366">'+data.length+' Bestellungen</td><td style="text-align:right;padding:8px">'+totalPrice.toFixed(2)+' CHF</td><td style="text-align:right;padding:8px;color:#f59e0b">'+totalCommission.toFixed(2)+' CHF</td><td style="text-align:right;padding:8px;color:#ef4444">'+totalStripe.toFixed(2)+' CHF</td><td style="text-align:right;padding:8px;color:#22c55e">'+totalNet.toFixed(2)+' CHF</td><td colspan="4"></td>';
   tbody.appendChild(sumTr);
   tbody.querySelectorAll('[data-refund-oid]').forEach(function(b){b.addEventListener('click',function(){processRefund(this.getAttribute('data-refund-oid'));});});
   tbody.querySelectorAll('[data-del-oid]').forEach(function(b){b.addEventListener('click',function(){deleteOrder(this.getAttribute('data-del-oid'));});});
@@ -704,7 +769,7 @@ function renderStats(period) {
     filtO=filtO.filter(function(o){var d=new Date(o.created_at);return d>=cutoff&&(!dateTo||d<=dateTo);});
   }
 
-  var totalRevenue=0,totalFees=0,pendingPayout=0,totalPaidOut=0,redeemed=0,notRedeemed=0,refunded=0;
+  var totalRevenue=0,totalFees=0,totalStripeFees=0,totalPlatformNet=0,pendingPayout=0,totalPaidOut=0,redeemed=0,notRedeemed=0,refunded=0;
   filtV.forEach(function(v){
     totalRevenue+=Number(v.price_paid)||0;
     totalFees+=Number(v.platform_fee)||0;
@@ -714,17 +779,28 @@ function renderStats(period) {
     if(v.payout_status==='paid')totalPaidOut+=Number(v.bar_payout)||0;
   });
   var paidOrders=0,totalRefunds=0;
-  filtO.forEach(function(o){if(o.status==='paid')paidOrders++;if(o.refund_status==='completed')totalRefunds+=Number(o.price)||0;});
+  filtO.forEach(function(o){
+    var fin = getOrderFinancials(o, barId);
+    if (!fin.included) return;
+    if(o.status==='paid'){
+      paidOrders++;
+      totalStripeFees += Number(fin.stripeFee)||0;
+      totalPlatformNet += Number(fin.platformNet)||0;
+    }
+    if(o.refund_status==='completed') totalRefunds+=Number(o.price)||0;
+  });
   var activeBars=0;d.bars.forEach(function(b){if(b.status==='active')activeBars++;});
   var activeDeals=barId?d.deals.filter(function(dl){return String(dl.bar_id)===barId&&dl.active;}).length:d.deals.filter(function(dl){return dl.active;}).length;
 
   var grid=document.createElement('div');grid.className='stats-grid';
   var stats=[
     ['Gutscheine vermittelt',filtV.length,'all_vouchers'],
-    ['Bestellungen',filtO.length,'all_orders'],
+    ['Bestellungen',filtO.filter(function(o){ return getOrderFinancials(o, barId).included; }).length,'all_orders'],
     ['Bezahlt',paidOrders,'paid_orders'],
-    ['Umsatz',fmtChf(totalRevenue)+' CHF','revenue'],
-    ['Provision (Einnahmen)',fmtChf(totalFees)+' CHF','commission'],
+    ['Verkaufsvolumen',fmtChf(totalRevenue)+' CHF','gross_sales'],
+    ['Provision brutto',fmtChf(totalFees)+' CHF','gross_commission'],
+    ['Stripe-Gebühren',fmtChf(totalStripeFees)+' CHF','stripe_fees'],
+    ['Plattform netto',fmtChf(totalPlatformNet)+' CHF','platform_net'],
     ['Schuld an Bars',fmtChf(pendingPayout)+' CHF','pending_payout'],
     ['Ausgezahlt',fmtChf(totalPaidOut)+' CHF','paid_out'],
     ['Eingelöst',redeemed,'redeemed'],
@@ -825,7 +901,12 @@ function showStatDetail(label, filterKey) {
   else if(filterKey==='pending_payout') items=filtV.filter(function(v){return v.status==='redeemed'&&v.payout_status==='pending';});
   else if(filterKey==='paid_out') items=filtV.filter(function(v){return v.payout_status==='paid';});
   else if(filterKey==='all_vouchers') items=filtV;
-  else if(filterKey==='all_orders'||filterKey==='paid_orders') { renderStatOrderDetail(detailEl,label,filterKey==='paid_orders'?filtO.filter(function(o){return o.status==='paid';}):filtO); return; }
+  else if(filterKey==='all_orders') { renderStatOrderDetail(detailEl,label,filtO.filter(function(o){ return getOrderFinancials(o, barId).included; }), barId); return; }
+  else if(filterKey==='paid_orders') { renderStatOrderDetail(detailEl,label,filtO.filter(function(o){ return o.status==='paid' && getOrderFinancials(o, barId).included; }), barId); return; }
+  else if(filterKey==='gross_sales') { renderStatOrderDetail(detailEl,label,filtO.filter(function(o){ var fin=getOrderFinancials(o, barId); return o.status==='paid' && fin.included && fin.sales>0; }), barId); return; }
+  else if(filterKey==='gross_commission') { renderStatOrderDetail(detailEl,label,filtO.filter(function(o){ var fin=getOrderFinancials(o, barId); return o.status==='paid' && fin.included && fin.grossCommission>0; }), barId); return; }
+  else if(filterKey==='stripe_fees') { renderStatOrderDetail(detailEl,label,filtO.filter(function(o){ var fin=getOrderFinancials(o, barId); return o.status==='paid' && fin.included && fin.stripeFee>0; }), barId); return; }
+  else if(filterKey==='platform_net') { renderStatOrderDetail(detailEl,label,filtO.filter(function(o){ var fin=getOrderFinancials(o, barId); return o.status==='paid' && fin.included && (fin.grossCommission>0 || fin.stripeFee>0); }), barId); return; }
   else { detailEl.innerHTML=''; return; }
   
   var html='<div class="section-title" style="margin-top:20px">'+esc(label)+' ('+items.length+')</div>';
@@ -838,13 +919,20 @@ function showStatDetail(label, filterKey) {
   detailEl.innerHTML=html;
 }
 
-function renderStatOrderDetail(el,label,orders){
+function renderStatOrderDetail(el,label,orders,barId){
   var html='<div class="section-title" style="margin-top:20px">'+esc(label)+' ('+orders.length+')</div>';
   if(!orders.length){html+='<div class="no-data">Keine Daten</div>';el.innerHTML=html;return;}
-  html+='<div class="overflow-x"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th>Datum</th><th>Deal</th><th>Bar</th><th>Käufer</th><th>Email</th><th>Preis</th><th>Status</th><th>Rückerstattung</th></tr></thead><tbody>';
+  html+='<div class="overflow-x"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th>Datum</th><th>Deal</th><th>Bar</th><th>Käufer</th><th>Email</th><th>Verkauf</th><th>Provision brutto</th><th>Stripe-Gebühr</th><th>Plattform netto</th><th>Status</th><th>Rückerstattung</th></tr></thead><tbody>';
+  var totalSales=0,totalCommission=0,totalStripe=0,totalNet=0;
   orders.forEach(function(o){
-    html+='<tr><td style="font-size:11px">'+fmtDate(o.created_at)+'</td><td>'+esc(o.deal_title||'-')+'</td><td>'+esc(o.bar_name||'-')+'</td><td>'+esc(o.buyer_name||'-')+'</td><td style="font-size:11px">'+esc(o.buyer_email||'-')+'</td><td style="text-align:right">'+fmtChf(o.price)+'</td><td>'+esc(o.status||'-')+'</td><td>'+esc(o.refund_status||'-')+'</td></tr>';
+    var fin = getOrderFinancials(o, barId);
+    totalSales += Number(fin.sales||0);
+    totalCommission += Number(fin.grossCommission||0);
+    totalStripe += Number(fin.stripeFee||0);
+    totalNet += Number(fin.platformNet||0);
+    html+='<tr><td style="font-size:11px">'+fmtDate(o.created_at)+'</td><td>'+esc(o.deal_title||'-')+'</td><td>'+esc(o.bar_name||'-')+'</td><td>'+esc(o.buyer_name||'-')+'</td><td style="font-size:11px">'+esc(o.buyer_email||'-')+'</td><td style="text-align:right">'+fmtChf(fin.sales)+'</td><td style="text-align:right;color:#f59e0b">'+fmtChf(fin.grossCommission)+'</td><td style="text-align:right;color:#ef4444">'+fmtChf(fin.stripeFee)+'</td><td style="text-align:right;color:#22c55e">'+fmtChf(fin.platformNet)+'</td><td>'+esc(o.status||'-')+'</td><td>'+esc(o.refund_status||'-')+'</td></tr>';
   });
+  html+='<tr style="border-top:2px solid #FF3366;font-weight:700"><td colspan="5" style="color:#FF3366">'+orders.length+' Bestellungen</td><td style="text-align:right">'+fmtChf(totalSales)+'</td><td style="text-align:right;color:#f59e0b">'+fmtChf(totalCommission)+'</td><td style="text-align:right;color:#ef4444">'+fmtChf(totalStripe)+'</td><td style="text-align:right;color:#22c55e">'+fmtChf(totalNet)+'</td><td colspan="2"></td></tr>';
   html+='</tbody></table></div>';
   el.innerHTML=html;
 }
