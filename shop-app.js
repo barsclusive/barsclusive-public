@@ -2,6 +2,9 @@
 // CONFIGURATION
 // =============================================
 const BACKEND_URL  = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
+const DEALS_CACHE_KEY = 'barsclusive_deals_cache_v3';
+const LEGACY_DEALS_CACHE_KEYS = ['barsclusive_deals_cache', 'barsclusive_deals_cache_v2'];
+const DEAL_GEO_CACHE_KEY = 'barsclusive_deal_geo_cache_v1';
 // WhatsApp removed - Stripe only
 
 // No API key: a key in frontend JS is public and provides no auth.
@@ -82,6 +85,13 @@ function isValidCoord(v) { return typeof v === 'number' && isFinite(v) && Math.a
 function saveLocationState() {
   try { localStorage.setItem('barsclusive_shop_location', JSON.stringify(_locationState)); } catch(e) {}
 }
+function normalizeUserCoords(rawLat, rawLng) {
+  var lat = Number(rawLat), lng = Number(rawLng);
+  if (isSwissCoordPair(lat, lng)) return { lat: lat, lng: lng };
+  if (isSwissCoordPair(lng, lat)) return { lat: lng, lng: lat, swapped: true };
+  if (isValidCoord(lat) && isValidCoord(lng)) return { lat: lat, lng: lng };
+  return null;
+}
 function restoreLocationState() {
   try {
     var raw = localStorage.getItem('barsclusive_shop_location');
@@ -91,9 +101,13 @@ function restoreLocationState() {
     _locationState = Object.assign(_locationState, parsed);
     if (parsed.label && document.getElementById('locationInput')) document.getElementById('locationInput').value = parsed.label;
     filters.city = parsed.textFilter || '';
-    if (isValidCoord(Number(parsed.lat)) && isValidCoord(Number(parsed.lng))) {
-      _userLat = Number(parsed.lat);
-      _userLng = Number(parsed.lng);
+    var coords = normalizeUserCoords(parsed.lat, parsed.lng);
+    if (coords) {
+      _userLat = coords.lat;
+      _userLng = coords.lng;
+      _locationState.lat = coords.lat;
+      _locationState.lng = coords.lng;
+      if (coords.swapped) saveLocationState();
     }
     updateLocationUi();
   } catch(e) {}
@@ -152,15 +166,16 @@ function mapLocationResult(item) {
   };
 }
 function applySelectedLocation(place) {
+  var coords = normalizeUserCoords(place.lat, place.lng) || { lat: Number(place.lat), lng: Number(place.lng) };
   _locationState = {
     label: place.label || place.shortLabel || '',
-    lat: Number(place.lat),
-    lng: Number(place.lng),
+    lat: coords.lat,
+    lng: coords.lng,
     source: 'search',
     textFilter: (place.textFilter || '').toLowerCase()
   };
-  _userLat = Number(place.lat);
-  _userLng = Number(place.lng);
+  _userLat = coords.lat;
+  _userLng = coords.lng;
   filters.city = _locationState.textFilter;
   saveLocationState();
   updateLocationUi();
@@ -198,21 +213,126 @@ function clearLocation() {
 function isSwissCoordPair(lat, lng) {
   return isValidCoord(lat) && isValidCoord(lng) && !!(_swissBounds && _swissBounds.contains([lat, lng]));
 }
+function normalizeSwissDealCoords(rawLat, rawLng) {
+  var lat = Number(rawLat), lng = Number(rawLng);
+  if (isSwissCoordPair(lat, lng)) return { lat: lat, lng: lng };
+  if (isSwissCoordPair(lng, lat)) return { lat: lng, lng: lat, swapped: true };
+  return null;
+}
 function getDealBaseCoords(deal) {
-  var lat = Number(deal && deal.bar_lat), lng = Number(deal && deal.bar_lng);
-  if (!isSwissCoordPair(lat, lng)) return null;
-  return { lat: lat, lng: lng };
+  if (!deal) return null;
+  var coords = normalizeSwissDealCoords(deal.bar_lat, deal.bar_lng);
+  if (coords && coords.swapped && !deal._coordsSwapped) {
+    deal._coordsSwapped = true;
+    deal.bar_lat = coords.lat;
+    deal.bar_lng = coords.lng;
+  }
+  return coords ? { lat: coords.lat, lng: coords.lng } : null;
+}
+
+var _dealGeoCache = (function(){
+  try {
+    var raw = localStorage.getItem(DEAL_GEO_CACHE_KEY);
+    var parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch(e) { return {}; }
+})();
+var _dealGeoRequests = {};
+var _dealGeoRefreshTimer = null;
+function saveDealGeoCache_() {
+  try { localStorage.setItem(DEAL_GEO_CACHE_KEY, JSON.stringify(_dealGeoCache)); } catch(e) {}
+}
+function getDealGeoCacheKey_(deal) {
+  return [deal && deal.bar_address, deal && deal.bar_zip, deal && deal.bar_city]
+    .filter(Boolean)
+    .join('|')
+    .trim()
+    .toLowerCase();
+}
+function scheduleDealGeoRefresh_() {
+  clearTimeout(_dealGeoRefreshTimer);
+  _dealGeoRefreshTimer = setTimeout(function() {
+    attachDistances();
+    renderDeals();
+  }, 80);
+}
+function applyResolvedDealCoords_(deal, coords, source) {
+  var normalized = coords ? normalizeSwissDealCoords(coords.lat, coords.lng) : null;
+  if (!normalized || !deal) return false;
+  deal.bar_lat = normalized.lat;
+  deal.bar_lng = normalized.lng;
+  deal._coordsSwapped = !!normalized.swapped;
+  deal._coordsResolvedSource = source || 'fallback';
+  return true;
+}
+async function geocodeDealAddressSwiss_(deal) {
+  var query = [deal && deal.bar_address, deal && deal.bar_zip, deal && deal.bar_city, 'Switzerland'].filter(Boolean).join(', ');
+  if (!query) return null;
+  try {
+    var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&countrycodes=ch&q=' + encodeURIComponent(query);
+    var resp = await fetch(url, { headers: { 'Accept-Language': 'de' } });
+    if (!resp.ok) return null;
+    var data = await resp.json();
+    if (!Array.isArray(data) || !data.length) return null;
+    var hit = data[0] || {};
+    var coords = normalizeSwissDealCoords(hit.lat, hit.lon || hit.lng);
+    return coords ? { lat: coords.lat, lng: coords.lng } : null;
+  } catch(e) {
+    return null;
+  }
+}
+function needsDealGeoFallback_(deal) {
+  var coords = getDealBaseCoords(deal);
+  if (!coords) return true;
+  if (typeof deal._dist === 'number' && isFinite(deal._dist) && deal._dist > 350) return true;
+  return false;
+}
+function maybeResolveDealCoords_(deal) {
+  if (!deal || deal._geoResolving || deal._coordsResolvedSource === 'geocode' || deal._coordsResolvedSource === 'geocode_failed') return;
+  if (!needsDealGeoFallback_(deal)) return;
+  var cacheKey = getDealGeoCacheKey_(deal);
+  if (!cacheKey) return;
+  var cached = _dealGeoCache[cacheKey];
+  if (cached && applyResolvedDealCoords_(deal, cached, 'geocode_cache')) {
+    scheduleDealGeoRefresh_();
+    return;
+  }
+  deal._geoResolving = true;
+  if (!_dealGeoRequests[cacheKey]) {
+    _dealGeoRequests[cacheKey] = geocodeDealAddressSwiss_(deal).then(function(coords) {
+      if (coords) {
+        _dealGeoCache[cacheKey] = coords;
+        saveDealGeoCache_();
+      }
+      return coords;
+    }).finally(function() { delete _dealGeoRequests[cacheKey]; });
+  }
+  _dealGeoRequests[cacheKey].then(function(coords) {
+    if (coords && applyResolvedDealCoords_(deal, coords, 'geocode')) scheduleDealGeoRefresh_();
+    else deal._coordsResolvedSource = deal._coordsResolvedSource || 'geocode_failed';
+  }).finally(function() { deal._geoResolving = false; });
 }
 function hasDisplayDistance(deal) {
   return typeof (deal && deal._dist) === 'number' && isFinite(deal._dist) && deal._dist >= 0 && deal._dist <= 500 && !!getDealBaseCoords(deal);
 }
 function attachDistances() {
-  var userLat = Number(_userLat), userLng = Number(_userLng);
-  var hasCoords = isSwissCoordPair(userLat, userLng);
+  var normalizedUser = normalizeUserCoords(_userLat, _userLng);
+  var userLat = normalizedUser ? Number(normalizedUser.lat) : NaN;
+  var userLng = normalizedUser ? Number(normalizedUser.lng) : NaN;
+  if (normalizedUser) {
+    _userLat = normalizedUser.lat;
+    _userLng = normalizedUser.lng;
+    if (_locationState) {
+      _locationState.lat = normalizedUser.lat;
+      _locationState.lng = normalizedUser.lng;
+    }
+  }
+  var hasCoords = isValidCoord(userLat) && isValidCoord(userLng);
   allDeals.forEach(function(d) {
     var coords = getDealBaseCoords(d);
     if (hasCoords && coords) d._dist = haversine(userLat, userLng, coords.lat, coords.lng);
     else delete d._dist;
+    maybeResolveDealCoords_(d);
   });
 }
 function haversine(la1, lo1, la2, lo2) {
@@ -269,7 +389,8 @@ let dealsCache = { data: null, timestamp: 0 };
 
 // Performance: load cached deals from localStorage instantly
 try {
-  var _stored = localStorage.getItem('barsclusive_deals_cache');
+  LEGACY_DEALS_CACHE_KEYS.forEach(function(k){ try { localStorage.removeItem(k); } catch(e) {} });
+  var _stored = localStorage.getItem(DEALS_CACHE_KEY);
   if (_stored) {
     var _parsed = JSON.parse(_stored);
     if (_parsed.data && (Date.now() - _parsed.timestamp) < 30 * 60 * 1000) {
@@ -301,7 +422,7 @@ async function loadDeals(forceRefresh = false) {
       allDeals = d.deals;
       attachDistances();
       dealsCache = { data: d.deals, timestamp: now };
-      try { localStorage.setItem('barsclusive_deals_cache', JSON.stringify(dealsCache)); } catch(e) {}
+      try { localStorage.setItem(DEALS_CACHE_KEY, JSON.stringify(dealsCache)); } catch(e) {}
       var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
       var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
       renderDeals();
@@ -390,7 +511,7 @@ function renderDeals() {
   }
 
   el.innerHTML = '';
-  visible.forEach(function(deal) { el.appendChild(buildDealCard(deal)); });
+  visible.forEach(function(deal) { maybeResolveDealCoords_(deal); el.appendChild(buildDealCard(deal)); });
   if (_shopMap && _mapView) updateShopMapMarkers();
 }
 
@@ -1647,8 +1768,9 @@ function requestGeoPermission() {
   if (!navigator.geolocation) { showToast('Standort nicht verfügbar', true); dismissGeoBanner(); return; }
   navigator.geolocation.getCurrentPosition(
     function(pos) {
-      _userLat = pos.coords.latitude;
-      _userLng = pos.coords.longitude;
+      var coords = normalizeUserCoords(pos.coords.latitude, pos.coords.longitude) || { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      _userLat = coords.lat;
+      _userLng = coords.lng;
       _locationState = { label: 'Mein Standort', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
       saveLocationState();
       updateLocationUi();
