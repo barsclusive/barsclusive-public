@@ -89,16 +89,18 @@
     .suggestion-meta{font-size:12px;color:#999;margin-top:2px}
     .input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
     
-.codebox-field{position:relative;width:100%}
-.codebox-input{position:absolute;inset:0;width:100%;height:100%;opacity:1;z-index:3;border:none;background:transparent;color:transparent;caret-color:#fff;cursor:text;text-transform:uppercase}
+.codebox-field{position:relative;width:100%;padding:14px 14px 12px;border:1px solid #2f2f2f;border-radius:16px;background:linear-gradient(180deg,#1d1d1d 0%,#181818 100%);overflow:hidden}
+.codebox-input{position:absolute;inset:0;width:100%;height:100%;opacity:.02;z-index:3;border:none;background:transparent;color:transparent;caret-color:#fff;cursor:text;text-transform:uppercase}
+.codebox-input::placeholder{color:transparent}
 .codebox-input:focus{outline:none}
-.codebox-grid{display:grid;grid-template-columns:repeat(var(--slots), minmax(0,1fr));gap:4px;width:100%}
-.codebox-slot{height:48px;border:1px solid #3b3b3b;border-radius:10px;background:#242424;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:18px;font-weight:700;color:#fff;transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;user-select:none}
-.codebox-slot.gap-after{margin-right:8px}
+.codebox-grid{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;width:100%;position:relative;z-index:1}
+.codebox-group{display:flex;gap:4px;min-width:max-content}
+.codebox-slot{width:34px;height:48px;border:1px solid #3b3b3b;border-radius:10px;background:#242424;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:18px;font-weight:700;color:#fff;transition:border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .15s ease;user-select:none}
 .codebox-slot.filled{border-color:#575757;background:#1f1f1f}
 .codebox-field.is-focused .codebox-slot{border-color:#535353}
-.codebox-field.is-focused .codebox-slot.active{border-color:#ff3366;box-shadow:0 0 0 2px rgba(255,51,102,.18);background:#191919}
+.codebox-field.is-focused .codebox-slot.active{border-color:#ff3366;box-shadow:0 0 0 2px rgba(255,51,102,.18);background:#191919;transform:translateY(-1px)}
 .codebox-field.mwst-field .codebox-slot{font-size:16px}
+.codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:32px}
 .toggle-check{display:flex;align-items:flex-start;gap:10px;padding:12px;background:#202020;border:1px solid #303030;border-radius:12px}
     .toggle-check input{margin-top:2px}
     .inline-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
@@ -122,12 +124,19 @@
       .stat-card{padding:14px}
       .stat-value{font-size:22px}
       .stats-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-      .codebox-slot{height:42px;font-size:15px}
+      .codebox-field{padding:12px 12px 10px;border-radius:14px}
+      .codebox-grid{gap:8px 10px}
+      .codebox-slot{width:30px;height:42px;font-size:15px;border-radius:9px}
       .codebox-field.mwst-field .codebox-slot{font-size:13px}
+      .codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:28px}
     }
     @media(max-width:480px){
       .header h1 span{display:none}
       .tabs{gap:0}
+      .codebox-grid{gap:8px}
+      .codebox-slot{width:28px;height:40px;font-size:14px}
+      .codebox-field.mwst-field .codebox-slot{font-size:12px}
+      .codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:26px}
       .tab{padding:8px 10px;font-size:11px}
     }
   </style>
@@ -323,12 +332,12 @@
             <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
             <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
             <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ <span data-i18n="flatVoucherCat">Pauschalgutschein</span></label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ Pauschalgutschein</label>
           </div>
         </div>
         <!-- Pauschalgutschein fields -->
         <div id="pauschalFields" style="display:none;background:#2a2a2a;padding:16px;border-radius:10px;margin-bottom:18px;border:1px solid #FF3366">
-          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ <span data-i18n="flatVoucherSettings">Pauschalgutschein-Einstellungen</span></h3>
+          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="form-group" style="margin-bottom:0">
               <label class="form-label" for="discountPercent">Rabatt % (mind. 15%)</label>
@@ -380,13 +389,13 @@
             </div>
           </div>
           <div style="margin-top:14px">
-            <label class="form-label" data-i18n="timeWindowOptional">Zeitfenster (optional)</label>
+            <label class="form-label">Zeitfenster (optional)</label>
             <div class="cats-grid" style="margin-bottom:10px">
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> <span data-i18n="timeSlotMorningLong">🌅 Morgen (06–12h)</span></label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> <span data-i18n="timeSlotMiddayLong">☀️ Mittag (11–17h)</span></label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> <span data-i18n="timeSlotEveningLong">🌙 Abend (16–00h)</span></label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> 🌅 Morgen (06–12h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> ☀️ Mittag (11–17h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> 🌙 Abend (16–00h)</label>
             </div>
-            <small style="color:#999;font-size:11px" data-i18n="customTimesHint">Oder eigene Zeiten:</small>
+            <small style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
             <div class="form-group">
@@ -564,46 +573,46 @@
       <input type="number" class="form-input" id="editQty" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label" data-i18n="changeImageOptional">Bild ändern (optional)</label>
+      <label class="form-label">Bild ändern (optional)</label>
       <input type="file" class="form-input" id="editImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
-      <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild" data-alt-i18n="currentImageAlt"></div>
+      <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild"></div>
       <input type="hidden" id="editImageUrl">
     </div>
     <div class="form-group">
-      <label class="form-label" data-i18n="validityPlain">Gültigkeitsdauer</label>
+      <label class="form-label">Gültigkeitsdauer</label>
       <div class="validity-toggle">
         <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> Wiederkehrend</label>
-        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> <span data-i18n="singleDate">Einmaliges Datum</span></label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> Einmaliges Datum</label>
       </div>
     </div>
     <div id="editRecurringFields" style="margin-top:8px">
-      <label class="form-label" data-i18n="weekdaysLbl">Wochentage</label>
+      <label class="form-label">Wochentage</label>
       <div class="weekdays" id="editWeekdays">
         <div class="wd-btn" data-wd="Mo">Mo</div><div class="wd-btn" data-wd="Di">Di</div><div class="wd-btn" data-wd="Mi">Mi</div><div class="wd-btn" data-wd="Do">Do</div><div class="wd-btn" data-wd="Fr">Fr</div><div class="wd-btn" data-wd="Sa">Sa</div><div class="wd-btn" data-wd="So">So</div>
       </div>
     </div>
     <div id="editSingleFields" style="display:none;margin-top:8px">
       <div class="form-group">
-        <label class="form-label" data-i18n="dateLbl">Datum</label>
+        <label class="form-label">Datum</label>
         <input type="date" class="form-input" id="editSingleDate">
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
       <div class="form-group">
-        <label class="form-label" data-i18n="fromTimeLabel">Von (Uhrzeit)</label>
+        <label class="form-label">Von (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeFrom">
       </div>
       <div class="form-group">
-        <label class="form-label" data-i18n="toTimeLabel">Bis (Uhrzeit)</label>
+        <label class="form-label">Bis (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeTo">
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label" data-i18n="timeWindowLabel">Zeitfenster</label>
+      <label class="form-label">Zeitfenster</label>
       <div class="cats-grid" style="margin-top:6px">
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> <span data-i18n="timeSlotMorning">🌅 Morgen</span></label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> <span data-i18n="timeSlotMidday">☀️ Mittag</span></label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> <span data-i18n="timeSlotEvening">🌙 Abend</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> 🌅 Morgen</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> ☀️ Mittag</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> 🌙 Abend</label>
       </div>
     </div>
     <div class="form-check" style="margin-bottom:20px">
