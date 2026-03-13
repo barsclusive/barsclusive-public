@@ -115,7 +115,7 @@
   <div id="tabOrders" class="tab-content active">
     <div class="section-title">Bestellungen</div>
     <div class="overflow-x"><table><thead><tr>
-      <th style="cursor:pointer" onclick="_orderSort={col:'created_at',dir:_orderSort.col==='created_at'?-_orderSort.dir:-1};renderOrders()">Datum ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'deal',dir:_orderSort.col==='deal'?-_orderSort.dir:1};renderOrders()">Deal ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'bar',dir:_orderSort.col==='bar'?-_orderSort.dir:1};renderOrders()">Bar ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'buyer',dir:_orderSort.col==='buyer'?-_orderSort.dir:1};renderOrders()">Käufer ⇅</th><th>Email</th><th style="cursor:pointer" onclick="_orderSort={col:'price',dir:_orderSort.col==='price'?-_orderSort.dir:-1};renderOrders()">Preis ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'status',dir:_orderSort.col==='status'?-_orderSort.dir:1};renderOrders()">Zahlung ⇅</th><th>Gutschein</th><th>Rückerstattung</th><th>Aktion</th>
+      <th style="cursor:pointer" onclick="_orderSort={col:'created_at',dir:_orderSort.col==='created_at'?-_orderSort.dir:-1};renderOrders()">Datum ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'deal',dir:_orderSort.col==='deal'?-_orderSort.dir:1};renderOrders()">Deal ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'bar',dir:_orderSort.col==='bar'?-_orderSort.dir:1};renderOrders()">Bar ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'buyer',dir:_orderSort.col==='buyer'?-_orderSort.dir:1};renderOrders()">Käufer ⇅</th><th>Email</th><th style="cursor:pointer" onclick="_orderSort={col:'price',dir:_orderSort.col==='price'?-_orderSort.dir:-1};renderOrders()">Verkauf ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'gross_commission',dir:_orderSort.col==='gross_commission'?-_orderSort.dir:-1};renderOrders()">Provision brutto ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'stripe_fee',dir:_orderSort.col==='stripe_fee'?-_orderSort.dir:-1};renderOrders()">Stripe-Gebühr ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'platform_net',dir:_orderSort.col==='platform_net'?-_orderSort.dir:-1};renderOrders()">Plattform netto ⇅</th><th style="cursor:pointer" onclick="_orderSort={col:'status',dir:_orderSort.col==='status'?-_orderSort.dir:1};renderOrders()">Zahlung ⇅</th><th>Gutschein</th><th>Rückerstattung</th><th>Aktion</th>
     </tr></thead><tbody id="ordersBody"></tbody></table></div>
   </div>
 
@@ -129,7 +129,7 @@
       <th style="cursor:pointer" onclick="_voucherSort={col:'buyer_name',dir:_voucherSort.col==='buyer_name'?-_voucherSort.dir:1};renderVouchers()">Kunde ⇅</th>
       <th>Kunde Email</th>
       <th style="cursor:pointer" onclick="_voucherSort={col:'price',dir:_voucherSort.col==='price'?-_voucherSort.dir:-1};renderVouchers()">Preis ⇅</th>
-      <th style="cursor:pointer" onclick="_voucherSort={col:'fee',dir:_voucherSort.col==='fee'?-_voucherSort.dir:-1};renderVouchers()">Provision ⇅</th>
+      <th style="cursor:pointer" onclick="_voucherSort={col:'fee',dir:_voucherSort.col==='fee'?-_voucherSort.dir:-1};renderVouchers()">Provision brutto ⇅</th>
       <th style="cursor:pointer" onclick="_voucherSort={col:'payout',dir:_voucherSort.col==='payout'?-_voucherSort.dir:-1};renderVouchers()">Auszahlung ⇅</th>
       <th style="cursor:pointer" onclick="_voucherSort={col:'status',dir:_voucherSort.col==='status'?-_voucherSort.dir:1};renderVouchers()">Status ⇅</th>
       <th style="cursor:pointer" onclick="_voucherSort={col:'payout_status',dir:_voucherSort.col==='payout_status'?-_voucherSort.dir:1};renderVouchers()">Auszahl. ⇅</th>
@@ -170,6 +170,7 @@
 
   <div id="tabStats" class="tab-content">
     <div class="section-title">Statistik</div>
+    <div style="margin:-4px 0 12px;color:#999;font-size:12px;line-height:1.5">Verkaufsvolumen = Verkaufspreis der bezahlten Bestellungen. Plattform netto = Provision brutto minus Stripe-Gebühren.</div>
     <div style="display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
       <select id="statsBarFilter" class="filter-select"><option value="">-- Alle Bars (Global) --</option></select>
     </div>
