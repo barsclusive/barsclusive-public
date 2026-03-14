@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AGB für Kundinnen und Kunden - BarSclusive</title>
   <style>
+
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -88,6 +89,18 @@
     a { color: #FF3366; text-decoration: none; }
     a:hover { text-decoration: underline; }
     .section { margin-bottom: 30px; }
+
+    .header-right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+    .lang-switch { display:flex; gap:8px; flex-wrap:wrap; }
+    .lang-btn { background:#1f1f1f; color:#ddd; border:1px solid #444; padding:8px 12px; border-radius:999px; cursor:pointer; font-size:13px; }
+    .lang-btn.active { border-color:#FF3366; color:#fff; }
+    @media (max-width: 720px) {
+      .header { flex-direction:column; align-items:flex-start; gap:16px; }
+      .header-right { width:100%; justify-content:space-between; }
+      .content { padding:28px 20px; }
+    }
+
+  
   </style>
   <link rel="icon" type="image/png" href="logo.png">
 </head>
@@ -97,13 +110,29 @@
       <div class="logo">
         <img src="logo.png" alt="BarSclusive">
       </div>
-      <a href="shop.html" class="back-btn">← Zurück zum Shop</a>
+      <div class="header-right">
+        <div class="lang-switch">
+          <button type="button" class="lang-btn" data-lang="de">DE</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+          <button type="button" class="lang-btn" data-lang="it">IT</button>
+          <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        </div>
+        <a href="shop.html" class="back-btn" id="backBtn">← Zurück zum Shop</a>
+      </div>
     </div>
 
     <div class="content">
-      <h1>AGB für Kundinnen und Kunden</h1>
-      <p class="subtitle">BarSclusive | Stand: März 2026</p>
+      <h1 id="pageTitle">AGB für Kundinnen und Kunden</h1>
+      <p class="subtitle" id="pageSubtitle">BarSclusive | Stand: März 2026</p>
+      <div id="legalBody"></div>
+    </div>
+  </div>
 
+  <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
+    <p>&copy; 2026 BarSclusive</p>
+  </div>
+
+  <template id="legal-body-de">
       <div class="section">
         <h2>1. Geltungsbereich</h2>
         <p>Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung der BarSclusive Plattform durch Kundinnen und Kunden sowie den Kauf von Gutscheinen und Deals über die Plattform.</p>
@@ -188,7 +217,9 @@
 
         <h3>7.2 Nach Einlösung</h3>
         <div class="highlight">
-          <p><strong>Nach erfolgter Einlösung ist eine Rückerstattung ausgeschlossen.</strong></p>
+          <p>
+<strong>Nach erfolgter Einlösung ist eine Rückerstattung ausgeschlossen.</strong>
+</p>
         </div>
 
         <h3>7.3 Ablauf</h3>
@@ -222,52 +253,436 @@
       </div>
 
       <div class="section">
-        <h2>10. Missbrauch und Sperrung</h2>
-        <p>BarSclusive kann Bestellungen, Konten oder Gutschein-Codes sperren, stornieren oder zurückweisen, wenn Anzeichen für Missbrauch, Manipulation, falsche Angaben oder sonstige unzulässige Nutzung vorliegen.</p>
-      
-      <div class="section">
-        <h2>10a. Steuerliche und rechtliche Einordnung</h2>
-        <p>BarSclusive unterscheidet in der Dokumentation, in Belegen und in der Kommunikation zwischen Gutscheinen für konkrete Leistungen der Partnerbar und Pauschalrabattgutscheinen als eigenem Produkt von BarSclusive.</p>
-        <p>Diese Struktur orientiert sich insbesondere an Art. 20 MWSTG, Art. 20a MWSTG, Art. 21 Abs. 2 Ziff. 19 MWSTG, Art. 40 Abs. 1 Bst. c MWSTG sowie an der MWST-Info 04 Steuerobjekt, einschliesslich der dort beschriebenen Unterscheidung zwischen Wertgutscheinen und Leistungsgutscheinen.</p>
-        <p>Massgebend für die konkrete Einordnung bleibt stets die im jeweiligen Deal publizierte Ausgestaltung und die tatsächlich angebotene Leistung.</p>
-      </div>
-
-</div>
-
-      <div class="section">
-        <h2>11. Datenschutz</h2>
-        <p>Es gilt die separate Datenschutzerklärung für Kundinnen und Kunden.</p>
+        <h2>10. Anwendbares Recht und Gerichtsstand</h2>
+        <p>
+<strong>Anwendbares Recht:</strong> Schweizer Recht</p>
+        <p>
+<strong>Gerichtsstand:</strong> Basel, Schweiz</p>
       </div>
 
       <div class="section">
-        <h2>12. Änderungen der AGB</h2>
-        <p>BarSclusive kann diese AGB jederzeit anpassen. Es gilt jeweils die zum Zeitpunkt der Bestellung veröffentlichte Fassung.</p>
-      </div>
-
-      <div class="section">
-        <h2>13. Schlussbestimmungen</h2>
-        <p><strong>Anwendbares Recht:</strong> Schweizer Recht</p>
-        <p><strong>Gerichtsstand:</strong> Basel, Schweiz</p>
+        <h2>11. Steuer- und Gutscheinlogik</h2>
+        <p>Für die rechtliche und steuerliche Einordnung von Gutscheinen und Rabattprodukten berücksichtigt BarSclusive insbesondere die Unterscheidung zwischen Wertgutscheinen, Leistungsgutscheinen und eigenen Rabattprodukten gemäss den einschlägigen schweizerischen MWST-Grundlagen.</p>
+        <p>Dazu gehören insbesondere Art. 20 MWSTG, Art. 20a MWSTG, Art. 21 Abs. 2 Ziff. 19 MWSTG, Art. 40 Abs. 1 Bst. c MWSTG sowie die MWST-Info 04 Steuerobjekt.</p>
       </div>
 
       <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
         <h2>Kontakt</h2>
-        <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
-        <p style="margin-top:20px; color:#999; font-size:14px;">
-          Stand: März 2026 | BarSclusive, Basel, Schweiz
-        </p>
+        <p>
+<strong>BarSclusive</strong>
+<br>
+        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+        <p style="margin-top:20px; color:#999; font-size:14px;">Stand: März 2026 | BarSclusive, Basel, Schweiz</p>
       </div>
-    </div>
-  </div>
+  </template>
 
-  <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
-    <p>&copy; 2026 BarSclusive</p>
-    <p style="margin-top:8px">
-      <a href="shop.html" style="color:#FF3366">Shop</a> &middot;
-      <a href="datenschutz.html" style="color:#FF3366">Datenschutz</a> &middot;
-      <a href="kontakt.html" style="color:#FF3366">Kontakt</a>
-    </p>
-  </div>
+  <template id="legal-body-en">
+      <div class="section">
+<h2>1. Scope</h2>
+<p>These General Terms and Conditions govern the use of the BarSclusive platform by customers and the purchase of vouchers and deals via the platform.</p>
+</div>
+      <div class="section">
+<h2>2. Role of BarSclusive</h2>
+<p>BarSclusive operates a digital platform for bar deals and vouchers.</p>
+<p>For fixed-price deals, BarSclusive publishes offers from partner bars, technically processes orders and payments, and sends the voucher code after successful payment.</p>
+<p>The respective partner bar provides the gastronomic service on site in its own name and under its own responsibility.</p>
+<p>For flat discount vouchers, BarSclusive sells the voucher itself for CHF 2.50. The partner bar only acts as the redemption point for the discount described in the deal.</p>
+</div>
+      <div class="section">
+<h2>3. Offers and deal types</h2>
+<h3>3.1 Fixed-price deals</h3>
+<p>With fixed-price deals, you purchase a voucher for a specifically described service or offer from a partner bar at a fixed price.</p>
+<p>Redemption takes place later directly at the respective partner bar within the conditions stated in the deal.</p>
+<h3>3.2 Flat discount vouchers</h3>
+<p>With flat discount vouchers, you purchase a voucher from BarSclusive that grants the percentage discount described in the respective deal when redeemed at the partner bar.</p>
+<p>The conditions described in the respective deal apply, especially the discount scope, minimum order value, time validity and any restrictions.</p>
+</div>
+      <div class="section">
+<h2>4. Order and conclusion of contract</h2>
+<h3>4.1 Order</h3>
+<ul>
+<li>You select a deal or voucher.</li>
+<li>You enter the information required for the order.</li>
+<li>You accept these Terms and the Privacy Policy.</li>
+<li>By completing the payment process, you place a binding order.</li>
+</ul>
+<h3>4.2 Payment</h3>
+<ul>
+<li>Payment is made via the payment methods offered on the platform, in particular via Stripe.</li>
+<li>After successful payment, you receive the relevant voucher code electronically via the platform or by email.</li>
+</ul>
+<h3>4.3 Voucher code</h3>
+<ul>
+<li>The voucher code can generally only be used once.</li>
+<li>The voucher code must be redeemed at the specified partner bar within the conditions described in the deal.</li>
+<li>The information published with the respective deal is decisive.</li>
+</ul>
+</div>
+      <div class="section">
+<h2>5. Redemption of vouchers</h2>
+<h3>5.1 General</h3>
+<ul>
+<li>Vouchers can only be redeemed at the respective partner bar indicated.</li>
+<li>Redemption is subject to the conditions published with the deal.</li>
+<li>You must present the voucher code when redeeming it.</li>
+</ul>
+<h3>5.2 On-site service</h3>
+<p>The actual on-site service is provided exclusively by the respective partner bar.</p>
+<p>The partner bar is responsible for availability, execution, quality, service and proper performance of the service.</p>
+<h3>5.3 Complaints during redemption</h3>
+<p>Complaints, disagreements or problems relating to redemption and the on-site service must generally be clarified directly with the respective partner bar.</p>
+<p>BarSclusive may voluntarily provide support, but is not obliged to do so.</p>
+</div>
+      <div class="section">
+<h2>6. Non-redemption of the voucher</h2>
+<p>If a purchased voucher is not redeemed within the validity period described in the deal, the right to redeem it expires after that period.</p>
+<p>For vouchers not redeemed, there is neither a right to the service from the partner bar after expiry nor a right to an automatic refund from BarSclusive.</p>
+<p>In individual cases, BarSclusive may voluntarily and without recognising any legal obligation offer a goodwill solution in whole or in part.</p>
+</div>
+      <div class="section">
+<h2>7. Refund</h2>
+<h3>7.1 Refund request before redemption</h3>
+<p>You may request a refund within 48 hours after purchase provided that the voucher has not yet been redeemed at that time.</p>
+<h3>7.2 After redemption</h3>
+<div class="highlight">
+<p>
+<strong>After successful redemption, a refund is excluded.</strong>
+</p>
+</div>
+<h3>7.3 Procedure</h3>
+<ul>
+<li>Refund requests must be sent to <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>.</li>
+<li>The request must at least include the voucher code and order details.</li>
+<li>BarSclusive reviews the request on the basis of the data available in the system.</li>
+</ul>
+<h3>7.4 Goodwill</h3>
+<p>Additional refunds outside the above rule, if any, are granted exclusively on a voluntary basis and without recognition of any legal obligation.</p>
+</div>
+      <div class="section">
+<h2>8. Technical functions of the platform</h2>
+<p>BarSclusive may provide technical convenience features, in particular search, filter and location functions.</p>
+<p>Such functions are intended to improve use of the platform and do not establish any claim to constant availability, completeness or absolute accuracy of the displayed results.</p>
+</div>
+      <div class="section">
+<h2>9. Liability</h2>
+<p>BarSclusive is not liable for the services provided on site by the partner bar.</p>
+<p>In particular, BarSclusive is not liable for:</p>
+<ul>
+<li>availability of the partner bar</li>
+<li>quality, content or scope of the on-site service</li>
+<li>conduct of employees of the partner bar</li>
+<li>complaints related to consumption, service or execution on site</li>
+<li>technical interruptions outside the direct sphere of influence of BarSclusive</li>
+</ul>
+</div>
+      <div class="section">
+<h2>10. Governing law and jurisdiction</h2>
+<p>
+<strong>Applicable law:</strong> Swiss law</p>
+<p>
+<strong>Place of jurisdiction:</strong> Basel, Switzerland</p>
+</div>
+      <div class="section">
+<h2>11. Tax and voucher logic</h2>
+<p>For the legal and tax classification of vouchers and discount products, BarSclusive considers in particular the distinction between value vouchers, performance vouchers and its own discount products under the relevant Swiss VAT rules.</p>
+<p>This includes in particular Art. 20 VATA, Art. 20a VATA, Art. 21 para. 2 no. 19 VATA, Art. 40 para. 1 lit. c VATA and VAT Info 04 Tax object.</p>
+</div>
+      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+<h2>Contact</h2>
+<p>
+<strong>BarSclusive</strong>
+<br>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+<p style="margin-top:20px; color:#999; font-size:14px;">Status: March 2026 | BarSclusive, Basel, Switzerland</p>
+</div>
+  </template>
+
+  <template id="legal-body-it">
+      <div class="section">
+<h2>1. Ambito di applicazione</h2>
+<p>Le presenti Condizioni generali disciplinano l’utilizzo della piattaforma BarSclusive da parte di clienti e l’acquisto di voucher e deal tramite la piattaforma.</p>
+</div>
+      <div class="section">
+<h2>2. Ruolo di BarSclusive</h2>
+<p>BarSclusive gestisce una piattaforma digitale per deal e voucher di bar.</p>
+<p>Per i deal a prezzo fisso, BarSclusive pubblica le offerte dei bar partner, gestisce tecnicamente ordini e pagamenti e trasmette il codice voucher dopo il pagamento riuscito.</p>
+<p>Il singolo bar partner fornisce la prestazione gastronomica sul posto a proprio nome e sotto la propria responsabilità.</p>
+<p>Per i voucher sconto forfettari, BarSclusive vende direttamente il voucher a CHF 2.50. Il bar partner funge soltanto da punto di riscatto per lo sconto descritto nel deal.</p>
+</div>
+      <div class="section">
+<h2>3. Offerte e tipi di deal</h2>
+<h3>3.1 Deal a prezzo fisso</h3>
+<p>Con i deal a prezzo fisso acquisti un voucher per una prestazione o un’offerta concretamente descritta di un bar partner a un prezzo fisso.</p>
+<p>Il riscatto avviene successivamente direttamente presso il bar partner secondo le condizioni descritte nel deal.</p>
+<h3>3.2 Voucher sconto forfettari</h3>
+<p>Con i voucher sconto forfettari acquisti un voucher di BarSclusive che, al momento del riscatto presso il bar partner, concede la percentuale di sconto descritta nel relativo deal.</p>
+<p>Fanno stato le condizioni descritte nel singolo deal, in particolare percentuale di sconto, importo minimo dell’ordine, validità temporale ed eventuali limitazioni.</p>
+</div>
+      <div class="section">
+<h2>4. Ordine e conclusione del contratto</h2>
+<h3>4.1 Ordine</h3>
+<ul>
+<li>Selezioni un deal o un voucher.</li>
+<li>Inserisci i dati necessari per l’ordine.</li>
+<li>Accetti le presenti Condizioni e l’Informativa privacy.</li>
+<li>Con il completamento del pagamento invii un ordine vincolante.</li>
+</ul>
+<h3>4.2 Pagamento</h3>
+<ul>
+<li>Il pagamento avviene tramite i metodi di pagamento offerti sulla piattaforma, in particolare tramite Stripe.</li>
+<li>Dopo il pagamento riuscito ricevi elettronicamente il relativo codice voucher tramite piattaforma o email.</li>
+</ul>
+<h3>4.3 Codice voucher</h3>
+<ul>
+<li>Il codice voucher è in linea di principio utilizzabile una sola volta.</li>
+<li>Il codice voucher deve essere riscattato presso il bar partner indicato secondo le condizioni descritte nel deal.</li>
+<li>Fanno stato le informazioni pubblicate per il singolo deal.</li>
+</ul>
+</div>
+      <div class="section">
+<h2>5. Riscatto dei voucher</h2>
+<h3>5.1 Generale</h3>
+<ul>
+<li>I voucher possono essere riscattati solo presso il bar partner indicato.</li>
+<li>Il riscatto segue le condizioni pubblicate con il deal.</li>
+<li>Sei tenuto a mostrare il codice voucher al momento del riscatto.</li>
+</ul>
+<h3>5.2 Prestazione sul posto</h3>
+<p>La prestazione effettiva sul posto è fornita esclusivamente dal relativo bar partner.</p>
+<p>Disponibilità, esecuzione, qualità, servizio e corretta erogazione della prestazione sono responsabilità del bar partner.</p>
+<h3>5.3 Reclami durante il riscatto</h3>
+<p>Reclami, divergenze o problemi relativi al riscatto e alla prestazione sul posto devono essere chiariti direttamente con il relativo bar partner.</p>
+<p>BarSclusive può intervenire volontariamente in via di supporto, ma non è obbligata a farlo.</p>
+</div>
+      <div class="section">
+<h2>6. Mancato utilizzo del voucher</h2>
+<p>Se un voucher acquistato non viene riscattato entro il periodo di validità descritto nel deal, il diritto al riscatto decade allo scadere di tale periodo.</p>
+<p>Per i voucher non riscattati non sussiste né un diritto alla prestazione presso il bar partner dopo la scadenza, né un diritto a un rimborso automatico da parte di BarSclusive.</p>
+<p>In singoli casi BarSclusive può offrire volontariamente una soluzione di cortesia, totale o parziale, senza riconoscimento di alcun obbligo legale.</p>
+</div>
+      <div class="section">
+<h2>7. Rimborso</h2>
+<h3>7.1 Richiesta di rimborso prima del riscatto</h3>
+<p>Puoi richiedere un rimborso entro 48 ore dall’acquisto, a condizione che il voucher in questione non sia ancora stato riscattato in quel momento.</p>
+<h3>7.2 Dopo il riscatto</h3>
+<div class="highlight">
+<p>
+<strong>Dopo il riscatto avvenuto con successo, il rimborso è escluso.</strong>
+</p>
+</div>
+<h3>7.3 Procedura</h3>
+<ul>
+<li>Le richieste di rimborso devono essere inviate a <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>.</li>
+<li>La richiesta deve contenere almeno il codice voucher e i dati dell’ordine.</li>
+<li>BarSclusive verifica la richiesta sulla base dei dati presenti nel sistema.</li>
+</ul>
+<h3>7.4 Cortesia</h3>
+<p>Eventuali ulteriori rimborsi al di fuori della regola sopra indicata sono concessi esclusivamente a titolo volontario e senza riconoscimento di alcun obbligo legale.</p>
+</div>
+      <div class="section">
+<h2>8. Funzioni tecniche della piattaforma</h2>
+<p>BarSclusive può mettere a disposizione funzioni tecniche di comodità, in particolare ricerca, filtri e funzioni di localizzazione.</p>
+<p>Tali funzioni servono a migliorare l’utilizzo della piattaforma e non danno diritto a disponibilità costante, completezza o assoluta precisione dei risultati mostrati.</p>
+</div>
+      <div class="section">
+<h2>9. Responsabilità</h2>
+<p>BarSclusive non risponde delle prestazioni fornite sul posto dal bar partner.</p>
+<p>In particolare BarSclusive non risponde per:</p>
+<ul>
+<li>disponibilità del bar partner</li>
+<li>qualità, contenuto o portata della prestazione sul posto</li>
+<li>comportamento del personale del bar partner</li>
+<li>reclami relativi a consumo, servizio o esecuzione sul posto</li>
+<li>interruzioni tecniche al di fuori della sfera di influenza diretta di BarSclusive</li>
+</ul>
+</div>
+      <div class="section">
+<h2>10. Diritto applicabile e foro competente</h2>
+<p>
+<strong>Diritto applicabile:</strong> diritto svizzero</p>
+<p>
+<strong>Foro competente:</strong> Basilea, Svizzera</p>
+</div>
+      <div class="section">
+<h2>11. Logica fiscale e dei voucher</h2>
+<p>Per la qualificazione giuridica e fiscale di voucher e prodotti sconto, BarSclusive tiene conto in particolare della distinzione tra buoni valore, buoni prestazione e propri prodotti sconto secondo le pertinenti basi IVA svizzere.</p>
+<p>Tra queste rientrano in particolare art. 20 LIVA, art. 20a LIVA, art. 21 cpv. 2 n. 19 LIVA, art. 40 cpv. 1 lett. c LIVA e Info IVA 04 Oggetto dell’imposta.</p>
+</div>
+      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+<h2>Contatto</h2>
+<p>
+<strong>BarSclusive</strong>
+<br>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+<p style="margin-top:20px; color:#999; font-size:14px;">Versione: marzo 2026 | BarSclusive, Basilea, Svizzera</p>
+</div>
+  </template>
+
+  <template id="legal-body-fr">
+      <div class="section">
+<h2>1. Champ d’application</h2>
+<p>Les présentes Conditions générales régissent l’utilisation de la plateforme BarSclusive par les clientes et clients ainsi que l’achat de bons et de deals via la plateforme.</p>
+</div>
+      <div class="section">
+<h2>2. Rôle de BarSclusive</h2>
+<p>BarSclusive exploite une plateforme numérique pour des deals et bons de bars.</p>
+<p>Pour les deals à prix fixe, BarSclusive publie les offres des bars partenaires, traite techniquement les commandes et les paiements et transmet le code du bon après paiement réussi.</p>
+<p>Le bar partenaire concerné fournit la prestation gastronomique sur place en son propre nom et sous sa propre responsabilité.</p>
+<p>Pour les bons de réduction forfaitaires, BarSclusive vend lui-même le bon pour CHF 2.50. Le bar partenaire n’est alors que le point d’acceptation de la réduction décrite dans le deal.</p>
+</div>
+      <div class="section">
+<h2>3. Offres et types de deal</h2>
+<h3>3.1 Deals à prix fixe</h3>
+<p>Avec un deal à prix fixe, vous achetez un bon pour une prestation ou une offre concrètement décrite d’un bar partenaire à un prix fixe.</p>
+<p>L’utilisation a lieu ensuite directement auprès du bar partenaire concerné dans les conditions décrites dans le deal.</p>
+<h3>3.2 Bons de réduction forfaitaires</h3>
+<p>Avec les bons de réduction forfaitaires, vous achetez un bon de BarSclusive qui vous accorde, lors de son utilisation dans le bar partenaire, la réduction en pourcentage décrite dans le deal concerné.</p>
+<p>Les conditions décrites dans le deal concerné font foi, en particulier l’étendue de la réduction, le montant minimum de commande, la validité temporelle et d’éventuelles restrictions.</p>
+</div>
+      <div class="section">
+<h2>4. Commande et conclusion du contrat</h2>
+<h3>4.1 Commande</h3>
+<ul>
+<li>Vous sélectionnez un deal ou un bon.</li>
+<li>Vous saisissez les informations nécessaires à la commande.</li>
+<li>Vous acceptez les présentes CGV et la déclaration de confidentialité.</li>
+<li>En finalisant le paiement, vous passez une commande ferme.</li>
+</ul>
+<h3>4.2 Paiement</h3>
+<ul>
+<li>Le paiement s’effectue via les moyens de paiement proposés sur la plateforme, en particulier via Stripe.</li>
+<li>Après paiement réussi, vous recevez le code du bon par voie électronique via la plateforme ou par email.</li>
+</ul>
+<h3>4.3 Code du bon</h3>
+<ul>
+<li>Le code du bon ne peut en principe être utilisé qu’une seule fois.</li>
+<li>Le code du bon doit être utilisé auprès du bar partenaire indiqué dans les conditions décrites dans le deal.</li>
+<li>Les informations publiées avec le deal concerné font foi.</li>
+</ul>
+</div>
+      <div class="section">
+<h2>5. Utilisation des bons</h2>
+<h3>5.1 Généralités</h3>
+<ul>
+<li>Les bons ne peuvent être utilisés qu’auprès du bar partenaire indiqué.</li>
+<li>L’utilisation dépend des conditions publiées avec le deal.</li>
+<li>Vous êtes tenu de présenter le code du bon lors de son utilisation.</li>
+</ul>
+<h3>5.2 Prestation sur place</h3>
+<p>La prestation réelle sur place est fournie exclusivement par le bar partenaire concerné.</p>
+<p>Le bar partenaire est responsable de la disponibilité, de l’exécution, de la qualité, du service et de la bonne exécution de la prestation.</p>
+<h3>5.3 Réclamations lors de l’utilisation</h3>
+<p>Les réclamations, désaccords ou problèmes liés à l’utilisation et à la prestation sur place doivent en principe être réglés directement avec le bar partenaire concerné.</p>
+<p>BarSclusive peut intervenir de manière volontaire à titre d’aide, sans y être obligé.</p>
+</div>
+      <div class="section">
+<h2>6. Non-utilisation du bon</h2>
+<p>Si un bon acheté n’est pas utilisé dans le délai de validité décrit dans le deal, le droit à son utilisation expire après cette période.</p>
+<p>Pour les bons non utilisés, il n’existe ni droit à la prestation auprès du bar partenaire après expiration, ni droit à un remboursement automatique de la part de BarSclusive.</p>
+<p>Dans certains cas, BarSclusive peut proposer volontairement une solution commerciale, totale ou partielle, sans reconnaissance d’une obligation juridique.</p>
+</div>
+      <div class="section">
+<h2>7. Remboursement</h2>
+<h3>7.1 Demande avant utilisation</h3>
+<p>Vous pouvez demander un remboursement dans les 48 heures suivant l’achat, à condition que le bon concerné n’ait pas encore été utilisé à ce moment-là.</p>
+<h3>7.2 Après utilisation</h3>
+<div class="highlight">
+<p>
+<strong>Après utilisation réussie, aucun remboursement n’est possible.</strong>
+</p>
+</div>
+<h3>7.3 Procédure</h3>
+<ul>
+<li>Les demandes de remboursement doivent être adressées à <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>.</li>
+<li>La demande doit contenir au moins le code du bon et les informations de commande.</li>
+<li>BarSclusive examine la demande sur la base des données disponibles dans le système.</li>
+</ul>
+<h3>7.4 Geste commercial</h3>
+<p>D’éventuels remboursements supplémentaires en dehors de la règle ci-dessus sont accordés exclusivement à titre volontaire et sans reconnaissance d’une obligation juridique.</p>
+</div>
+      <div class="section">
+<h2>8. Fonctions techniques de la plateforme</h2>
+<p>BarSclusive peut mettre à disposition des fonctions techniques de confort, notamment des fonctions de recherche, de filtre et de localisation.</p>
+<p>Ces fonctions servent à améliorer l’utilisation de la plateforme et ne fondent aucun droit à une disponibilité permanente, à l’exhaustivité ou à l’exactitude absolue des résultats affichés.</p>
+</div>
+      <div class="section">
+<h2>9. Responsabilité</h2>
+<p>BarSclusive n’est pas responsable des prestations fournies sur place par le bar partenaire.</p>
+<p>BarSclusive n’est notamment pas responsable de :</p>
+<ul>
+<li>la disponibilité du bar partenaire</li>
+<li>la qualité, le contenu ou l’étendue de la prestation sur place</li>
+<li>le comportement du personnel du bar partenaire</li>
+<li>les réclamations liées à la consommation, au service ou à l’exécution sur place</li>
+<li>les interruptions techniques en dehors de la sphère d’influence directe de BarSclusive</li>
+</ul>
+</div>
+      <div class="section">
+<h2>10. Droit applicable et for</h2>
+<p>
+<strong>Droit applicable :</strong> droit suisse</p>
+<p>
+<strong>For compétent :</strong> Bâle, Suisse</p>
+</div>
+      <div class="section">
+<h2>11. Logique fiscale et des bons</h2>
+<p>Pour la qualification juridique et fiscale des bons et produits de réduction, BarSclusive tient notamment compte de la distinction entre bons-valeur, bons de prestation et propres produits de réduction selon les bases suisses pertinentes en matière de TVA.</p>
+<p>Cela comprend en particulier l’art. 20 LTVA, l’art. 20a LTVA, l’art. 21 al. 2 ch. 19 LTVA, l’art. 40 al. 1 let. c LTVA ainsi que l’Info TVA 04 Objet de l’impôt.</p>
+</div>
+      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+<h2>Contact</h2>
+<p>
+<strong>BarSclusive</strong>
+<br>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+<p style="margin-top:20px; color:#999; font-size:14px;">Version : mars 2026 | BarSclusive, Bâle, Suisse</p>
+</div>
+  </template>
+
+  <script>
+    const LEGAL_META = {
+  "de": {
+    "title": "AGB für Kundinnen und Kunden",
+    "subtitle": "BarSclusive | Stand: März 2026",
+    "back": "← Zurück zum Shop"
+  },
+  "en": {
+    "title": "Terms for customers",
+    "subtitle": "BarSclusive | Version: March 2026",
+    "back": "← Back to shop"
+  },
+  "it": {
+    "title": "Condizioni per clienti",
+    "subtitle": "BarSclusive | Versione: marzo 2026",
+    "back": "← Torna allo shop"
+  },
+  "fr": {
+    "title": "CGV pour clientes et clients",
+    "subtitle": "BarSclusive | Version : mars 2026",
+    "back": "← Retour au shop"
+  }
+};
+    const LEGAL_STORAGE_KEY = "barsclusive_lang";
+    function setLegalLang(lang) {
+      var current = LEGAL_META[lang] ? lang : "de";
+      var meta = LEGAL_META[current];
+      var tpl = document.getElementById("legal-body-" + current);
+      document.documentElement.lang = current;
+      document.title = meta.title + " - BarSclusive";
+      document.getElementById("pageTitle").textContent = meta.title;
+      document.getElementById("pageSubtitle").textContent = meta.subtitle;
+      document.getElementById("backBtn").textContent = meta.back;
+      document.getElementById("legalBody").innerHTML = tpl ? tpl.innerHTML : document.getElementById("legal-body-de").innerHTML;
+      document.querySelectorAll(".lang-btn").forEach(function(btn){ btn.classList.toggle("active", btn.dataset.lang === current); });
+      try { localStorage.setItem(LEGAL_STORAGE_KEY, current); } catch(e) {}
+    }
+    document.querySelectorAll(".lang-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){ setLegalLang(btn.dataset.lang); });
+    });
+    var initialLang = "de";
+    try { initialLang = localStorage.getItem(LEGAL_STORAGE_KEY) || "de"; } catch(e) {}
+    setLegalLang(initialLang);
+  </script>
 </body>
 </html>
