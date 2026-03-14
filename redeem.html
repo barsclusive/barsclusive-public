@@ -108,7 +108,7 @@
 <script>
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
 let _code = '';
-let currentLang = localStorage.getItem('barsclusive_lang') || 'de';
+let currentLang = new URLSearchParams(window.location.search).get('lang') || localStorage.getItem('barsclusive_lang') || 'de';
 let voucherData = null;
 const T = {
   de:{title:'Gutschein einlösen – BarSclusive',loading:'Gutschein wird geladen...',redeemTitle:'Gutschein einlösen',warnTitle:'⚠️ Achtung: Nur einmal einlösbar!',redeemWarn:'Nach dem Wischen ist der Gutschein verbraucht und kann nicht erneut verwendet werden.',slideHint:'Schiebe den Regler ganz nach rechts',redeeming:'Wird eingelöst...',successTitle:'Erfolgreich eingelöst!',successText:'Der Gutschein wurde soeben eingelöst.',alreadyTitle:'Bereits eingelöst',alreadyText:'Dieser Gutschein wurde bereits verwendet.',errorTitle:'Fehler',errorNoCode:'Kein Gutschein-Code angegeben.',errorNotFound:'Gutschein nicht gefunden.',errorConn:'Verbindungsfehler.',errorRedeem:'Einlösung fehlgeschlagen.',swipeLabel:'→ → Wischen zum Einlösen → →',legalNote:'Offene Gutscheine dürfen im Bar-Portal sichtbar sein, der Code wird aber erst bei diesem Einlöseprozess verwendet.',lDeal:'Deal',lBar:'Bar',lPaid:'Bezahlt',lDiscount:'Rabatt',lMin:'Mindestbestellung'},
