@@ -2223,7 +2223,13 @@ applyProfileToForm = function(b) {
   isValidMwst = function(v) { return /^CHE-\d{3}\.\d{3}\.\d{3} (MWST|VAT|IVA|TVA)$/.test(formatMwstDisplay(v)); };
 
   codeboxValueToChars = function(pattern, value) {
-    if (pattern === 'mwst') return ('CHE' + getMwstDigitsOnly_(value) + currentMwstSuffix_()).split('');
+    if (pattern === 'mwst') {
+      var digits = getMwstDigitsOnly_(value).split('');
+      var suffix = currentMwstSuffix_().split('');
+      var chars = ['C','H','E'];
+      while (digits.length < 9) digits.push('');
+      return chars.concat(digits.slice(0, 9), suffix);
+    }
     return onlyAlphaNum(value).slice(0, 21).split('');
   };
   getCodeboxGroups = function(pattern) {
