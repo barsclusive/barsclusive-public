@@ -78,7 +78,7 @@ const T = {
   it:{title:'Pagamento riuscito – BarSclusive',loading:'Conferma pagamento...',loadingText:'Attendi un momento. Il tuo voucher viene creato.',successTitle:'Pagamento riuscito!',successText:'Il tuo voucher è stato creato e inviato via email.<br>Puoi anche aprirlo direttamente qui:',voucherBtn:'🎫 Apri voucher',backShop:'← Torna allo shop',errorTitle:'Errore di conferma',errorNoSession:'Nessun ID sessione trovato. Controlla la tua email per il voucher.',errorConfirm:'Il pagamento non è stato confermato.',errorConn:'Errore di connessione. Il voucher è stato comunque inviato via email.',legalNote:'Per i voucher relativi a una prestazione concreta del bar, la prestazione è fornita dal partner bar sul posto. I voucher sconto forfettari sono un prodotto di BarSclusive.',fShop:'Shop',fAbout:'Chi siamo',fContact:'Contatto'},
   fr:{title:'Paiement réussi – BarSclusive',loading:'Confirmation du paiement...',loadingText:'Veuillez patienter un instant. Votre bon est en cours de création.',successTitle:'Paiement réussi !',successText:'Votre bon a été créé et envoyé par email.<br>Vous pouvez aussi l’ouvrir directement ici :',voucherBtn:'🎫 Ouvrir le bon',backShop:'← Retour à la boutique',errorTitle:'Erreur de confirmation',errorNoSession:'Aucun identifiant de session trouvé. Vérifie ton email pour le bon.',errorConfirm:'Le paiement n’a pas pu être confirmé.',errorConn:'Erreur de connexion. Votre bon a quand même été envoyé par email.',legalNote:'Pour les bons portant sur une prestation concrète du bar, la prestation est fournie sur place par le bar partenaire. Les bons de réduction forfaitaires sont un produit de BarSclusive.',fShop:'Shop',fAbout:'À propos',fContact:'Contact'}
 };
-let currentLang = localStorage.getItem('barsclusive_lang') || 'de';
+let currentLang = new URLSearchParams(window.location.search).get('lang') || localStorage.getItem('barsclusive_lang') || 'de';
 function tt(k){ return (T[currentLang] && T[currentLang][k]) || T.de[k] || k; }
 function setLang(l){
   currentLang = l;
@@ -113,7 +113,7 @@ async function confirmPayment() {
     document.getElementById('stateSuccess').style.display = 'block';
     if (data.voucher_code) {
       const base = window.location.pathname.replace(/\/[^\/]*$/, '');
-      document.getElementById('linkVoucher').href = base + '/voucher.html?code=' + encodeURIComponent(data.voucher_code);
+      document.getElementById('linkVoucher').href = base + '/voucher.html?code=' + encodeURIComponent(data.voucher_code) + '&lang=' + encodeURIComponent(currentLang);
     }
   } catch (e) {
     showError('errorConn');
