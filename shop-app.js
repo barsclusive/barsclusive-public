@@ -2,9 +2,6 @@
 // CONFIGURATION
 // =============================================
 const BACKEND_URL  = 'https://script.google.com/macros/s/AKfycbz1zkTHlVpnFgbMlscbjgGHXDRwhoAqYQeasInpWUDzn6dzC2aFC_DEykj_itklCHILRA/exec';
-const DEALS_CACHE_KEY = 'barsclusive_deals_cache_v3';
-const LEGACY_DEALS_CACHE_KEYS = ['barsclusive_deals_cache', 'barsclusive_deals_cache_v2'];
-const DEAL_GEO_CACHE_KEY = 'barsclusive_deal_geo_cache_v1';
 // WhatsApp removed - Stripe only
 
 // No API key: a key in frontend JS is public and provides no auth.
@@ -85,13 +82,6 @@ function isValidCoord(v) { return typeof v === 'number' && isFinite(v) && Math.a
 function saveLocationState() {
   try { localStorage.setItem('barsclusive_shop_location', JSON.stringify(_locationState)); } catch(e) {}
 }
-function normalizeUserCoords(rawLat, rawLng) {
-  var lat = Number(rawLat), lng = Number(rawLng);
-  if (isSwissCoordPair(lat, lng)) return { lat: lat, lng: lng };
-  if (isSwissCoordPair(lng, lat)) return { lat: lng, lng: lat, swapped: true };
-  if (isValidCoord(lat) && isValidCoord(lng)) return { lat: lat, lng: lng };
-  return null;
-}
 function restoreLocationState() {
   try {
     var raw = localStorage.getItem('barsclusive_shop_location');
@@ -101,13 +91,9 @@ function restoreLocationState() {
     _locationState = Object.assign(_locationState, parsed);
     if (parsed.label && document.getElementById('locationInput')) document.getElementById('locationInput').value = parsed.label;
     filters.city = parsed.textFilter || '';
-    var coords = normalizeUserCoords(parsed.lat, parsed.lng);
-    if (coords) {
-      _userLat = coords.lat;
-      _userLng = coords.lng;
-      _locationState.lat = coords.lat;
-      _locationState.lng = coords.lng;
-      if (coords.swapped) saveLocationState();
+    if (isValidCoord(Number(parsed.lat)) && isValidCoord(Number(parsed.lng))) {
+      _userLat = Number(parsed.lat);
+      _userLng = Number(parsed.lng);
     }
     updateLocationUi();
   } catch(e) {}
@@ -166,16 +152,15 @@ function mapLocationResult(item) {
   };
 }
 function applySelectedLocation(place) {
-  var coords = normalizeUserCoords(place.lat, place.lng) || { lat: Number(place.lat), lng: Number(place.lng) };
   _locationState = {
     label: place.label || place.shortLabel || '',
-    lat: coords.lat,
-    lng: coords.lng,
+    lat: Number(place.lat),
+    lng: Number(place.lng),
     source: 'search',
     textFilter: (place.textFilter || '').toLowerCase()
   };
-  _userLat = coords.lat;
-  _userLng = coords.lng;
+  _userLat = Number(place.lat);
+  _userLng = Number(place.lng);
   filters.city = _locationState.textFilter;
   saveLocationState();
   updateLocationUi();
@@ -210,129 +195,12 @@ function clearLocation() {
   updateLocationUi();
   renderDeals();
 }
-function isSwissCoordPair(lat, lng) {
-  return isValidCoord(lat) && isValidCoord(lng) && !!(_swissBounds && _swissBounds.contains([lat, lng]));
-}
-function normalizeSwissDealCoords(rawLat, rawLng) {
-  var lat = Number(rawLat), lng = Number(rawLng);
-  if (isSwissCoordPair(lat, lng)) return { lat: lat, lng: lng };
-  if (isSwissCoordPair(lng, lat)) return { lat: lng, lng: lat, swapped: true };
-  return null;
-}
-function getDealBaseCoords(deal) {
-  if (!deal) return null;
-  var coords = normalizeSwissDealCoords(deal.bar_lat, deal.bar_lng);
-  if (coords && coords.swapped && !deal._coordsSwapped) {
-    deal._coordsSwapped = true;
-    deal.bar_lat = coords.lat;
-    deal.bar_lng = coords.lng;
-  }
-  return coords ? { lat: coords.lat, lng: coords.lng } : null;
-}
-
-var _dealGeoCache = (function(){
-  try {
-    var raw = localStorage.getItem(DEAL_GEO_CACHE_KEY);
-    var parsed = raw ? JSON.parse(raw) : {};
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch(e) { return {}; }
-})();
-var _dealGeoRequests = {};
-var _dealGeoRefreshTimer = null;
-function saveDealGeoCache_() {
-  try { localStorage.setItem(DEAL_GEO_CACHE_KEY, JSON.stringify(_dealGeoCache)); } catch(e) {}
-}
-function getDealGeoCacheKey_(deal) {
-  return [deal && deal.bar_address, deal && deal.bar_zip, deal && deal.bar_city]
-    .filter(Boolean)
-    .join('|')
-    .trim()
-    .toLowerCase();
-}
-function scheduleDealGeoRefresh_() {
-  clearTimeout(_dealGeoRefreshTimer);
-  _dealGeoRefreshTimer = setTimeout(function() {
-    attachDistances();
-    renderDeals();
-  }, 80);
-}
-function applyResolvedDealCoords_(deal, coords, source) {
-  var normalized = coords ? normalizeSwissDealCoords(coords.lat, coords.lng) : null;
-  if (!normalized || !deal) return false;
-  deal.bar_lat = normalized.lat;
-  deal.bar_lng = normalized.lng;
-  deal._coordsSwapped = !!normalized.swapped;
-  deal._coordsResolvedSource = source || 'fallback';
-  return true;
-}
-async function geocodeDealAddressSwiss_(deal) {
-  var query = [deal && deal.bar_address, deal && deal.bar_zip, deal && deal.bar_city, 'Switzerland'].filter(Boolean).join(', ');
-  if (!query) return null;
-  try {
-    var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&countrycodes=ch&q=' + encodeURIComponent(query);
-    var resp = await fetch(url, { headers: { 'Accept-Language': 'de' } });
-    if (!resp.ok) return null;
-    var data = await resp.json();
-    if (!Array.isArray(data) || !data.length) return null;
-    var hit = data[0] || {};
-    var coords = normalizeSwissDealCoords(hit.lat, hit.lon || hit.lng);
-    return coords ? { lat: coords.lat, lng: coords.lng } : null;
-  } catch(e) {
-    return null;
-  }
-}
-function needsDealGeoFallback_(deal) {
-  var coords = getDealBaseCoords(deal);
-  if (!coords) return true;
-  if (typeof deal._dist === 'number' && isFinite(deal._dist) && deal._dist > 350) return true;
-  return false;
-}
-function maybeResolveDealCoords_(deal) {
-  if (!deal || deal._geoResolving || deal._coordsResolvedSource === 'geocode' || deal._coordsResolvedSource === 'geocode_failed') return;
-  if (!needsDealGeoFallback_(deal)) return;
-  var cacheKey = getDealGeoCacheKey_(deal);
-  if (!cacheKey) return;
-  var cached = _dealGeoCache[cacheKey];
-  if (cached && applyResolvedDealCoords_(deal, cached, 'geocode_cache')) {
-    scheduleDealGeoRefresh_();
-    return;
-  }
-  deal._geoResolving = true;
-  if (!_dealGeoRequests[cacheKey]) {
-    _dealGeoRequests[cacheKey] = geocodeDealAddressSwiss_(deal).then(function(coords) {
-      if (coords) {
-        _dealGeoCache[cacheKey] = coords;
-        saveDealGeoCache_();
-      }
-      return coords;
-    }).finally(function() { delete _dealGeoRequests[cacheKey]; });
-  }
-  _dealGeoRequests[cacheKey].then(function(coords) {
-    if (coords && applyResolvedDealCoords_(deal, coords, 'geocode')) scheduleDealGeoRefresh_();
-    else deal._coordsResolvedSource = deal._coordsResolvedSource || 'geocode_failed';
-  }).finally(function() { deal._geoResolving = false; });
-}
-function hasDisplayDistance(deal) {
-  return typeof (deal && deal._dist) === 'number' && isFinite(deal._dist) && deal._dist >= 0 && deal._dist <= 500 && !!getDealBaseCoords(deal);
-}
 function attachDistances() {
-  var normalizedUser = normalizeUserCoords(_userLat, _userLng);
-  var userLat = normalizedUser ? Number(normalizedUser.lat) : NaN;
-  var userLng = normalizedUser ? Number(normalizedUser.lng) : NaN;
-  if (normalizedUser) {
-    _userLat = normalizedUser.lat;
-    _userLng = normalizedUser.lng;
-    if (_locationState) {
-      _locationState.lat = normalizedUser.lat;
-      _locationState.lng = normalizedUser.lng;
-    }
-  }
-  var hasCoords = isValidCoord(userLat) && isValidCoord(userLng);
+  var hasCoords = isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng));
   allDeals.forEach(function(d) {
-    var coords = getDealBaseCoords(d);
-    if (hasCoords && coords) d._dist = haversine(userLat, userLng, coords.lat, coords.lng);
+    var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
+    if (hasCoords && isValidCoord(lat) && isValidCoord(lng)) d._dist = haversine(Number(_userLat), Number(_userLng), lat, lng);
     else delete d._dist;
-    maybeResolveDealCoords_(d);
   });
 }
 function haversine(la1, lo1, la2, lo2) {
@@ -389,8 +257,7 @@ let dealsCache = { data: null, timestamp: 0 };
 
 // Performance: load cached deals from localStorage instantly
 try {
-  LEGACY_DEALS_CACHE_KEYS.forEach(function(k){ try { localStorage.removeItem(k); } catch(e) {} });
-  var _stored = localStorage.getItem(DEALS_CACHE_KEY);
+  var _stored = localStorage.getItem('barsclusive_deals_cache');
   if (_stored) {
     var _parsed = JSON.parse(_stored);
     if (_parsed.data && (Date.now() - _parsed.timestamp) < 30 * 60 * 1000) {
@@ -422,7 +289,7 @@ async function loadDeals(forceRefresh = false) {
       allDeals = d.deals;
       attachDistances();
       dealsCache = { data: d.deals, timestamp: now };
-      try { localStorage.setItem(DEALS_CACHE_KEY, JSON.stringify(dealsCache)); } catch(e) {}
+      try { localStorage.setItem('barsclusive_deals_cache', JSON.stringify(dealsCache)); } catch(e) {}
       var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
       var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
       renderDeals();
@@ -511,7 +378,7 @@ function renderDeals() {
   }
 
   el.innerHTML = '';
-  visible.forEach(function(deal) { maybeResolveDealCoords_(deal); el.appendChild(buildDealCard(deal)); });
+  visible.forEach(function(deal) { el.appendChild(buildDealCard(deal)); });
   if (_shopMap && _mapView) updateShopMapMarkers();
 }
 
@@ -585,8 +452,12 @@ function buildDealCard(deal) {
     b.textContent = (CAT_EMOJI[mainCat] || '') + ' ' + (CAT_NAME[mainCat] || mainCat);
     imgDiv.appendChild(b);
   }
-  // Distanz wird bewusst nur einmal unter der Adresse angezeigt,
-  // damit es keine inkonsistente Doppelanzeige auf derselben Karte gibt.
+  if (deal._dist !== undefined && deal._dist < 200) {
+    const b = document.createElement('div');
+    b.className = 'badge-dist';
+    b.textContent = formatDistanceLabel(deal._dist);
+    imgDiv.appendChild(b);
+  }
 
   // Content area
   const content = document.createElement('div');
@@ -639,7 +510,7 @@ function buildDealCard(deal) {
   var cartBtn = document.createElement('button');
   cartBtn.className = 'add-cart-btn';
   cartBtn.textContent = '🛒+';
-  cartBtn.title = 'In den Warenkorb';
+  cartBtn.title = shopT('cartAddTitle') || 'In den Warenkorb';
   cartBtn.addEventListener('click', function(e) { e.stopPropagation(); addToCart(deal); });
   card.style.cursor = 'pointer';
   card.addEventListener('click', function() { openDealDetail(deal); });
@@ -673,7 +544,7 @@ function buildDealCard(deal) {
 
   var distLine = document.createElement('div');
   distLine.className = 'deal-distance-line';
-  if (hasDisplayDistance(deal)) {
+  if (typeof deal._dist === 'number' && isFinite(deal._dist)) {
     distLine.textContent = '📍 ' + formatDistanceLabel(deal._dist);
   } else {
     distLine.style.display = 'none';
@@ -728,8 +599,8 @@ async function doBuy() {
   var email = document.getElementById('buyEmail').value.trim();
   var consent = document.getElementById('buyConsent').checked;
   var deal = window._currentDeal;
-  if (!name || !email) { showToast('Name und Email sind Pflichtfelder', true); return; }
-  if (!consent) { showToast('Bitte AGB & Datenschutz akzeptieren', true); return; }
+  if (!name || !email) { showToast(shopT('nameEmailRequired') || 'Name und Email sind Pflichtfelder', true); return; }
+  if (!consent) { showToast(shopT('buyConsentError') || 'Bitte AGB & Datenschutz akzeptieren', true); return; }
   if (!deal) return;
   var btn = document.getElementById('btnBuySubmit');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Weiterleitung...'; }
@@ -846,37 +717,13 @@ function buildOrderCard(o) {
       copyBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); }; })(vc));
       actions.appendChild(copyBtn);
 
-      var waBtn = document.createElement('button');
-      waBtn.className = 'share-btn';
-      waBtn.textContent = '💬 WhatsApp';
-      waBtn.addEventListener('click', (function(c, t) { return function() { shareVoucher(c, t, 'whatsapp'); }; })(vc, o.deal_title || ''));
-      actions.appendChild(waBtn);
-
-      var tgBtn = document.createElement('button');
-      tgBtn.className = 'share-btn';
-      tgBtn.textContent = '✈️ Telegram';
-      tgBtn.addEventListener('click', (function(c, t) { return function() { shareVoucher(c, t, 'telegram'); }; })(vc, o.deal_title || ''));
-      actions.appendChild(tgBtn);
-
-      var igBtn = document.createElement('button');
-      igBtn.className = 'share-btn';
-      igBtn.textContent = '📸 Instagram';
-      igBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast('Link kopiert – in Instagram einfügen!'); }; })(vc));
-      actions.appendChild(igBtn);
-
-      var tkBtn = document.createElement('button');
-      tkBtn.className = 'share-btn';
-      tkBtn.textContent = '🎵 TikTok';
-      tkBtn.addEventListener('click', (function(c) { return function() { copyVoucherLink(c); showToast('Link kopiert – in TikTok einfügen!'); }; })(vc));
-      actions.appendChild(tkBtn);
-
       if (navigator.share) {
         var nsBtn = document.createElement('button');
         nsBtn.className = 'share-btn';
-        nsBtn.textContent = '📱 Teilen';
+        nsBtn.textContent = '📱 ' + (shopT('shareBtn') || 'Teilen');
         nsBtn.addEventListener('click', (function(c, t) { return function() {
           var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(c);
-          navigator.share({ title: t || 'BarSclusive Gutschein', url: vUrl }).catch(function() {});
+          navigator.share({ title: t || 'BarSclusive Voucher', url: vUrl }).catch(function() {});
         }; })(vc, o.deal_title || ''));
         actions.appendChild(nsBtn);
       }
@@ -910,9 +757,9 @@ function buildOrderCard(o) {
 }
 
 async function doRefund(orderId) {
-  if (!confirm('Rückerstattung anfordern?\nDer Gutschein wird ungültig.')) return;
+  if (!confirm(shopT('refundConfirm') || 'Rückerstattung anfordern?\nDer Gutschein wird ungültig.')) return;
   const s = sessionGet();
-  if (!s) { showToast('Nicht eingeloggt', true); return; }
+  if (!s) { showToast(shopT('notLoggedIn') || 'Nicht eingeloggt', true); return; }
 
   try {
     const r = await api({ action: 'requestRefund', token: s.token, order_id: orderId });
@@ -990,7 +837,7 @@ async function doLogout() {
   }
   sessionClear();
   showView('deals');
-  showToast('Ausgeloggt');
+  showToast(shopT('logoutSuccess') || 'Ausgeloggt');
 }
 
 // =============================================
@@ -1131,7 +978,7 @@ async function resetPasswordSubmit() {
       role: 'customer' 
     });
     if (r.success) {
-      showToast('✅ Passwort geändert!');
+      showToast(shopT('passwordChangedSuccess') || '✅ Passwort geändert!');
       closeModal('resetPasswordModal');
       document.getElementById('resetEmail').value = '';
       document.getElementById('resetCode').value = '';
@@ -1452,18 +1299,18 @@ async function doChangePassword() {
   const confPw = document.getElementById('cpwConfirm').value;
   const err    = document.getElementById('cpwErr');
   err.textContent = '';
-  if (!oldPw || !newPw || !confPw) { err.textContent = 'Alle Felder ausfüllen.'; return; }
-  if (newPw.length < 8) { err.textContent = 'Neues Passwort mind. 8 Zeichen.'; return; }
-  if (newPw !== confPw) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
+  if (!oldPw || !newPw || !confPw) { err.textContent = shopT('allFieldsRequired') || 'Alle Felder ausfüllen.'; return; }
+  if (newPw.length < 8) { err.textContent = shopT('newPasswordMinErr') || 'Neues Passwort mind. 8 Zeichen.'; return; }
+  if (newPw !== confPw) { err.textContent = shopT('passwordMismatchDot') || 'Passwörter stimmen nicht überein.'; return; }
   try {
     const r = await api({ action: 'changePassword', token: s.token, old_password: oldPw, new_password: newPw });
     if (r.success) {
-      showToast('✅ Passwort geändert!');
+      showToast(shopT('passwordChangedSuccess') || '✅ Passwort geändert!');
       closeChangePwModal();
     } else {
-      err.textContent = r.error || 'Fehler.';
+      err.textContent = translateShopRuntimeMessage(r.error || (shopT('genericErrorDot') || 'Fehler.'));
     }
-  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
+  } catch (e) { err.textContent = shopT('networkErrorDot') || 'Verbindungsfehler.'; }
 }
 
 // Bind lang + password change on DOMContentLoaded
@@ -1566,7 +1413,7 @@ async function loadFavorites() {
 
 async function toggleFavorite(dealId, btn) {
   var s = sessionGet();
-  if (!s) { showToast('Bitte einloggen', true); return; }
+  if (!s) { showToast(shopT('loginRequired') || 'Bitte einloggen', true); return; }
   var isFav = _favorites.indexOf(dealId) !== -1;
   try {
     var r = await api({ action: isFav ? 'removeFavorite' : 'addFavorite', token: s.token, deal_id: dealId });
@@ -1634,7 +1481,7 @@ function openDealDetail(deal) {
   
   // Info section
   var info = '';
-  if (deal.bar_address) info += '<div><span style="color:#999">Adresse</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
+  if (deal.bar_address) info += '<div><span style="color:#999">' + escHtml(shopLang === 'en' ? 'Address' : shopLang === 'it' ? 'Indirizzo' : shopLang === 'fr' ? 'Adresse' : 'Adresse') + '</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
   if (isPauschal) {
     if (deal.discount_percent) info += '<div><span style="color:#999">Rabatt</span><span style="color:#FF3366;font-weight:700">' + deal.discount_percent + '%</span></div>';
     if (deal.min_order) info += '<div><span style="color:#999">Mindestbestellung</span><span>' + deal.min_order + ' CHF</span></div>';
@@ -1652,12 +1499,7 @@ function openDealDetail(deal) {
   var shareEl = document.getElementById('ddShare');
   shareEl.innerHTML = '';
   var shareItems = [
-    ['📋 Link kopieren', function() { copyDealLink(); }],
-    ['💬 WhatsApp', function() { shareDeal('whatsapp'); }],
-    ['📘 Facebook', function() { shareDeal('facebook'); }],
-    ['✈️ Telegram', function() { shareDeal('telegram'); }],
-    ['📸 Instagram', function() { copyDealLink(); showToast('Link kopiert – jetzt in Instagram Story einfügen!'); }],
-    ['🎵 TikTok', function() { copyDealLink(); showToast('Link kopiert – jetzt in TikTok einfügen!'); }]
+    ['📋 Link kopieren', function() { copyDealLink(); }]
   ];
   if (navigator.share) {
     shareItems.unshift(['📱 Teilen', function() {
@@ -1682,7 +1524,7 @@ function openDealDetail(deal) {
     ddCartBtn.style.cssText = 'width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
     document.getElementById('ddBuyBtn').after(ddCartBtn);
   }
-  ddCartBtn.textContent = '🛒 In den Warenkorb';
+  ddCartBtn.textContent = '🛒 ' + (shopT('cartAddTitle') || 'In den Warenkorb');
   ddCartBtn.onclick = function() { addToCart(deal); closeDealDetail(); };
   
   modal.classList.add('active');
@@ -1765,20 +1607,19 @@ function dismissGeoBanner() {
 }
 
 function requestGeoPermission() {
-  if (!navigator.geolocation) { showToast('Standort nicht verfügbar', true); dismissGeoBanner(); return; }
+  if (!navigator.geolocation) { showToast(shopT('locationUnavailable') || 'Standort nicht verfügbar', true); dismissGeoBanner(); return; }
   navigator.geolocation.getCurrentPosition(
     function(pos) {
-      var coords = normalizeUserCoords(pos.coords.latitude, pos.coords.longitude) || { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      _userLat = coords.lat;
-      _userLng = coords.lng;
-      _locationState = { label: 'Mein Standort', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
+      _userLat = pos.coords.latitude;
+      _userLng = pos.coords.longitude;
+      _locationState = { label: shopT('myLocationBtn') || 'Mein Standort', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
       saveLocationState();
       updateLocationUi();
       dismissGeoBanner();
-      showToast('📍 Deals werden nach Nähe sortiert');
+      showToast(shopT('dealsSortedByDistance') || '📍 Deals werden nach Nähe sortiert');
       sortDealsByDistance();
     },
-    function() { dismissGeoBanner(); showToast('Standort nicht verfügbar', true); },
+    function() { dismissGeoBanner(); showToast(shopT('locationUnavailable') || 'Standort nicht verfügbar', true); },
     { enableHighAccuracy: false, timeout: 10000 }
   );
 }
@@ -1825,7 +1666,7 @@ function addToCart(deal) {
   else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
   saveCart();
   openCartPanel();
-  showToast('🛒 ' + deal.title + ' zum Warenkorb hinzugefügt');
+  showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
 }
 
 function removeFromCart(dealId) {
@@ -2050,28 +1891,27 @@ function buildPricePinIcon(barEntry) {
 function offsetDuplicateDealsForMap(deals) {
   var groups = {};
   deals.forEach(function(d) {
-    var coords = getDealBaseCoords(d);
-    if (!coords) return;
-    var key = coords.lat.toFixed(5) + ',' + coords.lng.toFixed(5);
+    var lat = Number(d.bar_lat), lng = Number(d.bar_lng);
+    if (!isValidCoord(lat) || !isValidCoord(lng)) return;
+    var key = lat.toFixed(5) + ',' + lng.toFixed(5);
     if (!groups[key]) groups[key] = [];
     groups[key].push(d);
   });
   var out = [];
   Object.keys(groups).forEach(function(key) {
     var arr = groups[key];
-    var baseCoords = getDealBaseCoords(arr[0]);
-    if (!baseCoords) return;
     if (arr.length === 1) {
-      arr[0]._mapLat = baseCoords.lat;
-      arr[0]._mapLng = baseCoords.lng;
+      arr[0]._mapLat = Number(arr[0].bar_lat);
+      arr[0]._mapLng = Number(arr[0].bar_lng);
       out.push(arr[0]);
       return;
     }
+    var baseLat = Number(arr[0].bar_lat), baseLng = Number(arr[0].bar_lng);
     var radius = 0.00022;
     arr.forEach(function(d, idx) {
       var angle = (Math.PI * 2 * idx) / arr.length;
-      d._mapLat = baseCoords.lat + Math.sin(angle) * radius;
-      d._mapLng = baseCoords.lng + Math.cos(angle) * radius;
+      d._mapLat = baseLat + Math.sin(angle) * radius;
+      d._mapLng = baseLng + Math.cos(angle) * radius;
       out.push(d);
     });
   });
@@ -2105,17 +1945,16 @@ function updateShopMapMarkers() {
   }
 
   visibleDeals.forEach(function(d) {
-    var baseCoords = getDealBaseCoords(d);
-    var lat = Number(d._mapLat != null ? d._mapLat : (baseCoords && baseCoords.lat)), lng = Number(d._mapLng != null ? d._mapLng : (baseCoords && baseCoords.lng));
-    if (!isSwissCoordPair(lat, lng)) return;
-    var tooltipHtml = '<div style="font-weight:700">' + escHtml(d.title || '') + '</div>' +
-      '<div style="font-size:12px;color:#666">' + escHtml(d.bar_name || '') + '</div>';
-    if (hasDisplayDistance(d)) {
-      tooltipHtml += '<div style="font-size:12px;color:#666">' + escHtml(formatDistanceLabel(d._dist)) + '</div>';
-    }
+    var lat = Number(d._mapLat != null ? d._mapLat : d.bar_lat), lng = Number(d._mapLng != null ? d._mapLng : d.bar_lng);
+    if (!isValidCoord(lat) || !isValidCoord(lng)) return;
+    if (!_swissBounds.contains([lat, lng])) return;
     var marker = L.marker([lat, lng], { icon: buildDealPinIcon(d), keyboard: true, title: d.title || '' }).addTo(_shopMap);
     marker.on('click', function() { openDealDetail(d); });
-    marker.bindTooltip(tooltipHtml, { direction: 'top', offset: [0, -10], opacity: 0.96 });
+    marker.bindTooltip(
+      '<div style="font-weight:700">' + escHtml(d.title || '') + '</div>' +
+      '<div style="font-size:12px;color:#666">' + escHtml(d.bar_name || '') + '</div>',
+      { direction: 'top', offset: [0, -10], opacity: 0.96 }
+    );
     _shopMapMarkers.push(marker);
     bounds.push([lat, lng]);
   });
@@ -2194,3 +2033,178 @@ window.addEventListener('load', function() {
     el = document.querySelector('label[for="regPasswordConfirm"]'); if (el) el.textContent = t('registerConfirmLbl');
   };
 })();
+
+
+// =============================================
+// STRICT PATCH: i18n cleanup + language-aware deals + reduced sharing
+// =============================================
+Object.assign(SHOP_TRANSLATIONS.de, {
+  shareBtn:'Teilen', networkError:'Verbindungsfehler', networkReload:'Verbindungsfehler - bitte neu laden',
+  dealsLoadError:'Fehler beim Laden der Deals', cartAddTitle:'In den Warenkorb',
+  acceptTermsPrivacy:'Bitte AGB & Datenschutz akzeptieren', invalidCredentials:'Ungültige Zugangsdaten',
+  fillAllFields:'Alle Felder ausfüllen', passwordMinErr:'Passwort mind. 8 Zeichen', passwordMismatch:'Passwörter stimmen nicht überein',
+  emailRequired:'Bitte Email eingeben', codeSent:'Code gesendet!', passwordChangedSuccess:'✅ Passwort geändert!',
+  loginRequired:'Bitte einloggen', notLoggedIn:'Nicht eingeloggt', refundConfirm:'Rückerstattung anfordern?\nDer Gutschein wird ungültig.', refundRequestedSuccess:'✅ Rückerstattung angefordert',
+  locationUnavailable:'Standort nicht verfügbar', dealsSortedByDistance:'📍 Deals werden nach Nähe sortiert',
+  addedToCartSuffix:'zum Warenkorb hinzugefügt', processing:'⏳ Wird verarbeitet...',
+  loadError:'Fehler', registrationSuccess:'✅ Registrierung erfolgreich!', loginSuccess:'✅ Eingeloggt!', logoutSuccess:'Ausgeloggt',
+  linkGenericPrefix:'Link:', nameEmailRequired:'Name und Email sind Pflichtfelder', buyConsentError:'Bitte AGB & Datenschutz akzeptieren',
+  allFieldsRequired:'Alle Felder ausfüllen.', newPasswordMinErr:'Neues Passwort mind. 8 Zeichen.', passwordMismatchDot:'Passwörter stimmen nicht überein.', genericErrorDot:'Fehler.', networkErrorDot:'Verbindungsfehler.'
+});
+Object.assign(SHOP_TRANSLATIONS.en, {
+  shareBtn:'Share', networkError:'Connection error', networkReload:'Connection error - please reload',
+  dealsLoadError:'Error loading deals', cartAddTitle:'Add to cart', acceptTermsPrivacy:'Please accept terms and privacy',
+  invalidCredentials:'Invalid credentials', fillAllFields:'Please fill in all fields', passwordMinErr:'Password must be at least 8 characters',
+  passwordMismatch:'Passwords do not match', emailRequired:'Please enter your email', codeSent:'Code sent!',
+  passwordChangedSuccess:'✅ Password changed!', loginRequired:'Please log in', notLoggedIn:'Not logged in',
+  refundConfirm:'Request refund?\nThe voucher will become invalid.', refundRequestedSuccess:'✅ Refund requested',
+  locationUnavailable:'Location not available', dealsSortedByDistance:'📍 Deals are now sorted by distance',
+  addedToCartSuffix:'added to cart', loadError:'Error', registrationSuccess:'✅ Registration successful!', loginSuccess:'✅ Logged in!', logoutSuccess:'Logged out',
+  linkGenericPrefix:'Link:', buyConsentError:'Please accept terms and privacy', allFieldsRequired:'Please fill in all fields.',
+  newPasswordMinErr:'New password must be at least 8 characters.', passwordMismatchDot:'Passwords do not match.', genericErrorDot:'Error.', networkErrorDot:'Connection error.'
+});
+Object.assign(SHOP_TRANSLATIONS.it, {
+  shareBtn:'Condividi', networkError:'Errore di connessione', networkReload:'Errore di connessione - ricarica la pagina',
+  dealsLoadError:'Errore durante il caricamento dei deal', cartAddTitle:'Aggiungi al carrello', acceptTermsPrivacy:'Accetta condizioni e privacy',
+  invalidCredentials:'Credenziali non valide', fillAllFields:'Compila tutti i campi', passwordMinErr:'La password deve avere almeno 8 caratteri',
+  passwordMismatch:'Le password non coincidono', emailRequired:'Inserisci l\'email', codeSent:'Codice inviato!',
+  passwordChangedSuccess:'✅ Password modificata!', loginRequired:'Accedi prima', notLoggedIn:'Non connesso',
+  refundConfirm:'Richiedere il rimborso?\nIl voucher diventerà non valido.', refundRequestedSuccess:'✅ Rimborso richiesto',
+  locationUnavailable:'Posizione non disponibile', dealsSortedByDistance:'📍 I deal sono ora ordinati per distanza',
+  addedToCartSuffix:'aggiunto al carrello', loadError:'Errore', registrationSuccess:'✅ Registrazione riuscita!', loginSuccess:'✅ Accesso effettuato!', logoutSuccess:'Disconnesso',
+  linkGenericPrefix:'Link:', buyConsentError:'Accetta condizioni e privacy', allFieldsRequired:'Compila tutti i campi.',
+  newPasswordMinErr:'La nuova password deve avere almeno 8 caratteri.', passwordMismatchDot:'Le password non coincidono.', genericErrorDot:'Errore.', networkErrorDot:'Errore di connessione.'
+});
+Object.assign(SHOP_TRANSLATIONS.fr, {
+  shareBtn:'Partager', networkError:'Erreur de connexion', networkReload:'Erreur de connexion - veuillez recharger',
+  dealsLoadError:'Erreur lors du chargement des deals', cartAddTitle:'Ajouter au panier', acceptTermsPrivacy:'Veuillez accepter les CGV et la confidentialité',
+  invalidCredentials:'Identifiants invalides', fillAllFields:'Veuillez remplir tous les champs', passwordMinErr:'Le mot de passe doit contenir au moins 8 caractères',
+  passwordMismatch:'Les mots de passe ne correspondent pas', emailRequired:'Veuillez saisir l\'email', codeSent:'Code envoyé !',
+  passwordChangedSuccess:'✅ Mot de passe modifié !', loginRequired:'Veuillez vous connecter', notLoggedIn:'Non connecté',
+  refundConfirm:'Demander un remboursement ?\nLe bon deviendra invalide.', refundRequestedSuccess:'✅ Remboursement demandé',
+  locationUnavailable:'Position non disponible', dealsSortedByDistance:'📍 Les deals sont maintenant triés par distance',
+  addedToCartSuffix:'ajouté au panier', loadError:'Erreur', registrationSuccess:'✅ Inscription réussie !', loginSuccess:'✅ Connecté !', logoutSuccess:'Déconnecté',
+  linkGenericPrefix:'Lien :', buyConsentError:'Veuillez accepter les CGV et la confidentialité', allFieldsRequired:'Veuillez remplir tous les champs.',
+  newPasswordMinErr:'Le nouveau mot de passe doit contenir au moins 8 caractères.', passwordMismatchDot:'Les mots de passe ne correspondent pas.', genericErrorDot:'Erreur.', networkErrorDot:'Erreur de connexion.'
+});
+
+function dealsCacheKeyForLang(lang) {
+  return 'barsclusive_deals_cache_' + String(lang || 'de').toLowerCase();
+}
+function translateShopRuntimeMessage(msg) {
+  var raw = String(msg == null ? '' : msg).trim();
+  var map = {
+    'Fehler beim Laden der Deals':'dealsLoadError',
+    'Verbindungsfehler - bitte neu laden':'networkReload',
+    'Verbindungsfehler':'networkError',
+    'Name und Email sind Pflichtfelder':'nameEmailRequired',
+    'Bitte AGB & Datenschutz akzeptieren':'buyConsentError',
+    'Ungültige Zugangsdaten':'invalidCredentials',
+    'Alle Felder ausfüllen':'fillAllFields',
+    'Bitte Email eingeben':'emailRequired',
+    'Code gesendet!':'codeSent',
+    '✅ Passwort geändert!':'passwordChangedSuccess',
+    'Bitte einloggen':'loginRequired',
+    'Nicht eingeloggt':'notLoggedIn',
+    '✅ Rückerstattung angefordert':'refundRequestedSuccess',
+    'Standort nicht verfügbar':'locationUnavailable',
+    '📍 Deals werden nach Nähe sortiert':'dealsSortedByDistance',
+    'Ausgeloggt':'logoutSuccess',
+    '✅ Registrierung erfolgreich!':'registrationSuccess',
+    '✅ Eingeloggt!':'loginSuccess',
+    'Fehler':'loadError',
+    'Alle Felder ausfüllen.':'allFieldsRequired',
+    'Neues Passwort mind. 8 Zeichen.':'newPasswordMinErr',
+    'Passwörter stimmen nicht überein.':'passwordMismatchDot',
+    'Fehler.':'genericErrorDot',
+    'Verbindungsfehler.':'networkErrorDot'
+  };
+  if (map[raw]) return shopT(map[raw]) || raw;
+  return raw;
+}
+var _showToastOrig = showToast;
+showToast = function(msg, isError) {
+  return _showToastOrig(translateShopRuntimeMessage(msg), isError);
+};
+var _origCopyDealLink = copyDealLink;
+copyDealLink = function() {
+  if (!_detailDeal) return;
+  var url = window.location.origin + window.location.pathname + '?deal=' + _detailDeal.id;
+  navigator.clipboard.writeText(url).then(function() {
+    showToast(shopT('linkKopiert') || 'Link kopiert!');
+  }).catch(function() {
+    showToast((shopT('linkGenericPrefix') || 'Link:') + ' ' + url);
+  });
+};
+copyVoucherLink = function(code) {
+  var url = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(code);
+  navigator.clipboard.writeText(url).then(function() {
+    showToast(shopT('linkKopiert') || 'Link kopiert!');
+  }).catch(function() {
+    showToast((shopT('linkGenericPrefix') || 'Link:') + ' ' + url);
+  });
+};
+var _origLoadDeals = loadDeals;
+loadDeals = async function(forceRefresh) {
+  forceRefresh = !!forceRefresh;
+  var now = Date.now();
+  var lang = (_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || 'de').toLowerCase();
+  var cacheKey = dealsCacheKeyForLang(lang);
+  if (!forceRefresh && dealsCache.data && dealsCache.lang === lang && (now - dealsCache.timestamp) < CACHE_DURATION) {
+    allDeals = dealsCache.data;
+    attachDistances();
+    renderDeals();
+    return;
+  }
+  if (!forceRefresh) {
+    try {
+      var localRaw = localStorage.getItem(cacheKey);
+      if (localRaw) {
+        var localParsed = JSON.parse(localRaw);
+        if (localParsed.data && localParsed.lang === lang && (now - localParsed.timestamp) < CACHE_DURATION) {
+          dealsCache = localParsed;
+          allDeals = localParsed.data;
+          attachDistances();
+          renderDeals();
+          return;
+        }
+      }
+    } catch(e) {}
+  }
+  try {
+    const r = await fetch(BACKEND_URL + '?action=getActiveDeals&lang=' + encodeURIComponent(lang));
+    if (!r.ok) throw new Error('Network error');
+    const d = await r.json();
+    if (d.success) {
+      allDeals = d.deals || [];
+      attachDistances();
+      dealsCache = { data: allDeals, timestamp: now, lang: lang };
+      try { localStorage.setItem(cacheKey, JSON.stringify(dealsCache)); } catch(e) {}
+      var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
+      var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
+      renderDeals();
+    } else {
+      showToast(d.error || shopT('dealsLoadError') || 'Fehler beim Laden der Deals', true);
+    }
+  } catch (e) {
+    showToast(shopT('networkReload') || 'Verbindungsfehler - bitte neu laden', true);
+  }
+};
+var _origSetShopLang = setShopLang;
+setShopLang = function(lang) {
+  var previous = _shopLang || shopLang || 'de';
+  _origSetShopLang(lang);
+  if (previous !== lang) loadDeals(false);
+};
+// prime language-specific cache immediately if present
+try {
+  var _initialLang = (localStorage.getItem('barsclusive_lang') || _shopLang || 'de').toLowerCase();
+  var _localRaw = localStorage.getItem(dealsCacheKeyForLang(_initialLang));
+  if (_localRaw) {
+    var _localParsed = JSON.parse(_localRaw);
+    if (_localParsed.data && _localParsed.lang === _initialLang && (Date.now() - _localParsed.timestamp) < 30 * 60 * 1000) {
+      dealsCache = _localParsed;
+      allDeals = _localParsed.data;
+    }
+  }
+} catch(e) {}
