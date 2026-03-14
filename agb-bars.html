@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AGB für Partnerbars - BarSclusive</title>
   <style>
+
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -88,6 +89,18 @@
     a { color: #FF3366; text-decoration: none; }
     a:hover { text-decoration: underline; }
     .section { margin-bottom: 30px; }
+
+    .header-right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+    .lang-switch { display:flex; gap:8px; flex-wrap:wrap; }
+    .lang-btn { background:#1f1f1f; color:#ddd; border:1px solid #444; padding:8px 12px; border-radius:999px; cursor:pointer; font-size:13px; }
+    .lang-btn.active { border-color:#FF3366; color:#fff; }
+    @media (max-width: 720px) {
+      .header { flex-direction:column; align-items:flex-start; gap:16px; }
+      .header-right { width:100%; justify-content:space-between; }
+      .content { padding:28px 20px; }
+    }
+
+  
   </style>
   <link rel="icon" type="image/png" href="logo.png">
 </head>
@@ -97,183 +110,651 @@
       <div class="logo">
         <img src="logo.png" alt="BarSclusive">
       </div>
-      <a href="bar-portal.html" class="back-btn">← Zurück zum Portal</a>
+      <div class="header-right">
+        <div class="lang-switch">
+          <button type="button" class="lang-btn" data-lang="de">DE</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+          <button type="button" class="lang-btn" data-lang="it">IT</button>
+          <button type="button" class="lang-btn" data-lang="fr">FR</button>
+        </div>
+        <a href="bar-portal.html" class="back-btn" id="backBtn">← Zurück zum Portal</a>
+      </div>
     </div>
 
     <div class="content">
-      <h1>AGB für Partnerbars</h1>
-      <p class="subtitle">BarSclusive | Stand: März 2026</p>
-
-      <div class="section">
-        <h2>1. Geltungsbereich</h2>
-        <p>Diese AGB gelten für alle Partnerbars, die Deals oder Angebote auf der BarSclusive Plattform veröffentlichen.</p>
-      </div>
-
-      <div class="section">
-        <h2>2. Rolle von BarSclusive</h2>
-        <p>BarSclusive betreibt eine digitale Plattform zur Vermittlung von Bar-Deals und Gutscheinen.</p>
-        <p>Bei Fix-Preis-Deals übernimmt BarSclusive die technische Präsentation, Bestellabwicklung, Zahlungsabwicklung und Übermittlung des Gutschein-Codes an Kundinnen und Kunden.</p>
-        <p>Die Partnerbar bleibt Leistungserbringerin der gastronomischen Leistung vor Ort.</p>
-        <p>Bei Pauschalgutscheinen verkauft BarSclusive den Gutschein selbst. Die Partnerbar ist dabei ausschliesslich Einlösestelle für den beschriebenen Rabatt vor Ort.</p>
-      </div>
-
-      <div class="section">
-        <h2>3. Deal-Typen</h2>
-
-        <h3>3.1 Fix-Preis-Deals</h3>
-        <p>Die Partnerbar bietet einen Gutschein für eine konkret beschriebene Leistung oder ein konkret beschriebenes Angebot zu einem festen Preis an.</p>
-        <div class="highlight">
-          <p><strong>Auszahlung:</strong> Eine Auszahlung an die Partnerbar erfolgt ausschliesslich, wenn der betreffende Gutschein effektiv eingelöst wurde.</p>
-          <p><strong>Nicht eingelöste Gutscheine:</strong> Für nicht eingelöste Gutscheine erfolgt keine Auszahlung an die Partnerbar.</p>
-        </div>
-
-        <h3>3.2 Pauschalgutscheine</h3>
-        <p>Bei Pauschalgutscheinen verkauft BarSclusive einen Gutschein zu einem festen Preis von 2.50 CHF.</p>
-        <p>Die Partnerbar gewährt bei Einlösung den im Deal beschriebenen Rabatt direkt vor Ort.</p>
-        <div class="highlight">
-          <p><strong>Keine Auszahlung:</strong> Bei Pauschalgutscheinen erfolgt keine Auszahlung an die Partnerbar.</p>
-          <p><strong>Keine Provisionsabrechnung wie bei Fix-Preis-Deals:</strong> Pauschalgutscheine laufen nicht im Namen und nicht auf Rechnung der Partnerbar.</p>
-        </div>
-      </div>
-
-      <div class="section">
-        <h2>4. Pflichten der Partnerbar</h2>
-
-        <h3>4.1 Angaben zum Betrieb</h3>
-        <ul>
-          <li>Die Partnerbar erfasst ihre Angaben vollständig und wahrheitsgemäss.</li>
-          <li>Die Partnerbar hält ihre Stammdaten aktuell.</li>
-          <li>Dies betrifft insbesondere Adresse, Kontaktdaten, Auszahlungsdaten, Angaben zum MWST-Status sowie Standortangaben.</li>
-        </ul>
-
-        <h3>4.2 Deal-Erstellung</h3>
-        <ul>
-          <li>Die Partnerbar erstellt korrekte und vollständige Deal-Angaben.</li>
-          <li>Bilder, Beschreibungen und Preise müssen wahrheitsgemäss sein.</li>
-          <li>Die publizierten Konditionen müssen bei Einlösung eingehalten werden.</li>
-        </ul>
-
-        <h3>4.3 Einlösung</h3>
-        <ul>
-          <li>Die Partnerbar ist verpflichtet, gültige Gutscheine gemäss den publizierten Bedingungen einzulösen.</li>
-          <li>Die Einlösung erfolgt über das Bar-Portal bzw. das dafür vorgesehene System.</li>
-          <li>Ein Gutschein darf nur einmal eingelöst werden.</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>5. Auszahlung und Abrechnung</h2>
-
-        <h3>5.1 Fix-Preis-Deals</h3>
-        <ul>
-          <li>Eine Auszahlung an die Partnerbar erfolgt nur bei tatsächlich eingelösten Gutscheinen.</li>
-          <li>Nicht eingelöste Gutscheine führen zu keiner Auszahlung an die Partnerbar.</li>
-          <li>Die konkrete Abrechnung richtet sich nach den im System hinterlegten Konditionen.</li>
-        </ul>
-
-        <h3>5.2 Pauschalgutscheine</h3>
-        <ul>
-          <li>Bei Pauschalgutscheinen erfolgt keine Auszahlung an die Partnerbar.</li>
-          <li>Die Partnerbar erhält keine Provisionsabrechnung wie bei Fix-Preis-Deals.</li>
-          <li>Die Partnerbar gewährt den beschriebenen Rabatt direkt vor Ort bei Einlösung.</li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2>6. Registrierung, Stammdaten und Standort</h2>
-        <p>Die Partnerbar erfasst bei Registrierung und in ihrem Profil insbesondere:</p>
-        <ul>
-          <li>Bar-Name</li>
-          <li>Adresse</li>
-          <li>PLZ</li>
-          <li>Stadt</li>
-          <li>Land, sofern vorgesehen</li>
-          <li>Email-Adresse</li>
-          <li>Telefonnummer, sofern verlangt oder angegeben</li>
-          <li>Passwort</li>
-          <li>IBAN oder weitere Auszahlungsdaten, sofern erforderlich</li>
-          <li>MWST-pflichtig: Ja oder Nein</li>
-          <li>falls MWST-pflichtig: MWST-Nummer</li>
-          <li>Standortangaben, soweit diese für Karten-, Distanz- oder Suchfunktionen verwendet werden</li>
-        </ul>
-        <p>Die Partnerbar ist dafür verantwortlich, diese Angaben korrekt und aktuell zu halten.</p>
-      </div>
-
-      <div class="section">
-        <h2>7. MWST-Status und Beleglogik</h2>
-        <p>Die Partnerbar gibt an, ob sie MWST-pflichtig ist oder nicht.</p>
-        <p>Ist die Partnerbar als MWST-pflichtig erfasst, kann die MWST-Nummer der Partnerbar in der dafür vorgesehenen Beleg- und Rechnungslogik berücksichtigt werden.</p>
-        <p>Ist die Partnerbar nicht MWST-pflichtig, erfolgt kein Ausweis einer MWST-Nummer der Partnerbar auf entsprechenden Belegen.</p>
-        <p>Die Partnerbar ist für die Richtigkeit ihrer Angaben zum MWST-Status verantwortlich.</p>
-      </div>
-
-      <div class="section">
-        <h2>8. Standortdarstellung und Suche</h2>
-        <p>BarSclusive kann Standort- und Distanzfunktionen für die Darstellung und Auffindbarkeit von Bars und Deals bereitstellen.</p>
-        <p>Die Partnerbar erklärt sich damit einverstanden, dass die von ihr hinterlegten Standortdaten für diese Funktionen verwendet werden, soweit dies zur Darstellung und Suche auf der Plattform erforderlich ist.</p>
-      </div>
-
-      <div class="section">
-        <h2>9. Freischaltung und Nutzung</h2>
-        <p>BarSclusive kann neue Bar-Konten vor der definitiven Nutzung prüfen und freischalten.</p>
-        <p>Bis zur Freischaltung kann der Zugang ganz oder teilweise eingeschränkt sein.</p>
-      </div>
-
-      <div class="section">
-        <h2>10. Haftung</h2>
-        <p>Die Partnerbar ist für die von ihr vor Ort erbrachte Leistung selbst verantwortlich.</p>
-        <p>Sie haftet insbesondere für:</p>
-        <ul>
-          <li>Richtigkeit ihrer Angebotsangaben</li>
-          <li>Einhaltung der publizierten Konditionen</li>
-          <li>ordnungsgemässe Einlösung gültiger Gutscheine</li>
-          <li>korrekte Angaben zu ihrem MWST-Status</li>
-          <li>korrekte Angaben zu ihrem Standort und ihrer Erreichbarkeit</li>
-        </ul>
-      
-      <div class="section">
-        <h2>10a. Steuerliche und rechtliche Einordnung</h2>
-        <p>Die Vertrags-, Beleg- und Auszahlungslogik von BarSclusive unterscheidet zwischen Gutscheinen für konkrete Leistungen der Partnerbar und Pauschalrabattgutscheinen als eigenem Produkt von BarSclusive.</p>
-        <p>Die Struktur orientiert sich insbesondere an Art. 20 MWSTG, Art. 20a MWSTG, Art. 21 Abs. 2 Ziff. 19 MWSTG, Art. 40 Abs. 1 Bst. c MWSTG sowie an der MWST-Info 04 Steuerobjekt.</p>
-        <p>Die Partnerbar bleibt für ihre eigenen steuerlichen Angaben, insbesondere MWST-Status und UID, selbst verantwortlich. BarSclusive darf diese Angaben für Belege, Auszahlungsquittungen und die Plattformdarstellung verwenden, soweit dies sachlich erforderlich ist.</p>
-      </div>
-
-</div>
-
-      <div class="section">
-        <h2>11. Datenschutz</h2>
-        <p>Es gilt die separate Datenschutzerklärung für Bars.</p>
-      </div>
-
-      <div class="section">
-        <h2>12. Änderungen</h2>
-        <p>BarSclusive kann diese AGB jederzeit anpassen. Es gilt jeweils die veröffentlichte Fassung.</p>
-      </div>
-
-      <div class="section">
-        <h2>13. Schlussbestimmungen</h2>
-        <p><strong>Anwendbares Recht:</strong> Schweizer Recht</p>
-        <p><strong>Gerichtsstand:</strong> Basel, Schweiz</p>
-      </div>
-
-      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
-        <h2>Kontakt</h2>
-        <p><strong>BarSclusive</strong><br>
-        Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p>
-        <p style="margin-top:20px; color:#999; font-size:14px;">
-          Stand: März 2026 | BarSclusive, Basel, Schweiz
-        </p>
-      </div>
+      <h1 id="pageTitle">AGB für Partnerbars</h1>
+      <p class="subtitle" id="pageSubtitle">BarSclusive | Stand: März 2026</p>
+      <div id="legalBody"></div>
     </div>
   </div>
 
   <div style="text-align:center;padding:30px;color:#666;font-size:13px;border-top:1px solid #333;margin-top:40px">
     <p>&copy; 2026 BarSclusive</p>
-    <p style="margin-top:8px">
-      <a href="bar-portal.html" style="color:#FF3366">Bar-Portal</a> &middot;
-      <a href="datenschutz-bars.html" style="color:#FF3366">Datenschutz</a> &middot;
-      <a href="kontakt.html" style="color:#FF3366">Kontakt</a>
-    </p>
   </div>
+
+  <template id="legal-body-de">
+      <div class="section">
+<h2>1. Geltungsbereich</h2>
+<p>Diese AGB gelten für alle Partnerbars, die Deals oder Angebote auf der BarSclusive Plattform veröffentlichen.</p>
+</div>
+      <div class="section">
+<h2>2. Rolle von BarSclusive</h2>
+<p>BarSclusive betreibt eine digitale Plattform zur Vermittlung von Bar-Deals und Gutscheinen.</p>
+<p>Bei Fix-Preis-Deals übernimmt BarSclusive die technische Präsentation, Bestellabwicklung, Zahlungsabwicklung und Übermittlung des Gutschein-Codes an Kundinnen und Kunden.</p>
+<p>Die Partnerbar bleibt Leistungserbringerin der gastronomischen Leistung vor Ort.</p>
+<p>Bei Pauschalgutscheinen verkauft BarSclusive den Gutschein selbst. Die Partnerbar ist dabei ausschliesslich Einlösestelle für den beschriebenen Rabatt vor Ort.</p>
+</div>
+      <div class="section">
+<h2>3. Deal-Typen</h2>
+<h3>3.1 Fix-Preis-Deals</h3>
+<p>Die Partnerbar bietet einen Gutschein für eine konkret beschriebene Leistung oder ein konkret beschriebenes Angebot zu einem festen Preis an.</p>
+<div class="highlight">
+<p>
+<strong>Auszahlung:</strong> Eine Auszahlung an die Partnerbar erfolgt ausschliesslich, wenn der betreffende Gutschein effektiv eingelöst wurde.</p>
+<p>
+<strong>Nicht eingelöste Gutscheine:</strong> Für nicht eingelöste Gutscheine erfolgt keine Auszahlung an die Partnerbar.</p>
+</div>
+<h3>3.2 Pauschalgutscheine</h3>
+<p>Bei Pauschalgutscheinen verkauft BarSclusive einen Gutschein zu einem festen Preis von 2.50 CHF.</p>
+<p>Die Partnerbar gewährt bei Einlösung den im Deal beschriebenen Rabatt direkt vor Ort.</p>
+<div class="highlight">
+<p>
+<strong>Keine Auszahlung:</strong> Bei Pauschalgutscheinen erfolgt keine Auszahlung an die Partnerbar.</p>
+<p>
+<strong>Keine Provisionsabrechnung wie bei Fix-Preis-Deals:</strong> Pauschalgutscheine laufen nicht im Namen und nicht auf Rechnung der Partnerbar.</p>
+</div>
+</div>
+      <div class="section">
+<h2>4. Pflichten der Partnerbar</h2>
+<h3>4.1 Angaben zum Betrieb</h3>
+<ul>
+<li>Die Partnerbar erfasst ihre Angaben vollständig und wahrheitsgemäss.</li>
+<li>Die Partnerbar hält ihre Stammdaten aktuell.</li>
+<li>Dies betrifft insbesondere Adresse, Kontaktdaten, Auszahlungsdaten, Angaben zum MWST-Status sowie Standortangaben.</li>
+</ul>
+<h3>4.2 Deal-Erstellung</h3>
+<ul>
+<li>Die Partnerbar erstellt korrekte und vollständige Deal-Angaben.</li>
+<li>Bilder, Beschreibungen und Preise müssen wahrheitsgemäss sein.</li>
+<li>Die publizierten Konditionen müssen bei Einlösung eingehalten werden.</li>
+</ul>
+<h3>4.3 Einlösung</h3>
+<ul>
+<li>Die Partnerbar ist verpflichtet, gültige Gutscheine gemäss den publizierten Bedingungen einzulösen.</li>
+<li>Die Einlösung erfolgt über das Bar-Portal bzw. das dafür vorgesehene System.</li>
+<li>Ein Gutschein darf nur einmal eingelöst werden.</li>
+</ul>
+</div>
+      <div class="section">
+<h2>5. Auszahlung und Abrechnung</h2>
+<h3>5.1 Fix-Preis-Deals</h3>
+<ul>
+<li>Eine Auszahlung an die Partnerbar erfolgt nur bei tatsächlich eingelösten Gutscheinen.</li>
+<li>Nicht eingelöste Gutscheine führen zu keiner Auszahlung an die Partnerbar.</li>
+<li>Die konkrete Abrechnung richtet sich nach den im System hinterlegten Konditionen.</li>
+</ul>
+<h3>5.2 Pauschalgutscheine</h3>
+<ul>
+<li>Bei Pauschalgutscheinen erfolgt keine Auszahlung an die Partnerbar.</li>
+<li>Die Partnerbar erhält keine Provisionsabrechnung wie bei Fix-Preis-Deals.</li>
+<li>Die Partnerbar gewährt den beschriebenen Rabatt direkt vor Ort bei Einlösung.</li>
+</ul>
+</div>
+      <div class="section">
+<h2>6. Registrierung, Stammdaten und Standort</h2>
+<p>Die Partnerbar erfasst bei Registrierung und in ihrem Profil insbesondere:</p>
+<ul>
+<li>Bar-Name</li>
+<li>Adresse</li>
+<li>PLZ</li>
+<li>Stadt</li>
+<li>Land, sofern vorgesehen</li>
+<li>Email-Adresse</li>
+<li>Telefonnummer, sofern verlangt oder angegeben</li>
+<li>Passwort</li>
+<li>IBAN oder weitere Auszahlungsdaten, sofern erforderlich</li>
+<li>MWST-pflichtig: Ja oder Nein</li>
+<li>falls MWST-pflichtig: MWST-Nummer</li>
+<li>Standortangaben, soweit diese für Karten-, Distanz- oder Suchfunktionen verwendet werden</li>
+</ul>
+<p>Die Partnerbar ist dafür verantwortlich, diese Angaben korrekt und aktuell zu halten.</p>
+</div>
+      <div class="section">
+<h2>7. MWST-Status und Beleglogik</h2>
+<p>Die Partnerbar gibt an, ob sie MWST-pflichtig ist oder nicht.</p>
+<p>Ist die Partnerbar als MWST-pflichtig erfasst, kann die MWST-Nummer der Partnerbar in der dafür vorgesehenen Beleg- und Rechnungslogik berücksichtigt werden.</p>
+<p>Ist die Partnerbar nicht MWST-pflichtig, erfolgt kein Ausweis einer MWST-Nummer der Partnerbar auf entsprechenden Belegen.</p>
+<p>Die Partnerbar ist für die Richtigkeit ihrer Angaben zum MWST-Status verantwortlich.</p>
+</div>
+      <div class="section">
+<h2>8. Standortdarstellung und Suche</h2>
+<p>BarSclusive kann Standort- und Distanzfunktionen für die Darstellung und Auffindbarkeit von Bars und Deals bereitstellen.</p>
+<p>Die Partnerbar erklärt sich damit einverstanden, dass die von ihr hinterlegten Standortdaten für diese Funktionen verwendet werden, soweit dies zur Darstellung und Suche auf der Plattform erforderlich ist.</p>
+</div>
+      <div class="section">
+<h2>9. Freischaltung und Nutzung</h2>
+<p>BarSclusive kann neue Bar-Konten vor der definitiven Nutzung prüfen und freischalten.</p>
+<p>Bis zur Freischaltung kann der Zugang ganz oder teilweise eingeschränkt sein.</p>
+</div>
+      <div class="section">
+<h2>10. Haftung</h2>
+<p>Die Partnerbar ist für die von ihr vor Ort erbrachte Leistung selbst verantwortlich.</p>
+<p>Sie haftet insbesondere für:</p>
+<ul>
+<li>Richtigkeit ihrer Angebotsangaben</li>
+<li>Einhaltung der publizierten Konditionen</li>
+<li>ordnungsgemässe Einlösung gültiger Gutscheine</li>
+<li>korrekte Angaben zu ihrem MWST-Status</li>
+<li>korrekte Angaben zu ihrem Standort und ihrer Erreichbarkeit</li>
+</ul>
+</div>
+      <div class="section">
+<h2>11. Datenschutz</h2>
+<p>Es gilt die separate Datenschutzerklärung für Bars.</p>
+</div>
+      <div class="section">
+<h2>12. Änderungen</h2>
+<p>BarSclusive kann diese AGB jederzeit anpassen. Es gilt jeweils die veröffentlichte Fassung.</p>
+</div>
+      <div class="section">
+<h2>13. Schlussbestimmungen</h2>
+<p>
+<strong>Anwendbares Recht:</strong> Schweizer Recht</p>
+<p>
+<strong>Gerichtsstand:</strong> Basel, Schweiz</p>
+</div>
+      <div class="section">
+<h2>14. Steuerliche Grundlagen</h2>
+<p>Für die Beleg- und Gutscheinlogik berücksichtigt BarSclusive insbesondere die massgebenden schweizerischen MWST-Grundlagen, namentlich Art. 20 MWSTG, Art. 20a MWSTG, Art. 21 Abs. 2 Ziff. 19 MWSTG, Art. 40 Abs. 1 Bst. c MWSTG sowie die MWST-Info 04 Steuerobjekt.</p>
+</div>
+      <div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+<h2>Kontakt</h2>
+<p>
+<strong>BarSclusive</strong>
+<br>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+<p style="margin-top:20px; color:#999; font-size:14px;">Stand: März 2026 | BarSclusive, Basel, Schweiz</p>
+</div>
+  </template>
+
+  <template id="legal-body-en">
+      <div class="section">
+<h2>1. Scope</h2>
+<p>These Terms apply to all partner bars that publish deals or offers on the BarSclusive platform.</p>
+</div>
+<div class="section">
+<h2>2. Role of BarSclusive</h2>
+<p>BarSclusive operates a digital platform for the mediation of bar deals and vouchers.</p>
+<p>For fixed-price deals, BarSclusive handles the technical presentation, ordering process, payment processing and transmission of the voucher code to customers.</p>
+<p>The partner bar remains the provider of the gastronomic service on site.</p>
+<p>For flat discount vouchers, BarSclusive sells the voucher itself. The partner bar acts exclusively as the redemption point for the discount described on site.</p>
+</div>
+<div class="section">
+<h2>3. Deal types</h2>
+<h3>3.1 Fixed-price deals</h3>
+<p>The partner bar offers a voucher for a specifically described service or offer at a fixed price.</p>
+<div class="highlight">
+<p>
+<strong>Payout:</strong> A payout to the partner bar is made only if the voucher has actually been redeemed.</p>
+<p>
+<strong>Vouchers not redeemed:</strong> No payout is made to the partner bar for vouchers not redeemed.</p>
+</div>
+<h3>3.2 Flat discount vouchers</h3>
+<p>For flat discount vouchers, BarSclusive sells a voucher at a fixed price of CHF 2.50.</p>
+<p>When redeemed, the partner bar grants the discount described in the deal directly on site.</p>
+<div class="highlight">
+<p>
+<strong>No payout:</strong> No payout is made to the partner bar for flat discount vouchers.</p>
+<p>
+<strong>No commission settlement as with fixed-price deals:</strong> Flat discount vouchers do not run in the name or on the account of the partner bar.</p>
+</div>
+</div>
+<div class="section">
+<h2>4. Duties of the partner bar</h2>
+<h3>4.1 Business information</h3>
+<ul>
+<li>The partner bar must provide complete and truthful information.</li>
+<li>The partner bar must keep its master data up to date.</li>
+<li>This includes in particular address, contact details, payout data, VAT status details and location data.</li>
+</ul>
+<h3>4.2 Deal creation</h3>
+<ul>
+<li>The partner bar creates correct and complete deal information.</li>
+<li>Images, descriptions and prices must be truthful.</li>
+<li>The published conditions must be respected upon redemption.</li>
+</ul>
+<h3>4.3 Redemption</h3>
+<ul>
+<li>The partner bar is obliged to redeem valid vouchers in accordance with the published conditions.</li>
+<li>Redemption takes place via the bar portal or the system provided for this purpose.</li>
+<li>A voucher may only be redeemed once.</li>
+</ul>
+</div>
+<div class="section">
+<h2>5. Payout and settlement</h2>
+<h3>5.1 Fixed-price deals</h3>
+<ul>
+<li>A payout to the partner bar is made only for vouchers actually redeemed.</li>
+<li>Vouchers not redeemed do not result in any payout to the partner bar.</li>
+<li>The specific settlement is based on the conditions stored in the system.</li>
+</ul>
+<h3>5.2 Flat discount vouchers</h3>
+<ul>
+<li>No payout is made to the partner bar for flat discount vouchers.</li>
+<li>The partner bar does not receive a commission settlement as with fixed-price deals.</li>
+<li>The partner bar grants the described discount directly on site upon redemption.</li>
+</ul>
+</div>
+<div class="section">
+<h2>6. Registration, master data and location</h2>
+<p>During registration and in its profile, the partner bar records in particular:</p>
+<ul>
+<li>bar name</li>
+<li>address</li>
+<li>ZIP code</li>
+<li>city</li>
+<li>country, if provided</li>
+<li>email address</li>
+<li>phone number, if required or provided</li>
+<li>password</li>
+<li>IBAN or other payout data, if required</li>
+<li>VAT liable: yes or no</li>
+<li>if VAT liable: VAT number</li>
+<li>location data used for map, distance or search functions</li>
+</ul>
+<p>The partner bar is responsible for keeping this information correct and up to date.</p>
+</div>
+<div class="section">
+<h2>7. VAT status and receipt logic</h2>
+<p>The partner bar states whether it is liable for VAT or not.</p>
+<p>If the partner bar is registered as VAT liable, its VAT number may be considered in the corresponding receipt and invoicing logic.</p>
+<p>If the partner bar is not liable for VAT, no VAT number of the partner bar is shown on corresponding receipts.</p>
+<p>The partner bar is responsible for the accuracy of its VAT status information.</p>
+</div>
+<div class="section">
+<h2>8. Location display and search</h2>
+<p>BarSclusive may provide location and distance functions for the display and discoverability of bars and deals.</p>
+<p>The partner bar agrees that the location data it stores may be used for these functions where this is necessary for display and search on the platform.</p>
+</div>
+<div class="section">
+<h2>9. Activation and use</h2>
+<p>BarSclusive may review and activate new bar accounts before final use.</p>
+<p>Until activation, access may be restricted in whole or in part.</p>
+</div>
+<div class="section">
+<h2>10. Liability</h2>
+<p>The partner bar is itself responsible for the service it provides on site.</p>
+<p>It is responsible in particular for:</p>
+<ul>
+<li>accuracy of its offer information</li>
+<li>compliance with the published conditions</li>
+<li>proper redemption of valid vouchers</li>
+<li>correct information on its VAT status</li>
+<li>correct information on its location and accessibility</li>
+</ul>
+</div>
+<div class="section">
+<h2>11. Privacy</h2>
+<p>The separate privacy policy for bars applies.</p>
+</div>
+<div class="section">
+<h2>12. Changes</h2>
+<p>BarSclusive may amend these Terms at any time. The published version in each case applies.</p>
+</div>
+<div class="section">
+<h2>13. Final provisions</h2>
+<p>
+<strong>Applicable law:</strong> Swiss law</p>
+<p>
+<strong>Place of jurisdiction:</strong> Basel, Switzerland</p>
+</div>
+<div class="section">
+<h2>14. Tax basis</h2>
+<p>For receipt and voucher logic, BarSclusive takes into account the relevant Swiss VAT rules, in particular Art. 20 VATA, Art. 20a VATA, Art. 21 para. 2 no. 19 VATA, Art. 40 para. 1 lit. c VATA and VAT Info 04 Tax object.</p>
+</div>
+<div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+<h2>Contact</h2>
+<p>
+<strong>BarSclusive</strong>
+<br>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+<p style="margin-top:20px; color:#999; font-size:14px;">Status: March 2026 | BarSclusive, Basel, Switzerland</p>
+</div>
+  </template>
+
+  <template id="legal-body-it">
+      <div class="section">
+<h2>1. Ambito di applicazione</h2>
+<p>Le presenti Condizioni si applicano a tutti i bar partner che pubblicano deal o offerte sulla piattaforma BarSclusive.</p>
+</div>
+<div class="section">
+<h2>2. Ruolo di BarSclusive</h2>
+<p>BarSclusive gestisce una piattaforma digitale per la mediazione di deal e voucher di bar.</p>
+<p>Per i deal a prezzo fisso, BarSclusive si occupa della presentazione tecnica, del processo d’ordine, dell’elaborazione dei pagamenti e della trasmissione del codice voucher ai clienti.</p>
+<p>Il bar partner resta il prestatore della prestazione gastronomica sul posto.</p>
+<p>Per i voucher sconto forfettari, BarSclusive vende direttamente il voucher. Il bar partner funge esclusivamente da punto di riscatto per lo sconto descritto sul posto.</p>
+</div>
+<div class="section">
+<h2>3. Tipi di deal</h2>
+<h3>3.1 Deal a prezzo fisso</h3>
+<p>Il bar partner offre un voucher per una prestazione o un’offerta concretamente descritta a un prezzo fisso.</p>
+<div class="highlight">
+<p>
+<strong>Pagamento:</strong> il pagamento al bar partner avviene esclusivamente se il voucher è stato effettivamente riscattato.</p>
+<p>
+<strong>Voucher non riscattati:</strong> per i voucher non riscattati non viene effettuato alcun pagamento al bar partner.</p>
+</div>
+<h3>3.2 Voucher sconto forfettari</h3>
+<p>Per i voucher sconto forfettari, BarSclusive vende un voucher a un prezzo fisso di CHF 2.50.</p>
+<p>Al momento del riscatto, il bar partner concede direttamente sul posto lo sconto descritto nel deal.</p>
+<div class="highlight">
+<p>
+<strong>Nessun pagamento:</strong> per i voucher sconto forfettari non viene effettuato alcun pagamento al bar partner.</p>
+<p>
+<strong>Nessun conteggio di provvigioni come per i deal a prezzo fisso:</strong> i voucher sconto forfettari non vengono gestiti a nome e per conto del bar partner.</p>
+</div>
+</div>
+<div class="section">
+<h2>4. Obblighi del bar partner</h2>
+<h3>4.1 Dati dell’attività</h3>
+<ul>
+<li>Il bar partner registra i propri dati in modo completo e veritiero.</li>
+<li>Il bar partner mantiene aggiornati i propri dati anagrafici.</li>
+<li>Ciò riguarda in particolare indirizzo, dati di contatto, dati di pagamento, stato IVA e dati di posizione.</li>
+</ul>
+<h3>4.2 Creazione dei deal</h3>
+<ul>
+<li>Il bar partner crea dati di deal corretti e completi.</li>
+<li>Immagini, descrizioni e prezzi devono essere veritieri.</li>
+<li>Le condizioni pubblicate devono essere rispettate al momento del riscatto.</li>
+</ul>
+<h3>4.3 Riscatto</h3>
+<ul>
+<li>Il bar partner è tenuto a riscattare voucher validi secondo le condizioni pubblicate.</li>
+<li>Il riscatto avviene tramite il portale bar o il sistema previsto.</li>
+<li>Un voucher può essere riscattato una sola volta.</li>
+</ul>
+</div>
+<div class="section">
+<h2>5. Pagamento e conteggio</h2>
+<h3>5.1 Deal a prezzo fisso</h3>
+<ul>
+<li>Il pagamento al bar partner avviene solo per voucher effettivamente riscattati.</li>
+<li>I voucher non riscattati non generano alcun pagamento al bar partner.</li>
+<li>Il conteggio concreto dipende dalle condizioni memorizzate nel sistema.</li>
+</ul>
+<h3>5.2 Voucher sconto forfettari</h3>
+<ul>
+<li>Per i voucher sconto forfettari non viene effettuato alcun pagamento al bar partner.</li>
+<li>Il bar partner non riceve alcun conteggio di provvigioni come per i deal a prezzo fisso.</li>
+<li>Il bar partner concede direttamente sul posto lo sconto descritto al momento del riscatto.</li>
+</ul>
+</div>
+<div class="section">
+<h2>6. Registrazione, dati anagrafici e posizione</h2>
+<p>Durante la registrazione e nel profilo, il bar partner registra in particolare:</p>
+<ul>
+<li>nome del bar</li>
+<li>indirizzo</li>
+<li>CAP</li>
+<li>città</li>
+<li>paese, se previsto</li>
+<li>indirizzo email</li>
+<li>numero di telefono, se richiesto o indicato</li>
+<li>password</li>
+<li>IBAN o altri dati di pagamento, se necessari</li>
+<li>soggetto a IVA: sì o no</li>
+<li>se soggetto a IVA: numero IVA</li>
+<li>dati di posizione usati per mappe, distanza o ricerca</li>
+</ul>
+<p>Il bar partner è responsabile della correttezza e dell’aggiornamento di tali dati.</p>
+</div>
+<div class="section">
+<h2>7. Stato IVA e logica dei documenti</h2>
+<p>Il bar partner indica se è soggetto a IVA o meno.</p>
+<p>Se il bar partner è registrato come soggetto a IVA, il suo numero IVA può essere considerato nella relativa logica di documenti e fatture.</p>
+<p>Se il bar partner non è soggetto a IVA, nessun numero IVA del bar partner viene mostrato sui relativi documenti.</p>
+<p>Il bar partner è responsabile della correttezza dei propri dati relativi allo stato IVA.</p>
+</div>
+<div class="section">
+<h2>8. Visualizzazione della posizione e ricerca</h2>
+<p>BarSclusive può fornire funzioni di posizione e distanza per la visualizzazione e la reperibilità di bar e deal.</p>
+<p>Il bar partner accetta che i dati di posizione memorizzati siano usati per tali funzioni, nella misura necessaria alla visualizzazione e alla ricerca sulla piattaforma.</p>
+</div>
+<div class="section">
+<h2>9. Attivazione e utilizzo</h2>
+<p>BarSclusive può verificare e attivare nuovi account bar prima dell’utilizzo definitivo.</p>
+<p>Fino all’attivazione l’accesso può essere limitato in tutto o in parte.</p>
+</div>
+<div class="section">
+<h2>10. Responsabilità</h2>
+<p>Il bar partner è responsabile della prestazione fornita sul posto.</p>
+<p>È responsabile in particolare di:</p>
+<ul>
+<li>correttezza dei dati della propria offerta</li>
+<li>rispetto delle condizioni pubblicate</li>
+<li>corretto riscatto dei voucher validi</li>
+<li>corrette informazioni sul proprio stato IVA</li>
+<li>corrette informazioni su posizione e raggiungibilità</li>
+</ul>
+</div>
+<div class="section">
+<h2>11. Privacy</h2>
+<p>Si applica l’informativa privacy separata per i bar.</p>
+</div>
+<div class="section">
+<h2>12. Modifiche</h2>
+<p>BarSclusive può modificare in qualsiasi momento le presenti Condizioni. Fa stato la versione pubblicata di volta in volta.</p>
+</div>
+<div class="section">
+<h2>13. Disposizioni finali</h2>
+<p>
+<strong>Diritto applicabile:</strong> diritto svizzero</p>
+<p>
+<strong>Foro competente:</strong> Basilea, Svizzera</p>
+</div>
+<div class="section">
+<h2>14. Basi fiscali</h2>
+<p>Per la logica dei documenti e dei voucher, BarSclusive tiene conto delle pertinenti basi IVA svizzere, in particolare art. 20 LIVA, art. 20a LIVA, art. 21 cpv. 2 n. 19 LIVA, art. 40 cpv. 1 lett. c LIVA e Info IVA 04 Oggetto dell’imposta.</p>
+</div>
+<div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+<h2>Contatto</h2>
+<p>
+<strong>BarSclusive</strong>
+<br>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+<p style="margin-top:20px; color:#999; font-size:14px;">Versione: marzo 2026 | BarSclusive, Basilea, Svizzera</p>
+</div>
+  </template>
+
+  <template id="legal-body-fr">
+      <div class="section">
+<h2>1. Champ d’application</h2>
+<p>Les présentes Conditions s’appliquent à tous les bars partenaires qui publient des deals ou des offres sur la plateforme BarSclusive.</p>
+</div>
+<div class="section">
+<h2>2. Rôle de BarSclusive</h2>
+<p>BarSclusive exploite une plateforme numérique pour la mise en relation autour de deals et bons de bars.</p>
+<p>Pour les deals à prix fixe, BarSclusive assure la présentation technique, le traitement des commandes, le traitement des paiements et la transmission du code du bon aux clientes et clients.</p>
+<p>Le bar partenaire reste le prestataire de la prestation gastronomique sur place.</p>
+<p>Pour les bons de réduction forfaitaires, BarSclusive vend lui-même le bon. Le bar partenaire agit uniquement comme point d’acceptation de la réduction décrite sur place.</p>
+</div>
+<div class="section">
+<h2>3. Types de deals</h2>
+<h3>3.1 Deals à prix fixe</h3>
+<p>Le bar partenaire propose un bon pour une prestation ou une offre concrètement décrite à un prix fixe.</p>
+<div class="highlight">
+<p>
+<strong>Paiement :</strong> un versement au bar partenaire n’a lieu que si le bon concerné a effectivement été utilisé.</p>
+<p>
+<strong>Bons non utilisés :</strong> aucun versement n’est effectué au bar partenaire pour les bons non utilisés.</p>
+</div>
+<h3>3.2 Bons de réduction forfaitaires</h3>
+<p>Pour les bons de réduction forfaitaires, BarSclusive vend un bon à un prix fixe de CHF 2.50.</p>
+<p>Lors de l’utilisation, le bar partenaire accorde directement sur place la réduction décrite dans le deal.</p>
+<div class="highlight">
+<p>
+<strong>Aucun versement :</strong> aucun versement n’est effectué au bar partenaire pour les bons de réduction forfaitaires.</p>
+<p>
+<strong>Pas de décompte de commission comme pour les deals à prix fixe :</strong> les bons de réduction forfaitaires ne sont pas émis au nom ni pour le compte du bar partenaire.</p>
+</div>
+</div>
+<div class="section">
+<h2>4. Obligations du bar partenaire</h2>
+<h3>4.1 Informations sur l’établissement</h3>
+<ul>
+<li>Le bar partenaire saisit ses informations de manière complète et véridique.</li>
+<li>Le bar partenaire tient ses données de base à jour.</li>
+<li>Cela concerne notamment l’adresse, les coordonnées, les données de versement, les informations sur le statut TVA et les données de localisation.</li>
+</ul>
+<h3>4.2 Création des deals</h3>
+<ul>
+<li>Le bar partenaire crée des informations de deal correctes et complètes.</li>
+<li>Les images, descriptions et prix doivent être véridiques.</li>
+<li>Les conditions publiées doivent être respectées lors de l’utilisation.</li>
+</ul>
+<h3>4.3 Utilisation</h3>
+<ul>
+<li>Le bar partenaire est tenu d’accepter les bons valables conformément aux conditions publiées.</li>
+<li>L’utilisation s’effectue via le portail bar ou le système prévu à cet effet.</li>
+<li>Un bon ne peut être utilisé qu’une seule fois.</li>
+</ul>
+</div>
+<div class="section">
+<h2>5. Versement et décompte</h2>
+<h3>5.1 Deals à prix fixe</h3>
+<ul>
+<li>Un versement au bar partenaire n’a lieu que pour les bons effectivement utilisés.</li>
+<li>Les bons non utilisés ne donnent lieu à aucun versement au bar partenaire.</li>
+<li>Le décompte concret dépend des conditions enregistrées dans le système.</li>
+</ul>
+<h3>5.2 Bons de réduction forfaitaires</h3>
+<ul>
+<li>Aucun versement n’est effectué au bar partenaire pour les bons de réduction forfaitaires.</li>
+<li>Le bar partenaire ne reçoit aucun décompte de commission comme pour les deals à prix fixe.</li>
+<li>Le bar partenaire accorde directement sur place la réduction décrite lors de l’utilisation.</li>
+</ul>
+</div>
+<div class="section">
+<h2>6. Inscription, données de base et localisation</h2>
+<p>Lors de l’inscription et dans son profil, le bar partenaire saisit notamment :</p>
+<ul>
+<li>nom du bar</li>
+<li>adresse</li>
+<li>NPA</li>
+<li>ville</li>
+<li>pays, le cas échéant</li>
+<li>adresse email</li>
+<li>numéro de téléphone, si requis ou indiqué</li>
+<li>mot de passe</li>
+<li>IBAN ou autres données de versement, si nécessaire</li>
+<li>assujetti à la TVA : oui ou non</li>
+<li>si assujetti à la TVA : numéro TVA</li>
+<li>données de localisation utilisées pour les fonctions de carte, de distance ou de recherche</li>
+</ul>
+<p>Le bar partenaire est responsable de l’exactitude et de l’actualité de ces informations.</p>
+</div>
+<div class="section">
+<h2>7. Statut TVA et logique des justificatifs</h2>
+<p>Le bar partenaire indique s’il est assujetti à la TVA ou non.</p>
+<p>Si le bar partenaire est enregistré comme assujetti à la TVA, son numéro TVA peut être pris en compte dans la logique de justificatifs et de facturation prévue.</p>
+<p>Si le bar partenaire n’est pas assujetti à la TVA, aucun numéro TVA du bar partenaire n’est affiché sur les justificatifs correspondants.</p>
+<p>Le bar partenaire est responsable de l’exactitude de ses informations relatives au statut TVA.</p>
+</div>
+<div class="section">
+<h2>8. Affichage de la localisation et recherche</h2>
+<p>BarSclusive peut fournir des fonctions de localisation et de distance pour l’affichage et la visibilité des bars et des deals.</p>
+<p>Le bar partenaire accepte que les données de localisation qu’il enregistre soient utilisées pour ces fonctions dans la mesure nécessaire à l’affichage et à la recherche sur la plateforme.</p>
+</div>
+<div class="section">
+<h2>9. Activation et utilisation</h2>
+<p>BarSclusive peut examiner et activer les nouveaux comptes de bars avant leur utilisation définitive.</p>
+<p>Jusqu’à l’activation, l’accès peut être limité en tout ou en partie.</p>
+</div>
+<div class="section">
+<h2>10. Responsabilité</h2>
+<p>Le bar partenaire est responsable de la prestation qu’il fournit sur place.</p>
+<p>Il est notamment responsable de :</p>
+<ul>
+<li>l’exactitude de ses informations d’offre</li>
+<li>le respect des conditions publiées</li>
+<li>la bonne utilisation des bons valables</li>
+<li>les informations correctes sur son statut TVA</li>
+<li>les informations correctes sur sa localisation et son accessibilité</li>
+</ul>
+</div>
+<div class="section">
+<h2>11. Confidentialité</h2>
+<p>La déclaration de confidentialité séparée pour les bars s’applique.</p>
+</div>
+<div class="section">
+<h2>12. Modifications</h2>
+<p>BarSclusive peut adapter à tout moment les présentes Conditions. La version publiée fait foi.</p>
+</div>
+<div class="section">
+<h2>13. Dispositions finales</h2>
+<p>
+<strong>Droit applicable :</strong> droit suisse</p>
+<p>
+<strong>For compétent :</strong> Bâle, Suisse</p>
+</div>
+<div class="section">
+<h2>14. Bases fiscales</h2>
+<p>Pour la logique des justificatifs et des bons, BarSclusive tient compte des bases suisses pertinentes en matière de TVA, notamment l’art. 20 LTVA, l’art. 20a LTVA, l’art. 21 al. 2 ch. 19 LTVA, l’art. 40 al. 1 let. c LTVA et l’Info TVA 04 Objet de l’impôt.</p>
+</div>
+<div class="section" style="margin-top:50px; padding-top:30px; border-top:1px solid #444;">
+<h2>Contact</h2>
+<p>
+<strong>BarSclusive</strong>
+<br>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a>
+</p>
+<p style="margin-top:20px; color:#999; font-size:14px;">Version : mars 2026 | BarSclusive, Bâle, Suisse</p>
+</div>
+  </template>
+
+  <script>
+    const LEGAL_META = {
+  "de": {
+    "title": "AGB für Partnerbars",
+    "subtitle": "BarSclusive | Stand: März 2026",
+    "back": "← Zurück zum Portal"
+  },
+  "en": {
+    "title": "Terms for partner bars",
+    "subtitle": "BarSclusive | Version: March 2026",
+    "back": "← Back to portal"
+  },
+  "it": {
+    "title": "Condizioni per bar partner",
+    "subtitle": "BarSclusive | Versione: marzo 2026",
+    "back": "← Torna al portale"
+  },
+  "fr": {
+    "title": "CGV pour bars partenaires",
+    "subtitle": "BarSclusive | Version : mars 2026",
+    "back": "← Retour au portail"
+  }
+};
+    const LEGAL_STORAGE_KEY = "barsclusive_bar_lang";
+    function setLegalLang(lang) {
+      var current = LEGAL_META[lang] ? lang : "de";
+      var meta = LEGAL_META[current];
+      var tpl = document.getElementById("legal-body-" + current);
+      document.documentElement.lang = current;
+      document.title = meta.title + " - BarSclusive";
+      document.getElementById("pageTitle").textContent = meta.title;
+      document.getElementById("pageSubtitle").textContent = meta.subtitle;
+      document.getElementById("backBtn").textContent = meta.back;
+      document.getElementById("legalBody").innerHTML = tpl ? tpl.innerHTML : document.getElementById("legal-body-de").innerHTML;
+      document.querySelectorAll(".lang-btn").forEach(function(btn){ btn.classList.toggle("active", btn.dataset.lang === current); });
+      try { localStorage.setItem(LEGAL_STORAGE_KEY, current); } catch(e) {}
+    }
+    document.querySelectorAll(".lang-btn").forEach(function(btn){
+      btn.addEventListener("click", function(){ setLegalLang(btn.dataset.lang); });
+    });
+    var initialLang = "de";
+    try { initialLang = localStorage.getItem(LEGAL_STORAGE_KEY) || "de"; } catch(e) {}
+    setLegalLang(initialLang);
+  </script>
 </body>
 </html>
