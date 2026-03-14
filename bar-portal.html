@@ -90,7 +90,7 @@
     .input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
     
 .codebox-field{position:relative;width:100%;padding:14px 14px 12px;border:1px solid #2f2f2f;border-radius:16px;background:linear-gradient(180deg,#1d1d1d 0%,#181818 100%);overflow:hidden}
-.codebox-input{position:absolute;inset:0;width:100%;height:100%;opacity:.02;z-index:3;border:none;background:transparent;color:transparent;caret-color:#fff;cursor:text;text-transform:uppercase}
+.codebox-input{position:absolute;inset:0;width:100%;height:100%;opacity:0;z-index:3;border:none;background:transparent;color:transparent;caret-color:transparent;cursor:text;text-transform:uppercase}
 .codebox-input::placeholder{color:transparent}
 .codebox-input:focus{outline:none}
 .codebox-grid{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;width:100%;position:relative;z-index:1}
@@ -226,6 +226,15 @@
         <div class="form-group">
           <label class="form-label" for="regBarEmail" data-i18n="email">Email *</label>
           <input type="email" class="form-input" id="regBarEmail" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="regLangSelect" data-i18n="correspondenceLang">Korrespondenzsprache</label>
+          <select class="form-input" id="regLangSelect">
+            <option value="de" data-i18n="langGerman">Deutsch</option>
+            <option value="en" data-i18n="langEnglish">English</option>
+            <option value="it" data-i18n="langItalian">Italiano</option>
+            <option value="fr" data-i18n="langFrench">Français</option>
+          </select>
         </div>
         <div class="form-group">
           <label class="form-label" for="regBarPass" data-i18n="passwordMin">Passwort (mind. 8 Zeichen) *</label>
@@ -513,6 +522,15 @@
             <div id="profMap" style="height:200px;width:100%"></div>
           </div>
           <small class="input-help" data-i18n="locationHelp">Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="profLangSelect" data-i18n="correspondenceLang">Korrespondenzsprache</label>
+          <select class="form-input" id="profLangSelect">
+            <option value="de" data-i18n="langGerman">Deutsch</option>
+            <option value="en" data-i18n="langEnglish">English</option>
+            <option value="it" data-i18n="langItalian">Italiano</option>
+            <option value="fr" data-i18n="langFrench">Français</option>
+          </select>
         </div>
         <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
         <hr style="border:none;border-top:1px solid #333;margin:24px 0">
