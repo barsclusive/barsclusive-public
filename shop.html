@@ -248,8 +248,8 @@
   <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
     <img src="logo.png" alt="BarSclusive" style="height:90px">
     <div>
-      <h1 style="text-align:left">Die besten Bar-Deals deiner Stadt</h1>
-      <p style="text-align:left">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
+      <h1 id="heroTitleText" style="text-align:left">Die besten Bar-Deals deiner Stadt</h1>
+      <p id="heroSubText" style="text-align:left">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
     </div>
   </div>
 </div>
@@ -288,7 +288,7 @@
         <div id="locationSuggestions" class="suggestions-box"></div>
       </div>
       <button class="filter-btn" id="btnApplyLocation" data-shop-i18n="suchenBtn">Suchen</button>
-      <button class="filter-btn" id="btnUseMyLocation" data-shop-i18n="myLocationBtn">Mein Standort</button>
+      <button class="filter-btn" id="btnUseMyLocation" data-shop-i18n="myLocationBtn">Nach Distanz sortieren</button>
       <button class="filter-btn" id="btnClearLocation" style="display:none" data-shop-i18n="clearLocationBtn">✕</button>
       <span class="location-pill" id="locationStatus" style="display:none"></span>
     </div>
@@ -359,6 +359,16 @@
     <div class="form-group">
       <label class="form-label" for="loginPassword" data-shop-i18n="passwordLbl">Passwort</label>
       <input type="password" class="form-input" id="loginPassword" autocomplete="current-password">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="loginLangSelect" data-shop-i18n="correspondenceLang">Korrespondenzsprache</label>
+      <select class="form-input" id="loginLangSelect">
+        <option value="" data-shop-i18n="keepSavedLanguage">Gespeicherte Sprache beibehalten</option>
+        <option value="de" data-shop-i18n="langGerman">Deutsch</option>
+        <option value="en" data-shop-i18n="langEnglish">English</option>
+        <option value="it" data-shop-i18n="langItalian">Italiano</option>
+        <option value="fr" data-shop-i18n="langFrench">Français</option>
+      </select>
     </div>
     <button class="btn-pink" id="btnLoginSubmit" data-shop-i18n="loginSubmitBtn">Einloggen</button>
     <button class="btn-ghost" data-close-modal="loginModal" data-shop-i18n="cancelLoginBtn">Abbrechen</button>
@@ -469,6 +479,16 @@
       <button id="btnClosePwModal" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
     </div>
     <div id="cpwErr" style="color:#EF4444;font-size:13px;margin-bottom:12px;min-height:18px"></div>
+    <div class="form-group">
+      <label class="form-label" for="custLangSelect" data-shop-i18n="correspondenceLang">Korrespondenzsprache</label>
+      <select class="form-input" id="custLangSelect">
+        <option value="de" data-shop-i18n="langGerman">Deutsch</option>
+        <option value="en" data-shop-i18n="langEnglish">English</option>
+        <option value="it" data-shop-i18n="langItalian">Italiano</option>
+        <option value="fr" data-shop-i18n="langFrench">Français</option>
+      </select>
+      <button class="btn-ghost" id="btnSaveCustomerLang" style="margin-top:8px" data-shop-i18n="saveCorrespondenceLang">Korrespondenzsprache speichern</button>
+    </div>
     <div class="form-group">
       <label class="form-label" for="cpwOld" data-shop-i18n="oldPassword">Altes Passwort</label>
       <input type="password" class="form-input" id="cpwOld" autocomplete="current-password">
