@@ -420,9 +420,18 @@
       <label class="form-label" for="regPasswordConfirm" data-shop-i18n="registerConfirmLbl">Passwort bestätigen</label>
       <input type="password" class="form-input" id="regPasswordConfirm" autocomplete="new-password">
     </div>
+    <div class="form-group">
+      <label class="form-label" for="regLangSelect" data-shop-i18n="correspondenceLang">Korrespondenzsprache</label>
+      <select class="form-input" id="regLangSelect">
+        <option value="de" data-shop-i18n="langGerman">Deutsch</option>
+        <option value="en" data-shop-i18n="langEnglish">English</option>
+        <option value="it" data-shop-i18n="langItalian">Italiano</option>
+        <option value="fr" data-shop-i18n="langFrench">Français</option>
+      </select>
+    </div>
     <div class="form-check" style="margin-bottom:16px">
       <input type="checkbox" id="regConsent">
-      <label for="regConsent"><span data-shop-i18n="acceptPrivacyOnly">Ich akzeptiere die</span> <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="privacyOnly">Datenschutzerklärung</a></label>
+      <label for="regConsent"><span data-shop-i18n="acceptTermsRegister">Ich akzeptiere die</span> <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="fAGB">AGB</a> <span data-shop-i18n="andConnector">und</span> <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366" data-shop-i18n="fDatenschutz">Datenschutz</a></label>
     </div>
     <button class="btn-pink" id="btnRegisterSubmit" data-shop-i18n="registerSubmitBtn">Registrieren</button>
     <button class="btn-ghost" data-close-modal="registerModal" data-shop-i18n="cancelBtn">Abbrechen</button>
@@ -477,7 +486,7 @@
   </div>
 </div>
 
-<script src="shop-app.js?v=20260318-3"></script>
+<script src="shop-app.js?v=20260320-1"></script>
 
 <!-- Deal Detail Modal -->
 <div id="dealDetailModal" class="deal-modal">
@@ -489,6 +498,7 @@
       <div class="deal-modal-title" id="ddTitle"></div>
       <div class="deal-modal-bar" id="ddBar"></div>
       <div class="deal-modal-desc" id="ddDesc"></div>
+      <div class="deal-modal-desc" id="ddOriginalWrap" style="display:none;background:#141414;border:1px solid #2a2a2a;border-radius:12px;padding:14px;margin-top:-4px;margin-bottom:18px"><div style="font-size:12px;color:#999;margin-bottom:6px" id="ddOriginalLabel">Originaltext der Bar</div><div id="ddOriginalTitle" style="font-weight:700;margin-bottom:6px"></div><div id="ddOriginalDesc" style="color:#bbb"></div></div>
       <div class="deal-modal-price">
         <span class="new" id="ddPrice"></span>
         <span class="old" id="ddOrig"></span>
