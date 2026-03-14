@@ -2176,3 +2176,221 @@ applyProfileToForm = function(b) {
   _origApplyProfileToForm(b);
   setAddressMeta('prof', [b.address, b.zip, b.city].filter(Boolean).join(', ') || t('addressNotSelected'));
 };
+
+// =============================================
+// FINAL STRICT PATCH: correspondence language + fixed MWST slots/CHE prefix
+// =============================================
+(function(){
+  Object.assign(TRANSLATIONS.de, { correspondenceLang:'Korrespondenzsprache', langGerman:'Deutsch', langEnglish:'English', langItalian:'Italiano', langFrench:'Français', paidOut:'Netto erhalten' });
+  Object.assign(TRANSLATIONS.en, { correspondenceLang:'Correspondence language', langGerman:'German', langEnglish:'English', langItalian:'Italian', langFrench:'French', paidOut:'Net received' });
+  Object.assign(TRANSLATIONS.it, { correspondenceLang:'Lingua di corrispondenza', langGerman:'Tedesco', langEnglish:'Inglese', langItalian:'Italiano', langFrench:'Francese', paidOut:'Netto ricevuto' });
+  Object.assign(TRANSLATIONS.fr, { correspondenceLang:'Langue de correspondance', langGerman:'Allemand', langEnglish:'Anglais', langItalian:'Italien', langFrench:'Français', paidOut:'Net reçu' });
+
+  function currentMwstSuffix_() { return ({ de:'MWST', en:'VAT', it:'IVA', fr:'TVA' })[currentLang] || 'MWST'; }
+  function getMwstDigitsOnly_(v) { return onlyDigits(v).slice(0, 9); }
+
+  formatMwstDisplay = function(v) {
+    var digits = getMwstDigitsOnly_(v);
+    if (!digits) return 'CHE';
+    var parts = [];
+    if (digits.slice(0,3)) parts.push(digits.slice(0,3));
+    if (digits.slice(3,6)) parts.push(digits.slice(3,6));
+    if (digits.slice(6,9)) parts.push(digits.slice(6,9));
+    var base = 'CHE-' + parts.join('.');
+    if (digits.length === 9) base += ' ' + currentMwstSuffix_();
+    return base;
+  };
+  normalizeMwst = function(v) { return formatMwstDisplay(v); };
+  isValidMwst = function(v) { return /^CHE-\d{3}\.\d{3}\.\d{3} (MWST|VAT|IVA|TVA)$/.test(formatMwstDisplay(v)); };
+
+  codeboxValueToChars = function(pattern, value) {
+    if (pattern === 'mwst') return ('CHE' + getMwstDigitsOnly_(value) + currentMwstSuffix_()).split('');
+    return onlyAlphaNum(value).slice(0, 21).split('');
+  };
+  getCodeboxGroups = function(pattern) {
+    return pattern === 'mwst' ? [3, 3, 3, 3, currentMwstSuffix_().length] : [4, 4, 4, 4, 4, 1];
+  };
+  getCodeboxActiveIndex = function(input, slots) {
+    if (!input || document.activeElement !== input) return -1;
+    if ((input.id || '').toLowerCase().indexOf('mwst') !== -1) {
+      var rawBeforeDigits = onlyDigits(String(input.value || '').slice(0, Math.max(0, input.selectionStart || 0))).length;
+      return Math.min(3 + rawBeforeDigits, 11);
+    }
+    var caret = Math.max(0, input.selectionStart || 0);
+    var rawBefore = onlyAlphaNum(String(input.value || '').slice(0, caret)).length;
+    if (rawBefore >= slots) return slots - 1;
+    return rawBefore;
+  };
+  setMaskedInputValue = function(id, value, formatter) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if ((id || '').toLowerCase().indexOf('mwst') !== -1) el.value = getMwstDigitsOnly_(value);
+    else el.value = formatter ? formatter(value) : String(value || '');
+    if (document.getElementById(id + 'Grid')) renderCodebox(id, id.toLowerCase().indexOf('mwst') >= 0 ? 'mwst' : 'iban');
+  };
+  updateMwstVisibility = function(prefix) {
+    var cb = document.getElementById(prefix + 'NoMwst');
+    var group = document.getElementById(prefix + 'MwstNumGroup');
+    var input = document.getElementById(prefix + 'MwstNumber');
+    var liable = !(cb && cb.checked);
+    if (group) group.style.display = liable ? 'block' : 'none';
+    if (input) {
+      input.required = liable;
+      input.maxLength = 9;
+      input.inputMode = 'numeric';
+      if (!liable) input.value = '';
+    }
+    renderCodebox(prefix + 'MwstNumber', 'mwst');
+  };
+  setupCodeboxInput = function(id, formatter, pattern) {
+    var input = document.getElementById(id);
+    var field = document.getElementById(id + 'Field');
+    if (!input || !field) return;
+    if (pattern === 'mwst') { input.maxLength = 9; input.inputMode = 'numeric'; }
+    else { input.maxLength = 27; }
+    function syncFormatted() {
+      if (pattern === 'mwst') input.value = getMwstDigitsOnly_(input.value);
+      else input.value = formatter ? formatter(input.value) : input.value;
+      renderCodebox(id, pattern);
+    }
+    input.addEventListener('input', syncFormatted);
+    input.addEventListener('keydown', function(e){
+      if (pattern === 'mwst') {
+        var ctrl = e.ctrlKey || e.metaKey || e.altKey;
+        var allowedNav = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
+        if (ctrl || allowedNav.indexOf(e.key) !== -1) return;
+        if (!/^[0-9]$/.test(e.key) || getMwstDigitsOnly_(input.value).length >= 9) e.preventDefault();
+      } else {
+        var ctrl2 = e.ctrlKey || e.metaKey || e.altKey;
+        var allowedNav2 = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End',' '];
+        if (ctrl2 || allowedNav2.indexOf(e.key) !== -1) return;
+        if (!/^[A-Za-z0-9]$/.test(e.key) || onlyAlphaNum(input.value).length >= 21) e.preventDefault();
+      }
+    });
+    input.addEventListener('keyup', function(){ renderCodebox(id, pattern); });
+    input.addEventListener('click', function(){ renderCodebox(id, pattern); });
+    input.addEventListener('focus', function(){ field.classList.add('is-focused'); renderCodebox(id, pattern); });
+    input.addEventListener('blur', function(){ field.classList.remove('is-focused'); renderCodebox(id, pattern); });
+    field.addEventListener('click', function(){ try { input.focus(); renderCodebox(id, pattern); } catch(e) {} });
+    renderCodebox(id, pattern);
+  };
+
+  var _origSessionSetBar = sessionSet;
+  sessionSet = function(token, barId, barName, lang) {
+    _origSessionSetBar(token, barId, barName);
+    if (lang) {
+      _session.lang = lang;
+      try { localStorage.setItem('barsclusive_bar_session', JSON.stringify(_session)); } catch(e) {}
+      setLang(lang);
+    }
+  };
+
+  doBarLogin = async function() {
+    var email = document.getElementById('loginEmail').value.trim();
+    var pass  = document.getElementById('loginPassword').value;
+    var err   = document.getElementById('loginErr');
+    err.textContent = '';
+    if (!email || !pass) { err.textContent = currentLang === 'de' ? 'Bitte alle Felder ausfüllen.' : currentLang === 'en' ? 'Please fill in all fields.' : currentLang === 'it' ? 'Compila tutti i campi.' : 'Veuillez remplir tous les champs.'; return; }
+    try {
+      document.getElementById('btnBarLogin').disabled = true; document.getElementById('btnBarLogin').textContent = '⏳...';
+      var r = await api({ action: 'barLogin', email, password: pass });
+      document.getElementById('btnBarLogin').disabled = false; document.getElementById('btnBarLogin').textContent = t('loginBtn') || 'Einloggen';
+      if (r.success) {
+        var uiLang = (r.bar && r.bar.lang) || localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
+        sessionSet(r.token, r.bar.id, r.bar.name, uiLang);
+        document.getElementById('loginPassword').value = '';
+        showAuthScreen(false);
+        clearDataCache();
+        prefetchAllData();
+        loadBarStats();
+      } else {
+        err.textContent = r.error || (currentLang === 'de' ? 'Ungültige Zugangsdaten.' : currentLang === 'en' ? 'Invalid credentials.' : currentLang === 'it' ? 'Credenziali non valide.' : 'Identifiants invalides.');
+        document.getElementById('loginPassword').value = '';
+      }
+    } catch (e) { err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.'; }
+  };
+
+  doBarRegister = async function() {
+    var name = normText(document.getElementById('regBarName').value);
+    var phone = normText(document.getElementById('regPhone').value);
+    var email = normText(document.getElementById('regBarEmail').value);
+    var pass = document.getElementById('regBarPass').value;
+    var ibanRaw = normText(document.getElementById('regIban').value);
+    var mwstLiable = !(document.getElementById('regNoMwst') && document.getElementById('regNoMwst').checked);
+    var mwstRaw = document.getElementById('regMwstNumber') ? normText(document.getElementById('regMwstNumber').value) : '';
+    var consent = document.getElementById('regConsent').checked;
+    var lang = (document.getElementById('regLangSelect') || {}).value || currentLang || 'de';
+    var err = document.getElementById('regErr');
+    var addr = parseSelectedAddress('reg');
+    err.textContent = '';
+    if (!name || !addr.city || !addr.address || !addr.zip || !email || !pass || !ibanRaw) { err.textContent = currentLang === 'de' ? 'Alle Pflichtfelder ausfüllen.' : currentLang === 'en' ? 'Please fill in all required fields.' : currentLang === 'it' ? 'Compila tutti i campi obbligatori.' : 'Veuillez remplir tous les champs obligatoires.'; return; }
+    if (!(document.getElementById('regAddressSearch') || {}).dataset.selected || !addr.latitude || !addr.longitude) { err.textContent = currentLang === 'de' ? 'Bitte Adresse aus der Vorschlagsliste auswählen.' : currentLang === 'en' ? 'Please choose the address from the suggestion list.' : currentLang === 'it' ? 'Seleziona l’indirizzo dalla lista dei suggerimenti.' : 'Veuillez choisir l’adresse dans la liste des suggestions.'; return; }
+    if (!isValidIban(ibanRaw)) { err.textContent = currentLang === 'de' ? 'Bitte eine gültige IBAN eingeben.' : currentLang === 'en' ? 'Please enter a valid IBAN.' : currentLang === 'it' ? 'Inserisci un IBAN valido.' : 'Veuillez saisir un IBAN valide.'; return; }
+    if (mwstLiable && !isValidMwst(mwstRaw)) { err.textContent = currentLang === 'de' ? 'Bitte eine gültige MWST-Nummer eingeben.' : currentLang === 'en' ? 'Please enter a valid VAT number.' : currentLang === 'it' ? 'Inserisci un numero IVA valido.' : 'Veuillez saisir un numéro TVA valide.'; return; }
+    if (pass.length < 8) { err.textContent = currentLang === 'de' ? 'Passwort mind. 8 Zeichen.' : currentLang === 'en' ? 'Password min. 8 characters.' : currentLang === 'it' ? 'Password min. 8 caratteri.' : 'Mot de passe min. 8 caractères.'; return; }
+    var passConfirm = document.getElementById('regBarPassConfirm') ? document.getElementById('regBarPassConfirm').value : pass;
+    if (pass !== passConfirm) { err.textContent = currentLang === 'de' ? 'Passwörter stimmen nicht überein.' : currentLang === 'en' ? 'Passwords do not match.' : currentLang === 'it' ? 'Le password non coincidono.' : 'Les mots de passe ne correspondent pas.'; return; }
+    if (!consent) { err.textContent = currentLang === 'de' ? 'Bitte AGB & Datenschutz akzeptieren.' : currentLang === 'en' ? 'Please accept terms and privacy.' : currentLang === 'it' ? 'Accetta condizioni e privacy.' : 'Veuillez accepter les CGV et la confidentialité.'; return; }
+    var btn = document.getElementById('btnBarRegister');
+    try {
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
+      var r = await api({ action: 'barRegister', name: name, city: addr.city, address: addr.address, zip: addr.zip, phone: phone, email: email, password: pass, iban: normalizeIban(ibanRaw), mwst_liable: mwstLiable, mwst_number: mwstLiable ? normalizeMwst(mwstRaw) : '', latitude: addr.latitude, longitude: addr.longitude, lang: lang });
+      if (r.success) {
+        showToast(currentLang === 'de' ? '✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.' : currentLang === 'en' ? '✅ Registration successful! We will contact you for activation.' : currentLang === 'it' ? '✅ Registrazione riuscita! Ti contatteremo per l’attivazione.' : '✅ Inscription réussie ! Nous vous contacterons pour l’activation.');
+        document.getElementById('regBarPass').value = '';
+        document.getElementById('regBarPassConfirm').value = '';
+        document.getElementById('regIban').value = '';
+        document.getElementById('regMwstNumber').value = '';
+        clearSelectedAddress('reg');
+        if (document.getElementById('regAddressSearch')) document.getElementById('regAddressSearch').value = '';
+        if (document.getElementById('regBarName')) document.getElementById('regBarName').value = '';
+        if (document.getElementById('regPhone')) document.getElementById('regPhone').value = '';
+        if (document.getElementById('regBarEmail')) document.getElementById('regBarEmail').value = '';
+        if (document.getElementById('regConsent')) document.getElementById('regConsent').checked = false;
+      } else {
+        err.textContent = r.error || (currentLang === 'de' ? 'Fehler bei der Registrierung.' : currentLang === 'en' ? 'Registration error.' : currentLang === 'it' ? 'Errore di registrazione.' : 'Erreur d’inscription.');
+      }
+    } catch (e) { err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.'; }
+    finally { if (btn) { btn.disabled = false; btn.textContent = t('registerBtn'); } }
+  };
+
+  var _origApplyProfileToForm = applyProfileToForm;
+  applyProfileToForm = function(b) {
+    _origApplyProfileToForm(b);
+    var langSel = document.getElementById('profLangSelect');
+    if (langSel) langSel.value = b.lang || currentLang || 'de';
+  };
+
+  saveProfile = async function() {
+    var s = sessionGet();
+    if (!s) { doLogout(); return; }
+    var addr = parseSelectedAddress('prof');
+    var ibanRaw = normText(document.getElementById('profIban').value);
+    var mwstLiable = !(document.getElementById('profNoMwst') && document.getElementById('profNoMwst').checked);
+    var mwstRaw = document.getElementById('profMwstNumber') ? normText(document.getElementById('profMwstNumber').value) : '';
+    var lang = (document.getElementById('profLangSelect') || {}).value || currentLang || 'de';
+    if (!addr.address || !addr.city || !addr.zip) { showToast(currentLang === 'de' ? 'Bitte zuerst eine Adresse auswählen.' : currentLang === 'en' ? 'Please select an address first.' : currentLang === 'it' ? 'Seleziona prima un indirizzo.' : 'Veuillez d’abord sélectionner une adresse.', true); return; }
+    if (!addr.latitude || !addr.longitude) { showToast(currentLang === 'de' ? 'Für die Adresse fehlen Koordinaten.' : currentLang === 'en' ? 'Coordinates are missing for this address.' : currentLang === 'it' ? 'Mancano le coordinate per questo indirizzo.' : 'Il manque les coordonnées pour cette adresse.', true); return; }
+    if (ibanRaw && !isValidIban(ibanRaw)) { showToast(currentLang === 'de' ? 'Bitte eine gültige IBAN eingeben.' : currentLang === 'en' ? 'Please enter a valid IBAN.' : currentLang === 'it' ? 'Inserisci un IBAN valido.' : 'Veuillez saisir un IBAN valide.', true); return; }
+    if (mwstLiable && !isValidMwst(mwstRaw)) { showToast(currentLang === 'de' ? 'Bitte eine gültige MWST-Nummer eingeben.' : currentLang === 'en' ? 'Please enter a valid VAT number.' : currentLang === 'it' ? 'Inserisci un numero IVA valido.' : 'Veuillez saisir un numéro TVA valide.', true); return; }
+    var payload = { action: 'updateBarProfile', token: s.token, address: addr.address, zip: addr.zip, city: addr.city, phone: normText(document.getElementById('profPhone').value), iban: normalizeIban(ibanRaw), twint: normText(document.getElementById('profTwint').value), mwst_liable: mwstLiable, mwst_number: mwstLiable ? normalizeMwst(mwstRaw) : '', latitude: addr.latitude, longitude: addr.longitude, lang: lang };
+    try {
+      var r = await api(payload);
+      if (r.success) {
+        _dataCache.profile = null;
+        if (_session) _session.lang = lang;
+        try { localStorage.setItem('barsclusive_bar_session', JSON.stringify(_session)); } catch(e) {}
+        setLang(lang);
+        showToast(t('profileSaved') || 'Gespeichert');
+        ['profIban','profMwstNumber'].forEach(function(id){ if (document.getElementById(id)) renderCodebox(id, id.toLowerCase().indexOf('mwst') >= 0 ? 'mwst' : 'iban'); });
+      } else showToast(r.error || 'Fehler', true);
+    } catch(e) { showToast(currentLang === 'de' ? 'Verbindungsfehler' : currentLang === 'en' ? 'Connection error' : currentLang === 'it' ? 'Errore di connessione' : 'Erreur de connexion', true); }
+  };
+})();
+
+(function(){
+  setAddressMeta = function(prefix, text) {
+    var el = document.getElementById(prefix + 'AddressMeta');
+    if (el) el.textContent = text || t('addressNotSelected') || 'Noch keine Adresse gewählt';
+  };
+})();
