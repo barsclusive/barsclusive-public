@@ -98,7 +98,24 @@ function restoreLocationState() {
     updateLocationUi();
   } catch(e) {}
 }
+function isDistanceSortLabel(label) {
+  var val = String(label || '').trim();
+  if (!val) return false;
+  return [
+    'Nach Distanz sortiert',
+    'Sorted by distance',
+    'Ordinato per distanza',
+    'Trié par distance'
+  ].indexOf(val) !== -1;
+}
+function normalizeGeoLocationLabel() {
+  if (_locationState && (_locationState.source === 'geo' || isDistanceSortLabel(_locationState.label))) {
+    _locationState.label = shopT('distanceSortActive') || st('distanceSortActive') || 'Nach Distanz sortiert';
+    _locationState.source = 'geo';
+  }
+}
 function updateLocationUi() {
+  normalizeGeoLocationLabel();
   var clearBtn = document.getElementById('btnClearLocation');
   var statusEl = document.getElementById('locationStatus');
   var inputEl = document.getElementById('locationInput');
@@ -2172,44 +2189,58 @@ loadDeals = async function(forceRefresh) {
   var now = Date.now();
   var lang = (_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || 'de').toLowerCase();
   var cacheKey = dealsCacheKeyForLang(lang);
-  if (!forceRefresh && dealsCache.data && dealsCache.lang === lang && (now - dealsCache.timestamp) < CACHE_DURATION) {
-    allDeals = dealsCache.data;
+  var renderedFromCache = false;
+
+  function renderImmediate(cacheObj) {
+    if (!cacheObj || !Array.isArray(cacheObj.data)) return false;
+    dealsCache = cacheObj;
+    allDeals = cacheObj.data;
     attachDistances();
+    var ld = document.getElementById('dealsLoading'); if (ld) ld.style.display = 'none';
+    var dl = document.getElementById('dealsList'); if (dl) dl.style.display = '';
     renderDeals();
-    return;
+    return true;
   }
+
+  if (!forceRefresh && dealsCache.data && dealsCache.lang === lang) {
+    renderedFromCache = renderImmediate(dealsCache) || renderedFromCache;
+    if ((now - dealsCache.timestamp) < CACHE_DURATION) return;
+  }
+
   if (!forceRefresh) {
     try {
       var localRaw = localStorage.getItem(cacheKey);
       if (localRaw) {
         var localParsed = JSON.parse(localRaw);
-        if (localParsed.data && localParsed.lang === lang && (now - localParsed.timestamp) < CACHE_DURATION) {
-          dealsCache = localParsed;
-          allDeals = localParsed.data;
-          attachDistances();
-          renderDeals();
-          return;
+        if (localParsed.data && localParsed.lang === lang) {
+          renderedFromCache = renderImmediate(localParsed) || renderedFromCache;
+          if ((now - localParsed.timestamp) < CACHE_DURATION) return;
         }
       }
     } catch(e) {}
   }
+
+  if (!renderedFromCache && Array.isArray(allDeals) && allDeals.length) {
+    try { attachDistances(); renderDeals(); } catch(e) {}
+  }
+
   try {
-    const r = await fetch(BACKEND_URL + '?action=getActiveDeals&lang=' + encodeURIComponent(lang));
+    const r = await fetch(BACKEND_URL + '?action=getActiveDeals&lang=' + encodeURIComponent(lang), { cache: 'no-store' });
     if (!r.ok) throw new Error('Network error');
     const d = await r.json();
     if (d.success) {
       allDeals = d.deals || [];
       attachDistances();
-      dealsCache = { data: allDeals, timestamp: now, lang: lang };
+      dealsCache = { data: allDeals, timestamp: Date.now(), lang: lang };
       try { localStorage.setItem(cacheKey, JSON.stringify(dealsCache)); } catch(e) {}
       var ld = document.getElementById('dealsLoading'); if(ld) ld.style.display='none';
       var dl = document.getElementById('dealsList'); if(dl) dl.style.display='';
       renderDeals();
-    } else {
+    } else if (!renderedFromCache) {
       showToast(d.error || shopT('dealsLoadError') || 'Fehler beim Laden der Deals', true);
     }
   } catch (e) {
-    showToast(shopT('networkReload') || 'Verbindungsfehler - bitte neu laden', true);
+    if (!renderedFromCache) showToast(shopT('networkReload') || 'Verbindungsfehler - bitte neu laden', true);
   }
 };
 var _origSetShopLang = setShopLang;
@@ -2221,7 +2252,12 @@ setShopLang = function(lang) {
     url.searchParams.set('lang', lang);
     history.replaceState(history.state, '', url.toString());
   } catch(e) {}
-  if (previous !== lang) loadDeals(false);
+  if (previous !== lang) {
+    try { updateLocationUi(); } catch(e) {}
+    loadDeals(false);
+  } else {
+    try { updateLocationUi(); } catch(e) {}
+  }
 };
 // prime language-specific cache immediately if present
 try {
@@ -2257,6 +2293,7 @@ function translateWeekdayList(list) {
 (function(){
   Object.assign(SHOP_TRANSLATIONS.de, {
     noAccountYet:'Noch kein Konto?',
+    register:'Registrieren', favoritesHeading:'Favoriten', ordersHeading:'Bestellungen',
     correspondenceLang:'Korrespondenzsprache',
     langGerman:'Deutsch', langEnglish:'English', langItalian:'Italiano', langFrench:'Français',
     acceptTermsRegister:'Ich akzeptiere die', andConnector:'und',
@@ -2269,6 +2306,7 @@ function translateWeekdayList(list) {
   });
   Object.assign(SHOP_TRANSLATIONS.en, {
     noAccountYet:'No account yet?',
+    register:'Register', favoritesHeading:'Favorites', ordersHeading:'Orders',
     correspondenceLang:'Correspondence language',
     langGerman:'German', langEnglish:'English', langItalian:'Italian', langFrench:'French',
     acceptTermsRegister:'I accept the', andConnector:'and',
@@ -2280,6 +2318,7 @@ function translateWeekdayList(list) {
   });
   Object.assign(SHOP_TRANSLATIONS.it, {
     noAccountYet:'Non hai ancora un account?',
+    register:'Registrati', favoritesHeading:'Preferiti', ordersHeading:'Ordini',
     correspondenceLang:'Lingua di corrispondenza',
     langGerman:'Tedesco', langEnglish:'Inglese', langItalian:'Italiano', langFrench:'Francese',
     acceptTermsRegister:'Accetto i', andConnector:'e',
@@ -2291,6 +2330,7 @@ function translateWeekdayList(list) {
   });
   Object.assign(SHOP_TRANSLATIONS.fr, {
     noAccountYet:'Pas encore de compte ?',
+    register:"S'inscrire", favoritesHeading:'Favoris', ordersHeading:'Commandes',
     correspondenceLang:'Langue de correspondance',
     langGerman:'Allemand', langEnglish:'Anglais', langItalian:'Italien', langFrench:'Français',
     acceptTermsRegister:'J’accepte les', andConnector:'et',
@@ -2335,6 +2375,7 @@ function translateWeekdayList(list) {
     if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') { Promise.resolve().then(loadOrders).catch(function(){}); }
     var fv = document.getElementById('favoritesView'); if (fv && fv.style.display === 'block') { try { showFavorites(); } catch(e) {} }
     var cartPanel = document.getElementById('cartPanel'); if (cartPanel && cartPanel.classList.contains('active')) { try { renderCartPanel(); } catch(e) {} }
+    try { updateLocationUi(); } catch(e) {}
   };
 
   doLogin = async function() {
