@@ -178,6 +178,16 @@
           <label class="form-label" for="loginPassword" data-i18n="password">Passwort</label>
           <input type="password" class="form-input" id="loginPassword" autocomplete="current-password">
         </div>
+        <div class="form-group">
+          <label class="form-label" for="loginLangSelect" data-i18n="correspondenceLang">Korrespondenzsprache</label>
+          <select class="form-input" id="loginLangSelect">
+            <option value="" data-i18n="keepSavedLanguage">Gespeicherte Sprache beibehalten</option>
+            <option value="de" data-i18n="langGerman">Deutsch</option>
+            <option value="en" data-i18n="langEnglish">English</option>
+            <option value="it" data-i18n="langItalian">Italiano</option>
+            <option value="fr" data-i18n="langFrench">Français</option>
+          </select>
+        </div>
         <button class="btn-pink" id="btnBarLogin" data-i18n="loginBtn">Einloggen</button>
         <p style="margin-top:16px;text-align:center;color:#999;font-size:14px">
           <span class="text-link" id="linkBarForgotPassword" data-i18n="forgotPw">Passwort vergessen?</span>
@@ -327,45 +337,45 @@
           <input type="number" class="form-input" id="dealQty" min="0" value="0">
         </div>
         <div class="form-group">
-          <label class="form-label">Bild (optional)</label>
+          <label class="form-label" id="newDealImageLabel">Bild (optional)</label>
           <input type="file" class="form-input" id="dealImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
-          <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 2 MB</small>
+          <small style="color:#999;font-size:12px" id="newDealImageHelp">JPG, PNG oder WebP, max. 2 MB</small>
           <div id="imagePreview" style="margin-top:8px;display:none"><img id="imagePreviewImg" style="max-width:200px;border-radius:8px" alt="Vorschau"></div>
           <input type="hidden" id="dealImageUrl">
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="categoriesLbl">Kategorien * (mind. 1)</label>
           <div class="cats-grid">
-            <label class="cat-check"><input type="checkbox" name="cat" value="breakfast"> 🥐 Breakfast</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="lunch"> 🍽️ Lunch</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ Pauschalgutschein</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="breakfast"> <span id="barCatBreakfast">🥐 Breakfast</span></label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="lunch"> <span id="barCatLunch">🍽️ Lunch</span></label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> <span id="barCatAperitif">🍹 Aperitif</span></label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> <span id="barCatDinner">🍷 Dinner</span></label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="events"> <span id="barCatEvents">🎉 Events</span></label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> <span id="barCatDiscount">🏷️ Pauschalgutschein</span></label>
           </div>
         </div>
         <!-- Pauschalgutschein fields -->
         <div id="pauschalFields" style="display:none;background:#2a2a2a;padding:16px;border-radius:10px;margin-bottom:18px;border:1px solid #FF3366">
-          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
+          <h3 id="pauschalSettingsTitle" style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="form-group" style="margin-bottom:0">
-              <label class="form-label" for="discountPercent">Rabatt % (mind. 15%)</label>
+              <label class="form-label" for="discountPercent" id="discountPercentLabel">Rabatt % (mind. 15%)</label>
               <input type="number" class="form-input" id="discountPercent" min="15" max="100" value="15">
             </div>
             <div class="form-group" style="margin-bottom:0">
-              <label class="form-label" for="minOrder">Mindestbestellung CHF (mind. 40)</label>
+              <label class="form-label" for="minOrder" id="minOrderLabel">Mindestbestellung CHF (mind. 40)</label>
               <input type="number" class="form-input" id="minOrder" min="40" value="40">
             </div>
           </div>
           <div class="form-group" style="margin-top:12px;margin-bottom:0">
-            <label class="form-label" for="appliesTo">Gilt für</label>
+            <label class="form-label" for="appliesTo" id="appliesToLabel">Gilt für</label>
             <select class="form-input" id="appliesTo" style="background:#1a1a1a;color:#fff">
-              <option value="all">Alles</option>
-              <option value="drinks">Nur Getränke</option>
-              <option value="food">Nur Essen</option>
+              <option value="all" id="appliesToAll">Alles</option>
+              <option value="drinks" id="appliesToDrinks">Nur Getränke</option>
+              <option value="food" id="appliesToFood">Nur Essen</option>
             </select>
           </div>
-          <p style="color:#999;font-size:12px;margin-top:10px">💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.</p>
+          <p id="pauschalInfoHint" style="color:#999;font-size:12px;margin-top:10px">💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.</p>
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="validityLbl">Gültigkeitsdauer *</label>
@@ -398,13 +408,13 @@
             </div>
           </div>
           <div style="margin-top:14px">
-            <label class="form-label">Zeitfenster (optional)</label>
+            <label class="form-label" id="timeWindowLabel">Zeitfenster (optional)</label>
             <div class="cats-grid" style="margin-bottom:10px">
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> 🌅 Morgen (06–12h)</label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> ☀️ Mittag (11–17h)</label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> 🌙 Abend (16–00h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> <span id="timeSlotMorningLabel">🌅 Morgen (06–12h)</span></label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> <span id="timeSlotMiddayLabel">☀️ Mittag (11–17h)</span></label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> <span id="timeSlotEveningLabel">🌙 Abend (16–00h)</span></label>
             </div>
-            <small style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
+            <small id="customTimesLabel" style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
             <div class="form-group">
@@ -591,46 +601,46 @@
       <input type="number" class="form-input" id="editQty" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label">Bild ändern (optional)</label>
+      <label class="form-label" id="editImageLabel">Bild ändern (optional)</label>
       <input type="file" class="form-input" id="editImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
       <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild"></div>
       <input type="hidden" id="editImageUrl">
     </div>
     <div class="form-group">
-      <label class="form-label">Gültigkeitsdauer</label>
+      <label class="form-label" id="editValidityLabel">Gültigkeitsdauer</label>
       <div class="validity-toggle">
-        <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> Wiederkehrend</label>
-        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> Einmaliges Datum</label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> <span id="editRecurringText">Wiederkehrend</span></label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> <span id="editSingleText">Einmaliges Datum</span></label>
       </div>
     </div>
     <div id="editRecurringFields" style="margin-top:8px">
-      <label class="form-label">Wochentage</label>
+      <label class="form-label" id="editWeekdaysLabel">Wochentage</label>
       <div class="weekdays" id="editWeekdays">
         <div class="wd-btn" data-wd="Mo">Mo</div><div class="wd-btn" data-wd="Di">Di</div><div class="wd-btn" data-wd="Mi">Mi</div><div class="wd-btn" data-wd="Do">Do</div><div class="wd-btn" data-wd="Fr">Fr</div><div class="wd-btn" data-wd="Sa">Sa</div><div class="wd-btn" data-wd="So">So</div>
       </div>
     </div>
     <div id="editSingleFields" style="display:none;margin-top:8px">
       <div class="form-group">
-        <label class="form-label">Datum</label>
+        <label class="form-label" id="editDateLabel">Datum</label>
         <input type="date" class="form-input" id="editSingleDate">
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
       <div class="form-group">
-        <label class="form-label">Von (Uhrzeit)</label>
+        <label class="form-label" id="editFromLabel">Von (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeFrom">
       </div>
       <div class="form-group">
-        <label class="form-label">Bis (Uhrzeit)</label>
+        <label class="form-label" id="editToLabel">Bis (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeTo">
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Zeitfenster</label>
+      <label class="form-label" id="editTimeSlotsLabel">Zeitfenster</label>
       <div class="cats-grid" style="margin-top:6px">
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> 🌅 Morgen</label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> ☀️ Mittag</label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> 🌙 Abend</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> <span id="editTimeSlotMorningLabel">🌅 Morgen</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> <span id="editTimeSlotMiddayLabel">☀️ Mittag</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> <span id="editTimeSlotEveningLabel">🌙 Abend</span></label>
       </div>
     </div>
     <div class="form-check" style="margin-bottom:20px">
@@ -682,7 +692,7 @@
 <div id="voucherDetailModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box" style="max-width:760px">
     <div class="modal-title">
-      <span id="voucherDetailTitle">🎟️ Gutschein</span>
+      <span id="voucherDetailTitle" data-i18n="voucherDetailTitle">🎟️ Gutschein</span>
       <button class="modal-close" id="btnCloseVoucherDetail">✕</button>
     </div>
     <div id="voucherDetailBody"></div>
