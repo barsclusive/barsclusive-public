@@ -2208,3 +2208,204 @@ try {
     }
   }
 } catch(e) {}
+
+// =============================================
+// FINAL STRICT PATCH: correspondence language, clean auth labels, deal original text
+// =============================================
+(function(){
+  Object.assign(SHOP_TRANSLATIONS.de, {
+    noAccountYet:'Noch kein Konto?',
+    correspondenceLang:'Korrespondenzsprache',
+    langGerman:'Deutsch', langEnglish:'English', langItalian:'Italiano', langFrench:'Français',
+    acceptTermsRegister:'Ich akzeptiere die', andConnector:'und',
+    acceptPrivacyOnly:'Ich akzeptiere die', privacyOnly:'Datenschutzerklärung',
+    acceptTermsPrivacy:'Bitte AGB und Datenschutz akzeptieren',
+    addressLabel:'Adresse', weekdaysLabel:'Wochentage', timeLabel:'Zeit', availableLabel:'Verfügbar', discountLabel:'Rabatt', minimumOrderLabel:'Mindestbestellung', typeLabel:'Typ', flatVoucherType:'Pauschalgutschein', detailsNone:'Keine weiteren Details',
+    originalBarText:'Originaltext der Bar', linkCopied:'Link kopiert!',
+    loginSuccess:'Eingeloggt!', registerSuccess:'Registrierung erfolgreich!',
+    emailPasswordRequired:'Bitte Email und Passwort eingeben', invalidCredentials:'Ungültige Zugangsdaten', passwordMin8:'Passwort mind. 8 Zeichen', passwordMismatch:'Passwörter stimmen nicht überein'
+  });
+  Object.assign(SHOP_TRANSLATIONS.en, {
+    noAccountYet:'No account yet?',
+    correspondenceLang:'Correspondence language',
+    langGerman:'German', langEnglish:'English', langItalian:'Italian', langFrench:'French',
+    acceptTermsRegister:'I accept the', andConnector:'and',
+    acceptPrivacyOnly:'I accept the', privacyOnly:'Privacy Policy',
+    acceptTermsPrivacy:'Please accept terms and privacy',
+    addressLabel:'Address', weekdaysLabel:'Weekdays', timeLabel:'Time', availableLabel:'Available', discountLabel:'Discount', minimumOrderLabel:'Minimum order', typeLabel:'Type', flatVoucherType:'Flat discount voucher', detailsNone:'No further details',
+    originalBarText:'Original bar text', linkCopied:'Link copied!', loginSuccess:'Logged in!', registerSuccess:'Registration successful!',
+    emailPasswordRequired:'Please enter email and password', invalidCredentials:'Invalid credentials', passwordMin8:'Password min. 8 characters', passwordMismatch:'Passwords do not match'
+  });
+  Object.assign(SHOP_TRANSLATIONS.it, {
+    noAccountYet:'Non hai ancora un account?',
+    correspondenceLang:'Lingua di corrispondenza',
+    langGerman:'Tedesco', langEnglish:'Inglese', langItalian:'Italiano', langFrench:'Francese',
+    acceptTermsRegister:'Accetto i', andConnector:'e',
+    acceptPrivacyOnly:'Accetto la', privacyOnly:'Privacy',
+    acceptTermsPrivacy:'Accetta condizioni e privacy',
+    addressLabel:'Indirizzo', weekdaysLabel:'Giorni', timeLabel:'Orario', availableLabel:'Disponibile', discountLabel:'Sconto', minimumOrderLabel:'Ordine minimo', typeLabel:'Tipo', flatVoucherType:'Voucher sconto forfettario', detailsNone:'Nessun ulteriore dettaglio',
+    originalBarText:'Testo originale del bar', linkCopied:'Link copiato!', loginSuccess:'Accesso effettuato!', registerSuccess:'Registrazione riuscita!',
+    emailPasswordRequired:'Inserisci email e password', invalidCredentials:'Credenziali non valide', passwordMin8:'Password min. 8 caratteri', passwordMismatch:'Le password non coincidono'
+  });
+  Object.assign(SHOP_TRANSLATIONS.fr, {
+    noAccountYet:'Pas encore de compte ?',
+    correspondenceLang:'Langue de correspondance',
+    langGerman:'Allemand', langEnglish:'Anglais', langItalian:'Italien', langFrench:'Français',
+    acceptTermsRegister:'J’accepte les', andConnector:'et',
+    acceptPrivacyOnly:'J’accepte la', privacyOnly:'Confidentialité',
+    acceptTermsPrivacy:'Veuillez accepter les CGV et la confidentialité',
+    addressLabel:'Adresse', weekdaysLabel:'Jours', timeLabel:'Horaire', availableLabel:'Disponible', discountLabel:'Réduction', minimumOrderLabel:'Commande minimum', typeLabel:'Type', flatVoucherType:'Bon de réduction forfaitaire', detailsNone:'Pas d’autres détails',
+    originalBarText:'Texte original du bar', linkCopied:'Lien copié !', loginSuccess:'Connecté !', registerSuccess:'Inscription réussie !',
+    emailPasswordRequired:'Veuillez saisir l’email et le mot de passe', invalidCredentials:'Identifiants invalides', passwordMin8:'Mot de passe min. 8 caractères', passwordMismatch:'Les mots de passe ne correspondent pas'
+  });
+
+  var _origSessionSetShop = sessionSet;
+  sessionSet = function(token, name, email, role, lang) {
+    _origSessionSetShop(token, name, email, role);
+    if (lang) {
+      _session.lang = lang;
+      try { localStorage.setItem('barsclusive_customer_session', JSON.stringify(_session)); } catch(e) {}
+      if (typeof setShopLang === 'function') setShopLang(lang);
+    }
+  };
+
+  var _origApplyShopTranslations = applyShopTranslations;
+  applyShopTranslations = function() {
+    _origApplyShopTranslations();
+    var regLang = document.getElementById('regLangSelect');
+    if (regLang && !regLang.value) regLang.value = (_shopLang || localStorage.getItem('barsclusive_lang') || 'de');
+    var loginNo = document.getElementById('loginNoAccountText'); if (loginNo) loginNo.textContent = st('noAccountYet');
+    var originalLabel = document.getElementById('ddOriginalLabel'); if (originalLabel) originalLabel.textContent = st('originalBarText');
+  };
+
+  doLogin = async function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) { showToast(st('emailPasswordRequired') || 'Bitte Email und Passwort eingeben', true); return; }
+    var _loginBtn = document.getElementById('btnLoginSubmit');
+    var defaultLabel = shopT('loginSubmitBtn') || 'Einloggen';
+    if (_loginBtn) { _loginBtn.disabled = true; _loginBtn.textContent = '⏳...'; }
+    try {
+      const r = await api({ action: 'customerLogin', email, password });
+      if (r.success) {
+        var uiLang = (r.customer && r.customer.lang) || _shopLang || localStorage.getItem('barsclusive_lang') || 'de';
+        sessionSet(r.token, r.customer.name, r.customer.email, 'customer', uiLang);
+        closeModal('loginModal');
+        document.getElementById('loginPassword').value = '';
+        showToast('✅ ' + (st('loginSuccess') || 'Eingeloggt!'));
+        Promise.resolve().then(loadFavorites).catch(function(){});
+        if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') Promise.resolve().then(loadOrders).catch(function(){});
+      } else {
+        showToast(r.error || (st('invalidCredentials') || 'Ungültige Zugangsdaten'), true);
+        document.getElementById('loginPassword').value = '';
+      }
+    } catch (e) {
+      showToast(st('networkError') || 'Verbindungsfehler', true);
+    } finally {
+      if (_loginBtn) { _loginBtn.disabled = false; _loginBtn.textContent = defaultLabel; }
+    }
+  };
+
+  doRegister = async function() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const passConfirm = document.getElementById('regPasswordConfirm') ? document.getElementById('regPasswordConfirm').value : password;
+    const consent = document.getElementById('regConsent').checked;
+    const lang = (document.getElementById('regLangSelect') || {}).value || _shopLang || 'de';
+    if (!name || !email || !password) { showToast(st('allFieldsRequired') || 'Alle Felder ausfüllen', true); return; }
+    if (password.length < 8) { showToast(st('passwordMin8') || 'Passwort mind. 8 Zeichen', true); return; }
+    if (password !== passConfirm) { showToast(st('passwordMismatch') || 'Passwörter stimmen nicht überein', true); return; }
+    if (!consent) { showToast(st('acceptTermsPrivacy') || 'Bitte AGB & Datenschutz akzeptieren', true); return; }
+    try {
+      const r = await api({ action: 'customerRegister', name, email, password, lang });
+      if (r.success) {
+        sessionSet(r.token, name, email, 'customer', (r.customer && r.customer.lang) || lang);
+        closeModal('registerModal');
+        document.getElementById('regPassword').value = '';
+        document.getElementById('regPasswordConfirm').value = '';
+        showToast('✅ ' + (st('registerSuccess') || 'Registrierung erfolgreich!'));
+      } else {
+        showToast(r.error || (st('genericErrorDot') || 'Fehler'), true);
+      }
+    } catch (e) { showToast(st('networkError') || 'Verbindungsfehler', true); }
+  };
+
+  openDealDetail = function(deal) {
+    _detailDeal = deal;
+    var modal = document.getElementById('dealDetailModal');
+    if (!modal) return;
+    var isPauschal = (deal.categories || []).indexOf('pauschalgutscheine') !== -1;
+    var imgDiv = document.getElementById('ddImg');
+    var existingImg = imgDiv.querySelector('img');
+    if (existingImg) existingImg.remove();
+    if (deal.image_url) {
+      var img = document.createElement('img');
+      var gid = '';
+      var u = deal.image_url;
+      if (u.indexOf('lh3.googleusercontent.com/d/') >= 0) gid = u.split('/d/')[1].split('=')[0];
+      else if (u.indexOf('thumbnail?id=') >= 0) gid = u.split('id=')[1].split('&')[0];
+      else if (u.indexOf('/d/') >= 0) gid = (u.split('/d/')[1] || '').split('/')[0];
+      if (gid) img.src = 'https://lh3.googleusercontent.com/d/' + gid + '=w800'; else img.src = u;
+      img.referrerPolicy = 'no-referrer'; img.onerror = function() { this.style.display='none'; };
+      imgDiv.insertBefore(img, imgDiv.firstChild);
+    }
+    document.getElementById('ddTitle').textContent = deal.title;
+    document.getElementById('ddBar').textContent = deal.bar_name + (deal.bar_city ? ' • ' + deal.bar_city : '');
+    document.getElementById('ddDesc').textContent = deal.description || '';
+    document.getElementById('ddPrice').textContent = Number(deal.deal_price).toFixed(2) + ' CHF';
+    var origEl = document.getElementById('ddOrig');
+    if (deal.original_price > deal.deal_price) { origEl.textContent = Number(deal.original_price).toFixed(2) + ' CHF'; origEl.style.display = 'inline'; }
+    else { origEl.style.display = 'none'; }
+    var origWrap = document.getElementById('ddOriginalWrap');
+    var origTitle = document.getElementById('ddOriginalTitle');
+    var origDesc = document.getElementById('ddOriginalDesc');
+    var originalTitle = deal.original_title || deal.title || '';
+    var originalDesc = deal.original_description || deal.description || '';
+    var titleDiff = (deal.title || '') !== originalTitle;
+    var descDiff = (deal.description || '') !== originalDesc;
+    if (origWrap && (titleDiff || descDiff)) {
+      origWrap.style.display = 'block';
+      document.getElementById('ddOriginalLabel').textContent = st('originalBarText');
+      origTitle.textContent = titleDiff ? originalTitle : '';
+      origTitle.style.display = titleDiff ? 'block' : 'none';
+      origDesc.textContent = originalDesc || '';
+    } else if (origWrap) {
+      origWrap.style.display = 'none';
+    }
+    var info = '';
+    if (deal.bar_address) info += '<div><span style="color:#999">' + escHtml(st('addressLabel')) + '</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
+    if (isPauschal) {
+      if (deal.discount_percent) info += '<div><span style="color:#999">' + escHtml(st('discountLabel')) + '</span><span style="color:#FF3366;font-weight:700">' + deal.discount_percent + '%</span></div>';
+      if (deal.min_order) info += '<div><span style="color:#999">' + escHtml(st('minimumOrderLabel')) + '</span><span>' + deal.min_order + ' CHF</span></div>';
+      info += '<div><span style="color:#999">' + escHtml(st('typeLabel')) + '</span><span>' + escHtml(st('flatVoucherType')) + '</span></div>';
+    }
+    var weekdays = deal.valid_weekdays || [];
+    if (weekdays.length) info += '<div><span style="color:#999">' + escHtml(st('weekdaysLabel')) + '</span><span>' + weekdays.join(', ') + '</span></div>';
+    if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">' + escHtml(st('timeLabel')) + '</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
+    if (deal.max_quantity > 0) info += '<div><span style="color:#999">' + escHtml(st('availableLabel')) + '</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
+    document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">' + escHtml(st('detailsNone')) + '</div>';
+    var shareUrl = window.location.origin + window.location.pathname + '?deal=' + deal.id;
+    var shareText = deal.title + ' bei ' + deal.bar_name + ' - nur ' + Number(deal.deal_price).toFixed(2) + ' CHF!';
+    var shareEl = document.getElementById('ddShare'); shareEl.innerHTML = '';
+    var shareItems = [['📋 ' + (shopT('shareCopy') || 'Link kopieren'), function() { copyDealLink(); }]];
+    if (navigator.share) shareItems.unshift(['📱 ' + (shopT('shareBtn') || 'Teilen'), function() { navigator.share({ title: deal.title, text: shareText, url: shareUrl }).catch(function() {}); }]);
+    shareItems.forEach(function(s) { var btn = document.createElement('button'); btn.className = 'share-btn'; btn.textContent = s[0]; btn.addEventListener('click', s[1]); shareEl.appendChild(btn); });
+    document.getElementById('ddBuyBtn').onclick = function() { closeDealDetail(); openBuyModal(deal); };
+    var ddCartBtn = document.getElementById('ddCartBtn');
+    if (!ddCartBtn) {
+      ddCartBtn = document.createElement('button'); ddCartBtn.id = 'ddCartBtn';
+      ddCartBtn.style.cssText = 'width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
+      document.getElementById('ddBuyBtn').after(ddCartBtn);
+    }
+    ddCartBtn.textContent = '🛒 ' + (shopT('cartAddTitle') || 'In den Warenkorb');
+    ddCartBtn.onclick = function() { addToCart(deal); closeDealDetail(); };
+    modal.classList.add('active'); document.body.style.overflow = 'hidden';
+  };
+
+  copyDealLink = function() {
+    if (!_detailDeal) return;
+    var url = window.location.origin + window.location.pathname + '?deal=' + _detailDeal.id;
+    navigator.clipboard.writeText(url).then(function() { showToast(st('linkCopied') || 'Link kopiert!'); }).catch(function() { showToast((st('linkGenericPrefix') || 'Link:') + ' ' + url); });
+  };
+})();
