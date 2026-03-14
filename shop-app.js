@@ -612,7 +612,8 @@ async function doBuy() {
       deal_id: deal.id,
       buyer_name: name, buyer_email: email,
       customer_id: s ? s.token : '',
-      site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '')
+      site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, ''),
+      lang: (_shopLang || shopLang || 'de')
     });
     if (!r.success) {
       showToast(r.error || 'Fehler', true);
@@ -700,7 +701,7 @@ function buildOrderCard(o) {
       box.append(label, codeEl);
 
       // Voucher link + share row
-      var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(vc);
+      var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(vc) + '&lang=' + encodeURIComponent(_shopLang || shopLang || 'de');
       var actions = document.createElement('div');
       actions.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px';
 
@@ -722,7 +723,7 @@ function buildOrderCard(o) {
         nsBtn.className = 'share-btn';
         nsBtn.textContent = '📱 ' + (shopT('shareBtn') || 'Teilen');
         nsBtn.addEventListener('click', (function(c, t) { return function() {
-          var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(c);
+          var vUrl = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(c) + '&lang=' + encodeURIComponent(_shopLang || shopLang || 'de');
           navigator.share({ title: t || 'BarSclusive Voucher', url: vUrl }).catch(function() {});
         }; })(vc, o.deal_title || ''));
         actions.appendChild(nsBtn);
@@ -784,7 +785,8 @@ async function doLogin() {
   var defaultLabel = shopT('loginSubmitBtn') || 'Einloggen';
   if (_loginBtn) { _loginBtn.disabled = true; _loginBtn.textContent = '⏳...'; }
   try {
-    const r = await api({ action: 'customerLogin', email, password });
+    const selectedLang = ((document.getElementById('loginLangSelect') || {}).value || '').trim();
+      const r = await api({ action: 'customerLogin', email, password });
     if (r.success) {
       sessionSet(r.token, r.customer.name, r.customer.email, 'customer');
       closeModal('loginModal');
@@ -815,7 +817,7 @@ async function doRegister() {
   if (password.length < 8)           { showToast('Passwort mind. 8 Zeichen', true); return; }
   var passConfirm = document.getElementById('regPasswordConfirm') ? document.getElementById('regPasswordConfirm').value : password;
   if (password !== passConfirm)      { showToast('Passwörter stimmen nicht überein', true); return; }
-  if (!consent)                       { showToast('Datenschutz akzeptieren', true); return; }
+  if (!consent)                       { showToast(shopT('buyConsentError') || 'Bitte AGB & Datenschutz akzeptieren', true); return; }
 
   try {
     const r = await api({ action: 'customerRegister', name, email, password });
@@ -1130,7 +1132,7 @@ const SHOP_TRANSLATIONS = {
     gutscheinAnzeigen:'Anzeigen', linkKopieren:'Link kopieren', linkKopiert:'Link kopiert!',
     warenkorbLeer:'Warenkorb ist leer', jetztBezahlen:'Jetzt bezahlen', total:'Total', deinName:'Dein Name:', deineEmail:'Deine Email:', pwBestaetigen:'Passwort bestätigen',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Karte', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Rabatt',
-    myLocationBtn:'Mein Standort', clearLocationBtn:'Zurücksetzen', geoEnableBtn:'Standort freigeben', geoBannerText:'Deals in deiner Nähe anzeigen?', mapStateText:'Deals direkt auf der Karte der Schweiz', mapCountryBadge:'🇨🇭 Schweiz', distanceAway:'entfernt',
+    myLocationBtn:'Nach Distanz sortieren', clearLocationBtn:'Zurücksetzen', geoEnableBtn:'Standort freigeben', geoBannerText:'Deals in deiner Nähe anzeigen?', mapStateText:'Deals direkt auf der Karte der Schweiz', mapCountryBadge:'🇨🇭 Schweiz', distanceAway:'entfernt',
     emailLbl:'Email', passwordLbl:'Passwort', nameLbl:'Name', registerPasswordLbl:'Passwort (mind. 8 Zeichen)', registerConfirmLbl:'Passwort bestätigen', registerModalTitle:'✨ Registrieren', registerSubmitBtn:'Registrieren', acceptPrivacyOnly:'Ich akzeptiere die', privacyOnly:'Datenschutzerklärung', alreadyRegistered:'Schon registriert?', goToLogin:'Zum Login', cartTitle:'🛒 Warenkorb', checkoutTitle:'Checkout', acceptTermsCart:'Ich akzeptiere die', processing:'⏳ Wird verarbeitet...', nameEmailRequired:'Name und Email sind Pflichtfelder', checkoutFailed:'Checkout fehlgeschlagen', loginModalTitle:'🔐 Anmelden', resetModalTitle:'🔑 Passwort zurücksetzen', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', backBtn:'Zurück',
   },
   en: {
@@ -1157,7 +1159,7 @@ const SHOP_TRANSLATIONS = {
     gutscheinAnzeigen:'View', linkKopieren:'Copy link', linkKopiert:'Link copied!',
     warenkorbLeer:'Cart is empty', jetztBezahlen:'Pay now', total:'Total', deinName:'Your name:', deineEmail:'Your email:', pwBestaetigen:'Confirm password',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Map', catBreakfast:'🥐 Breakfast', catLunch:'🍽️ Lunch', catAperitif:'🍹 Aperitif', catDinner:'🍷 Dinner', catEvents:'🎉 Events', catDiscount:'🏷️ Discount',
-    myLocationBtn:'My location', clearLocationBtn:'Reset', geoEnableBtn:'Enable location', geoBannerText:'Show deals near you?', mapStateText:'Deals directly on the map of Switzerland', mapCountryBadge:'🇨🇭 Switzerland', distanceAway:'away',
+    myLocationBtn:'Sort by distance', clearLocationBtn:'Reset', geoEnableBtn:'Enable location', geoBannerText:'Show deals near you?', mapStateText:'Deals directly on the map of Switzerland', mapCountryBadge:'🇨🇭 Switzerland', distanceAway:'away',
     emailLbl:'Email', passwordLbl:'Password', nameLbl:'Name', registerPasswordLbl:'Password (min. 8 chars)', registerConfirmLbl:'Confirm password', registerModalTitle:'✨ Register', registerSubmitBtn:'Register', acceptPrivacyOnly:'I accept the', privacyOnly:'Privacy Policy', alreadyRegistered:'Already registered?', goToLogin:'Go to login', cartTitle:'🛒 Cart', checkoutTitle:'Checkout', acceptTermsCart:'I accept the', processing:'⏳ Processing...', nameEmailRequired:'Name and email are required', checkoutFailed:'Checkout failed', loginModalTitle:'🔐 Login', resetModalTitle:'🔑 Reset password', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', backBtn:'Back',
   },
   it: {
@@ -1183,7 +1185,7 @@ const SHOP_TRANSLATIONS = {
     gutscheinAnzeigen:'Visualizza', linkKopieren:'Copia link', linkKopiert:'Link copiato!',
     warenkorbLeer:'Carrello vuoto', jetztBezahlen:'Paga ora', total:'Totale', deinName:'Il tuo nome:', deineEmail:'La tua email:', pwBestaetigen:'Conferma password',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Mappa', catBreakfast:'🥐 Colazione', catLunch:'🍽️ Pranzo', catAperitif:'🍹 Aperitivo', catDinner:'🍷 Cena', catEvents:'🎉 Eventi', catDiscount:'🏷️ Sconto',
-    myLocationBtn:'La mia posizione', clearLocationBtn:'Reimposta', geoEnableBtn:'Attiva posizione', geoBannerText:'Mostrare i deal vicino a te?', mapStateText:'Deal direttamente sulla mappa della Svizzera', mapCountryBadge:'🇨🇭 Svizzera', distanceAway:'di distanza',
+    myLocationBtn:'Ordina per distanza', clearLocationBtn:'Reimposta', geoEnableBtn:'Attiva posizione', geoBannerText:'Mostrare i deal vicino a te?', mapStateText:'Deal direttamente sulla mappa della Svizzera', mapCountryBadge:'🇨🇭 Svizzera', distanceAway:'di distanza',
     emailLbl:'Email', passwordLbl:'Password', nameLbl:'Nome', registerPasswordLbl:'Password (min. 8 caratteri)', registerConfirmLbl:'Conferma password', registerModalTitle:'✨ Registrati', registerSubmitBtn:'Registrati', acceptPrivacyOnly:'Accetto la', privacyOnly:'Privacy', alreadyRegistered:'Già registrato?', goToLogin:'Vai al login', cartTitle:'🛒 Carrello', checkoutTitle:'Checkout', acceptTermsCart:'Accetto', processing:'⏳ Elaborazione...', nameEmailRequired:'Nome ed email sono obbligatori', checkoutFailed:'Checkout non riuscito', loginModalTitle:'🔐 Accedi', resetModalTitle:'🔑 Reimposta password', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', backBtn:'Indietro',
   },
   fr: {
@@ -1192,7 +1194,7 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Mes commandes', changePw:'Changer mot de passe',
     heroTitle:'🍹 Les meilleures offres bar de ta ville',
     heroSub:'Offres exclusives pour petit-déjeuner, brunch, apéritif et événements',
-    buyBtn:'Acheter Deal', changePasswordTitle:'Changer mot de passe',
+    buyBtn:"Acheter l'offre", changePasswordTitle:'Changer mot de passe',
     oldPassword:'Ancien mot de passe', newPassword:'Nouveau mot de passe',
     confirmPassword:'Confirmer', savePw:'Enregistrer', cancelBtn:'Annuler',
     datum:'Date', uhrzeit:'Heure', kategorie:'Catégorie', standort:'Lieu', jederzeit:'À tout moment',
@@ -1208,7 +1210,7 @@ const SHOP_TRANSLATIONS = {
     gutscheinAnzeigen:'Afficher', linkKopieren:'Copier le lien', linkKopiert:'Lien copié!',
     alle:'Tous', heute:"Aujourd'hui", morgen:'Demain',
     viewDeals:'🏠 Deals', viewMap:'🗺️ Carte', catBreakfast:'🥐 Petit-déjeuner', catLunch:'🍽️ Déjeuner', catAperitif:'🍹 Apéritif', catDinner:'🍷 Dîner', catEvents:'🎉 Événements', catDiscount:'🏷️ Réduction',
-    myLocationBtn:'Ma position', clearLocationBtn:'Réinitialiser', geoEnableBtn:'Activer la position', geoBannerText:'Afficher les deals près de vous ?', mapStateText:'Deals directement sur la carte de la Suisse', mapCountryBadge:'🇨🇭 Suisse', distanceAway:'de distance',
+    myLocationBtn:'Trier par distance', clearLocationBtn:'Réinitialiser', geoEnableBtn:'Activer la position', geoBannerText:'Afficher les deals près de vous ?', mapStateText:'Deals directement sur la carte de la Suisse', mapCountryBadge:'🇨🇭 Suisse', distanceAway:'de distance',
     emailLbl:'Email', passwordLbl:'Mot de passe', nameLbl:'Nom', registerPasswordLbl:'Mot de passe (min. 8 car.)', registerConfirmLbl:'Confirmer le mot de passe', registerModalTitle:'✨ Inscription', registerSubmitBtn:"S'inscrire", acceptPrivacyOnly:"J'accepte la", privacyOnly:'Confidentialité', alreadyRegistered:'Déjà inscrit ?', goToLogin:'Vers la connexion', cartTitle:'🛒 Panier', checkoutTitle:'Checkout', acceptTermsCart:"J'accepte les", processing:'⏳ Traitement...', nameEmailRequired:'Nom et email sont obligatoires', checkoutFailed:'Échec du checkout', loginModalTitle:'🔐 Connexion', resetModalTitle:'🔑 Réinitialiser le mot de passe', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', backBtn:'Retour',
   }
 };
@@ -1323,6 +1325,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (langEN) langEN.addEventListener('click', function(){setShopLang('en')});
   if (langIT) langIT.addEventListener('click', function(){setShopLang('it')});
   if (langFR) langFR.addEventListener('click', function(){setShopLang('fr')});
+  var loginLangSelect = document.getElementById('loginLangSelect');
+  if (loginLangSelect) loginLangSelect.addEventListener('change', function(){ this.dataset.touched = '1'; });
   // Init from localStorage
   var savedLang = localStorage.getItem('barsclusive_lang') || 'de';
   setShopLang(savedLang);
@@ -1335,6 +1339,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const btnSavePw = document.getElementById('btnSavePassword');
   if (btnSavePw) btnSavePw.addEventListener('click', doChangePassword);
+  const btnSaveCustomerLang = document.getElementById('btnSaveCustomerLang');
+  if (btnSaveCustomerLang) btnSaveCustomerLang.addEventListener('click', async function() {
+    var s = sessionGet();
+    if (!s) { showToast(st('loginRequired') || 'Bitte einloggen', true); return; }
+    var lang = ((document.getElementById('custLangSelect') || {}).value || '').trim() || (_shopLang || shopLang || 'de');
+    try {
+      var r = await api({ action: 'updateCorrespondenceLanguage', token: s.token, lang: lang });
+      if (r.success) {
+        if (_session) _session.lang = lang;
+        try { localStorage.setItem('barsclusive_customer_session', JSON.stringify(_session)); } catch(e) {}
+        setShopLang(lang);
+        showToast(st('correspondenceLangSaved') || 'Korrespondenzsprache gespeichert');
+      } else {
+        showToast(r.error || (st('genericErrorDot') || 'Fehler'), true);
+      }
+    } catch (e) { showToast(st('networkError') || 'Verbindungsfehler', true); }
+  });
 
   const cpwModal = document.getElementById('changePwModal');
   if (cpwModal) cpwModal.addEventListener('click', function(e) {
@@ -1488,7 +1509,7 @@ function openDealDetail(deal) {
     info += '<div><span style="color:#999">Typ</span><span>Pauschalgutschein</span></div>';
   }
   var weekdays = deal.valid_weekdays || [];
-  if (weekdays.length) info += '<div><span style="color:#999">Wochentage</span><span>' + weekdays.join(', ') + '</span></div>';
+  if (weekdays.length) info += '<div><span style="color:#999">' + escHtml(st('weekdaysLabel') || 'Wochentage') + '</span><span>' + escHtml(translateWeekdayList ? translateWeekdayList(weekdays) : weekdays.join(', ')) + '</span></div>';
   if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">Zeit</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
   if (deal.max_quantity > 0) info += '<div><span style="color:#999">Verfügbar</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
   document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">Keine weiteren Details</div>';
@@ -1558,12 +1579,12 @@ function shareDeal(platform) {
 
 // Voucher sharing functions
 function copyVoucherLink(code) {
-  var url = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(code);
+  var url = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(code) + '&lang=' + encodeURIComponent(_shopLang || shopLang || 'de');
   navigator.clipboard.writeText(url).then(function() { showToast(shopT('linkKopiert') || 'Link kopiert!'); }).catch(function() { showToast('Link: ' + url); });
 }
 
 function shareVoucher(code, dealTitle, platform) {
-  var url = encodeURIComponent(window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + code);
+  var url = encodeURIComponent(window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + code + '&lang=' + encodeURIComponent(_shopLang || shopLang || 'de'));
   var text = encodeURIComponent((dealTitle || 'BarSclusive Gutschein') + ' - ' + code);
   var link = '';
   if (platform === 'whatsapp') link = 'https://wa.me/?text=' + text + '%20' + url;
@@ -1612,7 +1633,7 @@ function requestGeoPermission() {
     function(pos) {
       _userLat = pos.coords.latitude;
       _userLng = pos.coords.longitude;
-      _locationState = { label: shopT('myLocationBtn') || 'Mein Standort', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
+      _locationState = { label: shopT('distanceSortActive') || 'Nach Distanz sortiert', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
       saveLocationState();
       updateLocationUi();
       dismissGeoBanner();
@@ -1789,7 +1810,8 @@ async function checkoutCart() {
       buyer_name: buyerName,
       buyer_email: buyerEmail,
       customer_id: s ? s.customerId : '',
-      site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '')
+      site_url: window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, ''),
+      lang: (_shopLang || shopLang || 'de')
     });
     if (r.success && r.checkout_url) {
       _cart = [];
@@ -1939,7 +1961,7 @@ function updateShopMapMarkers() {
     var userMarker = L.marker([Number(_userLat), Number(_userLng)], {
       icon: L.divIcon({ className: 'map-user-wrapper', html: '<div class="map-user-pin"></div>', iconSize: [16,16], iconAnchor: [8,8] })
     }).addTo(_shopMap);
-    userMarker.bindPopup(st('myLocationBtn'));
+    userMarker.bindPopup(st('distanceSortActive') || st('myLocationBtn'));
     _shopMapMarkers.push(userMarker);
     bounds.push([Number(_userLat), Number(_userLng)]);
   }
@@ -2137,7 +2159,7 @@ copyDealLink = function() {
   });
 };
 copyVoucherLink = function(code) {
-  var url = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(code);
+  var url = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '') + 'voucher.html?code=' + encodeURIComponent(code) + '&lang=' + encodeURIComponent(_shopLang || shopLang || 'de');
   navigator.clipboard.writeText(url).then(function() {
     showToast(shopT('linkKopiert') || 'Link kopiert!');
   }).catch(function() {
@@ -2194,6 +2216,11 @@ var _origSetShopLang = setShopLang;
 setShopLang = function(lang) {
   var previous = _shopLang || shopLang || 'de';
   _origSetShopLang(lang);
+  try {
+    var url = new URL(window.location.href);
+    url.searchParams.set('lang', lang);
+    history.replaceState(history.state, '', url.toString());
+  } catch(e) {}
   if (previous !== lang) loadDeals(false);
 };
 // prime language-specific cache immediately if present
@@ -2209,6 +2236,21 @@ try {
   }
 } catch(e) {}
 
+
+function translateWeekdayToken(token) {
+  var key = String(token || '').trim().toLowerCase();
+  var maps = {
+    de: { mo:'Mo', mon:'Mo', monday:'Mo', di:'Di', tue:'Di', tuesday:'Di', mi:'Mi', wed:'Mi', wednesday:'Mi', do:'Do', thu:'Do', thursday:'Do', fr:'Fr', fri:'Fr', friday:'Fr', sa:'Sa', sat:'Sa', saturday:'Sa', so:'So', sun:'So', sunday:'So' },
+    en: { mo:'Mon', mon:'Mon', monday:'Mon', di:'Tue', tue:'Tue', tuesday:'Tue', mi:'Wed', wed:'Wed', wednesday:'Wed', do:'Thu', thu:'Thu', thursday:'Thu', fr:'Fri', fri:'Fri', friday:'Fri', sa:'Sat', sat:'Sat', saturday:'Sat', so:'Sun', sun:'Sun', sunday:'Sun' },
+    it: { mo:'Lun', mon:'Lun', monday:'Lun', di:'Mar', tue:'Mar', tuesday:'Mar', mi:'Mer', wed:'Mer', wednesday:'Mer', do:'Gio', thu:'Gio', thursday:'Gio', fr:'Ven', fri:'Ven', friday:'Ven', sa:'Sab', sat:'Sab', saturday:'Sab', so:'Dom', sun:'Dom', sunday:'Dom' },
+    fr: { mo:'Lun', mon:'Lun', monday:'Lun', di:'Mar', tue:'Mar', tuesday:'Mar', mi:'Mer', wed:'Mer', wednesday:'Mer', do:'Jeu', thu:'Jeu', thursday:'Jeu', fr:'Ven', fri:'Ven', friday:'Ven', sa:'Sam', sat:'Sam', saturday:'Sam', so:'Dim', sun:'Dim', sunday:'Dim' }
+  };
+  return (maps[_shopLang || shopLang || 'de'] || {})[key] || String(token || '').trim();
+}
+function translateWeekdayList(list) {
+  return (Array.isArray(list) ? list : []).map(translateWeekdayToken).join(', ');
+}
+
 // =============================================
 // FINAL STRICT PATCH: correspondence language, clean auth labels, deal original text
 // =============================================
@@ -2223,7 +2265,7 @@ try {
     addressLabel:'Adresse', weekdaysLabel:'Wochentage', timeLabel:'Zeit', availableLabel:'Verfügbar', discountLabel:'Rabatt', minimumOrderLabel:'Mindestbestellung', typeLabel:'Typ', flatVoucherType:'Pauschalgutschein', detailsNone:'Keine weiteren Details',
     originalBarText:'Originaltext der Bar', linkCopied:'Link kopiert!',
     loginSuccess:'Eingeloggt!', registerSuccess:'Registrierung erfolgreich!',
-    emailPasswordRequired:'Bitte Email und Passwort eingeben', invalidCredentials:'Ungültige Zugangsdaten', passwordMin8:'Passwort mind. 8 Zeichen', passwordMismatch:'Passwörter stimmen nicht überein'
+    emailPasswordRequired:'Bitte Email und Passwort eingeben', invalidCredentials:'Ungültige Zugangsdaten', passwordMin8:'Passwort mind. 8 Zeichen', passwordMismatch:'Passwörter stimmen nicht überein', keepSavedLanguage:'Gespeicherte Sprache beibehalten', saveCorrespondenceLang:'Korrespondenzsprache speichern', correspondenceLangSaved:'Korrespondenzsprache gespeichert', distanceSortActive:'Nach Distanz sortiert', buyDealTitle:'Deal kaufen', payNowBtn:'💳 Jetzt bezahlen'
   });
   Object.assign(SHOP_TRANSLATIONS.en, {
     noAccountYet:'No account yet?',
@@ -2234,7 +2276,7 @@ try {
     acceptTermsPrivacy:'Please accept terms and privacy',
     addressLabel:'Address', weekdaysLabel:'Weekdays', timeLabel:'Time', availableLabel:'Available', discountLabel:'Discount', minimumOrderLabel:'Minimum order', typeLabel:'Type', flatVoucherType:'Flat discount voucher', detailsNone:'No further details',
     originalBarText:'Original bar text', linkCopied:'Link copied!', loginSuccess:'Logged in!', registerSuccess:'Registration successful!',
-    emailPasswordRequired:'Please enter email and password', invalidCredentials:'Invalid credentials', passwordMin8:'Password min. 8 characters', passwordMismatch:'Passwords do not match'
+    emailPasswordRequired:'Please enter email and password', invalidCredentials:'Invalid credentials', passwordMin8:'Password min. 8 characters', passwordMismatch:'Passwords do not match', keepSavedLanguage:'Keep saved language', saveCorrespondenceLang:'Save correspondence language', correspondenceLangSaved:'Correspondence language saved', distanceSortActive:'Sorted by distance', buyDealTitle:'Buy deal', payNowBtn:'💳 Pay now'
   });
   Object.assign(SHOP_TRANSLATIONS.it, {
     noAccountYet:'Non hai ancora un account?',
@@ -2245,7 +2287,7 @@ try {
     acceptTermsPrivacy:'Accetta condizioni e privacy',
     addressLabel:'Indirizzo', weekdaysLabel:'Giorni', timeLabel:'Orario', availableLabel:'Disponibile', discountLabel:'Sconto', minimumOrderLabel:'Ordine minimo', typeLabel:'Tipo', flatVoucherType:'Voucher sconto forfettario', detailsNone:'Nessun ulteriore dettaglio',
     originalBarText:'Testo originale del bar', linkCopied:'Link copiato!', loginSuccess:'Accesso effettuato!', registerSuccess:'Registrazione riuscita!',
-    emailPasswordRequired:'Inserisci email e password', invalidCredentials:'Credenziali non valide', passwordMin8:'Password min. 8 caratteri', passwordMismatch:'Le password non coincidono'
+    emailPasswordRequired:'Inserisci email e password', invalidCredentials:'Credenziali non valide', passwordMin8:'Password min. 8 caratteri', passwordMismatch:'Le password non coincidono', keepSavedLanguage:'Mantieni la lingua salvata', saveCorrespondenceLang:'Salva lingua di corrispondenza', correspondenceLangSaved:'Lingua di corrispondenza salvata', distanceSortActive:'Ordinato per distanza', buyDealTitle:'Acquista deal', payNowBtn:'💳 Paga ora'
   });
   Object.assign(SHOP_TRANSLATIONS.fr, {
     noAccountYet:'Pas encore de compte ?',
@@ -2256,12 +2298,13 @@ try {
     acceptTermsPrivacy:'Veuillez accepter les CGV et la confidentialité',
     addressLabel:'Adresse', weekdaysLabel:'Jours', timeLabel:'Horaire', availableLabel:'Disponible', discountLabel:'Réduction', minimumOrderLabel:'Commande minimum', typeLabel:'Type', flatVoucherType:'Bon de réduction forfaitaire', detailsNone:'Pas d’autres détails',
     originalBarText:'Texte original du bar', linkCopied:'Lien copié !', loginSuccess:'Connecté !', registerSuccess:'Inscription réussie !',
-    emailPasswordRequired:'Veuillez saisir l’email et le mot de passe', invalidCredentials:'Identifiants invalides', passwordMin8:'Mot de passe min. 8 caractères', passwordMismatch:'Les mots de passe ne correspondent pas'
+    emailPasswordRequired:'Veuillez saisir l’email et le mot de passe', invalidCredentials:'Identifiants invalides', passwordMin8:'Mot de passe min. 8 caractères', passwordMismatch:'Les mots de passe ne correspondent pas', keepSavedLanguage:'Conserver la langue enregistrée', saveCorrespondenceLang:'Enregistrer la langue de correspondance', correspondenceLangSaved:'Langue de correspondance enregistrée', distanceSortActive:'Trié par distance', buyDealTitle:'Acheter l’offre', payNowBtn:'💳 Payer maintenant'
   });
 
   var _origSessionSetShop = sessionSet;
-  sessionSet = function(token, name, email, role, lang) {
+  sessionSet = function(token, name, email, role, lang, customerId) {
     _origSessionSetShop(token, name, email, role);
+    if (customerId && _session) _session.customerId = customerId;
     if (lang) {
       _session.lang = lang;
       try { localStorage.setItem('barsclusive_customer_session', JSON.stringify(_session)); } catch(e) {}
@@ -2274,8 +2317,24 @@ try {
     _origApplyShopTranslations();
     var regLang = document.getElementById('regLangSelect');
     if (regLang && !regLang.value) regLang.value = (_shopLang || localStorage.getItem('barsclusive_lang') || 'de');
+    var loginLang = document.getElementById('loginLangSelect');
+    if (loginLang && !loginLang.dataset.touched) loginLang.value = '';
+    var custLang = document.getElementById('custLangSelect');
+    if (custLang) {
+      var s = sessionGet();
+      custLang.value = (s && s.lang) ? s.lang : (_shopLang || localStorage.getItem('barsclusive_lang') || 'de');
+    }
     var loginNo = document.getElementById('loginNoAccountText'); if (loginNo) loginNo.textContent = st('noAccountYet');
     var originalLabel = document.getElementById('ddOriginalLabel'); if (originalLabel) originalLabel.textContent = st('originalBarText');
+    var heroTitle = document.getElementById('heroTitleText'); if (heroTitle) heroTitle.textContent = st('heroTitle');
+    var heroSub = document.getElementById('heroSubText'); if (heroSub) heroSub.textContent = st('heroSub');
+    var changePwItem = document.getElementById('dropdownChangePw'); if (changePwItem) changePwItem.textContent = '🔑 ' + st('changePw');
+    var logoutItem = document.getElementById('dropdownLogout'); if (logoutItem) logoutItem.textContent = st('logoutBtn');
+    if (window._currentDeal && document.getElementById('buyModal') && document.getElementById('buyModal').classList.contains('active')) openBuyModal(window._currentDeal);
+    if (window._detailDeal && document.getElementById('dealDetailModal') && document.getElementById('dealDetailModal').classList.contains('active')) openDealDetail(window._detailDeal);
+    if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') { Promise.resolve().then(loadOrders).catch(function(){}); }
+    var fv = document.getElementById('favoritesView'); if (fv && fv.style.display === 'block') { try { showFavorites(); } catch(e) {} }
+    var cartPanel = document.getElementById('cartPanel'); if (cartPanel && cartPanel.classList.contains('active')) { try { renderCartPanel(); } catch(e) {} }
   };
 
   doLogin = async function() {
@@ -2286,10 +2345,12 @@ try {
     var defaultLabel = shopT('loginSubmitBtn') || 'Einloggen';
     if (_loginBtn) { _loginBtn.disabled = true; _loginBtn.textContent = '⏳...'; }
     try {
+      const selectedLang = ((document.getElementById('loginLangSelect') || {}).value || '').trim();
       const r = await api({ action: 'customerLogin', email, password });
       if (r.success) {
-        var uiLang = (r.customer && r.customer.lang) || _shopLang || localStorage.getItem('barsclusive_lang') || 'de';
-        sessionSet(r.token, r.customer.name, r.customer.email, 'customer', uiLang);
+        var uiLang = selectedLang || (r.customer && r.customer.lang) || _shopLang || localStorage.getItem('barsclusive_lang') || 'de';
+        if (selectedLang && selectedLang !== ((r.customer && r.customer.lang) || '')) { try { await api({ action: 'updateCorrespondenceLanguage', token: r.token, lang: selectedLang }); } catch(e) {} }
+        sessionSet(r.token, r.customer.name, r.customer.email, 'customer', uiLang, (r.customer && r.customer.id) || '');
         closeModal('loginModal');
         document.getElementById('loginPassword').value = '';
         showToast('✅ ' + (st('loginSuccess') || 'Eingeloggt!'));
@@ -2320,7 +2381,7 @@ try {
     try {
       const r = await api({ action: 'customerRegister', name, email, password, lang });
       if (r.success) {
-        sessionSet(r.token, name, email, 'customer', (r.customer && r.customer.lang) || lang);
+        sessionSet(r.token, name, email, 'customer', (r.customer && r.customer.lang) || lang, (r.customer && r.customer.id) || '');
         closeModal('registerModal');
         document.getElementById('regPassword').value = '';
         document.getElementById('regPasswordConfirm').value = '';
@@ -2381,7 +2442,7 @@ try {
       info += '<div><span style="color:#999">' + escHtml(st('typeLabel')) + '</span><span>' + escHtml(st('flatVoucherType')) + '</span></div>';
     }
     var weekdays = deal.valid_weekdays || [];
-    if (weekdays.length) info += '<div><span style="color:#999">' + escHtml(st('weekdaysLabel')) + '</span><span>' + weekdays.join(', ') + '</span></div>';
+    if (weekdays.length) info += '<div><span style="color:#999">' + escHtml(st('weekdaysLabel')) + '</span><span>' + escHtml(translateWeekdayList(weekdays)) + '</span></div>';
     if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">' + escHtml(st('timeLabel')) + '</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
     if (deal.max_quantity > 0) info += '<div><span style="color:#999">' + escHtml(st('availableLabel')) + '</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
     document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">' + escHtml(st('detailsNone')) + '</div>';
