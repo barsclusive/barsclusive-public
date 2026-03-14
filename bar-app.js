@@ -51,7 +51,7 @@ de: {
   locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
   zipReq:'PLZ *',
   mwstNumberLabel:'MWST-Nummer',
-  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)', loginFillAll:'Bitte alle Felder ausfüllen.', invalidCredentials:'Ungültige Zugangsdaten.', networkError:'Verbindungsfehler.', selectAddressSuggestion:'Bitte Adresse aus der Vorschlagsliste auswählen.', invalidIban:'Bitte eine gültige IBAN eingeben.', invalidMwst:'Bitte eine gültige MWST-Nummer eingeben.', passwordMismatch:'Passwörter stimmen nicht überein.', acceptTermsPrivacy:'Bitte AGB und Datenschutz akzeptieren.', registerInProgress:'⏳ Registrierung läuft…', registerSuccessLong:'✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.', registerError:'Fehler bei der Registrierung.', filterFromRequired:'Bitte Von-Datum wählen', voucherStatusOpen:'Offen', voucherStatusRedeemed:'Eingelöst', voucherStatusRefunded:'Erstattet', payoutPaidStatus:'Bezahlt', payoutPendingStatus:'Ausstehend', invalidPrice:'Ungültiger Preis', titleRequired:'Titel ist Pflichtfeld', minOrderMin40:'Mindestbestellung mind. 40 CHF', selectOneCategory:'Mind. 1 Kategorie wählen', chooseDate:'Datum wählen', imageTooLarge:'Bild zu gross (max 5MB)', imageUploadPrefix:'Bild-Upload:', imageUploadFailed:'Bild-Upload fehlgeschlagen', dealCreated:'✅ Deal erstellt!', emailRequired:'Bitte Email eingeben', codeRequired:'Code eingeben.', invalidVoucher:'Ungültiger Gutschein.', passwordChangedSuccess:'✅ Passwort geändert!', addressSelectFirst:'Bitte zuerst eine Adresse auswählen.', addressListSelectFirst:'Bitte zuerst eine Adresse aus der Liste wählen', locationLoaded:'📍 Standort geladen', locationLoadedDraggable:'📍 Standort geladen – Pin verschiebbar!', imageMax5mb:'Bild max. 5 MB', activated:'✅ Aktiviert', deactivated:'⏸ Deaktiviert', minDiscount15:'Rabatt mind. 15%', missingCoordinates:'Für die Adresse fehlen Koordinaten.', accountDeleted:'Account gelöscht', flatVoucherCat:'Pauschalgutschein', flatVoucherSettings:'Pauschalgutschein-Einstellungen', timeWindowOptional:'Zeitfenster (optional)', timeWindowLabel:'Zeitfenster', timeSlotMorningLong:'🌅 Morgen (06–12h)', timeSlotMiddayLong:'☀️ Mittag (11–17h)', timeSlotEveningLong:'🌙 Abend (16–00h)', customTimesHint:'Oder eigene Zeiten:', timeSlotMorning:'🌅 Morgen', timeSlotMidday:'☀️ Mittag', timeSlotEvening:'🌙 Abend', validityPlain:'Gültigkeitsdauer', changeImageOptional:'Bild ändern (optional)', currentImageAlt:'Aktuelles Bild', fromTimeLabel:'Von (Uhrzeit)', toTimeLabel:'Bis (Uhrzeit)', latitudePlaceholder:'Breitengrad', longitudePlaceholder:'Längengrad', newPasswordMinErr:'Neues Passwort mind. 8 Zeichen'
+  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
 },
 en: {
   logout:'Logout', login:'Login', register:'Register',
@@ -97,7 +97,7 @@ en: {
   locationHelp:'Taken from the selected address and can be fine-tuned on the map.',
   zipReq:'ZIP *',
   mwstNumberLabel:'VAT number',
-  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)', loginFillAll:'Please fill in all fields.', invalidCredentials:'Invalid credentials.', networkError:'Connection error.', selectAddressSuggestion:'Please select an address from the suggestion list.', invalidIban:'Please enter a valid IBAN.', invalidMwst:'Please enter a valid VAT number.', passwordMismatch:'Passwords do not match.', acceptTermsPrivacy:'Please accept terms and privacy.', registerInProgress:'⏳ Registration in progress…', registerSuccessLong:'✅ Registration successful! We will contact you for activation.', registerError:'Registration error.', filterFromRequired:'Please choose a from date', voucherStatusOpen:'Open', voucherStatusRedeemed:'Redeemed', voucherStatusRefunded:'Refunded', payoutPaidStatus:'Paid', payoutPendingStatus:'Pending', invalidPrice:'Invalid price', titleRequired:'Title is required', minOrderMin40:'Minimum order at least 40 CHF', selectOneCategory:'Select at least 1 category', chooseDate:'Choose a date', imageTooLarge:'Image too large (max 5 MB)', imageUploadPrefix:'Image upload:', imageUploadFailed:'Image upload failed', dealCreated:'✅ Deal created!', emailRequired:'Please enter email', codeRequired:'Enter code.', invalidVoucher:'Invalid voucher.', passwordChangedSuccess:'✅ Password changed!', addressSelectFirst:'Please select an address first.', addressListSelectFirst:'Please first select an address from the list', locationLoaded:'📍 Location loaded', locationLoadedDraggable:'📍 Location loaded – pin can be moved!', imageMax5mb:'Image max. 5 MB', activated:'✅ Activated', deactivated:'⏸ Deactivated', minDiscount15:'Discount at least 15%', missingCoordinates:'Coordinates are missing for this address.', accountDeleted:'Account deleted', flatVoucherCat:'Flat discount voucher', flatVoucherSettings:'Flat voucher settings', timeWindowOptional:'Time window (optional)', timeWindowLabel:'Time window', timeSlotMorningLong:'🌅 Morning (06–12h)', timeSlotMiddayLong:'☀️ Midday (11–17h)', timeSlotEveningLong:'🌙 Evening (16–00h)', customTimesHint:'Or choose custom times:', timeSlotMorning:'🌅 Morning', timeSlotMidday:'☀️ Midday', timeSlotEvening:'🌙 Evening', validityPlain:'Validity', changeImageOptional:'Change image (optional)', currentImageAlt:'Current image', fromTimeLabel:'From (time)', toTimeLabel:'To (time)', latitudePlaceholder:'Latitude', longitudePlaceholder:'Longitude', newPasswordMinErr:'New password must be at least 8 characters'
+  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)'
 },
 it: {
   logout:'Esci', login:'Login', register:'Registrati',
@@ -143,7 +143,7 @@ it: {
   locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.',
   zipReq:'CAP *',
   mwstNumberLabel:'Numero IVA',
-  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)', loginFillAll:'Compila tutti i campi.', invalidCredentials:'Credenziali non valide.', networkError:'Errore di connessione.', selectAddressSuggestion:'Seleziona un indirizzo dalla lista dei suggerimenti.', invalidIban:'Inserisci un IBAN valido.', invalidMwst:'Inserisci un numero IVA valido.', passwordMismatch:'Le password non coincidono.', acceptTermsPrivacy:'Accetta condizioni e privacy.', registerInProgress:'⏳ Registrazione in corso…', registerSuccessLong:'✅ Registrazione riuscita! Ti contatteremo per l\'attivazione.', registerError:'Errore di registrazione.', filterFromRequired:'Seleziona una data iniziale', voucherStatusOpen:'Aperto', voucherStatusRedeemed:'Riscattato', voucherStatusRefunded:'Rimborsato', payoutPaidStatus:'Pagato', payoutPendingStatus:'In sospeso', invalidPrice:'Prezzo non valido', titleRequired:'Il titolo è obbligatorio', minOrderMin40:'Ordine minimo almeno 40 CHF', selectOneCategory:'Seleziona almeno 1 categoria', chooseDate:'Seleziona una data', imageTooLarge:'Immagine troppo grande (max 5 MB)', imageUploadPrefix:'Upload immagine:', imageUploadFailed:'Caricamento immagine non riuscito', dealCreated:'✅ Deal creato!', emailRequired:'Inserisci email', codeRequired:'Inserisci il codice.', invalidVoucher:'Voucher non valido.', passwordChangedSuccess:'✅ Password cambiata!', addressSelectFirst:'Seleziona prima un indirizzo.', addressListSelectFirst:'Seleziona prima un indirizzo dalla lista', locationLoaded:'📍 Posizione caricata', locationLoadedDraggable:'📍 Posizione caricata – pin spostabile!', imageMax5mb:'Immagine max 5 MB', activated:'✅ Attivato', deactivated:'⏸ Disattivato', minDiscount15:'Sconto almeno 15%', missingCoordinates:'Per questo indirizzo mancano le coordinate.', accountDeleted:'Account eliminato', flatVoucherCat:'Voucher sconto forfait', flatVoucherSettings:'Impostazioni voucher forfait', timeWindowOptional:'Fascia oraria (opzionale)', timeWindowLabel:'Fascia oraria', timeSlotMorningLong:'🌅 Mattina (06–12)', timeSlotMiddayLong:'☀️ Mezzogiorno (11–17)', timeSlotEveningLong:'🌙 Sera (16–00)', customTimesHint:'Oppure orari personalizzati:', timeSlotMorning:'🌅 Mattina', timeSlotMidday:'☀️ Mezzogiorno', timeSlotEvening:'🌙 Sera', validityPlain:'Validità', changeImageOptional:'Cambia immagine (opzionale)', currentImageAlt:'Immagine attuale', fromTimeLabel:'Da (ora)', toTimeLabel:'A (ora)', latitudePlaceholder:'Latitudine', longitudePlaceholder:'Longitudine', newPasswordMinErr:'La nuova password deve avere almeno 8 caratteri'
+  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)'
 },
 fr: {
   logout:'Déconnexion', login:'Connexion', register:'Inscription',
@@ -189,7 +189,7 @@ fr: {
   locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.',
   zipReq:'NPA *',
   mwstNumberLabel:'Numéro TVA',
-  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)', loginFillAll:'Veuillez remplir tous les champs.', invalidCredentials:'Identifiants invalides.', networkError:'Erreur de connexion.', selectAddressSuggestion:'Veuillez sélectionner une adresse dans la liste de suggestions.', invalidIban:'Veuillez saisir un IBAN valide.', invalidMwst:'Veuillez saisir un numéro TVA valide.', passwordMismatch:'Les mots de passe ne correspondent pas.', acceptTermsPrivacy:'Veuillez accepter les CGV et la confidentialité.', registerInProgress:'⏳ Inscription en cours…', registerSuccessLong:'✅ Inscription réussie ! Nous vous contacterons pour l\'activation.', registerError:'Erreur d\'inscription.', filterFromRequired:'Veuillez choisir une date de début', voucherStatusOpen:'Ouvert', voucherStatusRedeemed:'Utilisé', voucherStatusRefunded:'Remboursé', payoutPaidStatus:'Payé', payoutPendingStatus:'En attente', invalidPrice:'Prix non valide', titleRequired:'Le titre est obligatoire', minOrderMin40:'Commande minimum d\'au moins 40 CHF', selectOneCategory:'Sélectionnez au moins 1 catégorie', chooseDate:'Choisissez une date', imageTooLarge:'Image trop grande (max 5 Mo)', imageUploadPrefix:'Téléversement de l\'image :', imageUploadFailed:'Échec du téléversement de l\'image', dealCreated:'✅ Deal créé !', emailRequired:'Veuillez saisir l\'email', codeRequired:'Saisissez le code.', invalidVoucher:'Bon non valide.', passwordChangedSuccess:'✅ Mot de passe modifié !', addressSelectFirst:'Veuillez d\'abord sélectionner une adresse.', addressListSelectFirst:'Veuillez d\'abord sélectionner une adresse dans la liste', locationLoaded:'📍 Position chargée', locationLoadedDraggable:'📍 Position chargée – le pin peut être déplacé !', imageMax5mb:'Image max. 5 Mo', activated:'✅ Activé', deactivated:'⏸ Désactivé', minDiscount15:'Réduction minimum 15 %', missingCoordinates:'Des coordonnées manquent pour cette adresse.', accountDeleted:'Compte supprimé', flatVoucherCat:'Bon forfaitaire', flatVoucherSettings:'Paramètres du bon forfaitaire', timeWindowOptional:'Créneau horaire (optionnel)', timeWindowLabel:'Créneau horaire', timeSlotMorningLong:'🌅 Matin (06–12h)', timeSlotMiddayLong:'☀️ Midi (11–17h)', timeSlotEveningLong:'🌙 Soir (16–00h)', customTimesHint:'Ou horaires personnalisés :', timeSlotMorning:'🌅 Matin', timeSlotMidday:'☀️ Midi', timeSlotEvening:'🌙 Soir', validityPlain:'Validité', changeImageOptional:'Changer l\'image (optionnel)', currentImageAlt:'Image actuelle', fromTimeLabel:'De (heure)', toTimeLabel:'À (heure)', latitudePlaceholder:'Latitude', longitudePlaceholder:'Longitude', newPasswordMinErr:'Le nouveau mot de passe doit contenir au moins 8 caractères'
+  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)'
 }
 };
 
@@ -282,30 +282,44 @@ function codeboxValueToChars(pattern, value) {
   var raw = pattern === 'mwst' ? onlyAlphaNum(value).slice(0, 15) : onlyAlphaNum(value).slice(0, 21);
   return raw.split('');
 }
+function getCodeboxGroups(pattern) {
+  return pattern === 'mwst' ? [3, 3, 3, 3, 3] : [4, 4, 4, 4, 4, 1];
+}
+function getCodeboxActiveIndex(input, slots) {
+  if (!input || document.activeElement !== input) return -1;
+  var caret = Math.max(0, input.selectionStart || 0);
+  var rawBefore = onlyAlphaNum(String(input.value || '').slice(0, caret)).length;
+  if (rawBefore >= slots) return slots - 1;
+  return rawBefore;
+}
 function renderCodebox(id, pattern) {
   var input = document.getElementById(id);
   var grid = document.getElementById(id + 'Grid');
   var field = document.getElementById(id + 'Field');
   if (!input || !grid || !field) return;
-  var breaks = pattern === 'mwst' ? [3,6,9,12] : [4,8,12,16,20];
-  var slots = pattern === 'mwst' ? 15 : 21;
+  var groups = getCodeboxGroups(pattern);
+  var slots = groups.reduce(function(sum, size){ return sum + size; }, 0);
   var chars = codeboxValueToChars(pattern, input.value);
   if (!grid.dataset.ready) {
     var html = '';
-    for (var i = 0; i < slots; i++) html += '<div class="codebox-slot" data-slot="' + i + '"></div>';
-    grid.innerHTML = html;
-    Array.from(grid.children).forEach(function(slot, idx) {
-      if (breaks.indexOf(idx + 1) >= 0 && idx !== slots - 1) slot.classList.add('gap-after');
+    var slotIndex = 0;
+    groups.forEach(function(size, groupIndex) {
+      html += '<div class="codebox-group" data-group="' + groupIndex + '">';
+      for (var i = 0; i < size; i++, slotIndex++) {
+        html += '<div class="codebox-slot" data-slot="' + slotIndex + '"></div>';
+      }
+      html += '</div>';
     });
+    grid.innerHTML = html;
     grid.dataset.ready = '1';
   }
-  Array.from(grid.children).forEach(function(slot, idx) {
+  var activeIndex = getCodeboxActiveIndex(input, slots);
+  Array.from(grid.querySelectorAll('.codebox-slot')).forEach(function(slot, idx) {
     var ch = chars[idx] || '';
     slot.textContent = ch;
     slot.classList.toggle('filled', !!ch);
-    slot.classList.toggle('active', idx === chars.length && document.activeElement === input);
+    slot.classList.toggle('active', idx === activeIndex || (!chars.length && idx === 0 && activeIndex === 0));
   });
-  if (!chars.length && document.activeElement === input && grid.children[0]) grid.children[0].classList.add('active');
 }
 function setupCodeboxInput(id, formatter, pattern) {
   var input = document.getElementById(id);
@@ -320,9 +334,11 @@ function setupCodeboxInput(id, formatter, pattern) {
     renderCodebox(id, pattern);
   }
   input.addEventListener('input', syncFormatted);
+  input.addEventListener('keyup', function(){ renderCodebox(id, pattern); });
+  input.addEventListener('click', function(){ renderCodebox(id, pattern); });
   input.addEventListener('focus', function(){ field.classList.add('is-focused'); renderCodebox(id, pattern); });
   input.addEventListener('blur', function(){ field.classList.remove('is-focused'); renderCodebox(id, pattern); });
-  field.addEventListener('click', function(){ try { input.focus(); } catch(e) {} });
+  field.addEventListener('click', function(){ try { input.focus(); renderCodebox(id, pattern); } catch(e) {} });
   renderCodebox(id, pattern);
 }
 function parseSelectedAddress(prefix) {
@@ -456,20 +472,13 @@ function applyTranslations() {
     dealTitle: {de:'z.B. 2 Cocktails für 1',en:'e.g. 2 Cocktails for 1',it:'es. 2 Cocktail per 1',fr:'ex. 2 Cocktails pour 1'},
     regIban: {de:'CH00 0000 0000 0000 0000 0',en:'CH00 0000 0000 0000 0000 0',it:'CH00 0000 0000 0000 0000 0',fr:'CH00 0000 0000 0000 0000 0'},
     regMwstNumber: {de:'CHE-123.456.789 MWST',en:'CHE-123.456.789 VAT',it:'CHE-123.456.789 IVA',fr:'CHE-123.456.789 TVA'},
-    profMwstNumber: {de:'CHE-123.456.789 MWST',en:'CHE-123.456.789 VAT',it:'CHE-123.456.789 IVA',fr:'CHE-123.456.789 TVA'},
-    profLat: {de:'Breitengrad',en:'Latitude',it:'Latitudine',fr:'Latitude'},
-    profLng: {de:'Längengrad',en:'Longitude',it:'Longitudine',fr:'Longitude'}
+    profMwstNumber: {de:'CHE-123.456.789 MWST',en:'CHE-123.456.789 VAT',it:'CHE-123.456.789 IVA',fr:'CHE-123.456.789 TVA'}
   };
   Object.keys(ph).forEach(function(id) {
     var el = document.getElementById(id);
     if (el && ph[id][currentLang]) el.placeholder = ph[id][currentLang];
   });
-  document.querySelectorAll('[data-alt-i18n]').forEach(function(el) {
-    var key = el.getAttribute('data-alt-i18n');
-    if (key) el.alt = t(key);
-  });
 }
-
 
 function setLang(lang) {
   currentLang = lang;
@@ -556,7 +565,7 @@ async function doBarLogin() {
   var pass  = document.getElementById('loginPassword').value;
   var err   = document.getElementById('loginErr');
   err.textContent = '';
-  if (!email || !pass) { err.textContent = t('loginFillAll'); return; }
+  if (!email || !pass) { err.textContent = 'Bitte alle Felder ausfüllen.'; return; }
   try {
     document.getElementById('btnBarLogin').disabled = true; document.getElementById('btnBarLogin').textContent = '⏳...';
     var r = await api({ action: 'barLogin', email, password: pass });
@@ -569,10 +578,10 @@ async function doBarLogin() {
       prefetchAllData(); // Start loading all data in parallel
       loadBarStats();
     } else {
-      err.textContent = r.error || t('invalidCredentials');
+      err.textContent = r.error || 'Ungültige Zugangsdaten.';
       document.getElementById('loginPassword').value = '';
     }
-  } catch (e) { err.textContent = t('networkError'); }
+  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
 }
 
 async function doBarRegister() {
@@ -589,23 +598,23 @@ async function doBarRegister() {
   err.textContent = '';
 
   if (!name || !addr.city || !addr.address || !addr.zip || !email || !pass || !ibanRaw) {
-    err.textContent = t('loginFillAll');
+    err.textContent = 'Alle Pflichtfelder ausfüllen.';
     return;
   }
   if (!(document.getElementById('regAddressSearch') || {}).dataset.selected || !addr.latitude || !addr.longitude) {
-    err.textContent = t('selectAddressSuggestion');
+    err.textContent = 'Bitte Adresse aus der Vorschlagsliste auswählen.';
     return;
   }
-  if (!isValidIban(ibanRaw)) { err.textContent = t('invalidIban'); return; }
-  if (mwstLiable && !isValidMwst(mwstRaw)) { err.textContent = t('invalidMwst'); return; }
-  if (pass.length < 8) { err.textContent = t('passwordMin'); return; }
+  if (!isValidIban(ibanRaw)) { err.textContent = 'Bitte eine gültige IBAN eingeben.'; return; }
+  if (mwstLiable && !isValidMwst(mwstRaw)) { err.textContent = 'Bitte eine gültige MWST-Nummer eingeben.'; return; }
+  if (pass.length < 8) { err.textContent = 'Passwort mind. 8 Zeichen.'; return; }
   var passConfirm = document.getElementById('regBarPassConfirm') ? document.getElementById('regBarPassConfirm').value : pass;
-  if (pass !== passConfirm) { err.textContent = t('passwordMismatch'); return; }
-  if (!consent) { err.textContent = t('acceptTermsPrivacy'); return; }
+  if (pass !== passConfirm) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
+  if (!consent) { err.textContent = 'Bitte AGB & Datenschutz akzeptieren.'; return; }
 
   var btn = document.getElementById('btnBarRegister');
   try {
-    if (btn) { btn.disabled = true; btn.textContent = t('registerInProgress'); }
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
     var r = await api({
       action: 'barRegister',
       name: name,
@@ -622,7 +631,7 @@ async function doBarRegister() {
       longitude: addr.longitude
     });
     if (r.success) {
-      showToast(t('registerSuccessLong'));
+      showToast('✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.');
       document.getElementById('regBarPass').value = '';
       document.getElementById('regBarPassConfirm').value = '';
       document.getElementById('regIban').value = '';
@@ -634,9 +643,9 @@ async function doBarRegister() {
       if (document.getElementById('regBarEmail')) document.getElementById('regBarEmail').value = '';
       if (document.getElementById('regConsent')) document.getElementById('regConsent').checked = false;
     } else {
-      err.textContent = r.error || t('registerError');
+      err.textContent = r.error || 'Fehler bei der Registrierung.';
     }
-  } catch (e) { err.textContent = t('networkError'); }
+  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
   finally { if (btn) { btn.disabled = false; btn.textContent = t('registerBtn'); } }
 }
 
@@ -661,7 +670,7 @@ async function deleteDeal(dealId) {
     var r = await api({ action: 'deleteDeal', token: s.token, deal_id: dealId });
     if (r.success) { showToast(r.message || 'Deal gelöscht'); _dataCache.deals = null; _barStatsDeals = -1; loadMyDeals(); }
     else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast(t('networkError'), true); }
+  } catch (e) { showToast('Verbindungsfehler', true); }
 }
 
 // ── OVERVIEW ─────────────────────────────────────────────────────────────
@@ -717,7 +726,7 @@ function ensureBarFilterBar() {
   applyBtn.style.cssText = 'background:#FF3366;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
   applyBtn.addEventListener('click', function() {
     var f = document.getElementById('barSfFrom'), tt = document.getElementById('barSfTo');
-    if (!f || !f.value) { showToast(t('filterFromRequired'), true); return; }
+    if (!f || !f.value) { showToast(currentLang === 'de' ? 'Bitte Von-Datum wählen' : currentLang === 'en' ? 'Please choose a from date' : currentLang === 'it' ? 'Seleziona una data iniziale' : 'Veuillez choisir une date de début', true); return; }
     _barCustomFrom = f.value;
     _barCustomTo = tt ? tt.value || new Date().toISOString().split('T')[0] : '';
     _barStatsPeriod = 'custom';
@@ -837,9 +846,9 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>Datum</th><th>Code</th><th>Deal</th><th>Preis</th><th>Status</th><th>Auszahl.</th></tr></thead><tbody>';
   items.forEach(function(v) {
     var sc = v.status === 'redeemed' ? '#22c55e' : v.status === 'refunded' ? '#ef4444' : '#f59e0b';
-    var st = v.status === 'redeemed' ? t('voucherStatusRedeemed') : v.status === 'refunded' ? t('voucherStatusRefunded') : t('voucherStatusOpen');
+    var st = v.status === 'redeemed' ? 'Eingelöst' : v.status === 'refunded' ? 'Erstattet' : 'Offen';
     var pc = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
-    var pt = v.payout_status === 'paid' ? t('payoutPaidStatus') : t('payoutPendingStatus');
+    var pt = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
     html += '<tr><td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-') + '</td><td style="font-family:monospace">' + ((v.code_display || v.code) || '-') + '</td><td>' + (v.deal_title || '-') + '</td><td style="text-align:right">' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + st + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td></tr>';
   });
   html += '</tbody></table></div>';
@@ -865,7 +874,7 @@ async function loadMyDeals() {
     if (!r.success) { if (!_dataCache.deals) showToast(r.error || 'Fehler', true); return; }
     _dataCache.deals = r.deals || [];
     renderMyDeals(_dataCache.deals);
-  } catch (e) { _dataCache.dealsLoading = false; if (!_dataCache.deals) showToast(t('networkError'), true); }
+  } catch (e) { _dataCache.dealsLoading = false; if (!_dataCache.deals) showToast('Verbindungsfehler', true); }
 }
 
 function renderMyDeals(deals) {
@@ -924,9 +933,9 @@ async function toggleDeal(dealId, active) {
   if (!s) { doLogout(); return; }
   try {
     var r = await api({ action: 'updateDealStatus', token: s.token, deal_id: dealId, active: active });
-    if (r.success) { showToast(active ? t('activated') : t('deactivated')); _dataCache.deals = null; _barStatsDeals = -1; loadMyDeals(); }
+    if (r.success) { showToast(active ? '✅ Aktiviert' : '⏸ Deaktiviert'); _dataCache.deals = null; _barStatsDeals = -1; loadMyDeals(); }
     else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast(t('networkError'), true); }
+  } catch (e) { showToast('Verbindungsfehler', true); }
 }
 
 // ── EDIT MODAL ────────────────────────────────────────────────────────────
@@ -995,7 +1004,7 @@ async function saveEditDeal() {
   if (!s) { doLogout(); return; }
   var dealId = document.getElementById('editDealId').value;
   var price  = parseFloat(document.getElementById('editDealPrice').value);
-  if (isNaN(price) || price <= 0) { showToast(t('invalidPrice'), true); return; }
+  if (isNaN(price) || price <= 0) { showToast('Ungültiger Preis', true); return; }
 
   var payload = {
     action: 'updateDeal', token: s.token,
@@ -1040,7 +1049,7 @@ async function saveEditDeal() {
       closeEditModal();
       loadMyDeals();
     } else showToast(r.error || 'Fehler', true);
-  } catch (e) { showToast(t('networkError'), true); }
+  } catch (e) { showToast('Verbindungsfehler', true); }
 }
 
 // ── VOUCHERS TAB ──────────────────────────────────────────────────────────
@@ -1060,7 +1069,7 @@ async function loadMyVouchers() {
     if (!r.success) { if (!_dataCache.vouchers) showToast(r.error || 'Fehler', true); return; }
     _dataCache.vouchers = r.vouchers || [];
     renderVouchers(_dataCache.vouchers);
-  } catch (e) { _dataCache.vouchersLoading = false; if (!_dataCache.vouchers) showToast(t('networkError'), true); }
+  } catch (e) { _dataCache.vouchersLoading = false; if (!_dataCache.vouchers) showToast('Verbindungsfehler', true); }
 }
 
 function renderVouchers(vouchers) {
@@ -1108,7 +1117,7 @@ async function doRedeem() {
   var result = document.getElementById('redeemResult');
   err.textContent = ''; result.style.display = 'none';
 
-  if (!code) { err.textContent = t('codeRequired'); return; }
+  if (!code) { err.textContent = 'Code eingeben.'; return; }
   try {
     var r = await api({ action: 'redeemVoucher', token: s.token, code: code });
     if (r.success) {
@@ -1118,9 +1127,9 @@ async function doRedeem() {
       showToast('✅ ' + t('redeemSuccess'));
       _dataCache.vouchers = null; _barStatsVouchers = null;
     } else {
-      err.textContent = r.error || t('invalidVoucher');
+      err.textContent = r.error || 'Ungültiger Gutschein.';
     }
-  } catch (e) { err.textContent = t('networkError'); }
+  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
 }
 
 // ── CHANGE PASSWORD ───────────────────────────────────────────────────────
@@ -1133,21 +1142,21 @@ async function doChangePassword() {
   var err    = document.getElementById('pwErr');
   err.textContent = '';
 
-  if (!oldPw || !newPw || !confPw) { err.textContent = t('loginFillAll'); return; }
-  if (newPw.length < 8) { err.textContent = t('newPasswordMinErr'); return; }
-  if (newPw !== confPw) { err.textContent = t('passwordMismatch'); return; }
+  if (!oldPw || !newPw || !confPw) { err.textContent = 'Alle Felder ausfüllen.'; return; }
+  if (newPw.length < 8) { err.textContent = 'Neues Passwort mind. 8 Zeichen.'; return; }
+  if (newPw !== confPw) { err.textContent = 'Passwörter stimmen nicht überein.'; return; }
 
   try {
     var r = await api({ action: 'changePassword', token: s.token, old_password: oldPw, new_password: newPw });
     if (r.success) {
-      showToast(t('passwordChangedSuccess'));
+      showToast('✅ Passwort geändert!');
       document.getElementById('pwOld').value = '';
       document.getElementById('pwNew').value = '';
       document.getElementById('pwConfirm').value = '';
     } else {
       err.textContent = r.error || 'Fehler.';
     }
-  } catch (e) { err.textContent = t('networkError'); }
+  } catch (e) { err.textContent = 'Verbindungsfehler.'; }
 }
 
 // ── DEAL CREATION ─────────────────────────────────────────────────────────
@@ -1173,16 +1182,16 @@ async function doCreateDeal() {
   var isPauschal = cats.indexOf('pauschalgutscheine') !== -1;
 
   if (isPauschal) { price = 2.50; }
-  if (!title)       { showToast(t('titleRequired'), true); return; }
-  if (isNaN(price)) { showToast(t('dealPriceLbl'), true); return; }
-  if (isPauschal && (parseInt(document.getElementById('discountPercent').value)||0) < 15) { showToast(t('minDiscount15'), true); return; }
-  if (isPauschal && (parseInt(document.getElementById('minOrder').value)||0) > 0 && (parseInt(document.getElementById('minOrder').value)||0) < 40) { showToast(t('minOrderMin40'), true); return; }
-  if (!cats.length) { showToast(t('selectOneCategory'), true); return; }
+  if (!title)       { showToast('Titel ist Pflichtfeld', true); return; }
+  if (isNaN(price)) { showToast('Deal-Preis ist Pflichtfeld', true); return; }
+  if (isPauschal && (parseInt(document.getElementById('discountPercent').value)||0) < 15) { showToast('Rabatt mind. 15%', true); return; }
+  if (isPauschal && (parseInt(document.getElementById('minOrder').value)||0) > 0 && (parseInt(document.getElementById('minOrder').value)||0) < 40) { showToast('Mindestbestellung mind. 40 CHF', true); return; }
+  if (!cats.length) { showToast('Mind. 1 Kategorie wählen', true); return; }
 
   var validType  = document.querySelector('input[name="validType"]:checked').value;
   var weekdays   = Array.from(document.querySelectorAll('.wd-btn.selected')).map(function(b) { return b.textContent; });
   var singleDate = document.getElementById('singleDate').value;
-  if (validType === 'single' && !singleDate) { showToast(t('chooseDate'), true); return; }
+  if (validType === 'single' && !singleDate) { showToast('Datum wählen', true); return; }
 
   try {
     // Upload image if file selected
@@ -1190,13 +1199,13 @@ async function doCreateDeal() {
     var imgF = document.getElementById('dealImageFile');
     if (imgF && imgF.files.length > 0) {
       var file = imgF.files[0];
-      if (file.size > 5 * 1024 * 1024) { showToast(t('imageTooLarge'), true); return; }
+      if (file.size > 5 * 1024 * 1024) { showToast('Bild zu gross (max 5MB)', true); return; }
       try {
         var b64 = await fileToBase64(file);
         var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: file.name });
         if (uR.success) { imageUrl = uR.url; }
-        else { showToast((t('imageUploadPrefix') || 'Bild-Upload:') + ' ' + (uR.error || 'Fehler'), true); return; }
-      } catch(e) { showToast(t('imageUploadFailed'), true); return; }
+        else { showToast('Bild-Upload: ' + (uR.error || 'Fehler'), true); return; }
+      } catch(e) { showToast('Bild-Upload fehlgeschlagen', true); return; }
     }
 
     var _cBtn = document.getElementById('btnCreateDeal');
@@ -1217,7 +1226,7 @@ async function doCreateDeal() {
       valid_single_date: singleDate, active: active
     });
     if (r.success) {
-      showToast(t('dealCreated'));
+      showToast('✅ Deal erstellt!');
       _dataCache.deals = null; _barStatsVouchers = null; _barStatsDeals = -1;
       ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo']
         .forEach(function(id) { document.getElementById(id).value = ''; });
@@ -1231,7 +1240,7 @@ async function doCreateDeal() {
     } else showToast(r.error || 'Fehler', true);
     if (_cBtn) { _cBtn.disabled = false; _cBtn.textContent = t('createDeal') || 'Deal erstellen'; }
   } catch (e) {
-    showToast(t('networkError'), true);
+    showToast('Verbindungsfehler', true);
     var _rb = document.getElementById('btnCreateDeal');
     if (_rb) { _rb.disabled = false; _rb.textContent = t('createDeal') || 'Deal erstellen'; }
   }
@@ -1284,7 +1293,7 @@ function showToast(msg, isError) {
 // ── PASSWORD RESET ────────────────────────────────────────────────────────
 async function sendBarResetCode() {
   var email = document.getElementById('barResetEmail').value.trim();
-  if (!email) { showToast(t('emailRequired'), true); return; }
+  if (!email) { showToast('Bitte Email eingeben', true); return; }
   try {
     var r = await api({ action: 'requestPasswordReset', email: email, role: 'bar' });
     if (r.success) {
@@ -1294,19 +1303,19 @@ async function sendBarResetCode() {
     } else {
       showToast(r.error || 'Fehler', true);
     }
-  } catch (e) { showToast(t('networkError'), true); }
+  } catch (e) { showToast('Verbindungsfehler', true); }
 }
 
 async function resetBarPassword() {
   var email = document.getElementById('barResetEmail').value.trim();
   var code = document.getElementById('barResetCode').value.trim();
   var newPassword = document.getElementById('barResetNewPassword').value;
-  if (!code || !newPassword) { showToast(t('loginFillAll'), true); return; }
-  if (newPassword.length < 8) { showToast(t('passwordMin'), true); return; }
+  if (!code || !newPassword) { showToast('Alle Felder ausfüllen', true); return; }
+  if (newPassword.length < 8) { showToast('Passwort mind. 8 Zeichen', true); return; }
   try {
     var r = await api({ action: 'resetPassword', email: email, code: code, new_password: newPassword, role: 'bar' });
     if (r.success) {
-      showToast(t('passwordChangedSuccess'));
+      showToast('✅ Passwort geändert!');
       closeBarResetModal();
       document.getElementById('barResetEmail').value = '';
       document.getElementById('barResetCode').value = '';
@@ -1314,7 +1323,7 @@ async function resetBarPassword() {
       document.getElementById('barResetStep1').style.display = 'block';
       document.getElementById('barResetStep2').style.display = 'none';
     } else { showToast(r.error || 'Fehler', true); }
-  } catch (e) { showToast(t('networkError'), true); }
+  } catch (e) { showToast('Verbindungsfehler', true); }
 }
 
 function openBarResetPasswordModal() {
@@ -1395,10 +1404,10 @@ async function saveProfile() {
   var mwstLiable = !(document.getElementById('profNoMwst') && document.getElementById('profNoMwst').checked);
   var mwstRaw = document.getElementById('profMwstNumber') ? normText(document.getElementById('profMwstNumber').value) : '';
 
-  if (!addr.address || !addr.city || !addr.zip) { showToast(t('addressSelectFirst'), true); return; }
-  if (!addr.latitude || !addr.longitude) { showToast(t('missingCoordinates'), true); return; }
-  if (ibanRaw && !isValidIban(ibanRaw)) { showToast(t('invalidIban'), true); return; }
-  if (mwstLiable && !isValidMwst(mwstRaw)) { showToast(t('invalidMwst'), true); return; }
+  if (!addr.address || !addr.city || !addr.zip) { showToast('Bitte zuerst eine Adresse auswählen.', true); return; }
+  if (!addr.latitude || !addr.longitude) { showToast('Für die Adresse fehlen Koordinaten.', true); return; }
+  if (ibanRaw && !isValidIban(ibanRaw)) { showToast('Bitte eine gültige IBAN eingeben.', true); return; }
+  if (mwstLiable && !isValidMwst(mwstRaw)) { showToast('Bitte eine gültige MWST-Nummer eingeben.', true); return; }
 
   var payload = {
     action: 'updateBarProfile',
@@ -1416,9 +1425,9 @@ async function saveProfile() {
   };
   try {
     var r = await api(payload);
-    if (r.success) { _dataCache.profile = null; showToast(t('profileSaved') || 'Gespeichert'); }
+    if (r.success) { _dataCache.profile = null; showToast(t('profileSaved') || 'Gespeichert'); ['profIban','profMwstNumber'].forEach(function(id){ if(document.getElementById(id)) renderCodebox(id, id.toLowerCase().indexOf('mwst') >= 0 ? 'mwst' : 'iban'); }); }
     else showToast(r.error || 'Fehler', true);
-  } catch(e) { showToast(t('networkError'), true); }
+  } catch(e) { showToast('Verbindungsfehler', true); }
 }
 
 async function deleteBarAccount() {
@@ -1433,10 +1442,10 @@ async function deleteBarAccount() {
   try {
     var r = await api({ action: 'deleteBarAccount', token: s.token });
     if (r.success) {
-      showToast(t('accountDeleted'));
+      showToast('Account gelöscht');
       setTimeout(function() { doLogout(); }, 1500);
     } else showToast(r.error || 'Fehler', true);
-  } catch(e) { showToast(t('networkError'), true); }
+  } catch(e) { showToast('Verbindungsfehler', true); }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
@@ -1595,7 +1604,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var btnGeocode = document.getElementById('btnGeocode');
   if (btnGeocode) btnGeocode.addEventListener('click', async function() {
     var addr = parseSelectedAddress('prof');
-    if (!addr.latitude || !addr.longitude) { showToast(t('addressListSelectFirst'), true); return; }
+    if (!addr.latitude || !addr.longitude) { showToast('Bitte zuerst eine Adresse aus der Liste wählen', true); return; }
     var lat = Number(addr.latitude), lng = Number(addr.longitude);
     var r = showMapPin('profMap', 'profMapWrap', lat, lng, _profMap, _profMarker);
     _profMap = r.map; _profMarker = r.marker;
@@ -1605,14 +1614,14 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('profLat').value = p.lat.toFixed(6);
       document.getElementById('profLng').value = p.lng.toFixed(6);
     });
-    showToast(t('locationLoaded'));
+    showToast('📍 Standort geladen');
   });
 
   // Registration geocode button
   var btnRegGeo = document.getElementById('btnRegGeocode');
   if (btnRegGeo) btnRegGeo.addEventListener('click', async function() {
     var addr = parseSelectedAddress('reg');
-    if (!addr.latitude || !addr.longitude) { showToast(t('addressListSelectFirst'), true); return; }
+    if (!addr.latitude || !addr.longitude) { showToast('Bitte zuerst eine Adresse aus der Liste wählen', true); return; }
     var lat = Number(addr.latitude), lng = Number(addr.longitude);
     var r = showMapPin('regMap', 'regMapWrap', lat, lng, _regMap, _regMarker);
     _regMap = r.map; _regMarker = r.marker;
@@ -1622,7 +1631,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('regLat').value = p.lat.toFixed(6);
       document.getElementById('regLng').value = p.lng.toFixed(6);
     });
-    showToast(t('locationLoadedDraggable'));
+    showToast('📍 Standort geladen – Pin verschiebbar!');
   });
 
   var imgFile = document.getElementById('dealImageFile');
@@ -1632,7 +1641,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var img = document.getElementById('imagePreviewImg');
       if (this.files.length > 0) {
         var file = this.files[0];
-        if (file.size > 5*1024*1024) { showToast(t('imageMax5mb'), true); this.value=''; return; }
+        if (file.size > 5*1024*1024) { showToast('Bild max. 5 MB', true); this.value=''; return; }
         var reader = new FileReader();
         reader.onload = function(e) { img.src = e.target.result; preview.style.display='block'; };
         reader.readAsDataURL(file);
@@ -1671,16 +1680,16 @@ function escHtml(v) {
 // =============================================
 (function(){
   Object.assign(TRANSLATIONS.de, {
-    grossSales:'Eingelöster Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', earnedHint:'Umsatz, Provision und Netto beziehen sich nur auf eingelöste, nicht erstattete Gutscheine.', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
+    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
   });
   Object.assign(TRANSLATIONS.en, {
-    grossSales:'Redeemed sales', commissionLbl:'Commission', netRevenue:'Net for the bar', earnedHint:'Sales, commission and net only include redeemed, non-refunded vouchers.', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
+    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
   });
   Object.assign(TRANSLATIONS.it, {
-    grossSales:'Fatturato riscattato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', earnedHint:'Fatturato, commissione e netto includono solo voucher riscattati e non rimborsati.', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
+    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
   });
   Object.assign(TRANSLATIONS.fr, {
-    grossSales:'Chiffre d’affaires encaissé', commissionLbl:'Commission', netRevenue:'Net pour le bar', earnedHint:'Le chiffre d’affaires, la commission et le net ne comptent que les bons utilisés et non remboursés.', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
+    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
   });
 })();
 
@@ -1701,74 +1710,6 @@ function fmtDateTime_(v) {
   if (!v) return '–';
   try { return new Date(v).toLocaleString(currentLang === 'en' ? 'en-GB' : currentLang === 'it' ? 'it-CH' : currentLang === 'fr' ? 'fr-CH' : 'de-CH'); } catch(e) { return String(v); }
 }
-
-function voucherState_(v) {
-  var status = String((v && v.status) || '').toLowerCase();
-  var refundStatus = String((v && v.refund_status) || 'none').toLowerCase();
-  var refunded = status === 'refunded' || refundStatus === 'completed';
-  var redeemed = status === 'redeemed' && !refunded;
-  var open = !redeemed && !refunded;
-  var payoutPaid = redeemed && String((v && v.payout_status) || '').toLowerCase() === 'paid';
-  var payoutPending = redeemed && !payoutPaid;
-  return { refunded: refunded, redeemed: redeemed, open: open, payoutPaid: payoutPaid, payoutPending: payoutPending };
-}
-function voucherMetricDate_(v, metricKey) {
-  switch (metricKey) {
-    case 'redeemed':
-    case 'gross':
-    case 'commission':
-    case 'net':
-    case 'pending_payout':
-      return v.redeemed_at || v.order_created_at || v.created_at || '';
-    case 'paid_out':
-      return v.payout_paid_at || v.redeemed_at || v.order_created_at || v.created_at || '';
-    case 'refunded':
-      return v.refunded_at || v.order_created_at || v.created_at || '';
-    case 'not_redeemed':
-    case 'sold':
-    default:
-      return v.order_created_at || v.created_at || v.paid_at || '';
-  }
-}
-function voucherMetricMatch_(v, metricKey) {
-  var state = voucherState_(v);
-  switch (metricKey) {
-    case 'sold': return true;
-    case 'redeemed': return state.redeemed;
-    case 'not_redeemed': return state.open;
-    case 'gross':
-    case 'commission':
-    case 'net': return state.redeemed;
-    case 'pending_payout': return state.payoutPending;
-    case 'paid_out': return state.payoutPaid;
-    case 'refunded': return state.refunded;
-    default: return true;
-  }
-}
-function voucherDateInRange_(rawDate, fromDate, toDate) {
-  if (!rawDate) return !fromDate && !toDate;
-  var d = new Date(rawDate);
-  if (!(d instanceof Date) || isNaN(d.getTime())) return !fromDate && !toDate;
-  if (fromDate && d < fromDate) return false;
-  if (toDate && d > toDate) return false;
-  return true;
-}
-function filterVouchersByMetric_(vouchers, metricKey, fromDate, toDate) {
-  return (vouchers || []).filter(function(v) {
-    if (!voucherMetricMatch_(v, metricKey)) return false;
-    return voucherDateInRange_(voucherMetricDate_(v, metricKey), fromDate, toDate);
-  });
-}
-function sumVoucherField_(vouchers, fieldName) {
-  return (vouchers || []).reduce(function(acc, v) { return acc + (Number(v[fieldName]) || 0); }, 0);
-}
-function voucherFilterDateForPanel_(v, filters) {
-  if (filters.payout === 'paid') return voucherMetricDate_(v, 'paid_out');
-  if (filters.payout === 'pending') return voucherMetricDate_(v, 'pending_payout');
-  if (filters.status === 'redeemed') return voucherMetricDate_(v, 'redeemed');
-  if (filters.status === 'refunded') return voucherMetricDate_(v, 'refunded');
-  return voucherMetricDate_(v, 'sold');
-}
 function getCurrentVoucherFilters_() {
   return {
     from: (document.getElementById('voucherFilterFrom') || {}).value || '',
@@ -1779,12 +1720,14 @@ function getCurrentVoucherFilters_() {
 }
 function applyVoucherFilters_(vouchers) {
   var f = getCurrentVoucherFilters_();
-  var fromDate = f.from ? new Date(f.from + 'T00:00:00') : null;
-  var toDate = f.to ? new Date(f.to + 'T23:59:59') : null;
   return (vouchers || []).filter(function(v) {
+    var baseDate = v.order_created_at || v.created_at || '';
+    var d = baseDate ? new Date(baseDate) : null;
+    if (f.from && d && d < new Date(f.from + 'T00:00:00')) return false;
+    if (f.to && d && d > new Date(f.to + 'T23:59:59')) return false;
     if (f.status !== 'all' && String(v.status || '') !== f.status) return false;
     if (f.payout !== 'all' && String(v.payout_status || '') !== f.payout) return false;
-    return voucherDateInRange_(voucherFilterDateForPanel_(v, f), fromDate, toDate);
+    return true;
   });
 }
 function renderVoucherPanel_(targetId, vouchers) {
@@ -1793,17 +1736,14 @@ function renderVoucherPanel_(targetId, vouchers) {
   vouchers = vouchers || [];
   var f = getCurrentVoucherFilters_();
   var filtered = applyVoucherFilters_(vouchers);
-  var earned = filtered.filter(function(v){ return voucherMetricMatch_(v, 'net'); });
   var rows = filtered.map(function(v) {
-    var displayDate = voucherFilterDateForPanel_(v, f) || v.order_created_at || v.created_at;
-    var state = voucherState_(v);
     return '<tr class="click-row" data-voucher-id="' + escHtml(String(v.id || '')) + '">' +
-      '<td>' + escHtml(fmtDate_(displayDate)) + '</td>' +
+      '<td>' + escHtml(fmtDate_(v.order_created_at || v.created_at)) + '</td>' +
       '<td style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</td>' +
       '<td>' + escHtml(String(v.deal_title || '')) + '</td>' +
       '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#ef4444">CHF ' + (state.redeemed ? Number(v.platform_fee || 0).toFixed(2) : '0.00') + '</td>' +
-      '<td style="text-align:right;color:#22c55e">CHF ' + (state.redeemed ? Number(v.bar_payout || 0).toFixed(2) : '0.00') + '</td>' +
+      '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
       '<td>' + escHtml(trPayout_(v.payout_status)) + '</td>' +
       '</tr>';
@@ -1821,11 +1761,11 @@ function renderVoucherPanel_(targetId, vouchers) {
       '</div>' +
     '</div>' +
     '<div class="money-grid">' +
-      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + sumVoucherField_(earned, 'price_paid').toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + sumVoucherField_(earned, 'platform_fee').toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + sumVoucherField_(earned, 'bar_payout').toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.price_paid)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
     '</div>' +
-    '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('earnedHint') + ' ' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
+    '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
@@ -1886,22 +1826,18 @@ function renderBarStats(period) {
   ensureBarFilterBar();
   var cutoff = barFilterDate(period);
   var dateTo = barFilterDateTo(period);
-  var allVouchers = _barStatsVouchers || [];
-  var soldItems = filterVouchersByMetric_(allVouchers, 'sold', cutoff, dateTo);
-  var redeemedItems = filterVouchersByMetric_(allVouchers, 'redeemed', cutoff, dateTo);
-  var openItems = filterVouchersByMetric_(allVouchers, 'not_redeemed', cutoff, dateTo);
-  var earnedItems = filterVouchersByMetric_(allVouchers, 'net', cutoff, dateTo);
-  var pendingItems = filterVouchersByMetric_(allVouchers, 'pending_payout', cutoff, dateTo);
-  var paidItems = filterVouchersByMetric_(allVouchers, 'paid_out', cutoff, dateTo);
-
-  var sold = soldItems.length;
-  var redeemed = redeemedItems.length;
-  var notRedeemed = openItems.length;
-  var gross = sumVoucherField_(earnedItems, 'price_paid');
-  var fees = sumVoucherField_(earnedItems, 'platform_fee');
-  var net = sumVoucherField_(earnedItems, 'bar_payout');
-  var pending = sumVoucherField_(pendingItems, 'bar_payout');
-  var paid = sumVoucherField_(paidItems, 'bar_payout');
+  var vouchers = (_barStatsVouchers || []).filter(function(v) {
+    var d = new Date(v.order_created_at || v.created_at || '');
+    return !cutoff || (d >= cutoff && (!dateTo || d <= dateTo));
+  });
+  var sold = vouchers.length;
+  var redeemed = vouchers.filter(function(v){ return v.status === 'redeemed'; }).length;
+  var notRedeemed = vouchers.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; }).length;
+  var gross = vouchers.reduce(function(a,v){ return a + (Number(v.price_paid)||0); }, 0);
+  var fees = vouchers.reduce(function(a,v){ return a + (Number(v.platform_fee)||0); }, 0);
+  var net = vouchers.reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var paid = vouchers.filter(function(v){ return v.payout_status === 'paid'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
 
   var grid = document.getElementById('statsGrid'); if (!grid) return;
   grid.innerHTML = '';
@@ -1910,9 +1846,9 @@ function renderBarStats(period) {
     [t('soldCount'), sold, '#fff', 'sold'],
     [t('redeemed'), redeemed, '#22c55e', 'redeemed'],
     [t('notRedeemed'), notRedeemed, '#f59e0b', 'not_redeemed'],
-    [t('grossSales'), gross.toFixed(2) + ' CHF', '#fff', 'gross'],
-    [t('commissionLbl'), fees.toFixed(2) + ' CHF', '#ef4444', 'commission'],
-    [t('netRevenue'), net.toFixed(2) + ' CHF', '#22c55e', 'net'],
+    [t('grossSales'), gross.toFixed(2) + ' CHF', '#fff', 'all'],
+    [t('commissionLbl'), fees.toFixed(2) + ' CHF', '#ef4444', 'all'],
+    [t('netRevenue'), net.toFixed(2) + ' CHF', '#22c55e', 'all'],
     [t('pendingPayout'), pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
     [t('paidOut'), paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
     [t('activeDeals'), _barStatsDeals, '#fff', null]
@@ -1921,7 +1857,7 @@ function renderBarStats(period) {
     var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
     var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]); if (s[2]) vEl.style.color = s[2];
     card.append(lEl, vEl);
-    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function(){ showBarStatDetail(s[0], s[3], allVouchers); }); }
+    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function(){ showBarStatDetail(s[0], s[3], vouchers); }); }
     cardsDiv.appendChild(card);
   });
   grid.appendChild(cardsDiv);
@@ -1929,9 +1865,11 @@ function renderBarStats(period) {
 function showBarStatDetail(label, filterKey, filteredVouchers) {
   var detailEl = document.getElementById('barStatsDetail');
   if (!detailEl) return;
-  var cutoff = barFilterDate(_barStatsPeriod || 'all');
-  var dateTo = barFilterDateTo(_barStatsPeriod || 'all');
-  var items = filterVouchersByMetric_(filteredVouchers || [], filterKey || 'sold', cutoff, dateTo);
+  var items = filteredVouchers || [];
+  if (filterKey === 'redeemed') items = items.filter(function(v){ return v.status === 'redeemed'; });
+  else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
+  else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
+  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
   detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
   renderVoucherPanel_('overviewVoucherPanel', items);
 }
@@ -1943,3 +1881,298 @@ document.addEventListener('DOMContentLoaded', function(){
   var close = document.getElementById('btnCloseVoucherDetail'); if (close) close.addEventListener('click', closeVoucherDetail);
   var modal = document.getElementById('voucherDetailModal'); if (modal) modal.addEventListener('click', function(e){ if (e.target === this) closeVoucherDetail(); });
 });
+
+
+// =============================================
+// STRICT PATCH: MWST codeboxes + runtime i18n cleanup
+// =============================================
+Object.assign(TRANSLATIONS.de, {
+  fillAllFields:'Bitte alle Felder ausfüllen.', fillRequiredFields:'Alle Pflichtfelder ausfüllen.',
+  invalidAddressChoice:'Bitte Adresse aus der Vorschlagsliste auswählen.', invalidIban:'Bitte eine gültige IBAN eingeben.',
+  invalidMwst:'Bitte eine gültige MWST-Nummer eingeben.', passwordMinErr:'Passwort mind. 8 Zeichen.',
+  passwordsNoMatch:'Passwörter stimmen nicht überein.', acceptTermsError:'Bitte AGB & Datenschutz akzeptieren.',
+  networkError:'Verbindungsfehler.', invalidCredentials:'Ungültige Zugangsdaten.', registrationSuccessDetailed:'✅ Registrierung erfolgreich! Wir melden uns zur Freischaltung.',
+  registrationError:'Fehler bei der Registrierung.', codeRequired:'Code eingeben.', invalidVoucher:'Ungültiger Gutschein.',
+  changePasswordSuccess:'✅ Passwort geändert!', genericError:'Fehler.', titleRequired:'Titel ist Pflichtfeld', dealPriceRequired:'Deal-Preis ist Pflichtfeld',
+  pauschalDiscountMin:'Rabatt mind. 15%', pauschalMinOrder:'Mindestbestellung mind. 40 CHF', chooseOneCategory:'Mind. 1 Kategorie wählen',
+  chooseDate:'Datum wählen', imageTooLarge:'Bild zu gross (max 5MB)', imageUploadPrefix:'Bild-Upload:', imageUploadFailed:'Bild-Upload fehlgeschlagen',
+  dealCreatedSuccess:'✅ Deal erstellt!', emailRequired:'Bitte Email eingeben', codeSent:'Code gesendet!', allFieldsRequiredNoPlease:'Alle Felder ausfüllen',
+  pleaseSelectAddressFirst:'Bitte zuerst eine Adresse auswählen.', missingCoordinates:'Für die Adresse fehlen Koordinaten.', accountDeleted:'Account gelöscht',
+  pleaseSelectAddressFromList:'Bitte zuerst eine Adresse aus der Liste wählen', locationLoaded:'📍 Standort geladen', locationLoadedDraggable:'📍 Standort geladen – Pin verschiebbar!', imageMax5mb:'Bild max. 5 MB'
+});
+Object.assign(TRANSLATIONS.en, {
+  fillAllFields:'Please fill in all fields.', fillRequiredFields:'Please complete all required fields.', invalidAddressChoice:'Please select an address from the suggestion list.',
+  invalidIban:'Please enter a valid IBAN.', invalidMwst:'Please enter a valid VAT number.', passwordMinErr:'Password must be at least 8 characters.',
+  passwordsNoMatch:'Passwords do not match.', acceptTermsError:'Please accept terms and privacy.', networkError:'Connection error.', invalidCredentials:'Invalid credentials.',
+  registrationSuccessDetailed:'✅ Registration successful! We will contact you for activation.', registrationError:'Registration error.', codeRequired:'Please enter a code.', invalidVoucher:'Invalid voucher.',
+  changePasswordSuccess:'✅ Password changed!', genericError:'Error.', titleRequired:'Title is required', dealPriceRequired:'Deal price is required', pauschalDiscountMin:'Discount must be at least 15%',
+  pauschalMinOrder:'Minimum order must be at least CHF 40', chooseOneCategory:'Choose at least 1 category', chooseDate:'Choose a date', imageTooLarge:'Image too large (max 5 MB)',
+  imageUploadPrefix:'Image upload:', imageUploadFailed:'Image upload failed', dealCreatedSuccess:'✅ Deal created!', emailRequired:'Please enter your email', codeSent:'Code sent!',
+  allFieldsRequiredNoPlease:'Please fill in all fields', pleaseSelectAddressFirst:'Please select an address first.', missingCoordinates:'Coordinates are missing for this address.', accountDeleted:'Account deleted',
+  pleaseSelectAddressFromList:'Please first choose an address from the list', locationLoaded:'📍 Location loaded', locationLoadedDraggable:'📍 Location loaded – pin can be moved!', imageMax5mb:'Image max. 5 MB'
+});
+Object.assign(TRANSLATIONS.it, {
+  fillAllFields:'Compila tutti i campi.', fillRequiredFields:'Compila tutti i campi obbligatori.', invalidAddressChoice:'Seleziona un indirizzo dall\'elenco dei suggerimenti.',
+  invalidIban:'Inserisci un IBAN valido.', invalidMwst:'Inserisci un numero IVA valido.', passwordMinErr:'La password deve avere almeno 8 caratteri.',
+  passwordsNoMatch:'Le password non coincidono.', acceptTermsError:'Accetta condizioni e privacy.', networkError:'Errore di connessione.', invalidCredentials:'Credenziali non valide.',
+  registrationSuccessDetailed:'✅ Registrazione riuscita! Ti contatteremo per l\'attivazione.', registrationError:'Errore di registrazione.', codeRequired:'Inserisci un codice.', invalidVoucher:'Voucher non valido.',
+  changePasswordSuccess:'✅ Password modificata!', genericError:'Errore.', titleRequired:'Il titolo è obbligatorio', dealPriceRequired:'Il prezzo del deal è obbligatorio', pauschalDiscountMin:'Sconto minimo 15%',
+  pauschalMinOrder:'Ordine minimo almeno 40 CHF', chooseOneCategory:'Scegli almeno 1 categoria', chooseDate:'Scegli una data', imageTooLarge:'Immagine troppo grande (max 5 MB)',
+  imageUploadPrefix:'Upload immagine:', imageUploadFailed:'Upload immagine non riuscito', dealCreatedSuccess:'✅ Deal creato!', emailRequired:'Inserisci l\'email', codeSent:'Codice inviato!',
+  allFieldsRequiredNoPlease:'Compila tutti i campi', pleaseSelectAddressFirst:'Seleziona prima un indirizzo.', missingCoordinates:'Mancano le coordinate per questo indirizzo.', accountDeleted:'Account eliminato',
+  pleaseSelectAddressFromList:'Seleziona prima un indirizzo dalla lista', locationLoaded:'📍 Posizione caricata', locationLoadedDraggable:'📍 Posizione caricata – il pin è spostabile!', imageMax5mb:'Immagine max 5 MB'
+});
+Object.assign(TRANSLATIONS.fr, {
+  fillAllFields:'Veuillez remplir tous les champs.', fillRequiredFields:'Veuillez remplir tous les champs obligatoires.', invalidAddressChoice:'Veuillez sélectionner une adresse dans la liste de suggestions.',
+  invalidIban:'Veuillez saisir un IBAN valide.', invalidMwst:'Veuillez saisir un numéro TVA valide.', passwordMinErr:'Le mot de passe doit contenir au moins 8 caractères.',
+  passwordsNoMatch:'Les mots de passe ne correspondent pas.', acceptTermsError:'Veuillez accepter les CGV et la confidentialité.', networkError:'Erreur de connexion.', invalidCredentials:'Identifiants invalides.',
+  registrationSuccessDetailed:'✅ Inscription réussie ! Nous vous contacterons pour l\'activation.', registrationError:'Erreur lors de l\'inscription.', codeRequired:'Veuillez saisir un code.', invalidVoucher:'Bon invalide.',
+  changePasswordSuccess:'✅ Mot de passe modifié !', genericError:'Erreur.', titleRequired:'Le titre est obligatoire', dealPriceRequired:'Le prix du deal est obligatoire', pauschalDiscountMin:'Réduction minimale de 15 %',
+  pauschalMinOrder:'Commande minimale d\'au moins 40 CHF', chooseOneCategory:'Choisissez au moins 1 catégorie', chooseDate:'Choisissez une date', imageTooLarge:'Image trop volumineuse (max 5 Mo)',
+  imageUploadPrefix:'Téléversement image :', imageUploadFailed:'Échec du téléversement de l\'image', dealCreatedSuccess:'✅ Deal créé !', emailRequired:'Veuillez saisir l\'email', codeSent:'Code envoyé !',
+  allFieldsRequiredNoPlease:'Veuillez remplir tous les champs', pleaseSelectAddressFirst:'Veuillez d\'abord sélectionner une adresse.', missingCoordinates:'Les coordonnées manquent pour cette adresse.', accountDeleted:'Compte supprimé',
+  pleaseSelectAddressFromList:'Veuillez d\'abord choisir une adresse dans la liste', locationLoaded:'📍 Position chargée', locationLoadedDraggable:'📍 Position chargée – le repère peut être déplacé !', imageMax5mb:'Image max. 5 Mo'
+});
+function getMwstSuffixForCodebox(value) {
+  var m = String(value || '').toUpperCase().match(/(MWST|TVA|IVA|VAT)$/);
+  if (m) return m[1];
+  return {de:'MWST', en:'VAT', it:'IVA', fr:'TVA'}[currentLang] || 'MWST';
+}
+formatMwstDisplay = function(v) {
+  var up = String(v || '').toUpperCase().replace(/\s+/g, ' ').trim();
+  var suffix = /(?:MWST|TVA|IVA|VAT)$/.test(up) ? up.match(/(MWST|TVA|IVA|VAT)$/)[1] : ({de:'MWST', en:'VAT', it:'IVA', fr:'TVA'}[currentLang] || 'MWST');
+  var digits = onlyDigits(up).slice(0, 9);
+  if (!digits) return '';
+  var parts = [];
+  if (digits.slice(0,3)) parts.push(digits.slice(0,3));
+  if (digits.slice(3,6)) parts.push(digits.slice(3,6));
+  if (digits.slice(6,9)) parts.push(digits.slice(6,9));
+  var base = 'CHE-' + parts.join('.');
+  if (digits.length === 9) base += ' ' + suffix;
+  return base;
+};
+isValidMwst = function(v) {
+  return /^CHE-\d{3}\.\d{3}\.\d{3} (MWST|TVA|IVA|VAT)$/.test(formatMwstDisplay(v));
+};
+codeboxValueToChars = function(pattern, value) {
+  var raw = pattern === 'mwst' ? onlyAlphaNum(value).slice(0, 12 + getMwstSuffixForCodebox(value).length) : onlyAlphaNum(value).slice(0, 21);
+  return raw.split('');
+};
+getCodeboxGroups = function(pattern, value) {
+  return pattern === 'mwst' ? [3, 3, 3, 3, getMwstSuffixForCodebox(value).length] : [4, 4, 4, 4, 4, 1];
+};
+renderCodebox = function(id, pattern) {
+  var input = document.getElementById(id);
+  var grid = document.getElementById(id + 'Grid');
+  var field = document.getElementById(id + 'Field');
+  if (!input || !grid || !field) return;
+  var groups = getCodeboxGroups(pattern, input.value);
+  var slots = groups.reduce(function(sum, size){ return sum + size; }, 0);
+  var chars = codeboxValueToChars(pattern, input.value);
+  var signature = groups.join('-');
+  if (grid.dataset.signature !== signature) {
+    var html = '';
+    var slotIndex = 0;
+    groups.forEach(function(size, groupIndex) {
+      html += '<div class="codebox-group" data-group="' + groupIndex + '">';
+      for (var i = 0; i < size; i++, slotIndex++) html += '<div class="codebox-slot" data-slot="' + slotIndex + '"></div>';
+      html += '</div>';
+    });
+    grid.innerHTML = html;
+    grid.dataset.signature = signature;
+  }
+  var activeIndex = getCodeboxActiveIndex(input, slots);
+  Array.from(grid.querySelectorAll('.codebox-slot')).forEach(function(slot, idx) {
+    var ch = chars[idx] || '';
+    slot.textContent = ch;
+    slot.classList.toggle('filled', !!ch);
+    slot.classList.toggle('active', idx === activeIndex || (!chars.length && idx === 0 && activeIndex === 0));
+  });
+};
+var _origBarShowToast = showToast;
+function translateBarRuntimeMessage(msg) {
+  var raw = String(msg == null ? '' : msg).trim();
+  var map = {
+    'Bitte alle Felder ausfüllen.':'fillAllFields',
+    'Alle Pflichtfelder ausfüllen.':'fillRequiredFields',
+    'Bitte Adresse aus der Vorschlagsliste auswählen.':'invalidAddressChoice',
+    'Bitte eine gültige IBAN eingeben.':'invalidIban',
+    'Bitte eine gültige MWST-Nummer eingeben.':'invalidMwst',
+    'Passwort mind. 8 Zeichen.':'passwordMinErr',
+    'Passwörter stimmen nicht überein.':'passwordsNoMatch',
+    'Bitte AGB & Datenschutz akzeptieren.':'acceptTermsError',
+    'Verbindungsfehler.':'networkError',
+    'Ungültige Zugangsdaten.':'invalidCredentials',
+    'Code eingeben.':'codeRequired',
+    'Ungültiger Gutschein.':'invalidVoucher',
+    '✅ Passwort geändert!':'changePasswordSuccess',
+    'Fehler.':'genericError',
+    'Titel ist Pflichtfeld':'titleRequired',
+    'Deal-Preis ist Pflichtfeld':'dealPriceRequired',
+    'Rabatt mind. 15%':'pauschalDiscountMin',
+    'Mindestbestellung mind. 40 CHF':'pauschalMinOrder',
+    'Mind. 1 Kategorie wählen':'chooseOneCategory',
+    'Datum wählen':'chooseDate',
+    'Bild zu gross (max 5MB)':'imageTooLarge',
+    'Bild-Upload fehlgeschlagen':'imageUploadFailed',
+    '✅ Deal erstellt!':'dealCreatedSuccess',
+    'Bitte Email eingeben':'emailRequired',
+    'Code gesendet!':'codeSent',
+    'Alle Felder ausfüllen':'allFieldsRequiredNoPlease',
+    'Bitte zuerst eine Adresse auswählen.':'pleaseSelectAddressFirst',
+    'Für die Adresse fehlen Koordinaten.':'missingCoordinates',
+    'Account gelöscht':'accountDeleted',
+    'Bitte zuerst eine Adresse aus der Liste wählen':'pleaseSelectAddressFromList',
+    '📍 Standort geladen':'locationLoaded',
+    '📍 Standort geladen – Pin verschiebbar!':'locationLoadedDraggable',
+    'Bild max. 5 MB':'imageMax5mb'
+  };
+  if (raw.indexOf('Bild-Upload:') === 0) return (t('imageUploadPrefix') || 'Bild-Upload:') + ' ' + raw.substring('Bild-Upload:'.length).trim();
+  if (map[raw]) return t(map[raw]) || raw;
+  return raw;
+}
+showToast = function(msg, isError) {
+  return _origBarShowToast(translateBarRuntimeMessage(msg), isError);
+};
+var _origSetLangBar = setLang;
+setLang = function(lang) {
+  _origSetLangBar(lang);
+  ['regIban','profIban','regMwstNumber','profMwstNumber'].forEach(function(id) {
+    if (document.getElementById(id)) renderCodebox(id, id.toLowerCase().indexOf('mwst') >= 0 ? 'mwst' : 'iban');
+  });
+};
+async function doBarLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var pass = document.getElementById('loginPassword').value;
+  var err = document.getElementById('loginErr');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = t('fillAllFields'); return; }
+  try {
+    document.getElementById('btnBarLogin').disabled = true;
+    document.getElementById('btnBarLogin').textContent = '⏳...';
+    var r = await api({ action: 'barLogin', email: email, password: pass });
+    document.getElementById('btnBarLogin').disabled = false;
+    document.getElementById('btnBarLogin').textContent = t('loginBtn') || 'Einloggen';
+    if (r.success) {
+      sessionSet(r.token, r.bar.id, r.bar.name);
+      document.getElementById('loginPassword').value = '';
+      showAuthScreen(false);
+      clearDataCache();
+      prefetchAllData();
+      loadBarStats();
+    } else {
+      err.textContent = translateBarRuntimeMessage(r.error || 'Ungültige Zugangsdaten.');
+      document.getElementById('loginPassword').value = '';
+    }
+  } catch (e) { err.textContent = t('networkError'); }
+}
+async function doBarRegister() {
+  var name = normText(document.getElementById('regBarName').value);
+  var phone = normText(document.getElementById('regPhone').value);
+  var email = normText(document.getElementById('regBarEmail').value);
+  var pass = document.getElementById('regBarPass').value;
+  var ibanRaw = normText(document.getElementById('regIban').value);
+  var mwstLiable = !(document.getElementById('regNoMwst') && document.getElementById('regNoMwst').checked);
+  var mwstRaw = document.getElementById('regMwstNumber') ? normText(document.getElementById('regMwstNumber').value) : '';
+  var consent = document.getElementById('regConsent').checked;
+  var err = document.getElementById('regErr');
+  var addr = parseSelectedAddress('reg');
+  err.textContent = '';
+  if (!name || !addr.city || !addr.address || !addr.zip || !email || !pass || !ibanRaw) { err.textContent = t('fillRequiredFields'); return; }
+  if (!(document.getElementById('regAddressSearch') || {}).dataset.selected || !addr.latitude || !addr.longitude) { err.textContent = t('invalidAddressChoice'); return; }
+  if (!isValidIban(ibanRaw)) { err.textContent = t('invalidIban'); return; }
+  if (mwstLiable && !isValidMwst(mwstRaw)) { err.textContent = t('invalidMwst'); return; }
+  if (pass.length < 8) { err.textContent = t('passwordMinErr'); return; }
+  var passConfirm = document.getElementById('regBarPassConfirm') ? document.getElementById('regBarPassConfirm').value : pass;
+  if (pass !== passConfirm) { err.textContent = t('passwordsNoMatch'); return; }
+  if (!consent) { err.textContent = t('acceptTermsError'); return; }
+  var btn = document.getElementById('btnBarRegister');
+  try {
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ Registrierung läuft…'; }
+    var r = await api({
+      action: 'barRegister', name: name, city: addr.city, address: addr.address, zip: addr.zip, phone: phone,
+      email: email, password: pass, iban: normalizeIban(ibanRaw), mwst_liable: mwstLiable,
+      mwst_number: mwstLiable ? normalizeMwst(mwstRaw) : '', latitude: addr.latitude, longitude: addr.longitude
+    });
+    if (r.success) {
+      showToast(t('registrationSuccessDetailed'));
+      document.getElementById('regBarPass').value = '';
+      document.getElementById('regBarPassConfirm').value = '';
+      document.getElementById('regIban').value = '';
+      document.getElementById('regMwstNumber').value = '';
+      clearSelectedAddress('reg');
+      if (document.getElementById('regAddressSearch')) document.getElementById('regAddressSearch').value = '';
+      if (document.getElementById('regBarName')) document.getElementById('regBarName').value = '';
+      if (document.getElementById('regPhone')) document.getElementById('regPhone').value = '';
+      if (document.getElementById('regBarEmail')) document.getElementById('regBarEmail').value = '';
+      if (document.getElementById('regConsent')) document.getElementById('regConsent').checked = false;
+      ['regIban','regMwstNumber'].forEach(function(id){ if(document.getElementById(id)) renderCodebox(id, id.toLowerCase().indexOf('mwst') >= 0 ? 'mwst' : 'iban'); });
+    } else {
+      err.textContent = translateBarRuntimeMessage(r.error || t('registrationError'));
+    }
+  } catch (e) { err.textContent = t('networkError'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = t('registerBtn'); } }
+}
+async function doRedeem() {
+  var s = sessionGet(); if (!s) { doLogout(); return; }
+  var code = document.getElementById('redeemCode').value.trim().toUpperCase();
+  var err = document.getElementById('redeemErr'); var result = document.getElementById('redeemResult');
+  err.textContent = ''; result.style.display = 'none';
+  if (!code) { err.textContent = t('codeRequired'); return; }
+  try {
+    var r = await api({ action: 'redeemVoucher', token: s.token, code: code });
+    if (r.success) {
+      document.getElementById('redeemDeal').textContent = r.deal_title || code;
+      result.style.display = 'block';
+      document.getElementById('redeemCode').value = '';
+      showToast(t('redeemSuccess'));
+      _dataCache.vouchers = null; _barStatsVouchers = null;
+    } else {
+      err.textContent = translateBarRuntimeMessage(r.error || 'Ungültiger Gutschein.');
+    }
+  } catch(e) { err.textContent = t('networkError'); }
+}
+async function doChangePassword() {
+  var s = sessionGet(); if (!s) { doLogout(); return; }
+  var oldPw = document.getElementById('pwOld').value;
+  var newPw = document.getElementById('pwNew').value;
+  var confPw = document.getElementById('pwConfirm').value;
+  var err = document.getElementById('pwErr');
+  err.textContent = '';
+  if (!oldPw || !newPw || !confPw) { err.textContent = t('fillAllFields'); return; }
+  if (newPw.length < 8) { err.textContent = t('newPasswordLbl'); return; }
+  if (newPw !== confPw) { err.textContent = t('passwordsNoMatch'); return; }
+  try {
+    var r = await api({ action: 'changePassword', token: s.token, old_password: oldPw, new_password: newPw });
+    if (r.success) {
+      showToast(t('changePasswordSuccess'));
+      document.getElementById('pwOld').value = '';
+      document.getElementById('pwNew').value = '';
+      document.getElementById('pwConfirm').value = '';
+    } else {
+      err.textContent = translateBarRuntimeMessage(r.error || 'Fehler.');
+    }
+  } catch(e) { err.textContent = t('networkError'); }
+}
+
+setAddressMeta = function(prefix, text) {
+  var el = document.getElementById(prefix + 'AddressMeta');
+  if (el) el.textContent = text || t('addressNotSelected');
+};
+clearSelectedAddress = function(prefix, keepSearch) {
+  var sInput = document.getElementById(prefix + 'AddressSearch');
+  if (sInput && !keepSearch) sInput.value = '';
+  if (sInput) sInput.dataset.selected = '';
+  ['Address','Zip','City','Lat','Lng'].forEach(function(suffix) {
+    var el = document.getElementById(prefix + suffix);
+    if (el) el.value = '';
+  });
+  var zv = document.getElementById(prefix + 'ZipVisible');
+  if (zv) zv.value = '';
+  setAddressMeta(prefix, t('addressNotSelected'));
+};
+var _origApplyProfileToForm = applyProfileToForm;
+applyProfileToForm = function(b) {
+  _origApplyProfileToForm(b);
+  setAddressMeta('prof', [b.address, b.zip, b.city].filter(Boolean).join(', ') || t('addressNotSelected'));
+};
