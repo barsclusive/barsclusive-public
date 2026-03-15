@@ -679,8 +679,6 @@ var _barStatsDeals = -1;
 var _barStatsPeriod = 'all';
 var _barCustomFrom = '';
 var _barCustomTo = '';
-var _barDetailFilterKey = '';
-var _barDetailLabel = '';
 
 function barFilterDate(period) {
   var now = new Date();
@@ -1481,8 +1479,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (loginPw) loginPw.addEventListener('keydown', function(e) { if (e.key === 'Enter') doBarLogin(); });
 
   // Dashboard tabs
-  var legacyVoucherBtn = document.querySelector('[data-dash-tab="vouchers"]');
-  if (legacyVoucherBtn) legacyVoucherBtn.style.display = 'none';
   document.querySelectorAll('[data-dash-tab]').forEach(function(btn) {
     btn.addEventListener('click', function() { switchDashTab(this.dataset.dashTab, this); });
   });
@@ -1861,23 +1857,10 @@ function renderBarStats(period) {
     var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
     var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]); if (s[2]) vEl.style.color = s[2];
     card.append(lEl, vEl);
-    if (s[3]) {
-      card.style.cursor = 'pointer';
-      card.addEventListener('click', function(){
-        _barDetailFilterKey = s[3];
-        _barDetailLabel = s[0];
-        showBarStatDetail(s[0], s[3], vouchers);
-      });
-    }
+    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function(){ showBarStatDetail(s[0], s[3], vouchers); }); }
     cardsDiv.appendChild(card);
   });
   grid.appendChild(cardsDiv);
-
-  if (_barDetailFilterKey) showBarStatDetail(_barDetailLabel || '', _barDetailFilterKey, vouchers);
-  else {
-    var detailEl = document.getElementById('barStatsDetail');
-    if (detailEl) detailEl.innerHTML = '';
-  }
 }
 function showBarStatDetail(label, filterKey, filteredVouchers) {
   var detailEl = document.getElementById('barStatsDetail');
@@ -1887,42 +1870,10 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
   else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
   else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
-
-  if (!items.length) {
-    detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (0)</div><div style="color:#666;text-align:center;padding:20px">' + escHtml(t('noDataPeriod') || 'Keine Daten für diesen Zeitraum') + '</div>';
-    return;
-  }
-
-  var html = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div>';
-  html += '<div style="margin-bottom:10px;color:#999;font-size:13px">' + escHtml(t('overviewDetailHint') || 'Die Datumsangaben beziehen sich auf den jeweiligen Status.') + '</div>';
-  html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + escHtml(t('boughtAtLbl') || 'Kaufdatum') + '</th><th>' + escHtml(t('codeLbl') || 'Code') + '</th><th>' + escHtml(t('dealLbl') || 'Deal') + '</th><th>' + escHtml(t('priceLbl') || 'Preis') + '</th><th>' + escHtml(t('commissionLbl') || 'Provision') + '</th><th>' + escHtml(t('netRevenue') || 'Netto für die Bar') + '</th><th>' + escHtml(t('statusLbl') || 'Status') + '</th><th>' + escHtml(t('paidLbl') || 'Bezahlt') + '</th></tr></thead><tbody>';
-
-  items.forEach(function(v) {
-    var statusKey = 'statusIssued';
-    if (v.refund_status === 'requested') statusKey = 'refundRequested';
-    else if (v.status === 'redeemed') statusKey = 'statusRedeemed';
-    else if (v.status === 'refunded') statusKey = 'statusRefunded';
-
-    var payoutText = (v.payout_status === 'paid') ? (t('payoutPaid') || 'Bezahlt') : (t('payoutPending') || 'Ausstehend');
-    html += '<tr>'
-      + '<td style="font-size:11px">' + escHtml(formatDateTimeLocal(v.order_created_at || v.created_at, false) || '-') + '</td>'
-      + '<td style="font-family:monospace">' + escHtml((v.code_display || v.code || '-')) + '</td>'
-      + '<td>' + escHtml(v.deal_title || '-') + '</td>'
-      + '<td style="text-align:right">' + escHtml(currency(Number(v.price_paid || 0))) + '</td>'
-      + '<td style="text-align:right;color:#ef4444">' + escHtml(currency(Number(v.platform_fee || 0))) + '</td>'
-      + '<td style="text-align:right;color:#22c55e">' + escHtml(currency(Number(v.bar_payout || 0))) + '</td>'
-      + '<td>' + escHtml(t(statusKey) || statusKey) + '</td>'
-      + '<td>' + escHtml(payoutText) + '</td>'
-      + '</tr>';
-  });
-  html += '</tbody></table></div>';
-  detailEl.innerHTML = html;
+  detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
+  renderVoucherPanel_('overviewVoucherPanel', items);
 }
-function renderMyVouchers(vouchers) {
-  var panel = document.getElementById('vouchersPanel');
-  if (!panel) return;
-  renderVoucherPanel_('vouchersPanel', vouchers || []);
-}
+function renderMyVouchers(vouchers) { renderVoucherPanel_('vouchersPanel', vouchers || []); }
 var _oldLoadMyVouchers = loadMyVouchers;
 loadMyVouchers = async function(){ var s=sessionGet(); if(!s){ doLogout(); return; } if(_dataCache.vouchers){ renderMyVouchers(_dataCache.vouchers);} try{ var r = await api({ action:'getBarVouchers', token:s.token, bar_id:s.barId }); if(r.success){ _dataCache.vouchers = r.vouchers || []; _barStatsVouchers = _dataCache.vouchers; renderMyVouchers(_dataCache.vouchers); } }catch(e){} };
 
@@ -2444,62 +2395,164 @@ applyProfileToForm = function(b) {
   };
 })();
 
-
 // =============================================
-// FINAL PATCH: stable bar login + hide MWST fields
+// FINAL CLEANUP PATCH: hide legacy MWST UI and voucher tab
 // =============================================
 (function(){
-  function hideMwstUiFinal_() {
-    ['regMwstNumGroup','profMwstNumGroup'].forEach(function(id){ var el = document.getElementById(id); if (el) el.style.display = 'none'; });
-    ['regNoMwst','profNoMwst'].forEach(function(id){ var el = document.getElementById(id); if (el) el.checked = true; });
-    ['regMwstNumber','profMwstNumber'].forEach(function(id){ var el = document.getElementById(id); if (el) el.value = ''; });
-    Array.prototype.forEach.call(document.querySelectorAll('[data-i18n="mwstLabel"]'), function(lbl){
-      var wrap = lbl.closest('.form-group, div[style*="margin-bottom"]');
-      if (wrap) wrap.style.display = 'none';
+  function removeLegacyVoucherUi(){
+    document.querySelectorAll('[data-dash-tab="vouchers"]').forEach(function(el){ el.remove(); });
+    var pane = document.getElementById('dashVouchers');
+    if (pane) pane.remove();
+  }
+  function disableLegacyMwstUi(){
+    ['regNoMwst','profNoMwst'].forEach(function(id){
+      var cb = document.getElementById(id);
+      if (cb) { cb.checked = true; cb.disabled = true; }
+      var group = cb && cb.closest('.form-group');
+      if (group) group.style.display = 'none';
+    });
+    ['regMwstNumGroup','profMwstNumGroup'].forEach(function(id){
+      var group = document.getElementById(id);
+      if (group) group.style.display = 'none';
+    });
+    ['regMwstNumber','profMwstNumber'].forEach(function(id){
+      var input = document.getElementById(id);
+      if (input) { input.value = ''; input.required = false; }
     });
   }
-  document.addEventListener('DOMContentLoaded', hideMwstUiFinal_);
-  var _origSetLangBarFinal = setLang;
-  setLang = function(lang) { _origSetLangBarFinal(lang); hideMwstUiFinal_(); };
-  api = async function(body) {
-    var r = await fetch(BACKEND_URL, { method: 'POST', body: JSON.stringify(body) });
-    var txt = await r.text();
-    try { return JSON.parse(txt); } catch (e) { throw new Error(txt || ('HTTP ' + r.status)); }
-  };
-  doBarLogin = async function() {
-    var emailEl = document.getElementById('loginEmail');
-    var passEl = document.getElementById('loginPassword');
-    var email = emailEl ? emailEl.value.trim() : '';
-    var pass = passEl ? passEl.value : '';
-    var err = document.getElementById('loginErr');
-    if (err) err.textContent = '';
-    if (!email || !pass) { if (err) err.textContent = t('fillAllFields') || 'Bitte alle Felder ausfüllen.'; return; }
-    var btn = document.getElementById('btnBarLogin');
-    var originalLabel = t('loginBtn') || 'Einloggen';
-    try {
-      if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
-      var r = await api({ action: 'barLogin', email: email, password: pass });
-      if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
-      if (!r || !r.success) {
-        if (err) err.textContent = (r && r.error) || (t('invalidCredentials') || 'Ungültige Zugangsdaten.');
-        if (passEl) passEl.value = '';
-        return;
-      }
-      sessionSet(r.token, r.bar.id, r.bar.name);
-      try {
-        if (r.bar && r.bar.lang) { currentLang = r.bar.lang; localStorage.setItem('barsclusive_lang', currentLang); setLang(currentLang); }
-        if (passEl) passEl.value = '';
-        showAuthScreen(false); clearDataCache(); prefetchAllData(); loadBarStats();
-      } catch (uiErr) { console.error('Post-login UI error', uiErr); }
-    } catch (e) {
-      if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
-      if (err) err.textContent = (e && e.message && e.message.length < 180) ? e.message : (t('networkError') || 'Verbindungsfehler.');
-    }
-  };
-  if (typeof saveProfile === 'function') {
-    var _origSaveProfileFinal = saveProfile;
-    saveProfile = async function(){ hideMwstUiFinal_(); return _origSaveProfileFinal.apply(this, arguments); };
+  var _origApplyProfileToFormFinal = typeof applyProfileToForm === 'function' ? applyProfileToForm : null;
+  if (_origApplyProfileToFormFinal) {
+    applyProfileToForm = function(b){
+      _origApplyProfileToFormFinal(b);
+      disableLegacyMwstUi();
+      removeLegacyVoucherUi();
+    };
   }
-  var _origTrStatusFinal = trStatus_;
-  trStatus_ = function(status) { return String(status || '').toLowerCase() === 'refund_requested' ? (t('refundRequested') || 'Rückerstattung angefordert') : _origTrStatusFinal(status); };
+  var _origSetLangFinalBar = setLang;
+  setLang = function(lang){
+    _origSetLangFinalBar(lang);
+    disableLegacyMwstUi();
+    removeLegacyVoucherUi();
+  };
+  document.addEventListener('DOMContentLoaded', function(){
+    disableLegacyMwstUi();
+    removeLegacyVoucherUi();
+  });
+  setTimeout(function(){
+    disableLegacyMwstUi();
+    removeLegacyVoucherUi();
+  }, 0);
+})();
+
+
+(function(){
+  Object.assign(TRANSLATIONS.de, { pauschalHint:'💡 Kund:innen zahlen 2.50 CHF. Du erhältst keine Auszahlung. Der Rabatt wird direkt bei dir eingelöst.' });
+  Object.assign(TRANSLATIONS.en, { pauschalHint:'💡 Guests pay 2.50 CHF. You do not receive a payout. The discount is redeemed directly at your bar.' });
+  Object.assign(TRANSLATIONS.it, { pauschalHint:'💡 I clienti pagano 2.50 CHF. Non ricevi alcun payout. Lo sconto viene riscattato direttamente presso il tuo bar.' });
+  Object.assign(TRANSLATIONS.fr, { pauschalHint:'💡 Les clients paient 2.50 CHF. Vous ne recevez aucun versement. La réduction est accordée directement sur place.' });
+})();
+
+
+// =============================================
+// FINAL BAR PORTAL UX / CLEANUP PATCH
+// =============================================
+(function(){
+  if (typeof TRANSLATIONS !== 'undefined') {
+    Object.assign(TRANSLATIONS.de,{ correspondenceHint:'Diese Sprache wird für E-Mails und die Kommunikation mit der Bar verwendet.', benefitFree:'Kostenlose Registrierung', benefitFast:'Deal in wenigen Minuten erstellt', benefitPayout:'90 % Auszahlung', benefitPayoutSub:'Nach Einlösung bei Fixpreis-Deals', benefitManaged:'Mehr Sichtbarkeit', benefitManagedSub:'BarSclusive bringt Gäste direkt zu dir', previewLabel:'So sehen Kund:innen deinen Deal', estimateLabel:'Auszahlungs-Schätzung', estimateHint:'Geschätzter Betrag pro Einlösung für Fixpreis-Deals.', previewBadgeDeal:'Deal', previewBadgeActive:'Aktiv', sectionBar:'Bar & Standort', sectionContact:'Kontakt', sectionAccess:'Zugang', sectionPayout:'Auszahlung', sectionConsent:'Zustimmung', sectionProfile:'Profil & Standort', sectionSecurity:'Sicherheit', sectionOffer:'Angebot', sectionPrice:'Preis', sectionImage:'Bild', sectionValidity:'Gültigkeit', sectionVisibility:'Sichtbarkeit' });
+    Object.assign(TRANSLATIONS.en,{ correspondenceHint:'This language is used for emails and communication with your bar.', benefitFree:'Free registration', benefitFast:'Create a deal in minutes', benefitPayout:'90% payout', benefitPayoutSub:'After redemption for fixed-price deals', benefitManaged:'More visibility', benefitManagedSub:'BarSclusive brings guests straight to you', previewLabel:'How guests will see your deal', estimateLabel:'Payout estimate', estimateHint:'Estimated payout per redemption for fixed-price deals.', previewBadgeDeal:'Deal', previewBadgeActive:'Active', sectionBar:'Bar & location', sectionContact:'Contact', sectionAccess:'Access', sectionPayout:'Payout', sectionConsent:'Consent', sectionProfile:'Profile & location', sectionSecurity:'Security', sectionOffer:'Offer', sectionPrice:'Price', sectionImage:'Image', sectionValidity:'Validity', sectionVisibility:'Visibility' });
+    Object.assign(TRANSLATIONS.it,{ correspondenceHint:'Questa lingua viene usata per email e comunicazioni con il bar.', benefitFree:'Registrazione gratuita', benefitFast:'Crea un deal in pochi minuti', benefitPayout:'90% di payout', benefitPayoutSub:'Dopo il riscatto per i deal a prezzo fisso', benefitManaged:'Più visibilità', benefitManagedSub:'BarSclusive porta ospiti direttamente da te', previewLabel:'Come vedranno il tuo deal i clienti', estimateLabel:'Stima del payout', estimateHint:'Importo stimato per riscatto dei deal a prezzo fisso.', previewBadgeDeal:'Deal', previewBadgeActive:'Attivo', sectionBar:'Bar e posizione', sectionContact:'Contatto', sectionAccess:'Accesso', sectionPayout:'Payout', sectionConsent:'Consenso', sectionProfile:'Profilo e posizione', sectionSecurity:'Sicurezza', sectionOffer:'Offerta', sectionPrice:'Prezzo', sectionImage:'Immagine', sectionValidity:'Validità', sectionVisibility:'Visibilità' });
+    Object.assign(TRANSLATIONS.fr,{ correspondenceHint:'Cette langue est utilisée pour les emails et la communication avec votre bar.', benefitFree:'Inscription gratuite', benefitFast:'Créez un deal en quelques minutes', benefitPayout:'90 % de versement', benefitPayoutSub:'Après utilisation pour les deals à prix fixe', benefitManaged:'Plus de visibilité', benefitManagedSub:'BarSclusive amène des clients directement chez vous', previewLabel:'Voici comment les clients verront votre deal', estimateLabel:'Estimation du versement', estimateHint:'Montant estimé par utilisation pour les deals à prix fixe.', previewBadgeDeal:'Deal', previewBadgeActive:'Actif', sectionBar:'Bar et emplacement', sectionContact:'Contact', sectionAccess:'Accès', sectionPayout:'Versement', sectionConsent:'Consentement', sectionProfile:'Profil et emplacement', sectionSecurity:'Sécurité', sectionOffer:'Offre', sectionPrice:'Prix', sectionImage:'Image', sectionValidity:'Validité', sectionVisibility:'Visibilité' });
+  }
+
+  function hideLegacyMwst(){
+    document.querySelectorAll('.mwst-legacy-block').forEach(function(el){ el.style.display='none'; });
+    ['regNoMwst','profNoMwst'].forEach(function(id){ var el=document.getElementById(id); if(el){ el.checked=true; el.disabled=true; } });
+    ['regMwstNumber','profMwstNumber'].forEach(function(id){ var el=document.getElementById(id); if(el){ el.value=''; el.required=false; } });
+  }
+
+  function cleanLangSelect(id){
+    var sel=document.getElementById(id); if(!sel) return;
+    Array.from(sel.options).forEach(function(opt){ if(['de','en','it','fr'].indexOf(opt.value)===-1) opt.remove(); });
+  }
+
+  function wrapGroups(containerId, sections){
+    var container=document.getElementById(containerId); if(!container || container.dataset.sectionized==='1') return;
+    container.dataset.sectionized='1';
+    function blockNode(node){ return node ? (node.closest('.form-group, .form-check, .err-msg, hr, h3, button, .inline-meta, [style*="margin-bottom"]') || node) : null; }
+    sections.forEach(function(sec){
+      var startRaw=document.querySelector(sec.start); if(!startRaw || !container.contains(startRaw)) return;
+      var start=blockNode(startRaw);
+      var endRaw = sec.end ? document.querySelector(sec.end) : null;
+      var end = endRaw && container.contains(endRaw) ? blockNode(endRaw) : null;
+      var wrapper=document.createElement('div'); wrapper.className='form-section';
+      var title=document.createElement('div'); title.className='form-section-title';
+      title.innerHTML='<span data-section-key="'+sec.label+'"></span>' + (sec.hint ? '<small>'+sec.hint+'</small>' : '');
+      wrapper.appendChild(title);
+      start.parentNode.insertBefore(wrapper, start);
+      var node=start;
+      while(node && node!==end){
+        var next=node.nextSibling;
+        wrapper.appendChild(node);
+        node=next;
+      }
+    });
+    syncSectionLabels();
+  }
+
+  function syncSectionLabels(){
+    document.querySelectorAll('[data-section-key]').forEach(function(el){ var key=el.getAttribute('data-section-key'); el.textContent = (typeof t==='function' && t(key)) || key; });
+    document.querySelectorAll('.correspondence-help').forEach(function(el){ el.textContent = (typeof t==='function' && t('correspondenceHint')) || el.textContent; });
+  }
+
+  function buildDealPreview(){
+    var title=(document.getElementById('dealTitle')||{}).value || 'Dein Deal-Titel';
+    var desc=(document.getElementById('dealDesc')||{}).value || '';
+    var price=parseFloat((document.getElementById('dealPrice')||{}).value||0);
+    var orig=parseFloat((document.getElementById('dealOrigPrice')||{}).value||0);
+    var imgUrl=(document.getElementById('dealImageUrl')||{}).value || '';
+    var titleEl=document.getElementById('builderPreviewTitle'); if(titleEl) titleEl.textContent=title || 'Dein Deal-Titel';
+    var metaEl=document.getElementById('builderPreviewMeta'); if(metaEl) metaEl.textContent=(document.getElementById('barNameDisplay')&&document.getElementById('barNameDisplay').textContent.trim()) || 'BarSclusive • Live-Vorschau';
+    var priceEl=document.getElementById('builderPreviewPrice'); if(priceEl) priceEl.textContent=(price||0).toFixed(2)+' CHF';
+    var oldEl=document.getElementById('builderPreviewOldPrice'); if(oldEl){ oldEl.textContent = orig>price ? orig.toFixed(2)+' CHF' : ''; }
+    var chipType=document.getElementById('builderPreviewChipType'); if(chipType) chipType.textContent = (document.getElementById('catPauschal')&&document.getElementById('catPauschal').checked) ? ((typeof t==='function'&&t('catDiscount'))||'Rabatt') : ((typeof t==='function'&&t('previewBadgeDeal'))||'Deal');
+    var chipValidity=document.getElementById('builderPreviewChipValidity'); if(chipValidity) chipValidity.textContent = (document.getElementById('dealActive')&&document.getElementById('dealActive').checked) ? ((typeof t==='function'&&t('previewBadgeActive'))||'Aktiv') : ((typeof t==='function'&&t('inactive'))||'Inaktiv');
+    var img=document.getElementById('builderPreviewImage'); if(img){ if(imgUrl){ img.src=imgUrl; img.style.display='block'; } else { img.removeAttribute('src'); img.style.display='none'; } }
+    var estimate=0; var isDiscount=(document.getElementById('catPauschal')&&document.getElementById('catPauschal').checked); if(!isDiscount) estimate = Math.max(0, (price||0)*0.90);
+    var estimateEl=document.getElementById('builderPayoutEstimate'); if(estimateEl) estimateEl.textContent = estimate.toFixed(2)+' CHF';
+    var copyEl=document.getElementById('builderPayoutCopy'); if(copyEl) copyEl.textContent = isDiscount ? ((currentLang==='de') ? 'Für Pauschalrabatte gibt es keine Auszahlung. Der Rabatt wird direkt bei dir eingelöst.' : currentLang==='en' ? 'Flat discounts do not create a payout. The discount is redeemed directly at your bar.' : currentLang==='it' ? 'I buoni sconto forfettari non generano payout. Lo sconto viene riscattato direttamente nel tuo bar.' : 'Les réductions forfaitaires ne génèrent aucun versement. La réduction est appliquée directement dans votre bar.') : ((typeof t==='function' && t('estimateHint')) || copyEl.textContent);
+  }
+
+  function enhancePortalUi(){
+    hideLegacyMwst();
+    cleanLangSelect('regLangSelect'); cleanLangSelect('profLangSelect');
+    wrapGroups('registerForm',[
+      {start:'#regBarName', end:'#regPhone', label:'sectionBar'},
+      {start:'#regBarEmail', end:'#regLangSelect', label:'sectionContact'},
+      {start:'#regLangSelect', end:'#regIbanField', label:'sectionAccess'},
+      {start:'#regIbanField', end:'#regConsent', label:'sectionPayout'},
+      {start:'#regConsent', end:'#btnBarRegister', label:'sectionConsent'}
+    ]);
+    wrapGroups('dashSettings',[
+      {start:'#profErr', end:'#btnSaveProfile', label:'sectionProfile'},
+      {start:'#pwErr', end:'#btnChangePassword', label:'sectionSecurity'}
+    ]);
+    wrapGroups('dashNewdeal',[
+      {start:'#dealTitle', end:'#dealOrigPrice', label:'sectionOffer'},
+      {start:'#dealOrigPrice', end:'#dealImageFile', label:'sectionPrice'},
+      {start:'#dealImageFile', end:'.cats-grid', label:'sectionImage'},
+      {start:'.cats-grid', end:'#dealActive', label:'sectionValidity'},
+      {start:'#dealActive', end:'#btnCreateDeal', label:'sectionVisibility'}
+    ]);
+    buildDealPreview();
+  }
+
+  var _origSetLangPortal = setLang;
+  setLang = function(lang){ _origSetLangPortal(lang); syncSectionLabels(); hideLegacyMwst(); cleanLangSelect('regLangSelect'); cleanLangSelect('profLangSelect'); buildDealPreview(); };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    enhancePortalUi();
+    ['dealTitle','dealDesc','dealPrice','dealOrigPrice','dealImageUrl','dealActive','catPauschal'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('input', buildDealPreview); if(el) el.addEventListener('change', buildDealPreview); });
+    document.querySelectorAll('input[name="cat"], input[name="timeSlot"], input[name="validType"]').forEach(function(el){ el.addEventListener('change', buildDealPreview); });
+    setTimeout(enhancePortalUi, 100);
+  });
 })();
