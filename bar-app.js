@@ -679,6 +679,8 @@ var _barStatsDeals = -1;
 var _barStatsPeriod = 'all';
 var _barCustomFrom = '';
 var _barCustomTo = '';
+var _barDetailFilterKey = '';
+var _barDetailLabel = '';
 
 function barFilterDate(period) {
   var now = new Date();
@@ -1256,11 +1258,11 @@ function switchAuthTab(name, btn) {
 
 var TAB_IDS = {
   overview:'dashOverview', newdeal:'dashNewdeal', mydeals:'dashMydeals',
-  vouchers:'dashVouchers', redeem:'dashRedeem', settings:'dashSettings'
+  redeem:'dashRedeem', settings:'dashSettings'
 };
 var TAB_LOADERS = {
   overview: loadBarStats, mydeals: loadMyDeals, settings: loadProfile,
-  vouchers: loadMyVouchers, redeem: function() {}
+  redeem: function() {}
 };
 
 function switchDashTab(name, btn) {
@@ -1479,6 +1481,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (loginPw) loginPw.addEventListener('keydown', function(e) { if (e.key === 'Enter') doBarLogin(); });
 
   // Dashboard tabs
+  var legacyVoucherBtn = document.querySelector('[data-dash-tab="vouchers"]');
+  if (legacyVoucherBtn) legacyVoucherBtn.style.display = 'none';
   document.querySelectorAll('[data-dash-tab]').forEach(function(btn) {
     btn.addEventListener('click', function() { switchDashTab(this.dataset.dashTab, this); });
   });
@@ -1857,10 +1861,23 @@ function renderBarStats(period) {
     var lEl = document.createElement('div'); lEl.className = 'stat-label'; lEl.textContent = s[0];
     var vEl = document.createElement('div'); vEl.className = 'stat-value'; vEl.textContent = String(s[1]); if (s[2]) vEl.style.color = s[2];
     card.append(lEl, vEl);
-    if (s[3]) { card.style.cursor = 'pointer'; card.addEventListener('click', function(){ showBarStatDetail(s[0], s[3], vouchers); }); }
+    if (s[3]) {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function(){
+        _barDetailFilterKey = s[3];
+        _barDetailLabel = s[0];
+        showBarStatDetail(s[0], s[3], vouchers);
+      });
+    }
     cardsDiv.appendChild(card);
   });
   grid.appendChild(cardsDiv);
+
+  if (_barDetailFilterKey) showBarStatDetail(_barDetailLabel || '', _barDetailFilterKey, vouchers);
+  else {
+    var detailEl = document.getElementById('barStatsDetail');
+    if (detailEl) detailEl.innerHTML = '';
+  }
 }
 function showBarStatDetail(label, filterKey, filteredVouchers) {
   var detailEl = document.getElementById('barStatsDetail');
@@ -1870,10 +1887,42 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
   else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
   else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
-  detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
-  renderVoucherPanel_('overviewVoucherPanel', items);
+
+  if (!items.length) {
+    detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (0)</div><div style="color:#666;text-align:center;padding:20px">' + escHtml(t('noDataPeriod') || 'Keine Daten für diesen Zeitraum') + '</div>';
+    return;
+  }
+
+  var html = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div>';
+  html += '<div style="margin-bottom:10px;color:#999;font-size:13px">' + escHtml(t('overviewDetailHint') || 'Die Datumsangaben beziehen sich auf den jeweiligen Status.') + '</div>';
+  html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + escHtml(t('boughtAtLbl') || 'Kaufdatum') + '</th><th>' + escHtml(t('codeLbl') || 'Code') + '</th><th>' + escHtml(t('dealLbl') || 'Deal') + '</th><th>' + escHtml(t('priceLbl') || 'Preis') + '</th><th>' + escHtml(t('commissionLbl') || 'Provision') + '</th><th>' + escHtml(t('netRevenue') || 'Netto für die Bar') + '</th><th>' + escHtml(t('statusLbl') || 'Status') + '</th><th>' + escHtml(t('paidLbl') || 'Bezahlt') + '</th></tr></thead><tbody>';
+
+  items.forEach(function(v) {
+    var statusKey = 'statusIssued';
+    if (v.refund_status === 'requested') statusKey = 'refundRequested';
+    else if (v.status === 'redeemed') statusKey = 'statusRedeemed';
+    else if (v.status === 'refunded') statusKey = 'statusRefunded';
+
+    var payoutText = (v.payout_status === 'paid') ? (t('payoutPaid') || 'Bezahlt') : (t('payoutPending') || 'Ausstehend');
+    html += '<tr>'
+      + '<td style="font-size:11px">' + escHtml(formatDateTimeLocal(v.order_created_at || v.created_at, false) || '-') + '</td>'
+      + '<td style="font-family:monospace">' + escHtml((v.code_display || v.code || '-')) + '</td>'
+      + '<td>' + escHtml(v.deal_title || '-') + '</td>'
+      + '<td style="text-align:right">' + escHtml(currency(Number(v.price_paid || 0))) + '</td>'
+      + '<td style="text-align:right;color:#ef4444">' + escHtml(currency(Number(v.platform_fee || 0))) + '</td>'
+      + '<td style="text-align:right;color:#22c55e">' + escHtml(currency(Number(v.bar_payout || 0))) + '</td>'
+      + '<td>' + escHtml(t(statusKey) || statusKey) + '</td>'
+      + '<td>' + escHtml(payoutText) + '</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table></div>';
+  detailEl.innerHTML = html;
 }
-function renderMyVouchers(vouchers) { renderVoucherPanel_('vouchersPanel', vouchers || []); }
+function renderMyVouchers(vouchers) {
+  var panel = document.getElementById('vouchersPanel');
+  if (!panel) return;
+  renderVoucherPanel_('vouchersPanel', vouchers || []);
+}
 var _oldLoadMyVouchers = loadMyVouchers;
 loadMyVouchers = async function(){ var s=sessionGet(); if(!s){ doLogout(); return; } if(_dataCache.vouchers){ renderMyVouchers(_dataCache.vouchers);} try{ var r = await api({ action:'getBarVouchers', token:s.token, bar_id:s.barId }); if(r.success){ _dataCache.vouchers = r.vouchers || []; _barStatsVouchers = _dataCache.vouchers; renderMyVouchers(_dataCache.vouchers); } }catch(e){} };
 
