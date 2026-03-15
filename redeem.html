@@ -37,6 +37,14 @@
     .note{background:#111;border:1px solid #2e2e2e;border-radius:12px;padding:14px;color:#b9b9b9;font-size:12px;line-height:1.6;margin-top:16px}
   </style>
   <link rel="icon" type="image/png" href="logo.png">
+
+  <style id='bs-redeem-refresh'>
+    body{background:radial-gradient(circle at top,#1a1a1a 0%,#0b0b0c 42%,#050505 100%)}
+    .card{background:linear-gradient(180deg,#171717,#101010);border-color:rgba(255,255,255,.08);box-shadow:0 24px 60px rgba(0,0,0,.34);border-radius:26px}
+    .deal-info,.note{background:#161616;border-color:rgba(255,255,255,.08)}
+    .swipe-track{background:#181818;border:1px solid rgba(255,255,255,.06)}
+    .lang-switch button{border-radius:999px;padding:7px 11px}
+  </style>
 </head>
 <body>
 <div class="lang-switch">
@@ -111,10 +119,10 @@ let _code = '';
 let currentLang = new URLSearchParams(window.location.search).get('lang') || localStorage.getItem('barsclusive_lang') || 'de';
 let voucherData = null;
 const T = {
-  de:{title:'Gutschein einlösen – BarSclusive',loading:'Gutschein wird geladen...',redeemTitle:'Gutschein einlösen',warnTitle:'⚠️ Achtung: Nur einmal einlösbar!',redeemWarn:'Nach dem Wischen ist der Gutschein verbraucht und kann nicht erneut verwendet werden.',slideHint:'Schiebe den Regler ganz nach rechts',redeeming:'Wird eingelöst...',successTitle:'Erfolgreich eingelöst!',successText:'Der Gutschein wurde soeben eingelöst.',alreadyTitle:'Bereits eingelöst',refundRequestedTitle:'Rückerstattung beantragt',refundedTitle:'Erstattet',alreadyText:'Dieser Gutschein wurde bereits verwendet.',errorTitle:'Fehler',errorNoCode:'Kein Gutschein-Code angegeben.',errorNotFound:'Gutschein nicht gefunden.',errorConn:'Verbindungsfehler.',errorRedeem:'Einlösung fehlgeschlagen.',swipeLabel:'→ → Wischen zum Einlösen → →',legalNote:'Offene Gutscheine dürfen im Bar-Portal sichtbar sein, der Code wird aber erst bei diesem Einlöseprozess verwendet.',lDeal:'Deal',lBar:'Bar',lPaid:'Bezahlt',lDiscount:'Rabatt',lMin:'Mindestbestellung'},
-  en:{title:'Redeem voucher – BarSclusive',loading:'Loading voucher...',redeemTitle:'Redeem voucher',warnTitle:'⚠️ Warning: Redeemable only once!',redeemWarn:'After swiping, the voucher is consumed and cannot be used again.',slideHint:'Slide the control all the way to the right',redeeming:'Redeeming...',successTitle:'Successfully redeemed!',successText:'The voucher has just been redeemed.',alreadyTitle:'Already redeemed',refundRequestedTitle:'Refund requested',refundedTitle:'Refunded',alreadyText:'This voucher has already been used.',errorTitle:'Error',errorNoCode:'No voucher code provided.',errorNotFound:'Voucher not found.',errorConn:'Connection error.',errorRedeem:'Redemption failed.',swipeLabel:'→ → Slide to redeem → →',legalNote:'Open vouchers may be visible in the bar portal, but the actual code is only used during this redemption process.',lDeal:'Deal',lBar:'Bar',lPaid:'Paid',lDiscount:'Discount',lMin:'Minimum order'},
-  it:{title:'Riscatta voucher – BarSclusive',loading:'Caricamento voucher...',redeemTitle:'Riscatta voucher',warnTitle:'⚠️ Attenzione: utilizzabile una sola volta!',redeemWarn:'Dopo lo swipe il voucher è consumato e non può essere riutilizzato.',slideHint:'Sposta il cursore completamente a destra',redeeming:'Riscatto in corso...',successTitle:'Riscattato con successo!',successText:'Il voucher è stato appena riscattato.',alreadyTitle:'Già riscattato',refundRequestedTitle:'Rimborso richiesto',refundedTitle:'Rimborsato',alreadyText:'Questo voucher è già stato utilizzato.',errorTitle:'Errore',errorNoCode:'Nessun codice voucher indicato.',errorNotFound:'Voucher non trovato.',errorConn:'Errore di connessione.',errorRedeem:'Riscatto non riuscito.',swipeLabel:'→ → Scorri per riscattare → →',legalNote:'I voucher aperti possono essere visibili nel portale bar, ma il codice effettivo viene usato solo durante questo processo di riscatto.',lDeal:'Offerta',lBar:'Bar',lPaid:'Pagato',lDiscount:'Sconto',lMin:'Ordine minimo'},
-  fr:{title:'Utiliser le bon – BarSclusive',loading:'Chargement du bon...',redeemTitle:'Utiliser le bon',warnTitle:'⚠️ Attention : utilisable une seule fois !',redeemWarn:'Après le glissement, le bon est consommé et ne peut plus être réutilisé.',slideHint:'Glissez le curseur complètement vers la droite',redeeming:'Utilisation en cours...',successTitle:'Utilisé avec succès !',successText:'Le bon vient d’être utilisé.',alreadyTitle:'Déjà utilisé',refundRequestedTitle:'Remboursement demandé',refundedTitle:'Remboursé',alreadyText:'Ce bon a déjà été utilisé.',errorTitle:'Erreur',errorNoCode:'Aucun code de bon indiqué.',errorNotFound:'Bon non trouvé.',errorConn:'Erreur de connexion.',errorRedeem:'Échec de l’utilisation.',swipeLabel:'→ → Glisser pour utiliser → →',legalNote:'Les bons ouverts peuvent être visibles dans le portail bar, mais le code effectif n’est utilisé que pendant ce processus d’utilisation.',lDeal:'Offre',lBar:'Bar',lPaid:'Payé',lDiscount:'Réduction',lMin:'Commande minimum'}
+  de:{title:'Gutschein einlösen – BarSclusive',loading:'Gutschein wird geladen...',redeemTitle:'Gutschein einlösen',warnTitle:'⚠️ Achtung: Nur einmal einlösbar!',redeemWarn:'Nach dem Wischen ist der Gutschein verbraucht und kann nicht erneut verwendet werden.',slideHint:'Schiebe den Regler ganz nach rechts',redeeming:'Wird eingelöst...',successTitle:'Erfolgreich eingelöst!',successText:'Der Gutschein wurde soeben eingelöst.',alreadyTitle:'Bereits eingelöst',alreadyText:'Dieser Gutschein wurde bereits verwendet.',errorTitle:'Fehler',errorNoCode:'Kein Gutschein-Code angegeben.',errorNotFound:'Gutschein nicht gefunden.',errorConn:'Verbindungsfehler.',errorRedeem:'Einlösung fehlgeschlagen.',swipeLabel:'→ → Wischen zum Einlösen → →',legalNote:'Offene Gutscheine dürfen im Bar-Portal sichtbar sein, der Code wird aber erst bei diesem Einlöseprozess verwendet.',lDeal:'Deal',lBar:'Bar',lPaid:'Bezahlt',lDiscount:'Rabatt',lMin:'Mindestbestellung'},
+  en:{title:'Redeem voucher – BarSclusive',loading:'Loading voucher...',redeemTitle:'Redeem voucher',warnTitle:'⚠️ Warning: Redeemable only once!',redeemWarn:'After swiping, the voucher is consumed and cannot be used again.',slideHint:'Slide the control all the way to the right',redeeming:'Redeeming...',successTitle:'Successfully redeemed!',successText:'The voucher has just been redeemed.',alreadyTitle:'Already redeemed',alreadyText:'This voucher has already been used.',errorTitle:'Error',errorNoCode:'No voucher code provided.',errorNotFound:'Voucher not found.',errorConn:'Connection error.',errorRedeem:'Redemption failed.',swipeLabel:'→ → Slide to redeem → →',legalNote:'Open vouchers may be visible in the bar portal, but the actual code is only used during this redemption process.',lDeal:'Deal',lBar:'Bar',lPaid:'Paid',lDiscount:'Discount',lMin:'Minimum order'},
+  it:{title:'Riscatta voucher – BarSclusive',loading:'Caricamento voucher...',redeemTitle:'Riscatta voucher',warnTitle:'⚠️ Attenzione: utilizzabile una sola volta!',redeemWarn:'Dopo lo swipe il voucher è consumato e non può essere riutilizzato.',slideHint:'Sposta il cursore completamente a destra',redeeming:'Riscatto in corso...',successTitle:'Riscattato con successo!',successText:'Il voucher è stato appena riscattato.',alreadyTitle:'Già riscattato',alreadyText:'Questo voucher è già stato utilizzato.',errorTitle:'Errore',errorNoCode:'Nessun codice voucher indicato.',errorNotFound:'Voucher non trovato.',errorConn:'Errore di connessione.',errorRedeem:'Riscatto non riuscito.',swipeLabel:'→ → Scorri per riscattare → →',legalNote:'I voucher aperti possono essere visibili nel portale bar, ma il codice effettivo viene usato solo durante questo processo di riscatto.',lDeal:'Offerta',lBar:'Bar',lPaid:'Pagato',lDiscount:'Sconto',lMin:'Ordine minimo'},
+  fr:{title:'Utiliser le bon – BarSclusive',loading:'Chargement du bon...',redeemTitle:'Utiliser le bon',warnTitle:'⚠️ Attention : utilisable une seule fois !',redeemWarn:'Après le glissement, le bon est consommé et ne peut plus être réutilisé.',slideHint:'Glissez le curseur complètement vers la droite',redeeming:'Utilisation en cours...',successTitle:'Utilisé avec succès !',successText:'Le bon vient d’être utilisé.',alreadyTitle:'Déjà utilisé',alreadyText:'Ce bon a déjà été utilisé.',errorTitle:'Erreur',errorNoCode:'Aucun code de bon indiqué.',errorNotFound:'Bon non trouvé.',errorConn:'Erreur de connexion.',errorRedeem:'Échec de l’utilisation.',swipeLabel:'→ → Glisser pour utiliser → →',legalNote:'Les bons ouverts peuvent être visibles dans le portail bar, mais le code effectif n’est utilisé que pendant ce processus d’utilisation.',lDeal:'Offre',lBar:'Bar',lPaid:'Payé',lDiscount:'Réduction',lMin:'Commande minimum'}
 };
 function tt(k){ return (T[currentLang] && T[currentLang][k]) || T.de[k] || k; }
 function setLang(l){
@@ -155,11 +163,9 @@ async function loadVoucher() {
     var data = await resp.json();
     if (!data.success || !data.voucher) { showError(data.error || tt('errorNotFound'), !!data.error); return; }
     voucherData = data.voucher;
-    var status = String(voucherData.status || '').toLowerCase();
-    if (status === 'redeemed' || status === 'refund_requested' || status === 'refunded') {
-      show(status === 'redeemed' ? 'stateAlready' : 'stateError');
-      if (status === 'redeemed') document.getElementById('alreadyCode').textContent = voucherData.code || _code;
-      else document.getElementById('errorMsg').textContent = status === 'refund_requested' ? tt('refundRequestedTitle') : tt('refundedTitle');
+    if (voucherData.status === 'redeemed') {
+      show('stateAlready');
+      document.getElementById('alreadyCode').textContent = voucherData.code || _code;
       return;
     }
     document.getElementById('readyCode').textContent = voucherData.code || _code;
@@ -222,12 +228,6 @@ async function doRedeem() {
     } else if (data.error && data.error.toLowerCase().indexOf('eingel') !== -1) {
       show('stateAlready');
       document.getElementById('alreadyCode').textContent = _code;
-    } else if (data.error && data.error.toLowerCase().indexOf('rückerstattung beantragt') !== -1) {
-      show('stateError');
-      document.getElementById('errorMsg').textContent = tt('refundRequestedTitle');
-    } else if (data.error && data.error.toLowerCase().indexOf('erstattet') !== -1) {
-      show('stateError');
-      document.getElementById('errorMsg').textContent = tt('refundedTitle');
     } else {
       showError(data.error || tt('errorRedeem'), !!data.error);
     }
