@@ -141,8 +141,27 @@
     }
   </style>
   <link rel="icon" type="image/png" href="logo.png">
+
+  <style id="bs-bar-refresh-style">
+    :root{--bp-bg:#050505;--bp-panel:#121212;--bp-panel-2:#191919;--bp-stroke:rgba(255,255,255,.08);--bp-text:#f5f5f7;--bp-muted:#a1a1aa;--bp-pink:#ff3366;--bp-shadow:0 18px 48px rgba(0,0,0,.28)}
+    body.bar-portal-page{background:radial-gradient(circle at top,#171717 0%,#090909 34%,#050505 100%)}
+    .header{position:sticky;top:0;z-index:90;background:rgba(8,8,8,.9);backdrop-filter:blur(20px);border-bottom-color:var(--bp-stroke);padding:12px 18px}
+    .logo img{height:44px !important}.container{max-width:1220px;padding-top:22px}.card,.stat-card,.deal-item,.redeem-box,.modal-box{background:linear-gradient(180deg,#151515 0%,#101010 100%);border-color:var(--bp-stroke);box-shadow:var(--bp-shadow)}
+    #loginScreen .container{max-width:1100px}.tabs{background:rgba(255,255,255,.03);padding:6px;border-radius:999px;border:1px solid var(--bp-stroke);margin-bottom:22px}.tab{border-radius:999px;border-bottom:none;padding:12px 18px}.tab.active{background:rgba(255,51,102,.15);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,51,102,.28)}
+    .portal-benefits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}.benefit-card{background:linear-gradient(180deg,#161616,#111);border:1px solid var(--bp-stroke);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:6px;color:#c8c8cf}.benefit-card strong{font-size:15px;color:#fff}
+    #loginForm .card,#registerForm .card{max-width:none}.form-input,.form-select{background:#151515;border-color:var(--bp-stroke);border-radius:16px;min-height:48px}.btn-pink,.btn-ghost,.btn-sm{border-radius:14px}.btn-pink{background:linear-gradient(180deg,#ff4d7d,#ff3366);box-shadow:0 14px 30px rgba(255,51,102,.24)}.btn-ghost{background:#171717}
+    .toggle-check,.pill,.cat-check{background:#171717;border-color:var(--bp-stroke)}
+    .stats-grid{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}.stat-card{min-height:120px;border-radius:18px}.stat-label{font-size:12px;text-transform:uppercase;letter-spacing:.06em}.stat-value{font-size:30px;letter-spacing:-.03em}
+    #dashOverview .card,#dashSettings .card,#dashNewdeal .card{max-width:none}.deal-item{border-radius:18px}.deal-actions{gap:10px}
+    .builder-extras{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin:0 0 18px}.builder-preview-card{background:#141414;border:1px solid var(--bp-stroke);border-radius:20px;padding:18px}.builder-preview-label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#a7a7b0;margin-bottom:12px}.builder-preview-shell{display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:stretch}.builder-preview-image{border-radius:16px;background:linear-gradient(135deg,#232323,#141414);min-height:140px;overflow:hidden;display:flex;align-items:center;justify-content:center}.builder-preview-image img{width:100%;height:100%;object-fit:cover}.builder-preview-title{font-size:20px;font-weight:800;line-height:1.1;margin-bottom:8px}.builder-preview-meta{color:#a1a1aa;font-size:13px;margin-bottom:10px}.builder-preview-price{display:flex;align-items:baseline;gap:10px}.builder-preview-price span{font-size:28px;font-weight:800;color:#fff}.builder-preview-price small{color:#6f6f78;text-decoration:line-through}.builder-preview-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.mini-chip{display:inline-flex;align-items:center;padding:7px 11px;border-radius:999px;background:#1d1d1d;border:1px solid var(--bp-stroke);font-size:12px;color:#ddd;font-weight:700}.estimate-value{font-size:34px;font-weight:800;letter-spacing:-.03em}.estimate-copy{color:#a4a4ad;font-size:13px;line-height:1.55;margin-top:8px}
+    .form-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px;margin-bottom:16px}.form-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px;font-weight:800;margin-bottom:14px}.form-section-title small{font-size:12px;color:#9fa0aa;font-weight:600}
+    .correspondence-help{margin-top:8px}.mwst-legacy-block{display:none !important}
+    @media(max-width:980px){.portal-benefits,.builder-extras{grid-template-columns:1fr}.builder-preview-shell{grid-template-columns:1fr}.container{padding-left:14px;padding-right:14px}}
+    @media(max-width:768px){.header{padding:10px 12px}.logo img{height:38px !important}.tabs{overflow:auto}.tab{padding:11px 14px}.container{padding-top:16px}#loginScreen{padding:20px 12px}.card{padding:20px;border-radius:20px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card{min-height:108px}.stat-value{font-size:24px}}
+    @media(max-width:560px){.stats-grid{grid-template-columns:1fr 1fr}.builder-preview-title{font-size:18px}.benefit-card{padding:16px}}
+  </style>
 </head>
-<body>
+<body class="bar-portal-page">
 <div id="toast" class="toast" role="alert"></div>
 
 <div class="header">
@@ -166,6 +185,11 @@
       <button class="tab active" data-auth-tab="login" data-i18n="login">Login</button>
       <button class="tab" data-auth-tab="register" data-i18n="register">Registrieren</button>
     </div>
+    <div class="portal-benefits">
+      <div class="benefit-card"><strong data-i18n="benefitFree">Kostenlose Registrierung</strong><span data-i18n="benefitFast">Deal in wenigen Minuten erstellt</span></div>
+      <div class="benefit-card"><strong data-i18n="benefitPayout">90 % Auszahlung</strong><span data-i18n="benefitPayoutSub">Nach Einlösung bei Fixpreis-Deals</span></div>
+      <div class="benefit-card"><strong data-i18n="benefitManaged">Mehr Sichtbarkeit</strong><span data-i18n="benefitManagedSub">BarSclusive bringt Gäste direkt zu dir</span></div>
+    </div>
     <div id="loginForm" class="tab-content active">
       <div class="card">
         <h2>🔑 <span data-i18n="barLogin">Bar Login</span></h2>
@@ -177,16 +201,6 @@
         <div class="form-group">
           <label class="form-label" for="loginPassword" data-i18n="password">Passwort</label>
           <input type="password" class="form-input" id="loginPassword" autocomplete="current-password">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="loginLangSelect" data-i18n="correspondenceLang">Korrespondenzsprache</label>
-          <select class="form-input" id="loginLangSelect">
-            <option value="" data-i18n="keepSavedLanguage">Gespeicherte Sprache beibehalten</option>
-            <option value="de" data-i18n="langGerman">Deutsch</option>
-            <option value="en" data-i18n="langEnglish">English</option>
-            <option value="it" data-i18n="langItalian">Italiano</option>
-            <option value="fr" data-i18n="langFrench">Français</option>
-          </select>
         </div>
         <button class="btn-pink" id="btnBarLogin" data-i18n="loginBtn">Einloggen</button>
         <p style="margin-top:16px;text-align:center;color:#999;font-size:14px">
@@ -245,6 +259,7 @@
             <option value="it" data-i18n="langItalian">Italiano</option>
             <option value="fr" data-i18n="langFrench">Français</option>
           </select>
+          <small class="input-help correspondence-help" data-i18n="correspondenceHint">Diese Sprache wird für E-Mails und die Kommunikation mit der Bar verwendet.</small>
         </div>
         <div class="form-group">
           <label class="form-label" for="regBarPass" data-i18n="passwordMin">Passwort (mind. 8 Zeichen) *</label>
@@ -262,14 +277,14 @@
           </div>
           <small class="input-help" data-i18n="ibanHelp">Nur gültige IBAN-Zeichen. Die Eingabe wird automatisch formatiert.</small>
         </div>
-        <div class="form-group" style="display:none">
+        <div class="form-group mwst-legacy-block" style="display:none">
           <label class="form-label" data-i18n="mwstLabel">MWST</label>
-          <label class="toggle-check" for="regNoMwst" style="display:none">
-            <input type="checkbox" id="regNoMwst">
+          <label class="toggle-check" for="regNoMwst">
+            <input type="checkbox" id="regNoMwst" checked>
             <span data-i18n="notMwstLiable">Ich bin nicht MWST-pflichtig</span>
           </label>
         </div>
-        <div class="form-group" id="regMwstNumGroup" style="display:none">
+        <div class="form-group mwst-legacy-block" id="regMwstNumGroup" style="display:none">
           <label class="form-label" for="regMwstNumber" data-i18n="mwstNumberReq">MWST-Nummer *</label>
           <div class="codebox-field mwst-field" id="regMwstNumberField" style="--slots:16">
             <input type="text" class="codebox-input" id="regMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
@@ -336,45 +351,45 @@
           <input type="number" class="form-input" id="dealQty" min="0" value="0">
         </div>
         <div class="form-group">
-          <label class="form-label" id="newDealImageLabel">Bild (optional)</label>
+          <label class="form-label">Bild (optional)</label>
           <input type="file" class="form-input" id="dealImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
-          <small style="color:#999;font-size:12px" id="newDealImageHelp">JPG, PNG oder WebP, max. 2 MB</small>
+          <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 2 MB</small>
           <div id="imagePreview" style="margin-top:8px;display:none"><img id="imagePreviewImg" style="max-width:200px;border-radius:8px" alt="Vorschau"></div>
           <input type="hidden" id="dealImageUrl">
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="categoriesLbl">Kategorien * (mind. 1)</label>
           <div class="cats-grid">
-            <label class="cat-check"><input type="checkbox" name="cat" value="breakfast"> <span id="barCatBreakfast">🥐 Breakfast</span></label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="lunch"> <span id="barCatLunch">🍽️ Lunch</span></label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> <span id="barCatAperitif">🍹 Aperitif</span></label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> <span id="barCatDinner">🍷 Dinner</span></label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="events"> <span id="barCatEvents">🎉 Events</span></label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> <span id="barCatDiscount">🏷️ Pauschalgutschein</span></label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="breakfast"> 🥐 Breakfast</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="lunch"> 🍽️ Lunch</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
+            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ Pauschalgutschein</label>
           </div>
         </div>
         <!-- Pauschalgutschein fields -->
         <div id="pauschalFields" style="display:none;background:#2a2a2a;padding:16px;border-radius:10px;margin-bottom:18px;border:1px solid #FF3366">
-          <h3 id="pauschalSettingsTitle" style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
+          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="form-group" style="margin-bottom:0">
-              <label class="form-label" for="discountPercent" id="discountPercentLabel">Rabatt % (mind. 15%)</label>
+              <label class="form-label" for="discountPercent">Rabatt % (mind. 15%)</label>
               <input type="number" class="form-input" id="discountPercent" min="15" max="100" value="15">
             </div>
             <div class="form-group" style="margin-bottom:0">
-              <label class="form-label" for="minOrder" id="minOrderLabel">Mindestbestellung CHF (mind. 40)</label>
+              <label class="form-label" for="minOrder">Mindestbestellung CHF (mind. 40)</label>
               <input type="number" class="form-input" id="minOrder" min="40" value="40">
             </div>
           </div>
           <div class="form-group" style="margin-top:12px;margin-bottom:0">
-            <label class="form-label" for="appliesTo" id="appliesToLabel">Gilt für</label>
+            <label class="form-label" for="appliesTo">Gilt für</label>
             <select class="form-input" id="appliesTo" style="background:#1a1a1a;color:#fff">
-              <option value="all" id="appliesToAll">Alles</option>
-              <option value="drinks" id="appliesToDrinks">Nur Getränke</option>
-              <option value="food" id="appliesToFood">Nur Essen</option>
+              <option value="all">Alles</option>
+              <option value="drinks">Nur Getränke</option>
+              <option value="food">Nur Essen</option>
             </select>
           </div>
-          <p id="pauschalInfoHint" style="color:#999;font-size:12px;margin-top:10px">💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.</p>
+          <p id="pauschalInfoHint" data-i18n="pauschalHint" style="color:#999;font-size:12px;margin-top:10px">💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.</p>
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="validityLbl">Gültigkeitsdauer *</label>
@@ -407,13 +422,13 @@
             </div>
           </div>
           <div style="margin-top:14px">
-            <label class="form-label" id="timeWindowLabel">Zeitfenster (optional)</label>
+            <label class="form-label">Zeitfenster (optional)</label>
             <div class="cats-grid" style="margin-bottom:10px">
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> <span id="timeSlotMorningLabel">🌅 Morgen (06–12h)</span></label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> <span id="timeSlotMiddayLabel">☀️ Mittag (11–17h)</span></label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> <span id="timeSlotEveningLabel">🌙 Abend (16–00h)</span></label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> 🌅 Morgen (06–12h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> ☀️ Mittag (11–17h)</label>
+              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> 🌙 Abend (16–00h)</label>
             </div>
-            <small id="customTimesLabel" style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
+            <small style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
             <div class="form-group">
@@ -430,6 +445,27 @@
           <input type="checkbox" id="dealActive" checked>
           <label for="dealActive" data-i18n="dealActiveLabel">Deal sofort aktiv</label>
         </div>
+        
+        <div class="builder-extras">
+          <div class="builder-preview-card">
+            <div class="builder-preview-label" data-i18n="previewLabel">So sehen Kund:innen deinen Deal</div>
+            <div class="builder-preview-shell">
+              <div class="builder-preview-image" id="builderPreviewImageWrap"><img id="builderPreviewImage" alt="Deal Vorschau" style="display:none"></div>
+              <div class="builder-preview-body">
+                <div class="builder-preview-title" id="builderPreviewTitle">Dein Deal-Titel</div>
+                <div class="builder-preview-meta" id="builderPreviewMeta">BarSclusive • Live-Vorschau</div>
+                <div class="builder-preview-price"><span id="builderPreviewPrice">0.00 CHF</span><small id="builderPreviewOldPrice"></small></div>
+                <div class="builder-preview-badges"><span class="mini-chip" id="builderPreviewChipType" data-i18n="previewBadgeDeal">Deal</span><span class="mini-chip" id="builderPreviewChipValidity" data-i18n="previewBadgeActive">Aktiv</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="builder-preview-card builder-estimate-card">
+            <div class="builder-preview-label" data-i18n="estimateLabel">Auszahlungs-Schätzung</div>
+            <div class="estimate-value" id="builderPayoutEstimate">0.00 CHF</div>
+            <p class="estimate-copy" id="builderPayoutCopy" data-i18n="estimateHint">Geschätzter Betrag pro Einlösung für Fixpreis-Deals.</p>
+          </div>
+        </div>
+
         <button class="btn-pink" id="btnCreateDeal" data-i18n="createDeal">Deal erstellen</button>
       </div>
     </div>
@@ -439,25 +475,7 @@
       <div class="deal-list" id="dealList"></div>
     </div>
 
-
-    <!-- REDEEM -->
-    <div id="dashRedeem" class="tab-content">
-      <div class="redeem-box">
-        <h2>🔑 <span data-i18n="redeemTitle">Gutschein einlösen</span></h2>
-        <p style="color:#999;font-size:14px;margin-bottom:20px" data-i18n="redeemHint">Gutschein-Code des Kunden eingeben</p>
-        <div class="form-group">
-          <input type="text" class="form-input" id="redeemCode"
-                 placeholder="XXXX-XXXX-XXXX"
-                 style="text-align:center;font-size:20px;letter-spacing:2px;font-weight:700;text-transform:uppercase">
-        </div>
-        <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
-        <div id="redeemResult" style="display:none;margin-top:20px" class="code-display">
-          <div class="code-title" data-i18n="redeemSuccess">✅ Gutschein eingelöst!</div>
-          <div class="code-val" id="redeemDeal"></div>
-        </div>
-        <div id="redeemErr" class="err-msg" style="margin-top:12px"></div>
-      </div>
-    </div>
+    <!-- VOUCHERS -->
 
     <!-- SETTINGS -->
     <div id="dashSettings" class="tab-content">
@@ -499,14 +517,14 @@
             <input type="text" class="form-input" id="profTwint" placeholder="+41...">
           </div>
         </div>
-        <div style="margin-bottom:18px;display:none">
+        <div class="mwst-legacy-block" style="margin-bottom:18px;display:none">
           <label class="form-label" data-i18n="mwstLabel">MWST</label>
-          <label class="toggle-check" for="profNoMwst" style="display:none">
-            <input type="checkbox" id="profNoMwst">
+          <label class="toggle-check" for="profNoMwst">
+            <input type="checkbox" id="profNoMwst" checked>
             <span data-i18n="notMwstLiable">Ich bin nicht MWST-pflichtig</span>
           </label>
         </div>
-        <div class="form-group" id="profMwstNumGroup" style="display:none">
+        <div class="form-group mwst-legacy-block" id="profMwstNumGroup" style="display:none">
           <label class="form-label" data-i18n="mwstNumberLabel">MWST-Nummer</label>
           <div class="codebox-field mwst-field" id="profMwstNumberField" style="--slots:16">
             <input type="text" class="codebox-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
@@ -536,6 +554,7 @@
             <option value="it" data-i18n="langItalian">Italiano</option>
             <option value="fr" data-i18n="langFrench">Français</option>
           </select>
+          <small class="input-help correspondence-help" data-i18n="correspondenceHint">Diese Sprache wird für E-Mails und die Kommunikation mit der Bar verwendet.</small>
         </div>
         <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
         <hr style="border:none;border-top:1px solid #333;margin:24px 0">
@@ -596,46 +615,46 @@
       <input type="number" class="form-input" id="editQty" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label" id="editImageLabel">Bild ändern (optional)</label>
+      <label class="form-label">Bild ändern (optional)</label>
       <input type="file" class="form-input" id="editImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
       <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild"></div>
       <input type="hidden" id="editImageUrl">
     </div>
     <div class="form-group">
-      <label class="form-label" id="editValidityLabel">Gültigkeitsdauer</label>
+      <label class="form-label">Gültigkeitsdauer</label>
       <div class="validity-toggle">
-        <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> <span id="editRecurringText">Wiederkehrend</span></label>
-        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> <span id="editSingleText">Einmaliges Datum</span></label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> Wiederkehrend</label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> Einmaliges Datum</label>
       </div>
     </div>
     <div id="editRecurringFields" style="margin-top:8px">
-      <label class="form-label" id="editWeekdaysLabel">Wochentage</label>
+      <label class="form-label" data-i18n="weekdaysLbl">Wochentage</label>
       <div class="weekdays" id="editWeekdays">
         <div class="wd-btn" data-wd="Mo">Mo</div><div class="wd-btn" data-wd="Di">Di</div><div class="wd-btn" data-wd="Mi">Mi</div><div class="wd-btn" data-wd="Do">Do</div><div class="wd-btn" data-wd="Fr">Fr</div><div class="wd-btn" data-wd="Sa">Sa</div><div class="wd-btn" data-wd="So">So</div>
       </div>
     </div>
     <div id="editSingleFields" style="display:none;margin-top:8px">
       <div class="form-group">
-        <label class="form-label" id="editDateLabel">Datum</label>
+        <label class="form-label">Datum</label>
         <input type="date" class="form-input" id="editSingleDate">
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
       <div class="form-group">
-        <label class="form-label" id="editFromLabel">Von (Uhrzeit)</label>
+        <label class="form-label">Von (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeFrom">
       </div>
       <div class="form-group">
-        <label class="form-label" id="editToLabel">Bis (Uhrzeit)</label>
+        <label class="form-label">Bis (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeTo">
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label" id="editTimeSlotsLabel">Zeitfenster</label>
+      <label class="form-label">Zeitfenster</label>
       <div class="cats-grid" style="margin-top:6px">
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> <span id="editTimeSlotMorningLabel">🌅 Morgen</span></label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> <span id="editTimeSlotMiddayLabel">☀️ Mittag</span></label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> <span id="editTimeSlotEveningLabel">🌙 Abend</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> 🌅 Morgen</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> ☀️ Mittag</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> 🌙 Abend</label>
       </div>
     </div>
     <div class="form-check" style="margin-bottom:20px">
@@ -687,7 +706,7 @@
 <div id="voucherDetailModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box" style="max-width:760px">
     <div class="modal-title">
-      <span id="voucherDetailTitle" data-i18n="voucherDetailTitle">🎟️ Gutschein</span>
+      <span id="voucherDetailTitle">🎟️ Gutschein</span>
       <button class="modal-close" id="btnCloseVoucherDetail">✕</button>
     </div>
     <div id="voucherDetailBody"></div>
@@ -708,6 +727,6 @@
   </p>
 </div>
 
-<script src="bar-app.js?v=20260320-3"></script>
+<script src="bar-app.js?v=20260318-2"></script>
 </body>
 </html>
