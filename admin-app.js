@@ -800,7 +800,7 @@ function renderStats(period) {
     ['Verkaufsvolumen',fmtChf(totalRevenue)+' CHF','gross_sales'],
     ['Provision brutto',fmtChf(totalFees)+' CHF','gross_commission'],
     ['Stripe-Gebühren',fmtChf(totalStripeFees)+' CHF','stripe_fees'],
-    ['Plattform netto',fmtChf(totalPlatformNet)+' CHF','platform_net'],
+    ['Provision netto',fmtChf(totalPlatformNet)+' CHF','platform_net'],
     ['Schuld an Bars',fmtChf(pendingPayout)+' CHF','pending_payout'],
     ['Ausgezahlt',fmtChf(totalPaidOut)+' CHF','paid_out'],
     ['Eingelöst',redeemed,'redeemed'],
@@ -922,7 +922,7 @@ function showStatDetail(label, filterKey) {
 function renderStatOrderDetail(el,label,orders,barId){
   var html='<div class="section-title" style="margin-top:20px">'+esc(label)+' ('+orders.length+')</div>';
   if(!orders.length){html+='<div class="no-data">Keine Daten</div>';el.innerHTML=html;return;}
-  html+='<div class="overflow-x"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th>Datum</th><th>Deal</th><th>Bar</th><th>Käufer</th><th>Email</th><th>Verkauf</th><th>Provision brutto</th><th>Stripe-Gebühr</th><th>Plattform netto</th><th>Status</th><th>Rückerstattung</th></tr></thead><tbody>';
+  html+='<div class="overflow-x"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th>Datum</th><th>Deal</th><th>Bar</th><th>Käufer</th><th>Email</th><th>Verkauf</th><th>Provision brutto</th><th>Stripe-Gebühr</th><th>Provision netto</th><th>Status</th><th>Rückerstattung</th></tr></thead><tbody>';
   var totalSales=0,totalCommission=0,totalStripe=0,totalNet=0;
   orders.forEach(function(o){
     var fin = getOrderFinancials(o, barId);
@@ -948,3 +948,93 @@ function setStatsCustomRange() {
   if(_statsData) renderStats('custom');
 }
 var _customFrom='',_customTo='';
+
+
+// =============================================
+// FINAL PATCH: refund-aware admin metrics
+// =============================================
+(function(){
+  function isRefundedVoucher_(v) { return String(v && v.status || '').toLowerCase() === 'refunded'; }
+  var _origGetOrderFinancialsFinal = getOrderFinancials;
+  getOrderFinancials = function(order, barId) {
+    var fin = _origGetOrderFinancialsFinal(order, barId);
+    var vouchers = order && order._vouchers ? order._vouchers : [];
+    var relevant = barId ? vouchers.filter(function(v){ return String(v.bar_id) === String(barId); }) : vouchers.slice();
+    if (!relevant.length) return fin;
+    var sales = 0, gross = 0, payout = 0;
+    relevant.forEach(function(v){ if (isRefundedVoucher_(v)) return; sales += Number(v.price_paid || 0); gross += Number(v.platform_fee || 0); payout += Number(v.bar_payout || 0); });
+    var stripeFee = Number(order && order.stripe_fee || 0);
+    var globalOriginalSales = 0; vouchers.forEach(function(v){ globalOriginalSales += Number(v.price_paid || 0); });
+    var orderTotal = Number(order && order.price || 0) || globalOriginalSales;
+    var allocatedStripe = barId ? ((orderTotal > 0) ? stripeFee * ((sales > 0 ? sales : 0) / orderTotal) : 0) : stripeFee;
+    return { included: fin.included, sales: sales, grossCommission: gross, stripeFee: allocatedStripe, platformNet: gross - allocatedStripe, barPayout: payout };
+  };
+  var _origLoadOrdersFinal = loadOrders;
+  loadOrders = async function(force) { await _origLoadOrdersFinal(force); _ordersData = (_ordersData || []).map(function(o){ var fin = getOrderFinancials(o); o._grossCommission = fin.grossCommission; o._stripeFee = fin.stripeFee; o._platformNet = fin.platformNet; return o; }); };
+})();
+
+
+// =============================================
+// FINAL PATCH 2: admin refund status rendering
+// =============================================
+(function(){
+  var _origRenderOrdersFinal2 = renderOrders;
+  renderOrders = function() {
+    _origRenderOrdersFinal2();
+    var tbody = document.getElementById('ordersBody');
+    if (!tbody) return;
+    Array.prototype.forEach.call(tbody.querySelectorAll('tr'), function(tr){
+      if (tr.children.length < 13) return;
+      var refundCell = tr.children[11];
+      var actionCell = tr.children[12];
+      var txt = (refundCell.textContent || '').trim();
+      if (txt === 'partial_requested') refundCell.innerHTML = '<span style="color:#FFC107">⚠️ Teilweise angefordert</span>';
+      if (txt === 'partial_completed') refundCell.innerHTML = '<span style="color:#4CAF50">↩️ Teilweise erstattet</span>';
+      if (txt === 'requested' && actionCell && !actionCell.querySelector('[data-refund-oid]')) {
+        var delBtn = actionCell.querySelector('[data-del-oid]');
+        var oid = delBtn ? delBtn.getAttribute('data-del-oid') : '';
+        if (oid) {
+          var btn=document.createElement('button');
+          btn.className='btn-sm btn-red'; btn.textContent='Erstatten'; btn.setAttribute('data-refund-oid',oid);
+          btn.addEventListener('click', function(){ processRefund(oid); });
+          actionCell.insertBefore(btn, actionCell.firstChild);
+          actionCell.insertBefore(document.createTextNode(' '), btn.nextSibling);
+        }
+      }
+    });
+  };
+
+  renderVouchers = function() {
+    var data = _vouchersData.slice();
+    Object.keys(_voucherFilters).forEach(function(k){
+      var q=String(_voucherFilters[k]||'').toLowerCase(); if(!q) return;
+      data=data.filter(function(v){ var val=''; if(k==='date') val=fmtDate(v.created_at); else if(k==='code') val=v.code||''; else if(k==='deal') val=v.deal_title||''; else if(k==='bar') val=v.bar_name||''; else if(k==='buyer') val=v.buyer_name||''; else if(k==='buyer_email') val=v.buyer_email||''; else if(k==='price') val=fmtChf(v.price_paid); else if(k==='fee') val=fmtChf(v.platform_fee); else if(k==='payout') val=fmtChf(v.bar_payout); else if(k==='status') val=v.status||''; else if(k==='pay_status') val=v.payout_status||''; return String(val).toLowerCase().indexOf(q)!==-1; });
+    });
+    var tbody = document.getElementById('vouchersBody'); tbody.innerHTML='';
+    var ftr=document.createElement('tr'); ftr.style.background='#1a1a1a';
+    ['date','code','deal','bar','buyer','buyer_email','price','fee','payout','status','pay_status',''].forEach(function(k){ var ftd=document.createElement('td');ftd.style.padding='4px'; if(k){var inp=document.createElement('input');inp.type='text';inp.placeholder='🔍';inp.value=_voucherFilters[k]||'';inp.style.cssText='width:100%;background:#222;color:#ccc;border:1px solid #444;padding:3px 6px;font-size:11px;border-radius:4px;box-sizing:border-box';inp.addEventListener('input',function(){_voucherFilters[k]=this.value;renderVouchers();});ftd.appendChild(inp);} ftr.appendChild(ftd); });
+    tbody.appendChild(ftr);
+    if(!data.length){tbody.innerHTML+='<tr><td colspan="12" class="no-data">Keine Gutscheine</td></tr>';return;}
+    var tP=0,tF=0,tA=0;
+    data.forEach(function(v){
+      var refunded = String(v.status||'').toLowerCase()==='refunded';
+      if (!refunded) { tP+=Number(v.price_paid||0); tF+=Number(v.platform_fee||0); tA+=Number(v.bar_payout||0); }
+      var statusKey = String(v.status||'').toLowerCase();
+      var stBadge = statusKey==='redeemed' ? '<span class="badge b-paid">✓ Eingelöst</span>' : statusKey==='refund_requested' ? '<span class="badge" style="background:#f59e0b;color:#111">Refund beantragt</span>' : statusKey==='refunded' ? '<span class="badge" style="background:#EF4444;color:#fff">Erstattet</span>' : '<span class="badge b-active">'+esc(v.status||'-')+'</span>';
+      var payBadge = v.payout_status==='paid' ? '<span style="color:#3b82f6;font-weight:600">Bezahlt</span>' : '<span style="color:#ef4444">Ausstehend</span>';
+      var aHtml='';
+      if(v.payout_status==='pending'&&statusKey==='redeemed') aHtml+='<button class="btn-sm btn-blue" style="font-size:10px" data-markpaid-vid="'+v.id+'">💸</button> ';
+      if(statusKey==='refund_requested') aHtml+='<button class="btn-sm btn-red" style="font-size:10px" data-refund-vid="'+v.id+'" data-refund-code="'+(v.code||'')+'">↩️</button> ';
+      aHtml+='<button class="btn-sm" style="background:#333;color:#999;font-size:10px" data-del-vid="'+v.id+'">🗑</button>';
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td style="font-size:11px">'+fmtDate(v.created_at)+'</td><td style="font-family:monospace;font-size:11px">'+esc(v.code||'-')+'</td><td>'+esc(v.deal_title||'-')+'</td><td>'+esc(v.bar_name||'-')+'</td><td>'+esc(v.buyer_name||'-')+'</td><td style="font-size:11px">'+esc(v.buyer_email||'-')+'</td><td style="text-align:right">'+fmtChf(refunded ? 0 : v.price_paid)+'</td><td style="text-align:right;color:#ef4444">'+fmtChf(refunded ? 0 : v.platform_fee)+'</td><td style="text-align:right;color:#22c55e">'+fmtChf(refunded ? 0 : v.bar_payout)+'</td><td>'+stBadge+'</td><td>'+payBadge+'</td><td>'+aHtml+'</td>';
+      tbody.appendChild(tr);
+    });
+    var sumTr=document.createElement('tr'); sumTr.style.cssText='background:#1a1a1a;font-weight:700;border-top:2px solid #FF3366';
+    sumTr.innerHTML='<td colspan="6" style="padding:8px;color:#FF3366">'+data.length+' Gutscheine</td><td style="text-align:right;padding:8px">'+tP.toFixed(2)+'</td><td style="text-align:right;padding:8px;color:#ef4444">'+tF.toFixed(2)+'</td><td style="text-align:right;padding:8px;color:#22c55e">'+tA.toFixed(2)+'</td><td colspan="3"></td>';
+    tbody.appendChild(sumTr);
+    tbody.querySelectorAll('[data-markpaid-vid]').forEach(function(b){b.addEventListener('click',function(){markVoucherPaid(this.getAttribute('data-markpaid-vid'));});});
+    tbody.querySelectorAll('[data-refund-vid]').forEach(function(b){b.addEventListener('click',function(){refundVoucher(this.getAttribute('data-refund-vid'),this.getAttribute('data-refund-code'));});});
+    tbody.querySelectorAll('[data-del-vid]').forEach(function(b){b.addEventListener('click',function(){deleteVoucher(this.getAttribute('data-del-vid'));});});
+  };
+})();
