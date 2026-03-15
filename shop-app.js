@@ -1665,7 +1665,6 @@ function addToCart(deal) {
   if (existing) existing.quantity++;
   else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
   saveCart();
-  openCartPanel();
   showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
 }
 
