@@ -3,81 +3,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Impressum – BarSclusive</title>
-  <link rel="icon" type="image/png" href="logo.png">
+  <title>Kontakt - BarSclusive</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#000;color:#fff;min-height:100vh}
-    .header{background:#111;padding:18px 24px;border-bottom:1px solid #1f1f1f;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-    .back{color:#FF3366;text-decoration:none;font-size:14px}
-    .container{max-width:800px;margin:40px auto;padding:0 20px}
-    h1{font-size:28px;font-weight:700;margin-bottom:30px}
-    h2{font-size:18px;font-weight:600;margin:28px 0 12px;color:#FF3366}
-    p{color:#ccc;line-height:1.7;margin-bottom:12px;font-size:15px}
-    a{color:#FF3366}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: #fff; min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid #FF3366; flex-wrap:wrap; gap:12px; }
+    .logo img { height: 40px; }
+    .back-btn { background: #333; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; }
+    .back-btn:hover { background: #444; }
+    .content { background: #2a2a2a; padding: 40px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    h1 { color: #FF3366; margin-bottom: 30px; font-size: 32px; }
+    .contact-section { margin: 30px 0; }
+    .contact-section h2 { color: #FF3366; font-size: 20px; margin-bottom: 15px; }
+    .contact-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #1a1a1a; border-radius: 8px; margin-bottom: 15px; }
+    .contact-icon { font-size: 24px; width: 40px; text-align: center; }
+    .contact-text { flex: 1; }
+    .contact-text strong { display: block; color: #FF3366; margin-bottom: 5px; }
+    .contact-text a { color: #fff; text-decoration: none; }
+    .contact-text a:hover { color: #FF3366; }
+    .info-box { background: #1a1a1a; padding: 20px; border-radius: 8px; border-left: 4px solid #FF3366; margin: 20px 0; }
+    .info-box p { line-height: 1.6; margin-bottom: 10px; }
+    .info-box p:last-child { margin-bottom: 0; }
     .lang-switch{display:flex;gap:6px;margin-left:auto}
     .lang-switch button{background:#222;border:1px solid #333;color:#888;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px}
     .lang-switch button.active{border-color:#FF3366;color:#fff}
-    .footer{text-align:center;padding:30px;color:#555;font-size:13px;border-top:1px solid #333;margin-top:40px}
-    .footer a{color:#FF3366;text-decoration:none;margin:0 8px}
+  </style>
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style id='bs-static-refresh'>
+    body{background:radial-gradient(circle at top,#1a1a1a 0%,#0b0b0c 42%,#050505 100%)}.content{background:linear-gradient(180deg,#171717,#101010);border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 60px rgba(0,0,0,.32);border-radius:28px}.header{border-bottom-width:1px;border-bottom-color:rgba(255,255,255,.08)}.contact-item,.info-box{background:#151515;border:1px solid rgba(255,255,255,.07);border-radius:16px}.back-btn,.lang-switch button{border-radius:999px}
   </style>
 </head>
 <body>
-<div class="header">
-  <a href="shop.html" class="back" id="backLink">&larr; Zurück</a>
-  <div class="lang-switch" id="langSwitch">
-    <button id="iDE" class="active">DE</button>
-    <button id="iEN">EN</button>
-    <button id="iIT">IT</button>
-    <button id="iFR">FR</button>
+  <div class="container">
+    <div class="header">
+      <div class="logo"><img src="logo.png" alt="BarSclusive"></div>
+      <a href="shop.html" class="back-btn" id="backBtn">← Zurück zum Shop</a>
+      <div class="lang-switch">
+        <button onclick="setKL('de', this)" id="langBtnDe" class="active">DE</button>
+        <button onclick="setKL('en', this)" id="langBtnEn">EN</button>
+        <button onclick="setKL('it', this)" id="langBtnIt">IT</button>
+        <button onclick="setKL('fr', this)" id="langBtnFr">FR</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <h1 id="pageTitle">📞 Kontakt</h1>
+
+      <div class="contact-section">
+        <h2 id="generalTitle">Allgemeine Anfragen</h2>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-text">
+            <strong id="emailLabel">Email</strong>
+            <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-section">
+        <h2 id="barsTitle">🍸 Für Bars & Partner</h2>
+        <div class="info-box" id="barsBox"></div>
+      </div>
+
+      <div class="contact-section">
+        <h2 id="customersTitle">🛒 Für Kundinnen und Kunden</h2>
+        <div class="info-box" id="customersBox"></div>
+      </div>
+
+      <div class="contact-section">
+        <h2 id="responseTitle">⏰ Antwortzeit</h2>
+        <div class="info-box" id="responseBox"></div>
+      </div>
+    </div>
   </div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <img src="logo.png" alt="BarSclusive" style="height:60px">
+
+  <div style="text-align:center;padding:30px;color:#555;font-size:13px;border-top:1px solid #333;margin-top:40px">
+    <p>&copy; 2026 BarSclusive</p>
+    <p style="margin-top:8px">
+      <a href="shop.html" style="color:#FF3366" id="fShop">Shop</a> &middot;
+      <a href="ueber-uns.html" style="color:#FF3366" id="fAbout">Über uns</a> &middot;
+      <a href="impressum.html" style="color:#FF3366" id="fImprint">Impressum</a> &middot;
+      <a href="datenschutz.html" style="color:#FF3366" id="fPrivacy">Datenschutz</a> &middot;
+      <a href="agb.html" style="color:#FF3366" id="fTerms">AGB</a>
+    </p>
   </div>
-</div>
-<div class="container" id="content"></div>
-<div class="footer">
-  <p>&copy; 2026 BarSclusive</p>
-  <p style="margin-top:8px">
-    <a href="shop.html" id="fShop">Shop</a>
-    <a href="ueber-uns.html" id="fAbout">Über uns</a>
-    <a href="datenschutz.html" id="fPrivacy">Datenschutz</a>
-    <a href="agb.html" id="fTerms">AGB</a>
-    <a href="kontakt.html" id="fContact">Kontakt</a>
-  </p>
-</div>
+
 <script>
-var T={
-de:{title:'Impressum',back:'← Zurück',fShop:'Shop',fAbout:'Über uns',fPrivacy:'Datenschutz',fTerms:'AGB',fContact:'Kontakt',
-body:'<h1>Impressum</h1><h2>Angaben gemäss Art. 3 ZGB</h2><p>BarSclusive<br>[Strasse und Hausnummer]<br>[PLZ Ort], Schweiz</p><h2>Kontakt</h2><p>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Verantwortlich für den Inhalt</h2><p>[Vor- und Nachname]</p><h2>Rechtliche Hinweise</h2><p>BarSclusive betreibt eine Plattform für Deals, Gutscheine und Pauschalrabattgutscheine. Je nach Angebot wird die Leistung entweder von der Partnerbar vor Ort erbracht oder es handelt sich um ein eigenes Produkt von BarSclusive.</p><p>Für die inhaltliche Struktur der Beleg- und Rechtstexte berücksichtigt BarSclusive insbesondere die Unterscheidungen gemäss MWST-Info 04 Steuerobjekt sowie Art. 20 MWSTG, Art. 20a MWSTG, Art. 21 Abs. 2 Ziff. 19 MWSTG und Art. 40 Abs. 1 Bst. c MWSTG.</p><h2>Haftungsausschluss</h2><p>Alle Angaben auf dieser Website wurden sorgfältig geprüft. Wir bemühen uns, dieses Informationsangebot aktuell, inhaltlich richtig und vollständig anzubieten. Dennoch ist das Auftreten von Fehlern nicht vollständig auszuschliessen. Eine Haftung oder Garantie für Aktualität, Richtigkeit und Vollständigkeit der zur Verfügung gestellten Informationen kann daher nicht übernommen werden.</p><h2>Urheberrecht</h2><p>Die auf dieser Website veröffentlichten Inhalte und Werke unterliegen dem schweizerischen Urheberrecht. Jede vom schweizerischen Urheberrecht nicht zugelassene Verwertung bedarf der vorherigen schriftlichen Zustimmung der Autorinnen und Autoren.</p><p style="margin-top:30px;color:#666;font-size:13px">Stand: März 2026 | BarSclusive, Schweiz</p>'},
-en:{title:'Legal notice',back:'← Back',fShop:'Shop',fAbout:'About us',fPrivacy:'Privacy',fTerms:'Terms',fContact:'Contact',
-body:'<h1>Legal notice</h1><h2>Information pursuant to Art. 3 Swiss Civil Code</h2><p>BarSclusive<br>[Street and number]<br>[ZIP City], Switzerland</p><h2>Contact</h2><p>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Responsible for content</h2><p>[Full name]</p><h2>Legal notice</h2><p>BarSclusive operates a platform for deals, vouchers and flat discount vouchers. Depending on the offer, the service is either provided on site by the partner bar or the product is sold by BarSclusive itself.</p><p>The structure of legal and receipt texts particularly considers the distinctions set out in Swiss VAT Info 04 as well as Art. 20, Art. 20a, Art. 21 para. 2 no. 19 and Art. 40 para. 1 let. c VATA.</p><h2>Disclaimer</h2><p>All information on this website has been reviewed carefully. We strive to keep this information current, accurate and complete. However, errors cannot be fully excluded. No liability or guarantee can therefore be assumed for the timeliness, accuracy and completeness of the information provided.</p><h2>Copyright</h2><p>The content and works published on this website are subject to Swiss copyright law. Any use not permitted under Swiss copyright law requires prior written consent from the authors.</p><p style="margin-top:30px;color:#666;font-size:13px">Last updated: March 2026 | BarSclusive, Switzerland</p>'},
-it:{title:'Impressum',back:'← Indietro',fShop:'Shop',fAbout:'Chi siamo',fPrivacy:'Privacy',fTerms:'Condizioni',fContact:'Contatto',
-body:'<h1>Impressum</h1><h2>Indicazioni ai sensi dell’art. 3 CC svizzero</h2><p>BarSclusive<br>[Via e numero]<br>[CAP Città], Svizzera</p><h2>Contatto</h2><p>Email: <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Responsabile del contenuto</h2><p>[Nome e cognome]</p><h2>Avvertenze legali</h2><p>BarSclusive gestisce una piattaforma per offerte, voucher e voucher sconto forfettari. A seconda dell’offerta, la prestazione è fornita sul posto dal partner bar oppure il prodotto è venduto direttamente da BarSclusive.</p><p>La struttura dei testi legali e delle ricevute tiene conto in particolare delle distinzioni previste dalla MWST-Info 04 svizzera e dagli art. 20, 20a, 21 cpv. 2 n. 19 e 40 cpv. 1 lett. c LIVA.</p><h2>Esclusione di responsabilità</h2><p>Tutte le informazioni su questo sito sono state verificate con cura. Ci impegniamo a mantenere le informazioni aggiornate, corrette e complete. Tuttavia non è possibile escludere completamente errori. Non si assume pertanto alcuna responsabilità o garanzia per attualità, correttezza e completezza delle informazioni fornite.</p><h2>Diritto d’autore</h2><p>I contenuti e le opere pubblicati su questo sito sono soggetti al diritto d’autore svizzero. Qualsiasi utilizzo non consentito dalla legge richiede il previo consenso scritto degli autori.</p><p style="margin-top:30px;color:#666;font-size:13px">Aggiornato: marzo 2026 | BarSclusive, Svizzera</p>'},
-fr:{title:'Mentions légales',back:'← Retour',fShop:'Shop',fAbout:'À propos',fPrivacy:'Confidentialité',fTerms:'CGV',fContact:'Contact',
-body:'<h1>Mentions légales</h1><h2>Informations selon l’art. 3 du Code civil suisse</h2><p>BarSclusive<br>[Rue et numéro]<br>[NPA Ville], Suisse</p><h2>Contact</h2><p>Email : <a href="mailto:barsclusive@gmail.com">barsclusive@gmail.com</a></p><h2>Responsable du contenu</h2><p>[Prénom et nom]</p><h2>Informations juridiques</h2><p>BarSclusive exploite une plateforme pour des offres, des bons et des bons de réduction forfaitaires. Selon l’offre, la prestation est fournie sur place par le bar partenaire ou le produit est vendu directement par BarSclusive.</p><p>La structure des textes juridiques et des justificatifs tient notamment compte des distinctions prévues par l’Info TVA 04 suisse ainsi que par les art. 20, 20a, 21 al. 2 ch. 19 et 40 al. 1 let. c LTVA.</p><h2>Clause de non-responsabilité</h2><p>Toutes les informations de ce site ont été vérifiées avec soin. Nous nous efforçons de maintenir ces informations à jour, exactes et complètes. Toutefois, des erreurs ne peuvent pas être totalement exclues. Aucune responsabilité ni garantie ne peut donc être assumée quant à l’actualité, l’exactitude et l’exhaustivité des informations fournies.</p><h2>Droit d’auteur</h2><p>Les contenus et œuvres publiés sur ce site sont soumis au droit d’auteur suisse. Toute utilisation non autorisée par la loi nécessite l’accord écrit préalable des auteurs.</p><p style="margin-top:30px;color:#666;font-size:13px">Mise à jour : mars 2026 | BarSclusive, Suisse</p>'}
+var _KT={
+  de:{title:'📞 Kontakt',back:'← Zurück zum Shop',general:'Allgemeine Anfragen',email:'Email',barsTitle:'🍸 Für Bars & Partner',barsBox:'<p><strong>Du betreibst eine Bar und möchtest dabei sein?</strong></p><p>Registriere dich direkt im <a href="bar-portal.html" style="color:#FF3366">Bar-Portal</a> oder schreibe uns eine Email an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>.</p><p>Wir melden uns in der Regel innerhalb von 24 Stunden.</p>',customersTitle:'🛒 Für Kundinnen und Kunden',customersBox:'<p><strong>Fragen zu deiner Bestellung?</strong></p><p>Schreibe uns an <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> und nenne nach Möglichkeit deine Bestellnummer oder deinen Gutschein-Code.</p><p><strong>Wichtig:</strong> Bei konkreten Leistungen vor Ort ist die Partnerbar Leistungserbringerin. Bei Pauschalrabattgutscheinen ist BarSclusive Verkäuferin des Produkts.</p>',responseTitle:'⏰ Antwortzeit',responseBox:'<p>📅 <strong>Montag bis Freitag:</strong> Antwort in der Regel innerhalb von 24 Stunden</p><p>📱 <strong>Wochenende:</strong> eingeschränkt erreichbar</p>',fShop:'Shop',fAbout:'Über uns',fImprint:'Impressum',fPrivacy:'Datenschutz',fTerms:'AGB'},
+  en:{title:'📞 Contact',back:'← Back to shop',general:'General enquiries',email:'Email',barsTitle:'🍸 For bars & partners',barsBox:'<p><strong>Do you run a bar and want to join?</strong></p><p>Register directly in the <a href="bar-portal.html" style="color:#FF3366">bar portal</a> or send us an email at <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>.</p><p>We usually reply within 24 hours.</p>',customersTitle:'🛒 For customers',customersBox:'<p><strong>Questions about your order?</strong></p><p>Write to <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> and include your order number or voucher code if possible.</p><p><strong>Important:</strong> For specific on-site services, the partner bar is the service provider. For flat discount vouchers, BarSclusive is the seller of the product.</p>',responseTitle:'⏰ Response time',responseBox:'<p>📅 <strong>Monday to Friday:</strong> usually within 24 hours</p><p>📱 <strong>Weekend:</strong> limited availability</p>',fShop:'Shop',fAbout:'About us',fImprint:'Legal notice',fPrivacy:'Privacy',fTerms:'Terms'},
+  it:{title:'📞 Contatto',back:'← Torna allo shop',general:'Richieste generali',email:'Email',barsTitle:'🍸 Per bar e partner',barsBox:'<p><strong>Gestisci un bar e vuoi partecipare?</strong></p><p>Registrati direttamente nel <a href="bar-portal.html" style="color:#FF3366">portale bar</a> oppure scrivici a <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>.</p><p>Di norma rispondiamo entro 24 ore.</p>',customersTitle:'🛒 Per clienti',customersBox:'<p><strong>Domande sul tuo ordine?</strong></p><p>Scrivici a <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> e indica se possibile il numero d’ordine o il codice voucher.</p><p><strong>Importante:</strong> Per prestazioni concrete sul posto, il partner bar è il prestatore del servizio. Per i voucher sconto forfettari, BarSclusive è il venditore del prodotto.</p>',responseTitle:'⏰ Tempo di risposta',responseBox:'<p>📅 <strong>Da lunedì a venerdì:</strong> di norma entro 24 ore</p><p>📱 <strong>Weekend:</strong> disponibilità limitata</p>',fShop:'Shop',fAbout:'Chi siamo',fImprint:'Impressum',fPrivacy:'Privacy',fTerms:'Condizioni'},
+  fr:{title:'📞 Contact',back:'← Retour à la boutique',general:'Demandes générales',email:'Email',barsTitle:'🍸 Pour les bars et partenaires',barsBox:'<p><strong>Vous gérez un bar et souhaitez participer ?</strong></p><p>Inscrivez-vous directement dans le <a href="bar-portal.html" style="color:#FF3366">portail bar</a> ou écrivez-nous à <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a>.</p><p>Nous répondons en général dans les 24 heures.</p>',customersTitle:'🛒 Pour les clients',customersBox:'<p><strong>Des questions sur votre commande ?</strong></p><p>Écrivez-nous à <a href="mailto:barsclusive@gmail.com" style="color:#FF3366">barsclusive@gmail.com</a> et indiquez si possible votre numéro de commande ou votre code de bon.</p><p><strong>Important :</strong> Pour les prestations concrètes sur place, le bar partenaire est le prestataire. Pour les bons de réduction forfaitaires, BarSclusive est le vendeur du produit.</p>',responseTitle:'⏰ Temps de réponse',responseBox:'<p>📅 <strong>Du lundi au vendredi :</strong> en général dans les 24 heures</p><p>📱 <strong>Week-end :</strong> disponibilité limitée</p>',fShop:'Shop',fAbout:'À propos',fImprint:'Mentions légales',fPrivacy:'Confidentialité',fTerms:'CGV'}
 };
-function setLang(l){
+function setKL(l, btn){
   localStorage.setItem('barsclusive_lang',l);
-  var t=T[l]||T.de;
-  document.getElementById('content').innerHTML=t.body;
-  document.getElementById('backLink').textContent=t.back;
-  document.title=t.title+' – BarSclusive';
+  document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active');});
+  var activeBtn = btn || document.getElementById('langBtn' + l.charAt(0).toUpperCase() + l.slice(1));
+  if(activeBtn) activeBtn.classList.add('active');
+  var t=_KT[l]||_KT.de;
+  document.title = t.title + ' - BarSclusive';
+  document.getElementById('backBtn').textContent=t.back;
+  document.getElementById('pageTitle').textContent=t.title;
+  document.getElementById('generalTitle').textContent=t.general;
+  document.getElementById('emailLabel').textContent=t.email;
+  document.getElementById('barsTitle').textContent=t.barsTitle;
+  document.getElementById('barsBox').innerHTML=t.barsBox;
+  document.getElementById('customersTitle').textContent=t.customersTitle;
+  document.getElementById('customersBox').innerHTML=t.customersBox;
+  document.getElementById('responseTitle').textContent=t.responseTitle;
+  document.getElementById('responseBox').innerHTML=t.responseBox;
   document.getElementById('fShop').textContent=t.fShop;
   document.getElementById('fAbout').textContent=t.fAbout;
+  document.getElementById('fImprint').textContent=t.fImprint;
   document.getElementById('fPrivacy').textContent=t.fPrivacy;
   document.getElementById('fTerms').textContent=t.fTerms;
-  document.getElementById('fContact').textContent=t.fContact;
-  document.querySelectorAll('.lang-switch button').forEach(function(b){b.classList.remove('active');});
-  var btn=document.getElementById('i'+l.toUpperCase());
-  if(btn)btn.classList.add('active');
 }
 document.addEventListener('DOMContentLoaded',function(){
-  document.querySelectorAll('.lang-switch button').forEach(function(btn){
-    btn.addEventListener('click',function(){setLang(this.id.replace('i','').toLowerCase());});
-  });
-  setLang(localStorage.getItem('barsclusive_lang')||'de');
+  var s=localStorage.getItem('barsclusive_lang')||'de';
+  setKL(s);
 });
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
