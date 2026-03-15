@@ -1189,7 +1189,7 @@ async function doCreateDeal() {
   if (!cats.length) { showToast('Mind. 1 Kategorie wählen', true); return; }
 
   var validType  = document.querySelector('input[name="validType"]:checked').value;
-  var weekdays   = Array.from(document.querySelectorAll('.wd-btn.selected')).map(function(b) { return b.getAttribute('data-weekday') || b.textContent; });
+  var weekdays   = Array.from(document.querySelectorAll('.wd-btn.selected')).map(function(b) { return b.textContent; });
   var singleDate = document.getElementById('singleDate').value;
   if (validType === 'single' && !singleDate) { showToast('Datum wählen', true); return; }
 
@@ -1459,8 +1459,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (langEN) langEN.addEventListener('click', function() { setLang('en'); });
   if (langIT) langIT.addEventListener('click', function() { setLang('it'); });
   if (langFR) langFR.addEventListener('click', function() { setLang('fr'); });
-  var loginLangSelect = document.getElementById('loginLangSelect');
-  if (loginLangSelect) loginLangSelect.addEventListener('change', function(){ this.dataset.touched = '1'; });
 
   // Logout
   document.querySelectorAll('.btn-logout').forEach(function(b) { b.addEventListener('click', doLogout); });
@@ -1575,7 +1573,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (profNoMwst) profNoMwst.addEventListener('change', function() { updateMwstVisibility('prof'); });
   updateMwstVisibility('reg');
   updateMwstVisibility('prof');
-  try { applyBarStaticUiTranslations_(); } catch(e) {}
 
   bindAddressAutocomplete('reg');
   bindAddressAutocomplete('prof');
@@ -2184,26 +2181,10 @@ applyProfileToForm = function(b) {
 // FINAL STRICT PATCH: correspondence language + fixed MWST slots/CHE prefix
 // =============================================
 (function(){
-  Object.assign(TRANSLATIONS.de, { correspondenceLang:'Korrespondenzsprache', langGerman:'Deutsch', langEnglish:'English', langItalian:'Italiano', langFrench:'Français', keepSavedLanguage:'Gespeicherte Sprache beibehalten', paidOut:'Netto erhalten', pauschalSettingsTitle:'🏷️ Pauschalgutschein-Einstellungen', discountPercentLabel:'Rabatt % (mind. 15%)', minOrderLabel:'Mindestbestellung CHF (mind. 40)', appliesToLabel:'Gilt für', appliesToAll:'Alles', appliesToDrinks:'Nur Getränke', appliesToFood:'Nur Essen', pauschalInfoHint:'💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung. Der Rabatt wird direkt bei dir eingelöst.', timeWindowLabel:'Zeitfenster (optional)', timeSlotMorningLabel:'🌅 Morgen (06–12h)', timeSlotMiddayLabel:'☀️ Mittag (11–17h)', timeSlotEveningLabel:'🌙 Abend (16–00h)', customTimesLabel:'Oder eigene Zeiten:', editImageLabel:'Bild ändern (optional)', editValidityLabel:'Gültigkeitsdauer', editDateLabel:'Datum', editFromLabel:'Von (Uhrzeit)', editToLabel:'Bis (Uhrzeit)', editTimeSlotsLabel:'Zeitfenster', editRecurringText:'Wiederkehrend', editSingleText:'Einmaliges Datum', editTimeSlotMorningLabel:'🌅 Morgen', editTimeSlotMiddayLabel:'☀️ Mittag', editTimeSlotEveningLabel:'🌙 Abend', newDealImageLabel:'Bild (optional)', newDealImageHelp:'JPG, PNG oder WebP, max. 2 MB', barCatBreakfast:'🥐 Breakfast', barCatLunch:'🍽️ Lunch', barCatAperitif:'🍹 Aperitif', barCatDinner:'🍷 Dinner', barCatEvents:'🎉 Events', barCatDiscount:'🏷️ Pauschalgutschein', voucherDetailTitle:'🎟️ Gutschein' });
-  Object.assign(TRANSLATIONS.en, { correspondenceLang:'Correspondence language', langGerman:'German', langEnglish:'English', langItalian:'Italian', langFrench:'French', keepSavedLanguage:'Keep saved language', paidOut:'Net received', pauschalSettingsTitle:'🏷️ Flat voucher settings', discountPercentLabel:'Discount % (min. 15%)', minOrderLabel:'Minimum order CHF (min. 40)', appliesToLabel:'Applies to', appliesToAll:'Everything', appliesToDrinks:'Drinks only', appliesToFood:'Food only', pauschalInfoHint:'💡 Customers pay CHF 2.50. You do not receive a payout. The discount is redeemed directly at your bar.', timeWindowLabel:'Time slots (optional)', timeSlotMorningLabel:'🌅 Morning (06–12h)', timeSlotMiddayLabel:'☀️ Midday (11–17h)', timeSlotEveningLabel:'🌙 Evening (16–00h)', customTimesLabel:'Or own times:', editImageLabel:'Change image (optional)', editValidityLabel:'Validity', editDateLabel:'Date', editFromLabel:'From (time)', editToLabel:'To (time)', editTimeSlotsLabel:'Time slots', editRecurringText:'Recurring', editSingleText:'Single date', editTimeSlotMorningLabel:'🌅 Morning', editTimeSlotMiddayLabel:'☀️ Midday', editTimeSlotEveningLabel:'🌙 Evening', newDealImageLabel:'Image (optional)', newDealImageHelp:'JPG, PNG or WebP, max. 2 MB', barCatBreakfast:'🥐 Breakfast', barCatLunch:'🍽️ Lunch', barCatAperitif:'🍹 Aperitif', barCatDinner:'🍷 Dinner', barCatEvents:'🎉 Events', barCatDiscount:'🏷️ Discount voucher', voucherDetailTitle:'🎟️ Voucher' });
-  Object.assign(TRANSLATIONS.it, { correspondenceLang:'Lingua di corrispondenza', langGerman:'Tedesco', langEnglish:'Inglese', langItalian:'Italiano', langFrench:'Francese', keepSavedLanguage:'Mantieni la lingua salvata', paidOut:'Netto ricevuto', pauschalSettingsTitle:'🏷️ Impostazioni voucher sconto', discountPercentLabel:'Sconto % (min. 15%)', minOrderLabel:'Ordine minimo CHF (min. 40)', appliesToLabel:'Valido per', appliesToAll:'Tutto', appliesToDrinks:'Solo bevande', appliesToFood:'Solo cibo', pauschalInfoHint:'💡 I clienti pagano CHF 2.50. Non ricevi alcun payout. Lo sconto viene riscattato direttamente da te.', timeWindowLabel:'Fasce orarie (opzionale)', timeSlotMorningLabel:'🌅 Mattina (06–12h)', timeSlotMiddayLabel:'☀️ Pranzo (11–17h)', timeSlotEveningLabel:'🌙 Sera (16–00h)', customTimesLabel:'Oppure orari personalizzati:', editImageLabel:'Cambia immagine (opzionale)', editValidityLabel:'Validità', editDateLabel:'Data', editFromLabel:'Da (orario)', editToLabel:'A (orario)', editTimeSlotsLabel:'Fasce orarie', editRecurringText:'Ricorrente', editSingleText:'Data singola', editTimeSlotMorningLabel:'🌅 Mattina', editTimeSlotMiddayLabel:'☀️ Pranzo', editTimeSlotEveningLabel:'🌙 Sera', newDealImageLabel:'Immagine (opzionale)', newDealImageHelp:'JPG, PNG o WebP, max. 2 MB', barCatBreakfast:'🥐 Colazione', barCatLunch:'🍽️ Pranzo', barCatAperitif:'🍹 Aperitivo', barCatDinner:'🍷 Cena', barCatEvents:'🎉 Eventi', barCatDiscount:'🏷️ Voucher sconto', voucherDetailTitle:'🎟️ Voucher' });
-  Object.assign(TRANSLATIONS.fr, { correspondenceLang:'Langue de correspondance', langGerman:'Allemand', langEnglish:'Anglais', langItalian:'Italien', langFrench:'Français', keepSavedLanguage:'Conserver la langue enregistrée', paidOut:'Net reçu', pauschalSettingsTitle:'🏷️ Paramètres du bon de réduction', discountPercentLabel:'Réduction % (min. 15%)', minOrderLabel:'Commande minimum CHF (min. 40)', appliesToLabel:'Valable pour', appliesToAll:'Tout', appliesToDrinks:'Boissons uniquement', appliesToFood:'Nourriture uniquement', pauschalInfoHint:'💡 Les clients paient CHF 2.50. Vous ne recevez aucun versement. La réduction est utilisée directement chez vous.', timeWindowLabel:'Créneaux horaires (optionnel)', timeSlotMorningLabel:'🌅 Matin (06–12h)', timeSlotMiddayLabel:'☀️ Midi (11–17h)', timeSlotEveningLabel:'🌙 Soir (16–00h)', customTimesLabel:'Ou horaires personnalisés :', editImageLabel:'Modifier l’image (optionnel)', editValidityLabel:'Validité', editDateLabel:'Date', editFromLabel:'De (heure)', editToLabel:'À (heure)', editTimeSlotsLabel:'Créneaux horaires', editRecurringText:'Récurrent', editSingleText:'Date unique', editTimeSlotMorningLabel:'🌅 Matin', editTimeSlotMiddayLabel:'☀️ Midi', editTimeSlotEveningLabel:'🌙 Soir', newDealImageLabel:'Image (optionnelle)', newDealImageHelp:'JPG, PNG ou WebP, max. 2 MB', barCatBreakfast:'🥐 Petit-déjeuner', barCatLunch:'🍽️ Déjeuner', barCatAperitif:'🍹 Apéritif', barCatDinner:'🍷 Dîner', barCatEvents:'🎉 Événements', barCatDiscount:'🏷️ Bon de réduction', voucherDetailTitle:'🎟️ Bon' });
-
-
-  function applyBarStaticUiTranslations_() {
-    var map = {
-      pauschalSettingsTitle:'pauschalSettingsTitle', discountPercentLabel:'discountPercentLabel', minOrderLabel:'minOrderLabel', appliesToLabel:'appliesToLabel',
-      pauschalInfoHint:'pauschalInfoHint', timeWindowLabel:'timeWindowLabel', timeSlotMorningLabel:'timeSlotMorningLabel', timeSlotMiddayLabel:'timeSlotMiddayLabel',
-      timeSlotEveningLabel:'timeSlotEveningLabel', customTimesLabel:'customTimesLabel', editImageLabel:'editImageLabel', editValidityLabel:'editValidityLabel',
-      editDateLabel:'editDateLabel', editFromLabel:'editFromLabel', editToLabel:'editToLabel', editTimeSlotsLabel:'editTimeSlotsLabel',
-      editRecurringText:'editRecurringText', editSingleText:'editSingleText', editTimeSlotMorningLabel:'editTimeSlotMorningLabel', editTimeSlotMiddayLabel:'editTimeSlotMiddayLabel', editTimeSlotEveningLabel:'editTimeSlotEveningLabel', newDealImageLabel:'newDealImageLabel', newDealImageHelp:'newDealImageHelp', barCatBreakfast:'barCatBreakfast', barCatLunch:'barCatLunch', barCatAperitif:'barCatAperitif', barCatDinner:'barCatDinner', barCatEvents:'barCatEvents', barCatDiscount:'barCatDiscount', voucherDetailTitle:'voucherDetailTitle'
-    };
-    Object.keys(map).forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = t(map[id]); });
-    var optAll = document.getElementById('appliesToAll'); if (optAll) optAll.textContent = t('appliesToAll');
-    var optDrinks = document.getElementById('appliesToDrinks'); if (optDrinks) optDrinks.textContent = t('appliesToDrinks');
-    var optFood = document.getElementById('appliesToFood'); if (optFood) optFood.textContent = t('appliesToFood');
-    var loginLang = document.getElementById('loginLangSelect'); if (loginLang && !loginLang.dataset.touched) loginLang.value = '';
-  }
+  Object.assign(TRANSLATIONS.de, { correspondenceLang:'Korrespondenzsprache', langGerman:'Deutsch', langEnglish:'English', langItalian:'Italiano', langFrench:'Français', paidOut:'Netto erhalten' });
+  Object.assign(TRANSLATIONS.en, { correspondenceLang:'Correspondence language', langGerman:'German', langEnglish:'English', langItalian:'Italian', langFrench:'French', paidOut:'Net received' });
+  Object.assign(TRANSLATIONS.it, { correspondenceLang:'Lingua di corrispondenza', langGerman:'Tedesco', langEnglish:'Inglese', langItalian:'Italiano', langFrench:'Francese', paidOut:'Netto ricevuto' });
+  Object.assign(TRANSLATIONS.fr, { correspondenceLang:'Langue de correspondance', langGerman:'Allemand', langEnglish:'Anglais', langItalian:'Italien', langFrench:'Français', paidOut:'Net reçu' });
 
   function currentMwstSuffix_() { return ({ de:'MWST', en:'VAT', it:'IVA', fr:'TVA' })[currentLang] || 'MWST'; }
   function getMwstDigitsOnly_(v) { return onlyDigits(v).slice(0, 9); }
@@ -2223,13 +2204,7 @@ applyProfileToForm = function(b) {
   isValidMwst = function(v) { return /^CHE-\d{3}\.\d{3}\.\d{3} (MWST|VAT|IVA|TVA)$/.test(formatMwstDisplay(v)); };
 
   codeboxValueToChars = function(pattern, value) {
-    if (pattern === 'mwst') {
-      var digits = getMwstDigitsOnly_(value).split('');
-      var suffix = currentMwstSuffix_().split('');
-      var chars = ['C','H','E'];
-      while (digits.length < 9) digits.push('');
-      return chars.concat(digits.slice(0, 9), suffix);
-    }
+    if (pattern === 'mwst') return ('CHE' + getMwstDigitsOnly_(value) + currentMwstSuffix_()).split('');
     return onlyAlphaNum(value).slice(0, 21).split('');
   };
   getCodeboxGroups = function(pattern) {
@@ -2321,8 +2296,7 @@ applyProfileToForm = function(b) {
       var r = await api({ action: 'barLogin', email, password: pass });
       document.getElementById('btnBarLogin').disabled = false; document.getElementById('btnBarLogin').textContent = t('loginBtn') || 'Einloggen';
       if (r.success) {
-        var uiLang = selectedLang || (r.bar && r.bar.lang) || localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
-        if (selectedLang && selectedLang !== ((r.bar && r.bar.lang) || '')) { try { await api({ action: 'updateCorrespondenceLanguage', token: r.token, lang: selectedLang }); } catch(e) {} }
+        var uiLang = (r.bar && r.bar.lang) || localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
         sessionSet(r.token, r.bar.id, r.bar.name, uiLang);
         document.getElementById('loginPassword').value = '';
         showAuthScreen(false);
@@ -2419,4 +2393,64 @@ applyProfileToForm = function(b) {
     var el = document.getElementById(prefix + 'AddressMeta');
     if (el) el.textContent = text || t('addressNotSelected') || 'Noch keine Adresse gewählt';
   };
+})();
+
+
+// =============================================
+// FINAL PATCH: stable bar login + hide MWST fields
+// =============================================
+(function(){
+  function hideMwstUiFinal_() {
+    ['regMwstNumGroup','profMwstNumGroup'].forEach(function(id){ var el = document.getElementById(id); if (el) el.style.display = 'none'; });
+    ['regNoMwst','profNoMwst'].forEach(function(id){ var el = document.getElementById(id); if (el) el.checked = true; });
+    ['regMwstNumber','profMwstNumber'].forEach(function(id){ var el = document.getElementById(id); if (el) el.value = ''; });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-i18n="mwstLabel"]'), function(lbl){
+      var wrap = lbl.closest('.form-group, div[style*="margin-bottom"]');
+      if (wrap) wrap.style.display = 'none';
+    });
+  }
+  document.addEventListener('DOMContentLoaded', hideMwstUiFinal_);
+  var _origSetLangBarFinal = setLang;
+  setLang = function(lang) { _origSetLangBarFinal(lang); hideMwstUiFinal_(); };
+  api = async function(body) {
+    var r = await fetch(BACKEND_URL, { method: 'POST', body: JSON.stringify(body) });
+    var txt = await r.text();
+    try { return JSON.parse(txt); } catch (e) { throw new Error(txt || ('HTTP ' + r.status)); }
+  };
+  doBarLogin = async function() {
+    var emailEl = document.getElementById('loginEmail');
+    var passEl = document.getElementById('loginPassword');
+    var email = emailEl ? emailEl.value.trim() : '';
+    var pass = passEl ? passEl.value : '';
+    var err = document.getElementById('loginErr');
+    if (err) err.textContent = '';
+    if (!email || !pass) { if (err) err.textContent = t('fillAllFields') || 'Bitte alle Felder ausfüllen.'; return; }
+    var btn = document.getElementById('btnBarLogin');
+    var originalLabel = t('loginBtn') || 'Einloggen';
+    try {
+      if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
+      var r = await api({ action: 'barLogin', email: email, password: pass });
+      if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
+      if (!r || !r.success) {
+        if (err) err.textContent = (r && r.error) || (t('invalidCredentials') || 'Ungültige Zugangsdaten.');
+        if (passEl) passEl.value = '';
+        return;
+      }
+      sessionSet(r.token, r.bar.id, r.bar.name);
+      try {
+        if (r.bar && r.bar.lang) { currentLang = r.bar.lang; localStorage.setItem('barsclusive_lang', currentLang); setLang(currentLang); }
+        if (passEl) passEl.value = '';
+        showAuthScreen(false); clearDataCache(); prefetchAllData(); loadBarStats();
+      } catch (uiErr) { console.error('Post-login UI error', uiErr); }
+    } catch (e) {
+      if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
+      if (err) err.textContent = (e && e.message && e.message.length < 180) ? e.message : (t('networkError') || 'Verbindungsfehler.');
+    }
+  };
+  if (typeof saveProfile === 'function') {
+    var _origSaveProfileFinal = saveProfile;
+    saveProfile = async function(){ hideMwstUiFinal_(); return _origSaveProfileFinal.apply(this, arguments); };
+  }
+  var _origTrStatusFinal = trStatus_;
+  trStatus_ = function(status) { return String(status || '').toLowerCase() === 'refund_requested' ? (t('refundRequested') || 'Rückerstattung angefordert') : _origTrStatusFinal(status); };
 })();
