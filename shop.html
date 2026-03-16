@@ -204,6 +204,27 @@
 
     .add-cart-btn{background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;margin-left:8px}
     .add-cart-btn:hover{background:#FF3366;border-color:#FF3366}
+
+    .menu-btn{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;color:#f4f4f5;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform .18s ease,background .18s ease,border-color .18s ease;min-width:44px}
+    .menu-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);background:#1a1a1a}
+    .side-drawer{position:fixed;top:0;right:-360px;width:320px;max-width:88vw;height:100vh;background:#101010;border-left:1px solid #2a2a2a;z-index:1201;transition:right .28s ease;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.45)}
+    .side-drawer.active{right:0}
+    .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid #222}
+    .drawer-title{font-size:16px;font-weight:700}
+    .drawer-close{background:none;border:none;color:#aaa;font-size:24px;cursor:pointer}
+    .drawer-body{padding:16px;display:flex;flex-direction:column;gap:18px;overflow:auto}
+    .drawer-links,.drawer-actions{display:flex;flex-direction:column;gap:10px}
+    .drawer-link,.drawer-action{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:#181818;border:1px solid #292929;color:#fff;text-decoration:none;font-size:14px;font-weight:600;cursor:pointer}
+    .drawer-link:hover,.drawer-action:hover{background:#222}
+    .drawer-note{font-size:12px;color:#888;line-height:1.5;padding:0 2px}
+    .date-picker-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .date-picker-label{display:inline-flex;align-items:center;gap:8px}
+    @media(max-width:768px){
+      .date-picker-wrap{width:100%}
+      .date-picker-wrap .date-input{flex:1;min-width:150px}
+      .drawer-body{padding-bottom:40px}
+    }
+
   </style>
   <link rel="icon" type="image/png" href="logo.png">
 
@@ -308,6 +329,7 @@
         <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">FR</button>
       </div>
       <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
+      <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
     <div class="user-menu">
         <button class="user-button" id="userBtn">👤 Login</button>
         <div class="user-dropdown" id="userDropdown">
@@ -317,7 +339,33 @@
       </div>
     </div>
   </div>
+
 </div>
+
+<div id="shopDrawer" class="side-drawer" aria-hidden="true">
+  <div class="drawer-header">
+    <div class="drawer-title" data-shop-i18n="menuTitle">Mehr entdecken</div>
+    <button class="drawer-close" id="shopDrawerClose" aria-label="Menü schliessen">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-actions">
+      <button class="drawer-action" id="drawerDealsBtn">🏠 <span data-shop-i18n="deals">Deals</span></button>
+      <button class="drawer-action" id="drawerFavoritesBtn">❤️ <span data-shop-i18n="favoritesNav">Favoriten</span></button>
+      <button class="drawer-action" id="drawerOrdersBtn">📦 <span data-shop-i18n="orders">Bestellungen</span></button>
+    </div>
+    <div class="drawer-links">
+      <a class="drawer-link" href="ueber-uns.html">ℹ️ <span data-shop-i18n="fUeberUns">Über uns</span></a>
+      <a class="drawer-link" href="so-funktionierts.html">✨ <span data-shop-i18n="fSoFunktionierts">So funktionierts</span></a>
+      <a class="drawer-link" href="kontakt.html">✉️ <span data-shop-i18n="fKontakt">Kontakt</span></a>
+      <a class="drawer-link" href="impressum.html">📄 <span data-shop-i18n="fImpressum">Impressum</span></a>
+      <a class="drawer-link" href="datenschutz.html">🔒 <span data-shop-i18n="fDatenschutz">Datenschutz</span></a>
+      <a class="drawer-link" href="agb.html">🧾 <span data-shop-i18n="fAGB">AGB</span></a>
+      <a class="drawer-link" href="bar-portal.html">🍸 <span data-shop-i18n="fFuerBars">Für Bars → Bar-Portal</span></a>
+    </div>
+    <div class="drawer-note" data-shop-i18n="menuNote">Alles Wichtige schnell erreichbar, ohne bis zum Seitenende zu scrollen.</div>
+  </div>
+</div>
+<div id="shopDrawerOverlay" class="cart-overlay"></div>
 
 <!-- HERO -->
 <div class="hero">
@@ -345,7 +393,7 @@
       <button class="filter-btn active" data-filter-date="all" data-i18n="alle">Alle</button>
       <button class="filter-btn" data-filter-date="today" data-i18n="heute">Heute</button>
       <button class="filter-btn" data-filter-date="tomorrow" data-i18n="morgen">Morgen</button>
-      <input type="date" id="customDate" class="date-input">
+      <div class="date-picker-wrap"><label for="customDate" class="filter-btn date-picker-label" id="customDateLabel" data-shop-i18n="customDateBtn">📅 Eigenes Datum wählen</label><input type="date" id="customDate" class="date-input" aria-label="Eigenes Datum wählen"></div>
     </div>
     <div class="filter-row">
       <span class="filter-label" data-i18n="uhrzeit">🕐 Uhrzeit</span>
@@ -606,5 +654,3 @@
 <div class="cart-overlay" id="cartOverlay"></div>
 </body>
 </html>
-}
-
