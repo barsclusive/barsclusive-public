@@ -233,7 +233,7 @@
     body.shop-page{background:radial-gradient(circle at top,#191919 0%,#0a0a0a 34%,#050505 100%);color:var(--bs-text)}
     .header{backdrop-filter:blur(22px);background:rgba(7,7,7,.88);border-bottom-color:rgba(255,255,255,.06);padding:12px 18px}
     .nav{gap:14px;align-items:flex-start}
-    .logo img{height:46px !important}
+    .logo img{height:56px !important}
     .nav-links{flex:1;justify-content:flex-end;gap:10px;row-gap:8px}
     .nav-link,.user-button,.cart-btn,.filter-btn,.btn-ghost,.btn-pink,.btn-buy,.share-btn,.add-cart-btn{transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease}
     .nav-link,.user-button,.cart-btn{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;color:#f4f4f5;box-shadow:none}
@@ -242,10 +242,10 @@
     .search-input{height:40px;padding-left:36px;background:#151515;border-color:rgba(255,255,255,.08);border-radius:999px}
     .search-input::placeholder{color:#7e7e86}
     .hero{padding:28px 20px 18px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
-    .hero>div{max-width:980px;margin:0 auto;justify-content:space-between !important;gap:16px !important;align-items:center !important}
+    .hero>div{max-width:980px;margin:0 auto;text-align:center}
     .hero img{height:72px !important}
     .hero h1{font-size:clamp(26px,4vw,44px);line-height:1.02;letter-spacing:-.03em;margin-bottom:10px}
-    .hero p{font-size:15px;color:#b7b7bd;max-width:620px}
+    .hero p{font-size:15px;color:#b7b7bd;max-width:620px;margin:0 auto}
     .hero-trust-strip,.hero-utility-line{max-width:1200px;margin:0 auto;padding:0 20px}
     .hero-trust-strip{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
     .trust-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:13px;color:#ececf1}
@@ -291,7 +291,7 @@
     body[data-shop-view="favorites"] .hero, body[data-shop-view="orders"] .hero, body[data-shop-view="favorites"] .filter-wrap, body[data-shop-view="orders"] .filter-wrap{display:none}
     @media(max-width:900px){.nav{align-items:center}.nav-links{justify-content:flex-start}}
     @media(max-width:768px){
-      .header{padding:10px 12px}.logo img{height:38px !important}.nav{gap:10px}.nav-links{width:100%;align-items:center;gap:8px}
+      .header{padding:10px 12px}.logo img{height:44px !important}.nav{gap:10px}.nav-links{width:100%;align-items:center;gap:8px}
       .search-wrap{order:1;flex:1;min-width:0;max-width:none}.search-input{height:38px}.cart-btn,.user-button{padding:8px 12px}
       .hero{padding:18px 12px 10px}.hero>div{justify-content:flex-start !important}.hero img{height:54px !important}.hero h1{text-align:left !important;font-size:24px}.hero p{text-align:left !important;font-size:14px}
       .hero-trust-strip,.hero-utility-line,.filter-wrap,.container{padding-left:12px;padding-right:12px}.hero-trust-strip{justify-content:flex-start}.trust-chip{font-size:12px;padding:8px 12px}
@@ -312,7 +312,7 @@
 <div class="header">
   <div class="nav">
     <div class="logo" style="display:flex;align-items:center;gap:8px">
-      <img src="logo.png" alt="BarSclusive" style="height:60px">
+      <img src="logo.png" alt="BarSclusive" style="height:72px">
     </div>
     <div class="nav-links">
       <div class="search-wrap">
@@ -329,14 +329,14 @@
         <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">FR</button>
       </div>
       <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
-      <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
-    <div class="user-menu">
+      <div class="user-menu">
         <button class="user-button" id="userBtn">👤 Login</button>
         <div class="user-dropdown" id="userDropdown">
           <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
           <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
         </div>
       </div>
+      <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
     </div>
   </div>
 
@@ -369,12 +369,9 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
-    <img src="logo.png" alt="BarSclusive" style="height:90px">
-    <div>
-      <h1 style="text-align:left" id="heroHeadline" data-shop-i18n="heroHeadline">Die besten Bar-Deals deiner Stadt</h1>
-      <p style="text-align:left" id="heroSubline" data-shop-i18n="heroSubline">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
-    </div>
+  <div>
+    <h1 id="heroHeadline" data-shop-i18n="heroHeadline">Die besten Bar-Deals deiner Stadt</h1>
+    <p id="heroSubline" data-shop-i18n="heroSubline">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
   </div>
 </div>
 
