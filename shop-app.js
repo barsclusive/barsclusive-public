@@ -1114,6 +1114,10 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Meine Bestellungen', changePw:'Passwort ändern',
     heroTitle:'🍹 Die besten Bar-Deals deiner Stadt',
     heroSub:'Exklusive Angebote für Breakfast, Brunch, Aperitif und Events',
+    heroBenefitLocal:'🍸 Exklusive Bar-Deals entdecken',
+    heroBenefitRedeem:'🎟️ Heute sichern, später einlösen',
+    heroBenefitInstant:'⚡ In Sekunden einlösbar',
+    heroUtility:'Heute kaufen, später entspannt einlösen.',
     buyBtn:'Deal kaufen', changePasswordTitle:'Passwort ändern',
     oldPassword:'Altes Passwort', newPassword:'Neues Passwort',
     confirmPassword:'Passwort bestätigen', savePw:'Speichern',
@@ -1141,6 +1145,10 @@ const SHOP_TRANSLATIONS = {
     myOrders:'My Orders', changePw:'Change Password',
     heroTitle:'🍹 The best bar deals in your city',
     heroSub:'Exclusive offers for Breakfast, Brunch, Aperitif and Events',
+    heroBenefitLocal:'🍸 Discover exclusive bar deals',
+    heroBenefitRedeem:'🎟️ Get it today, redeem later',
+    heroBenefitInstant:'⚡ Redeemable in seconds',
+    heroUtility:'Buy today, enjoy whenever you like.',
     buyBtn:'Buy Deal', changePasswordTitle:'Change Password',
     oldPassword:'Old Password', newPassword:'New Password',
     confirmPassword:'Confirm Password', savePw:'Save',
@@ -1168,6 +1176,10 @@ const SHOP_TRANSLATIONS = {
     myOrders:'I miei ordini', changePw:'Cambia Password',
     heroTitle:'🍹 Le migliori offerte bar della tua città',
     heroSub:'Offerte esclusive per colazione, brunch, aperitivo ed eventi',
+    heroBenefitLocal:'🍸 Scopri offerte esclusive',
+    heroBenefitRedeem:'🎟️ Acquista oggi, riscatta dopo',
+    heroBenefitInstant:'⚡ Riscattabile in pochi secondi',
+    heroUtility:'Acquista oggi, goditi il tuo deal con calma.',
     buyBtn:'Acquista Deal', changePasswordTitle:'Cambia Password',
     oldPassword:'Vecchia Password', newPassword:'Nuova Password',
     confirmPassword:'Conferma Password', savePw:'Salva', cancelBtn:'Annulla',
@@ -1194,6 +1206,10 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Mes commandes', changePw:'Changer mot de passe',
     heroTitle:'🍹 Les meilleures offres bar de ta ville',
     heroSub:'Offres exclusives pour petit-déjeuner, brunch, apéritif et événements',
+    heroBenefitLocal:'🍸 Découvre des offres exclusives',
+    heroBenefitRedeem:'🎟️ Réserve aujourd\'hui, utilise plus tard',
+    heroBenefitInstant:'⚡ Utilisable en quelques secondes',
+    heroUtility:'Achète aujourd\'hui, profite quand tu veux.',
     buyBtn:'Acheter Deal', changePasswordTitle:'Changer mot de passe',
     oldPassword:'Ancien mot de passe', newPassword:'Nouveau mot de passe',
     confirmPassword:'Confirmer', savePw:'Enregistrer', cancelBtn:'Annuler',
@@ -2763,6 +2779,11 @@ try {
     if (ddPw) ddPw.textContent = '🔑 ' + st('changePw');
     var noAcc = document.getElementById('loginNoAccountText'); if (noAcc) noAcc.textContent = st('noAccountYet') || noAcc.textContent;
     var regLink = document.getElementById('linkToRegister'); if (regLink) regLink.textContent = st('registrieren') || regLink.textContent;
+    var drawerLogin = document.getElementById('drawerLoginBtn');
+    if (drawerLogin) {
+      var span = drawerLogin.querySelector('span');
+      if (span) span.textContent = s ? (escHtml(s.name || '') + ' · ' + st('logoutBtn')) : st('loginBtn');
+    }
   }
 
   var _origApplyShopTranslations = applyShopTranslations;
@@ -2834,6 +2855,16 @@ try {
     var drawerDeals = document.getElementById('drawerDealsBtn'); if (drawerDeals) drawerDeals.addEventListener('click', function(){ closeShopDrawer(); showView('deals'); });
     var drawerFav = document.getElementById('drawerFavoritesBtn'); if (drawerFav) drawerFav.addEventListener('click', function(){ closeShopDrawer(); showView('favorites'); });
     var drawerOrders = document.getElementById('drawerOrdersBtn'); if (drawerOrders) drawerOrders.addEventListener('click', function(){ closeShopDrawer(); showView('orders'); });
+    var drawerLogin = document.getElementById('drawerLoginBtn');
+    if (drawerLogin) drawerLogin.addEventListener('click', function(){
+      closeShopDrawer();
+      if (sessionGet()) {
+        // On mobile, trigger user dropdown or open change password
+        onUserButtonClick();
+      } else {
+        openModal('loginModal');
+      }
+    });
     var customDate = document.getElementById('customDate'); if (customDate) customDate.addEventListener('change', updateCustomDateLabel);
     updateCustomDateLabel();
     updateShopUserUi();
