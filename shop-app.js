@@ -2687,3 +2687,153 @@ try {
     };
   }
 })();
+
+
+// ===== FINAL MERGE PATCH: sidebar, custom date, translated user labels, no auto-open cart =====
+(function(){
+  try {
+    Object.assign(SHOP_TRANSLATIONS.de, {
+      menuTitle:'Mehr entdecken', menuNote:'Alles Wichtige schnell erreichbar, ohne bis zum Seitenende zu scrollen.',
+      customDateBtn:'📅 Eigenes Datum wählen', customDateLabel:'Eigenes Datum',
+      myLocationBtn:'Nach Distanz sortieren', geoCurrentLocation:'Aktueller Standort',
+      favoritesNav:'Favoriten', noAccountYet:'Noch kein Konto?',
+      statusPending:'Ausstehend', statusBought:'Gekauft', statusRedeemed:'Eingelöst',
+      timeSlotMorning:'🌅 Morgen', timeSlotMidday:'☀️ Mittag', timeSlotEvening:'🌙 Abend', weekdaysLabel:'Wochentage',
+      buyBtn:'Deal kaufen'
+    });
+    Object.assign(SHOP_TRANSLATIONS.en, {
+      menuTitle:'Explore more', menuNote:'Quick access to the important pages without endless scrolling.',
+      customDateBtn:'📅 Choose your own date', customDateLabel:'Custom date',
+      myLocationBtn:'Sort by distance', geoCurrentLocation:'Current location',
+      favoritesNav:'Favorites', noAccountYet:'No account yet?',
+      statusPending:'Pending', statusBought:'Purchased', statusRedeemed:'Redeemed',
+      timeSlotMorning:'🌅 Morning', timeSlotMidday:'☀️ Midday', timeSlotEvening:'🌙 Evening', weekdaysLabel:'Weekdays',
+      buyBtn:'Buy deal'
+    });
+    Object.assign(SHOP_TRANSLATIONS.it, {
+      menuTitle:'Scopri di più', menuNote:'Tutto importante a portata di mano, senza scorrere fino in fondo.',
+      customDateBtn:'📅 Scegli una data', customDateLabel:'Data personalizzata',
+      myLocationBtn:'Ordina per distanza', geoCurrentLocation:'Posizione attuale',
+      favoritesNav:'Preferiti', noAccountYet:'Non hai ancora un account?',
+      statusPending:'In attesa', statusBought:'Acquistato', statusRedeemed:'Riscattato',
+      timeSlotMorning:'🌅 Mattina', timeSlotMidday:'☀️ Pranzo', timeSlotEvening:'🌙 Sera', weekdaysLabel:'Giorni',
+      buyBtn:'Acquista deal'
+    });
+    Object.assign(SHOP_TRANSLATIONS.fr, {
+      menuTitle:'Découvrir plus', menuNote:'Toutes les pages importantes rapidement accessibles, sans devoir scroller jusqu’en bas.',
+      customDateBtn:'📅 Choisir une date', customDateLabel:'Date personnalisée',
+      myLocationBtn:'Trier par distance', geoCurrentLocation:'Position actuelle',
+      favoritesNav:'Favoris', noAccountYet:'Pas encore de compte ?',
+      statusPending:'En attente', statusBought:'Acheté', statusRedeemed:'Utilisé',
+      timeSlotMorning:'🌅 Matin', timeSlotMidday:'☀️ Midi', timeSlotEvening:'🌙 Soir', weekdaysLabel:'Jours',
+      buyBtn:'Acheter l’offre'
+    });
+  } catch(e) {}
+
+  function updateCustomDateLabel(){
+    var el = document.getElementById('customDateLabel');
+    var input = document.getElementById('customDate');
+    if (!el) return;
+    if (input && input.value) {
+      var dt = new Date(input.value + 'T00:00:00');
+      if (!isNaN(dt.getTime())) {
+        try {
+          el.textContent = '📅 ' + dt.toLocaleDateString(document.documentElement.lang || 'de-CH', { day:'2-digit', month:'2-digit', year:'numeric' });
+          return;
+        } catch(e) {}
+      }
+    }
+    el.textContent = st('customDateBtn') || '📅 Eigenes Datum wählen';
+  }
+  window.updateCustomDateLabel = updateCustomDateLabel;
+
+  function updateShopUserUi(){
+    var s = sessionGet();
+    var userBtn = document.getElementById('userBtn');
+    var btnOrders = document.getElementById('btnOrders');
+    var btnFavorites = document.getElementById('btnFavorites');
+    var ddLogout = document.getElementById('dropdownLogout');
+    var ddPw = document.getElementById('dropdownChangePw');
+    if (userBtn) userBtn.textContent = s ? ('👤 ' + escHtml(s.name || '')) : ('👤 ' + st('loginBtn'));
+    if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
+    if (btnFavorites) btnFavorites.textContent = '❤️ ' + st('favoritesNav');
+    if (ddLogout) ddLogout.textContent = st('logoutBtn');
+    if (ddPw) ddPw.textContent = '🔑 ' + st('changePw');
+    var noAcc = document.getElementById('loginNoAccountText'); if (noAcc) noAcc.textContent = st('noAccountYet') || noAcc.textContent;
+    var regLink = document.getElementById('linkToRegister'); if (regLink) regLink.textContent = st('registrieren') || regLink.textContent;
+  }
+
+  var _origApplyShopTranslations = applyShopTranslations;
+  applyShopTranslations = function(){
+    _origApplyShopTranslations();
+    updateShopUserUi();
+    updateCustomDateLabel();
+    var input = document.getElementById('locationInput'); if (input) input.placeholder = st('searchPLZ');
+    var search = document.getElementById('shopSearch'); if (search) search.placeholder = st('searchBarDeal');
+  };
+
+  var _origSessionSet = sessionSet;
+  sessionSet = function(token, name, email, role){ _origSessionSet(token,name,email,role); updateShopUserUi(); };
+  var _origSessionClear = sessionClear;
+  sessionClear = function(){ _origSessionClear(); updateShopUserUi(); };
+
+  var _origSetCustomDate = setCustomDate;
+  setCustomDate = function(val){ _origSetCustomDate(val); updateCustomDateLabel(); };
+
+  requestGeoPermission = function() {
+    if (!navigator.geolocation) { showToast(shopT('locationUnavailable') || 'Standort nicht verfügbar', true); dismissGeoBanner(); return; }
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        _userLat = pos.coords.latitude;
+        _userLng = pos.coords.longitude;
+        _locationState = { label: shopT('geoCurrentLocation') || 'Aktueller Standort', lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
+        saveLocationState();
+        updateLocationUi();
+        dismissGeoBanner();
+        showToast(shopT('dealsSortedByDistance') || '📍 Deals werden nach Nähe sortiert');
+        sortDealsByDistance();
+      },
+      function() { dismissGeoBanner(); showToast(shopT('locationUnavailable') || 'Standort nicht verfügbar', true); },
+      { enableHighAccuracy: false, timeout: 10000 }
+    );
+  };
+
+  function openShopDrawer(){
+    var drawer = document.getElementById('shopDrawer');
+    var overlay = document.getElementById('shopDrawerOverlay');
+    if (drawer) drawer.classList.add('active');
+    if (overlay) overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeShopDrawer(){
+    var drawer = document.getElementById('shopDrawer');
+    var overlay = document.getElementById('shopDrawerOverlay');
+    if (drawer) drawer.classList.remove('active');
+    if (overlay) overlay.style.display = 'none';
+    var cartPanel = document.getElementById('cartPanel');
+    if (!(cartPanel && cartPanel.classList.contains('active'))) document.body.style.overflow = '';
+  }
+  window.openShopDrawer = openShopDrawer;
+  window.closeShopDrawer = closeShopDrawer;
+
+  addToCart = function(deal) {
+    getCart();
+    var existing = _cart.find(function(c) { return c.deal_id === deal.id; });
+    if (existing) existing.quantity++;
+    else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
+    saveCart();
+    showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var menuBtn = document.getElementById('shopMenuBtn'); if (menuBtn) menuBtn.addEventListener('click', openShopDrawer);
+    var drawerClose = document.getElementById('shopDrawerClose'); if (drawerClose) drawerClose.addEventListener('click', closeShopDrawer);
+    var drawerOverlay = document.getElementById('shopDrawerOverlay'); if (drawerOverlay) drawerOverlay.addEventListener('click', closeShopDrawer);
+    var drawerDeals = document.getElementById('drawerDealsBtn'); if (drawerDeals) drawerDeals.addEventListener('click', function(){ closeShopDrawer(); showView('deals'); });
+    var drawerFav = document.getElementById('drawerFavoritesBtn'); if (drawerFav) drawerFav.addEventListener('click', function(){ closeShopDrawer(); showView('favorites'); });
+    var drawerOrders = document.getElementById('drawerOrdersBtn'); if (drawerOrders) drawerOrders.addEventListener('click', function(){ closeShopDrawer(); showView('orders'); });
+    var customDate = document.getElementById('customDate'); if (customDate) customDate.addEventListener('change', updateCustomDateLabel);
+    updateCustomDateLabel();
+    updateShopUserUi();
+  });
+})();
