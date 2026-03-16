@@ -505,14 +505,10 @@ function buildDealCard(deal) {
 
   const btn = document.createElement('button');
   btn.className = 'btn-buy';
-  btn.type = 'button';
-  btn.dataset.dealId = deal.id;
   btn.textContent = shopT('profitiere') || 'Profitiere jetzt!';
   btn.addEventListener('click', (e) => { e.stopPropagation(); openBuyModal(deal); });
   var cartBtn = document.createElement('button');
   cartBtn.className = 'add-cart-btn';
-  cartBtn.type = 'button';
-  cartBtn.dataset.dealId = deal.id;
   cartBtn.textContent = '🛒+';
   cartBtn.title = shopT('cartAddTitle') || 'In den Warenkorb';
   cartBtn.addEventListener('click', function(e) { e.stopPropagation(); addToCart(deal); });
@@ -775,17 +771,9 @@ async function doRefund(orderId) {
 // =============================================
 // AUTH
 // =============================================
-function onUserButtonClick(ev) {
-  if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+function onUserButtonClick() {
   if (!sessionGet()) { openModal('loginModal'); }
-  else {
-    var dd = document.getElementById('userDropdown');
-    if (!dd) return;
-    var willShow = !dd.classList.contains('show');
-    dd.classList.toggle('show');
-    var btn = document.getElementById('userBtn');
-    if (btn) btn.setAttribute('aria-expanded', willShow ? 'true' : 'false');
-  }
+  else { document.getElementById('userDropdown').classList.toggle('show'); }
 }
 
 async function doLogin() {
@@ -914,10 +902,7 @@ window.addEventListener('popstate', (e) => {
 document.addEventListener('click', e => {
   if (e.target.classList.contains('modal')) e.target.classList.remove('active');
   if (!e.target.closest('.user-menu')) {
-    var dd = document.getElementById('userDropdown');
-    if (dd) dd.classList.remove('show');
-    var ub = document.getElementById('userBtn');
-    if (ub) ub.setAttribute('aria-expanded', 'false');
+    document.getElementById('userDropdown').classList.remove('show');
   }
 });
 
@@ -1066,6 +1051,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Custom date input — bind via JS (CSP-konform, kein inline onchange)
   const customDateInput = document.getElementById('customDate');
   if (customDateInput) customDateInput.addEventListener('change', function() { setCustomDate(this.value); });
+  const customDateTrigger = document.getElementById('customDateTrigger');
+  if (customDateTrigger && customDateInput) customDateTrigger.addEventListener('click', function(){ try { if (customDateInput.showPicker) customDateInput.showPicker(); else customDateInput.click(); } catch(e){ customDateInput.click(); } });
 
   // Modal close buttons
   document.querySelectorAll('[data-close-modal]').forEach(btn => {
@@ -1253,7 +1240,7 @@ function applyShopTranslations() {
   if (heroTitle) heroTitle.textContent = st('heroTitle');
   if (heroSub)   heroSub.textContent   = st('heroSub');
   const btnDeals  = document.getElementById('btnDeals');
-  if (btnDeals) btnDeals.textContent = '🍸 ' + st('deals');
+  if (btnDeals) btnDeals.textContent = '🏠 ' + st('deals');
   const btnOrders = document.getElementById('btnOrders');
   if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
   document.querySelectorAll('[data-shop-i18n]').forEach(function(el) {
@@ -1710,15 +1697,9 @@ function getCartTotal() {
 function updateCartBadge() {
   getCart();
   var badge = document.getElementById('cartBadge');
-  var openBtn = document.getElementById('cartOpenBtn');
   var count = 0;
   _cart.forEach(function(c) { count += c.quantity; });
-  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline-flex' : 'none'; }
-  if (openBtn) {
-    openBtn.classList.toggle('has-items', count > 0);
-    openBtn.setAttribute('aria-label', (shopT('cartHeaderBtn') || 'Warenkorb') + (count > 0 ? ' (' + count + ')' : ''));
-    openBtn.title = count > 0 ? ((shopT('cartHeaderBtn') || 'Warenkorb') + ' (' + count + ')') : (shopT('cartHeaderBtn') || 'Warenkorb');
-  }
+  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
 }
 
 function renderCartPanel() {
@@ -2715,59 +2696,39 @@ try {
   try {
     Object.assign(SHOP_TRANSLATIONS.de, {
       menuTitle:'Mehr entdecken', menuNote:'Alles Wichtige schnell erreichbar, ohne bis zum Seitenende zu scrollen.',
-      customDateBtn:'📅 Datum wählen', customDateLabel:'Datum',
+      customDateBtn:'📅 Eigenes Datum wählen', customDateLabel:'Eigenes Datum',
       myLocationBtn:'Nach Distanz sortieren', geoCurrentLocation:'Aktueller Standort',
       favoritesNav:'Favoriten', noAccountYet:'Noch kein Konto?',
       statusPending:'Ausstehend', statusBought:'Gekauft', statusRedeemed:'Eingelöst',
       timeSlotMorning:'🌅 Morgen', timeSlotMidday:'☀️ Mittag', timeSlotEvening:'🌙 Abend', weekdaysLabel:'Wochentage',
-      buyBtn:'Deal kaufen',
-      shopBenefitFastTitle:'✨ Direkt sichern', shopBenefitFastSub:'In wenigen Sekunden reserviert.',
-      shopBenefitLocalTitle:'📍 In deiner Nähe', shopBenefitLocalSub:'Bars und Deals nach Distanz entdecken.',
-      shopBenefitExclusiveTitle:'🍸 Kuratierte Selektion', shopBenefitExclusiveSub:'Breakfast bis Aperitivo an einem Ort.',
-      dealsIntro:'Kuratierte Deals für Breakfast, Brunch, Aperitivo und Events.',
-      cartHeaderBtn:'Warenkorb', profitiere:'Jetzt sichern'
+      buyBtn:'Deal kaufen'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
       menuTitle:'Explore more', menuNote:'Quick access to the important pages without endless scrolling.',
-      customDateBtn:'📅 Pick a date', customDateLabel:'Date',
+      customDateBtn:'📅 Choose your own date', customDateLabel:'Custom date',
       myLocationBtn:'Sort by distance', geoCurrentLocation:'Current location',
       favoritesNav:'Favorites', noAccountYet:'No account yet?',
       statusPending:'Pending', statusBought:'Purchased', statusRedeemed:'Redeemed',
       timeSlotMorning:'🌅 Morning', timeSlotMidday:'☀️ Midday', timeSlotEvening:'🌙 Evening', weekdaysLabel:'Weekdays',
-      buyBtn:'Buy deal',
-      shopBenefitFastTitle:'✨ Secure instantly', shopBenefitFastSub:'Reserved in just a few seconds.',
-      shopBenefitLocalTitle:'📍 Nearby first', shopBenefitLocalSub:'Discover bars and deals by distance.',
-      shopBenefitExclusiveTitle:'🍸 Curated selection', shopBenefitExclusiveSub:'From breakfast to aperitivo in one place.',
-      dealsIntro:'Curated deals for breakfast, brunch, aperitivo and events.',
-      cartHeaderBtn:'Cart', profitiere:'Secure now'
+      buyBtn:'Buy deal'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
       menuTitle:'Scopri di più', menuNote:'Tutto importante a portata di mano, senza scorrere fino in fondo.',
-      customDateBtn:'📅 Scegli data', customDateLabel:'Data',
+      customDateBtn:'📅 Scegli una data', customDateLabel:'Data personalizzata',
       myLocationBtn:'Ordina per distanza', geoCurrentLocation:'Posizione attuale',
       favoritesNav:'Preferiti', noAccountYet:'Non hai ancora un account?',
       statusPending:'In attesa', statusBought:'Acquistato', statusRedeemed:'Riscattato',
       timeSlotMorning:'🌅 Mattina', timeSlotMidday:'☀️ Pranzo', timeSlotEvening:'🌙 Sera', weekdaysLabel:'Giorni',
-      buyBtn:'Acquista deal',
-      shopBenefitFastTitle:'✨ Blocca subito', shopBenefitFastSub:'Prenotato in pochi secondi.',
-      shopBenefitLocalTitle:'📍 Vicino a te', shopBenefitLocalSub:'Scopri bar e deal per distanza.',
-      shopBenefitExclusiveTitle:'🍸 Selezione curata', shopBenefitExclusiveSub:'Da breakfast ad aperitivo in un solo posto.',
-      dealsIntro:'Deal curati per breakfast, brunch, aperitivo ed eventi.',
-      cartHeaderBtn:'Carrello', profitiere:'Blocca ora'
+      buyBtn:'Acquista deal'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
       menuTitle:'Découvrir plus', menuNote:'Toutes les pages importantes rapidement accessibles, sans devoir scroller jusqu’en bas.',
-      customDateBtn:'📅 Choisir date', customDateLabel:'Date',
+      customDateBtn:'📅 Choisir une date', customDateLabel:'Date personnalisée',
       myLocationBtn:'Trier par distance', geoCurrentLocation:'Position actuelle',
       favoritesNav:'Favoris', noAccountYet:'Pas encore de compte ?',
       statusPending:'En attente', statusBought:'Acheté', statusRedeemed:'Utilisé',
       timeSlotMorning:'🌅 Matin', timeSlotMidday:'☀️ Midi', timeSlotEvening:'🌙 Soir', weekdaysLabel:'Jours',
-      buyBtn:'Acheter l’offre',
-      shopBenefitFastTitle:'✨ Réserver vite', shopBenefitFastSub:'Réservé en quelques secondes.',
-      shopBenefitLocalTitle:'📍 Près de toi', shopBenefitLocalSub:'Découvre bars et deals par distance.',
-      shopBenefitExclusiveTitle:'🍸 Sélection soignée', shopBenefitExclusiveSub:'Du breakfast à l’aperitivo au même endroit.',
-      dealsIntro:'Des deals sélectionnés pour breakfast, brunch, aperitivo et événements.',
-      cartHeaderBtn:'Panier', profitiere:'Réserver'
+      buyBtn:'Acheter l’offre'
     });
   } catch(e) {}
 
@@ -2795,7 +2756,7 @@ try {
     var btnFavorites = document.getElementById('btnFavorites');
     var ddLogout = document.getElementById('dropdownLogout');
     var ddPw = document.getElementById('dropdownChangePw');
-    if (userBtn) { userBtn.textContent = s ? ('👤 ' + escHtml(s.name || '')) : ('👤 ' + st('loginBtn')); userBtn.setAttribute('aria-expanded', 'false'); }
+    if (userBtn) userBtn.textContent = s ? ('👤 ' + escHtml(s.name || '')) : ('👤 ' + st('loginBtn'));
     if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
     if (btnFavorites) btnFavorites.textContent = '❤️ ' + st('favoritesNav');
     if (ddLogout) ddLogout.textContent = st('logoutBtn');
@@ -2863,8 +2824,6 @@ try {
     if (existing) existing.quantity++;
     else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
     saveCart();
-    renderCartPanel();
-    openCartPanel();
     showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
   };
 
@@ -2876,24 +2835,6 @@ try {
     var drawerFav = document.getElementById('drawerFavoritesBtn'); if (drawerFav) drawerFav.addEventListener('click', function(){ closeShopDrawer(); showView('favorites'); });
     var drawerOrders = document.getElementById('drawerOrdersBtn'); if (drawerOrders) drawerOrders.addEventListener('click', function(){ closeShopDrawer(); showView('orders'); });
     var customDate = document.getElementById('customDate'); if (customDate) customDate.addEventListener('change', updateCustomDateLabel);
-    var cartOpenBtn = document.getElementById('cartOpenBtn'); if (cartOpenBtn) cartOpenBtn.onclick = function(ev){ if (ev) { ev.preventDefault(); ev.stopPropagation(); } toggleCartPanel(); };
-    var userBtn = document.getElementById('userBtn'); if (userBtn) userBtn.onclick = function(ev){ if (ev) { ev.preventDefault(); ev.stopPropagation(); } onUserButtonClick(ev); };
-    var ddBuyBtn = document.getElementById('ddBuyBtn'); if (ddBuyBtn) ddBuyBtn.type = 'button';
-    document.addEventListener('click', function(ev){
-      var buyBtn = ev.target && ev.target.closest ? ev.target.closest('.btn-buy[data-deal-id]') : null;
-      if (buyBtn) {
-        var dealId = buyBtn.getAttribute('data-deal-id');
-        var deal = allDeals.find(function(d){ return String(d.id) === String(dealId); });
-        if (deal) { ev.preventDefault(); ev.stopPropagation(); openBuyModal(deal); }
-        return;
-      }
-      var cartBtn = ev.target && ev.target.closest ? ev.target.closest('.add-cart-btn[data-deal-id]') : null;
-      if (cartBtn) {
-        var cartDealId = cartBtn.getAttribute('data-deal-id');
-        var cartDeal = allDeals.find(function(d){ return String(d.id) === String(cartDealId); });
-        if (cartDeal) { ev.preventDefault(); ev.stopPropagation(); addToCart(cartDeal); }
-      }
-    }, true);
     updateCustomDateLabel();
     updateShopUserUi();
   });
