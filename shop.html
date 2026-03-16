@@ -231,24 +231,32 @@
   <style id="bs-shop-refresh-style">
     :root{--bs-bg:#050505;--bs-panel:#121212;--bs-panel-2:#181818;--bs-stroke:#262626;--bs-text:#f7f7f7;--bs-muted:#a1a1aa;--bs-soft:#71717a;--bs-pink:#ff3366;--bs-pink-soft:rgba(255,51,102,.14);--bs-shadow:0 18px 45px rgba(0,0,0,.28);--bs-radius:22px}
     body.shop-page{background:radial-gradient(circle at top,#191919 0%,#0a0a0a 34%,#050505 100%);color:var(--bs-text)}
-    .header{backdrop-filter:blur(22px);background:rgba(7,7,7,.88);border-bottom-color:rgba(255,255,255,.06);padding:12px 18px}
-    .nav{gap:14px;align-items:flex-start}
-    .logo img{height:56px !important}
-    .nav-links{flex:1;justify-content:flex-end;gap:10px;row-gap:8px}
+    .header{backdrop-filter:blur(22px);background:rgba(7,7,7,.88);border-bottom-color:rgba(255,255,255,.06);padding:14px 18px}
+    .nav.shop-nav-shell{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+    .shop-header-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .shop-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+    .shop-lang-switch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .shop-header-lower{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .shop-header-tabs{display:flex;align-items:center;gap:10px;row-gap:8px;flex-wrap:wrap}
+    .logo img{height:72px !important}
     .nav-link,.user-button,.cart-btn,.filter-btn,.btn-ghost,.btn-pink,.btn-buy,.share-btn,.add-cart-btn{transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease}
     .nav-link,.user-button,.cart-btn{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;color:#f4f4f5;box-shadow:none}
     .nav-link:hover,.user-button:hover,.cart-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);background:#1a1a1a}
-    .search-wrap{max-width:360px;min-width:220px}
+    .search-wrap{max-width:420px;min-width:260px;flex:1}
     .search-input{height:40px;padding-left:36px;background:#151515;border-color:rgba(255,255,255,.08);border-radius:999px}
     .search-input::placeholder{color:#7e7e86}
-    .hero{padding:28px 20px 18px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+    .hero{padding:28px 20px 10px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
     .hero>div{max-width:980px;margin:0 auto;text-align:center}
-    .hero img{height:72px !important}
+    .hero img{display:none !important}
     .hero h1{font-size:clamp(26px,4vw,44px);line-height:1.02;letter-spacing:-.03em;margin-bottom:10px}
     .hero p{font-size:15px;color:#b7b7bd;max-width:620px;margin:0 auto}
-    .hero-trust-strip,.hero-utility-line{max-width:1200px;margin:0 auto;padding:0 20px}
-    .hero-trust-strip{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
-    .trust-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:13px;color:#ececf1}
+    .shop-benefits,.hero-utility-line{max-width:1200px;margin:0 auto;padding:0 20px}
+    .shop-benefits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+    .shop-benefit-card{position:relative;overflow:hidden;border-radius:20px;padding:18px;background:linear-gradient(135deg,rgba(255,51,102,.16),rgba(255,200,120,.08) 52%,rgba(32,32,32,.96));border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.25)}
+    .shop-benefit-card:nth-child(2){background:linear-gradient(135deg,rgba(255,184,0,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
+    .shop-benefit-card:nth-child(3){background:linear-gradient(135deg,rgba(90,160,255,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
+    .shop-benefit-title{font-size:17px;font-weight:800;margin-bottom:8px;color:#fff}
+    .shop-benefit-sub{font-size:14px;color:#d0d0d0;line-height:1.5}
     .hero-utility-line{margin-top:14px;font-size:14px;color:#b8b8c2;text-align:center}
     .filter-wrap{margin:20px auto 24px}
     .filter-bar{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:18px;box-shadow:var(--bs-shadow)}
@@ -289,12 +297,24 @@
     .footer{background:transparent;border-top-color:rgba(255,255,255,.06);margin-top:42px}
     .footer a{color:#ff5a86}
     body[data-shop-view="favorites"] .hero, body[data-shop-view="orders"] .hero, body[data-shop-view="favorites"] .filter-wrap, body[data-shop-view="orders"] .filter-wrap{display:none}
-    @media(max-width:900px){.nav{align-items:center}.nav-links{justify-content:flex-start}}
+    @media(max-width:900px){
+      .shop-header-lower{flex-direction:column;align-items:stretch}
+      .search-wrap{max-width:none;min-width:0;width:100%}
+    }
     @media(max-width:768px){
-      .header{padding:10px 12px}.logo img{height:44px !important}.nav{gap:10px}.nav-links{width:100%;align-items:center;gap:8px}
-      .search-wrap{order:1;flex:1;min-width:0;max-width:none}.search-input{height:38px}.cart-btn,.user-button{padding:8px 12px}
-      .hero{padding:18px 12px 10px}.hero>div{justify-content:flex-start !important}.hero img{height:54px !important}.hero h1{text-align:left !important;font-size:24px}.hero p{text-align:left !important;font-size:14px}
-      .hero-trust-strip,.hero-utility-line,.filter-wrap,.container{padding-left:12px;padding-right:12px}.hero-trust-strip{justify-content:flex-start}.trust-chip{font-size:12px;padding:8px 12px}
+      .header{padding:10px 12px}
+      .shop-header-row{align-items:flex-start;gap:12px}
+      .shop-header-actions{justify-content:flex-end;gap:8px}
+      .shop-lang-switch{gap:6px}
+      .logo img{height:56px !important}
+      .search-wrap{width:100%;max-width:none;min-width:0}.search-input{height:38px}
+      .cart-btn,.user-button{padding:8px 12px}
+      .shop-header-lower{gap:10px}
+      .shop-header-tabs{gap:8px}
+      .hero{padding:18px 12px 10px}.hero>div{justify-content:flex-start !important}.hero h1{text-align:left !important;font-size:24px}.hero p{text-align:left !important;font-size:14px}
+      .shop-benefits,.hero-utility-line,.filter-wrap,.container{padding-left:12px;padding-right:12px}
+      .shop-benefits{grid-template-columns:1fr;gap:12px}
+      .shop-benefit-card{padding:18px}
       .filter-bar{padding:14px;border-radius:22px}.filter-row{flex-wrap:nowrap;overflow:auto;padding-bottom:2px}.filter-row::-webkit-scrollbar{display:none}.filter-label{position:sticky;left:0;background:linear-gradient(90deg,#181818 65%,rgba(24,24,24,0));padding-right:12px;min-width:72px;flex-shrink:0}
       .filter-row:last-child{flex-wrap:wrap;overflow:visible}.filter-row:last-child .filter-label{position:static;background:none;padding-right:0;min-width:100%}
       .filter-row:last-child .search-select-wrap{min-width:100%}.filter-row:last-child #btnApplyLocation,.filter-row:last-child #btnUseMyLocation,.filter-row:last-child #btnClearLocation{flex:1}
@@ -310,33 +330,39 @@
 
 <!-- NAVIGATION -->
 <div class="header">
-  <div class="nav">
-    <div class="logo" style="display:flex;align-items:center;gap:8px">
-      <img src="logo.png" alt="BarSclusive" style="height:72px">
+  <div class="nav shop-nav-shell">
+    <div class="shop-header-row">
+      <div class="logo" style="display:flex;align-items:center;gap:8px">
+        <img src="logo.png" alt="BarSclusive" style="height:88px">
+      </div>
+      <div class="shop-header-actions">
+        <div class="shop-lang-switch">
+          <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:10px;color:#fff">DE</button>
+          <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">EN</button>
+          <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">IT</button>
+          <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">FR</button>
+        </div>
+        <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
+        <div class="user-menu">
+          <button class="user-button" id="userBtn">👤 Login</button>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
+            <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
+          </div>
+        </div>
+        <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
+      </div>
     </div>
-    <div class="nav-links">
+    <div class="shop-header-lower">
+      <div class="shop-header-tabs nav-links">
+        <button class="nav-link active" id="btnDeals">🏠 Deals</button>
+        <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
+        <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
+      </div>
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input type="text" class="search-input" id="shopSearch" placeholder="Bar oder Deal suchen...">
       </div>
-      <button class="nav-link active" id="btnDeals">🏠 Deals</button>
-      <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
-      <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
-      <div style="display:flex;align-items:center;gap:8px">
-        <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
-        <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
-        <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
-        <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">FR</button>
-      </div>
-      <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
-      <div class="user-menu">
-        <button class="user-button" id="userBtn">👤 Login</button>
-        <div class="user-dropdown" id="userDropdown">
-          <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
-          <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
-        </div>
-      </div>
-      <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
     </div>
   </div>
 
@@ -375,10 +401,19 @@
   </div>
 </div>
 
-<div class="hero-trust-strip">
-  <span class="trust-chip" data-shop-i18n="trustFast">⚡ Schnell kaufen</span>
-  <span class="trust-chip" data-shop-i18n="trustVerified">🍸 Lokale Bars entdecken</span>
-  <span class="trust-chip" data-shop-i18n="trustMobile">📱 Perfekt fürs Handy</span>
+<div class="shop-benefits">
+  <div class="shop-benefit-card">
+    <div class="shop-benefit-title" data-shop-i18n="shopBenefitFastTitle">⚡ Schnell kaufen</div>
+    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitFastSub">Direkt online sichern und später entspannt einlösen.</div>
+  </div>
+  <div class="shop-benefit-card">
+    <div class="shop-benefit-title" data-shop-i18n="shopBenefitLocalTitle">🍸 Lokale Bars entdecken</div>
+    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitLocalSub">Finde Angebote in deiner Nähe und sortiere sie nach Distanz.</div>
+  </div>
+  <div class="shop-benefit-card">
+    <div class="shop-benefit-title" data-shop-i18n="shopBenefitExclusiveTitle">✨ Exklusive Angebote</div>
+    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitExclusiveSub">Breakfast, Brunch, Aperitif und Event-Deals übersichtlich an einem Ort.</div>
+  </div>
 </div>
 <div class="hero-utility-line" id="dealsUtilityLine" data-shop-i18n="dealsIntro">Heute kaufen, später entspannt einlösen.</div>
 
