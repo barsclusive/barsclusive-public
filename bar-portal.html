@@ -159,6 +159,28 @@
     @media(max-width:980px){.portal-benefits,.builder-extras{grid-template-columns:1fr}.builder-preview-shell{grid-template-columns:1fr}.container{padding-left:14px;padding-right:14px}}
     @media(max-width:768px){.header{padding:10px 12px}.logo img{height:38px !important}.tabs{overflow:auto}.tab{padding:11px 14px}.container{padding-top:16px}#loginScreen{padding:20px 12px}.card{padding:20px;border-radius:20px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card{min-height:108px}.stat-value{font-size:24px}}
     @media(max-width:560px){.stats-grid{grid-template-columns:1fr 1fr}.builder-preview-title{font-size:18px}.benefit-card{padding:16px}}
+
+    .menu-btn{background:#171717;border:1px solid rgba(255,255,255,.08);color:#fff;padding:8px 12px;border-radius:14px;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;justify-content:center;min-width:44px}
+    .menu-btn:hover{background:#222}
+    .side-drawer{position:fixed;top:0;right:-360px;width:320px;max-width:86vw;height:100vh;background:#101010;border-left:1px solid #2a2a2a;z-index:1200;transition:right .28s ease;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.45)}
+    .side-drawer.active{right:0}
+    .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid #222}
+    .drawer-title{font-size:16px;font-weight:700}
+    .drawer-close{background:none;border:none;color:#aaa;font-size:24px;cursor:pointer}
+    .drawer-body{padding:16px;display:flex;flex-direction:column;gap:12px;overflow:auto}
+    .drawer-link{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:#181818;border:1px solid #292929;color:#fff;text-decoration:none;font-size:14px;font-weight:600}
+    .drawer-link:hover{background:#222}
+    .drawer-note{font-size:12px;color:#888;line-height:1.5;padding:4px 2px 0}
+    .auth-benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px auto 26px;max-width:760px}
+    .benefit-card{position:relative;overflow:hidden;border-radius:18px;padding:20px;background:linear-gradient(135deg,rgba(255,51,102,.16),rgba(255,200,120,.08) 52%,rgba(32,32,32,.96));border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.25)}
+    .benefit-card:nth-child(2){background:linear-gradient(135deg,rgba(255,184,0,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
+    .benefit-card:nth-child(3){background:linear-gradient(135deg,rgba(90,160,255,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
+    .benefit-card:nth-child(4){background:linear-gradient(135deg,rgba(255,51,102,.14),rgba(120,255,180,.08) 55%,rgba(32,32,32,.96));}
+    .benefit-title{font-size:17px;font-weight:800;margin-bottom:8px;color:#fff}
+    .benefit-sub{font-size:14px;color:#d0d0d0;line-height:1.5}
+    .auth-shell{max-width:920px;margin:0 auto}
+    @media(max-width:768px){.auth-benefits{grid-template-columns:1fr}.benefit-card{padding:18px}}
+
   </style>
 </head>
 <body class="bar-portal-page">
@@ -175,20 +197,53 @@
     <button class="lang-btn" id="langIT">IT</button>
     <button class="lang-btn" id="langFR">FR</button>
     <button class="btn-logout" id="btnLogout" style="display:none" data-i18n="logout">Ausloggen</button>
+    <button class="menu-btn" id="barMenuBtn" aria-label="Menü öffnen">☰</button>
+  </div>
+
+</div>
+
+<div id="barDrawer" class="side-drawer" aria-hidden="true">
+  <div class="drawer-header">
+    <div class="drawer-title" data-i18n="menuTitle">Mehr entdecken</div>
+    <button class="drawer-close" id="barDrawerClose" aria-label="Menü schliessen">✕</button>
+  </div>
+  <div class="drawer-body">
+    <a class="drawer-link" href="shop.html">🍸 <span data-i18n="shop">Shop</span></a>
+    <a class="drawer-link" href="ueber-uns.html">ℹ️ <span data-i18n="aboutUs">Über uns</span></a>
+    <a class="drawer-link" href="so-funktionierts.html">✨ <span data-i18n="howItWorks">So funktionierts</span></a>
+    <a class="drawer-link" href="kontakt.html">✉️ <span data-i18n="contact">Kontakt</span></a>
+    <a class="drawer-link" href="impressum.html">📄 <span data-i18n="legalNotice">Impressum</span></a>
+    <a class="drawer-link" href="datenschutz-bars.html">🔒 <span data-i18n="privacy">Datenschutz</span></a>
+    <a class="drawer-link" href="agb-bars.html">🧾 <span data-i18n="termsBars">AGB Bars</span></a>
+    <div class="drawer-note" data-i18n="menuNote">Wichtige Infos schnell erreichbar, auch wenn weiter unten viele Inhalte sichtbar sind.</div>
   </div>
 </div>
+<div id="barDrawerOverlay" class="modal" style="display:none;background:rgba(0,0,0,.65);z-index:1100"></div>
 
 <!-- LOGIN -->
 <div id="loginScreen">
-  <div class="container">
+  <div class="container auth-shell">
     <div class="tabs">
       <button class="tab active" data-auth-tab="login" data-i18n="login">Login</button>
       <button class="tab" data-auth-tab="register" data-i18n="register">Registrieren</button>
     </div>
-    <div class="portal-benefits">
-      <div class="benefit-card"><strong data-i18n="benefitFree">Kostenlose Registrierung</strong><span data-i18n="benefitFast">Deal in wenigen Minuten erstellt</span></div>
-      <div class="benefit-card"><strong data-i18n="benefitPayout">90 % Auszahlung</strong><span data-i18n="benefitPayoutSub">Nach Einlösung bei Fixpreis-Deals</span></div>
-      <div class="benefit-card"><strong data-i18n="benefitManaged">Mehr Sichtbarkeit</strong><span data-i18n="benefitManagedSub">BarSclusive bringt Gäste direkt zu dir</span></div>
+    <div class="auth-benefits">
+      <div class="benefit-card">
+        <div class="benefit-title" data-i18n="benefitFreeTitle">Kostenlose Registrierung</div>
+        <div class="benefit-sub" data-i18n="benefitFreeSub">Ohne Einrichtungsgebühr und ohne laufende Kosten.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-title" data-i18n="benefitFastTitle">Deal in wenigen Minuten erstellt</div>
+        <div class="benefit-sub" data-i18n="benefitFastSub">Schnell online, sauber geführt und direkt auf dem Handy bearbeitbar.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-title" data-i18n="benefitPayoutTitle">90 % Auszahlung</div>
+        <div class="benefit-sub" data-i18n="benefitPayoutSub">Nach Einlösung bei Fixpreis-Deals.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-title" data-i18n="benefitReachTitle">Mehr Sichtbarkeit</div>
+        <div class="benefit-sub" data-i18n="benefitReachSub">BarSclusive bringt neue Gäste direkt zu dir.</div>
+      </div>
     </div>
     <div id="loginForm" class="tab-content active">
       <div class="card">
