@@ -2556,3 +2556,46 @@ applyProfileToForm = function(b) {
     setTimeout(enhancePortalUi, 100);
   });
 })();
+
+
+// ===== FINAL MERGE PATCH: sidebar + richer auth benefits =====
+(function(){
+  try {
+    Object.assign(TRANSLATIONS.de, { menuTitle:'Mehr entdecken', menuNote:'Wichtige Infos schnell erreichbar, auch wenn weiter unten viele Inhalte sichtbar sind.', benefitFreeTitle:'Kostenlose Registrierung', benefitFreeSub:'Ohne Einrichtungsgebühr und ohne laufende Kosten.', benefitFastTitle:'Deal in wenigen Minuten erstellt', benefitFastSub:'Schnell online, sauber geführt und direkt auf dem Handy bearbeitbar.', benefitPayoutTitle:'90 % Auszahlung', benefitPayoutSub:'Nach Einlösung bei Fixpreis-Deals.', benefitReachTitle:'Mehr Sichtbarkeit', benefitReachSub:'BarSclusive bringt neue Gäste direkt zu dir.' });
+    Object.assign(TRANSLATIONS.en, { menuTitle:'Explore more', menuNote:'Important pages stay easy to reach, even when there is a lot to scroll through.', benefitFreeTitle:'Free registration', benefitFreeSub:'No setup fee and no ongoing costs.', benefitFastTitle:'Create a deal in minutes', benefitFastSub:'Quick to publish, clearly guided and easy to manage on mobile.', benefitPayoutTitle:'90% payout', benefitPayoutSub:'After redemption for fixed-price deals.', benefitReachTitle:'More visibility', benefitReachSub:'BarSclusive brings new guests directly to you.' });
+    Object.assign(TRANSLATIONS.it, { menuTitle:'Scopri di più', menuNote:'Le informazioni importanti restano raggiungibili rapidamente, anche con molte sezioni nella pagina.', benefitFreeTitle:'Registrazione gratuita', benefitFreeSub:'Nessun costo di attivazione e nessun costo ricorrente.', benefitFastTitle:'Deal creato in pochi minuti', benefitFastSub:'Online in fretta, guidato bene e facile da gestire da mobile.', benefitPayoutTitle:'90% di payout', benefitPayoutSub:'Dopo il riscatto per i deal a prezzo fisso.', benefitReachTitle:'Più visibilità', benefitReachSub:'BarSclusive porta nuovi ospiti direttamente da te.' });
+    Object.assign(TRANSLATIONS.fr, { menuTitle:'Découvrir plus', menuNote:'Les pages importantes restent accessibles rapidement, même quand le contenu est long.', benefitFreeTitle:'Inscription gratuite', benefitFreeSub:'Sans frais de mise en place et sans coûts récurrents.', benefitFastTitle:'Offre créée en quelques minutes', benefitFastSub:'Mise en ligne rapide, guidée clairement et facile à gérer sur mobile.', benefitPayoutTitle:'90 % de versement', benefitPayoutSub:'Après utilisation pour les offres à prix fixe.', benefitReachTitle:'Plus de visibilité', benefitReachSub:'BarSclusive amène de nouveaux clients directement chez vous.' });
+  } catch(e) {}
+
+  function openBarDrawer() {
+    var drawer = document.getElementById('barDrawer');
+    var overlay = document.getElementById('barDrawerOverlay');
+    if (drawer) drawer.classList.add('active');
+    if (overlay) overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeBarDrawer() {
+    var drawer = document.getElementById('barDrawer');
+    var overlay = document.getElementById('barDrawerOverlay');
+    if (drawer) drawer.classList.remove('active');
+    if (overlay) overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  window.openBarDrawer = openBarDrawer;
+  window.closeBarDrawer = closeBarDrawer;
+
+  var _origSetLangMerge = setLang;
+  setLang = function(lang){
+    _origSetLangMerge(lang);
+    document.querySelectorAll('.benefit-title,.benefit-sub,.drawer-note,[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if (key && TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) el.textContent = TRANSLATIONS[currentLang][key];
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var barMenuBtn = document.getElementById('barMenuBtn'); if (barMenuBtn) barMenuBtn.addEventListener('click', openBarDrawer);
+    var barDrawerClose = document.getElementById('barDrawerClose'); if (barDrawerClose) barDrawerClose.addEventListener('click', closeBarDrawer);
+    var barDrawerOverlay = document.getElementById('barDrawerOverlay'); if (barDrawerOverlay) barDrawerOverlay.addEventListener('click', closeBarDrawer);
+  });
+})();
