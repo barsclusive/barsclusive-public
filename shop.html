@@ -251,12 +251,12 @@
     .hero h1{font-size:clamp(26px,4vw,44px);line-height:1.02;letter-spacing:-.03em;margin-bottom:10px}
     .hero p{font-size:15px;color:#b7b7bd;max-width:620px;margin:0 auto}
     .shop-benefits,.hero-utility-line{max-width:1200px;margin:0 auto;padding:0 20px}
-    .shop-benefits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
-    .shop-benefit-card{position:relative;overflow:hidden;border-radius:20px;padding:18px;background:linear-gradient(135deg,rgba(255,51,102,.16),rgba(255,200,120,.08) 52%,rgba(32,32,32,.96));border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px rgba(0,0,0,.25)}
+    .shop-benefits{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+    .shop-benefit-card{position:relative;z-index:1;min-width:0;overflow:hidden;border-radius:18px;padding:14px 15px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);box-shadow:none}
     .shop-benefit-card:nth-child(2){background:linear-gradient(135deg,rgba(255,184,0,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
     .shop-benefit-card:nth-child(3){background:linear-gradient(135deg,rgba(90,160,255,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
-    .shop-benefit-title{font-size:17px;font-weight:800;margin-bottom:8px;color:#fff}
-    .shop-benefit-sub{font-size:14px;color:#d0d0d0;line-height:1.5}
+    .shop-benefit-title{font-size:14px;font-weight:800;margin-bottom:4px;color:#fff;line-height:1.25;overflow-wrap:anywhere}
+    .shop-benefit-sub{font-size:12px;color:#a9abb5;line-height:1.4;overflow-wrap:anywhere}
     .hero-utility-line{margin-top:14px;font-size:14px;color:#b8b8c2;text-align:center}
     .filter-wrap{margin:20px auto 24px}
     .filter-bar{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:18px;box-shadow:var(--bs-shadow)}
@@ -328,6 +328,7 @@
     .shop-lang-switch{padding:6px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
     .shop-lang-btn{min-width:42px;min-height:36px}
     .cart-btn,.user-button,.menu-btn{min-height:44px}
+    .shop-header-row,.shop-header-actions,.shop-header-lower,.filter-wrap,.container,.cart-panel,.modal,.deal-modal{position:relative;z-index:2}
     .cart-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 13px}
     .cart-btn .cart-btn-copy{font-size:13px;font-weight:700;letter-spacing:-.01em}
     .cart-badge{position:static;top:auto;right:auto;width:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:none;line-height:1}
@@ -337,10 +338,10 @@
     .shop-header-tabs .nav-link{padding:10px 14px}
     #btnDeals{background:rgba(255,51,102,.14);border:1px solid rgba(255,51,102,.34);color:#fff}
     #btnDeals.active{background:linear-gradient(180deg,rgba(255,77,125,.95),rgba(255,51,102,.95));border-color:#ff4d7d;box-shadow:0 10px 22px rgba(255,51,102,.24)}
-    .shop-benefits{gap:10px;margin-top:14px}
-    .shop-benefit-card{padding:14px 15px;border-radius:18px;background:rgba(255,255,255,.03);box-shadow:none;min-height:auto}
+    .shop-benefits{gap:8px;margin-top:12px}
+    .shop-benefit-card{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.03);box-shadow:none;min-height:auto}
     .shop-benefit-card:nth-child(1),.shop-benefit-card:nth-child(2),.shop-benefit-card:nth-child(3){background:rgba(255,255,255,.03)}
-    .shop-benefit-title{font-size:14px;margin-bottom:4px}
+    .shop-benefit-title{font-size:13px;margin-bottom:3px}
     .shop-benefit-sub{font-size:12px;line-height:1.4;color:#a9abb5}
     .shop-benefit-card,.shop-benefit-title,.shop-benefit-sub{overflow-wrap:anywhere}
     .hero-utility-line{margin-top:10px;font-size:13px;color:#9ea2ad}
@@ -372,6 +373,8 @@
       .shop-header-tabs .nav-link{justify-content:center;text-align:center;padding:10px 10px}
       .search-wrap{order:2}
       .shop-benefits{grid-template-columns:1fr;grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;padding-bottom:0}
+      .shop-benefit-card{pointer-events:none}
+      .shop-benefit-title,.shop-benefit-sub{pointer-events:none}
       .shop-benefits::-webkit-scrollbar{display:none}
       .shop-benefit-card{padding:12px 14px;border-radius:18px;min-height:0}
       .shop-benefit-title{font-size:13px;line-height:1.25;white-space:normal}
@@ -407,22 +410,22 @@
           <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">IT</button>
           <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">FR</button>
         </div>
-        <button class="cart-btn" id="cartOpenBtn"><span class="cart-btn-icon">🛒</span><span class="cart-btn-copy" data-shop-i18n="cartHeaderBtn">Warenkorb</span><span id="cartBadge" class="cart-badge">0</span></button>
+        <button class="cart-btn" id="cartOpenBtn" type="button" onclick="if(window.toggleCartPanel){toggleCartPanel();}"><span class="cart-btn-icon">🛒</span><span class="cart-btn-copy" data-shop-i18n="cartHeaderBtn">Warenkorb</span><span id="cartBadge" class="cart-badge">0</span></button>
         <div class="user-menu">
-          <button class="user-button" id="userBtn">👤 Login</button>
+          <button class="user-button" id="userBtn" type="button" onclick="if(window.onUserButtonClick){onUserButtonClick(event);}">👤 Login</button>
           <div class="user-dropdown" id="userDropdown">
             <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
             <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
           </div>
         </div>
-        <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
+        <button class="menu-btn" id="shopMenuBtn" type="button" aria-label="Menü öffnen" onclick="if(window.openShopDrawer){openShopDrawer();}">☰</button>
       </div>
     </div>
     <div class="shop-header-lower">
       <div class="shop-header-tabs nav-links">
-        <button class="nav-link active" id="btnDeals">🍸 Deals</button>
-        <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
-        <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
+        <button class="nav-link active" id="btnDeals" type="button">🍸 Deals</button>
+        <button class="nav-link" id="btnFavorites" type="button" style="display:none">❤️ Favoriten</button>
+        <button class="nav-link" id="btnOrders" type="button" style="display:none">📦 Bestellungen</button>
       </div>
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
@@ -468,8 +471,8 @@
 
 <div class="shop-benefits">
   <div class="shop-benefit-card">
-    <div class="shop-benefit-title" data-shop-i18n="shopBenefitFastTitle">⚡ Schnell kaufen</div>
-    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitFastSub">Direkt online sichern und später entspannt einlösen.</div>
+    <div class="shop-benefit-title" data-shop-i18n="shopBenefitFastTitle">✨ Jetzt sichern</div>
+    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitFastSub">Deals sofort sichern und entspannt vor Ort geniessen.</div>
   </div>
   <div class="shop-benefit-card">
     <div class="shop-benefit-title" data-shop-i18n="shopBenefitLocalTitle">🍸 Lokale Bars entdecken</div>
@@ -526,8 +529,8 @@
 <!-- MAIN -->
 <div class="container">
   <div style="display:flex;gap:10px;margin-bottom:16px">
-    <button id="viewGrid" data-shop-i18n="viewDeals" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🏠 Deals</button>
-    <button id="viewMap" data-shop-i18n="viewMap" style="background:#2a2a2a;color:#ccc;border:1px solid #3a3a3a;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🗺️ Karte</button>
+    <button type="button" id="viewGrid" data-shop-i18n="viewDeals" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🏠 Deals</button>
+    <button type="button" id="viewMap" data-shop-i18n="viewMap" style="background:#2a2a2a;color:#ccc;border:1px solid #3a3a3a;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🗺️ Karte</button>
   </div>
   <div id="shopMapWrap" style="display:none;border-radius:16px;overflow:hidden;border:1px solid #2a2a2a;margin-bottom:20px">
     <div class="map-state-bar">
@@ -716,8 +719,6 @@
   </div>
 </div>
 
-<script src="shop-app.js?v=20260320-2"></script>
-
 <!-- Deal Detail Modal -->
 <div id="dealDetailModal" class="deal-modal">
   <div class="deal-modal-box">
@@ -735,7 +736,7 @@
       </div>
       <div class="deal-modal-info" id="ddInfo"></div>
       <div class="share-row" id="ddShare"></div>
-      <button class="btn-buy" id="ddBuyBtn" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer" data-shop-i18n="buyBtn">Jetzt kaufen</button>
+      <button type="button" class="btn-buy" id="ddBuyBtn" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer" data-shop-i18n="buyBtn">Jetzt kaufen</button>
     </div>
   </div>
 </div>
@@ -744,10 +745,11 @@
 <div id="cartPanel" class="cart-panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
     <h2 style="font-size:18px" id="cartTitle" data-shop-i18n="cartTitle">🛒 Warenkorb</h2>
-    <button id="cartCloseBtn" style="background:none;border:none;color:#999;font-size:22px;cursor:pointer">✕</button>
+    <button type="button" id="cartCloseBtn" style="background:none;border:none;color:#999;font-size:22px;cursor:pointer">✕</button>
   </div>
   <div id="cartBody"></div>
 </div>
 <div class="cart-overlay" id="cartOverlay"></div>
+<script src="shop-app.js?v=20260316-3"></script>
 </body>
 </html>
