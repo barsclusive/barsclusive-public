@@ -2699,7 +2699,11 @@ try {
       favoritesNav:'Favoriten', noAccountYet:'Noch kein Konto?',
       statusPending:'Ausstehend', statusBought:'Gekauft', statusRedeemed:'Eingelöst',
       timeSlotMorning:'🌅 Morgen', timeSlotMidday:'☀️ Mittag', timeSlotEvening:'🌙 Abend', weekdaysLabel:'Wochentage',
-      buyBtn:'Deal kaufen'
+      buyBtn:'Deal kaufen',
+      shopBenefitFastTitle:'⚡ Schnell kaufen', shopBenefitFastSub:'Direkt online sichern und später entspannt einlösen.',
+      shopBenefitLocalTitle:'🍸 Lokale Bars entdecken', shopBenefitLocalSub:'Finde Angebote in deiner Nähe und sortiere sie nach Distanz.',
+      shopBenefitExclusiveTitle:'✨ Exklusive Angebote', shopBenefitExclusiveSub:'Breakfast, Brunch, Aperitif und Event-Deals übersichtlich an einem Ort.',
+      dealsIntro:'Heute kaufen, später entspannt einlösen.'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
       menuTitle:'Explore more', menuNote:'Quick access to the important pages without endless scrolling.',
@@ -2708,7 +2712,11 @@ try {
       favoritesNav:'Favorites', noAccountYet:'No account yet?',
       statusPending:'Pending', statusBought:'Purchased', statusRedeemed:'Redeemed',
       timeSlotMorning:'🌅 Morning', timeSlotMidday:'☀️ Midday', timeSlotEvening:'🌙 Evening', weekdaysLabel:'Weekdays',
-      buyBtn:'Buy deal'
+      buyBtn:'Buy deal',
+      shopBenefitFastTitle:'⚡ Buy quickly', shopBenefitFastSub:'Secure deals online in seconds and redeem them later with ease.',
+      shopBenefitLocalTitle:'🍸 Discover local bars', shopBenefitLocalSub:'Find nearby offers and sort them by distance.',
+      shopBenefitExclusiveTitle:'✨ Exclusive offers', shopBenefitExclusiveSub:'Breakfast, brunch, aperitif and event deals clearly in one place.',
+      dealsIntro:'Buy today, redeem later without stress.'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
       menuTitle:'Scopri di più', menuNote:'Tutto importante a portata di mano, senza scorrere fino in fondo.',
@@ -2717,7 +2725,11 @@ try {
       favoritesNav:'Preferiti', noAccountYet:'Non hai ancora un account?',
       statusPending:'In attesa', statusBought:'Acquistato', statusRedeemed:'Riscattato',
       timeSlotMorning:'🌅 Mattina', timeSlotMidday:'☀️ Pranzo', timeSlotEvening:'🌙 Sera', weekdaysLabel:'Giorni',
-      buyBtn:'Acquista deal'
+      buyBtn:'Acquista deal',
+      shopBenefitFastTitle:'⚡ Acquisto rapido', shopBenefitFastSub:'Acquista online in pochi secondi e usa il deal con calma più tardi.',
+      shopBenefitLocalTitle:'🍸 Scopri bar locali', shopBenefitLocalSub:'Trova offerte vicine a te e ordinale per distanza.',
+      shopBenefitExclusiveTitle:'✨ Offerte esclusive', shopBenefitExclusiveSub:'Breakfast, brunch, aperitif ed eventi raccolti in modo chiaro in un solo posto.',
+      dealsIntro:'Acquista oggi e riscatta più tardi senza stress.'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
       menuTitle:'Découvrir plus', menuNote:'Toutes les pages importantes rapidement accessibles, sans devoir scroller jusqu’en bas.',
@@ -2726,7 +2738,11 @@ try {
       favoritesNav:'Favoris', noAccountYet:'Pas encore de compte ?',
       statusPending:'En attente', statusBought:'Acheté', statusRedeemed:'Utilisé',
       timeSlotMorning:'🌅 Matin', timeSlotMidday:'☀️ Midi', timeSlotEvening:'🌙 Soir', weekdaysLabel:'Jours',
-      buyBtn:'Acheter l’offre'
+      buyBtn:'Acheter l’offre',
+      shopBenefitFastTitle:'⚡ Achat rapide', shopBenefitFastSub:'Réserve en ligne en quelques secondes et utilise ton offre plus tard tranquillement.',
+      shopBenefitLocalTitle:'🍸 Découvrir des bars locaux', shopBenefitLocalSub:'Trouve des offres près de toi et trie-les par distance.',
+      shopBenefitExclusiveTitle:'✨ Offres exclusives', shopBenefitExclusiveSub:'Breakfast, brunch, aperitif et offres d’événements regroupés clairement au même endroit.',
+      dealsIntro:'Acheter aujourd’hui, utiliser plus tard en toute tranquillité.'
     });
   } catch(e) {}
 
