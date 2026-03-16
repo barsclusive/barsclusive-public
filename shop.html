@@ -322,6 +322,67 @@
       .container > div:first-child{display:grid !important;grid-template-columns:1fr 1fr}.section-subline{font-size:13px;margin-bottom:14px}
       .modal-box,.deal-modal-box{border-radius:22px;padding:20px}.order-head{flex-direction:column;align-items:flex-start}
     }
+    .shop-brand-mark{padding:10px 14px;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 34px rgba(0,0,0,.24)}
+    .logo.shop-brand-mark img{height:92px !important;display:block}
+    .shop-header-actions{align-items:flex-start}
+    .shop-lang-switch{padding:6px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+    .shop-lang-btn{min-width:42px;min-height:36px}
+    .cart-btn,.user-button,.menu-btn{min-height:44px}
+    .cart-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 13px}
+    .cart-btn .cart-btn-copy{font-size:13px;font-weight:700;letter-spacing:-.01em}
+    .cart-badge{position:static;top:auto;right:auto;width:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:none;line-height:1}
+    .cart-btn.has-items{border-color:rgba(255,51,102,.32);background:rgba(255,51,102,.12)}
+    .user-button{max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .shop-header-tabs{padding:6px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
+    .shop-header-tabs .nav-link{padding:10px 14px}
+    #btnDeals{background:rgba(255,51,102,.14);border:1px solid rgba(255,51,102,.34);color:#fff}
+    #btnDeals.active{background:linear-gradient(180deg,rgba(255,77,125,.95),rgba(255,51,102,.95));border-color:#ff4d7d;box-shadow:0 10px 22px rgba(255,51,102,.24)}
+    .shop-benefits{gap:10px;margin-top:14px}
+    .shop-benefit-card{padding:14px 15px;border-radius:18px;background:rgba(255,255,255,.03);box-shadow:none;min-height:auto}
+    .shop-benefit-card:nth-child(1),.shop-benefit-card:nth-child(2),.shop-benefit-card:nth-child(3){background:rgba(255,255,255,.03)}
+    .shop-benefit-title{font-size:14px;margin-bottom:4px}
+    .shop-benefit-sub{font-size:12px;line-height:1.4;color:#a9abb5}
+    .hero-utility-line{margin-top:10px;font-size:13px;color:#9ea2ad}
+    .filter-wrap{margin:18px auto 24px}
+    .filter-bar{padding:16px 18px;border-radius:24px}
+    .filter-row{gap:8px 10px;align-items:center}
+    .filter-label{min-width:88px;padding-top:0;align-self:center}
+    .filter-btn{padding:9px 14px;min-height:40px}
+    .filter-btn.active{box-shadow:0 8px 18px rgba(255,51,102,.18)}
+    .date-picker-wrap{gap:8px;flex-wrap:nowrap;max-width:100%}
+    .date-picker-label{padding:9px 14px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .date-input{height:40px;min-width:132px}
+    @media(max-width:900px){
+      .shop-header-actions{width:100%;justify-content:space-between}
+      .shop-header-lower{gap:12px}
+    }
+    @media(max-width:768px){
+      .header{padding:12px}
+      .shop-header-row{display:grid;grid-template-columns:1fr;gap:12px}
+      .shop-header-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+      .shop-lang-switch{grid-column:1/-1;justify-content:flex-start}
+      .user-menu{min-width:0}
+      .cart-btn,.user-button,.menu-btn{width:100%;justify-content:center}
+      .user-button{max-width:none}
+      .menu-btn{padding-left:0;padding-right:0}
+      .shop-brand-mark{padding:12px 14px;border-radius:22px}
+      .logo.shop-brand-mark img{height:76px !important}
+      .shop-header-tabs{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+      .shop-header-tabs .nav-link{justify-content:center;text-align:center;padding:10px 10px}
+      .search-wrap{order:2}
+      .shop-benefits{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(180px,1fr);overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:4px}
+      .shop-benefits::-webkit-scrollbar{display:none}
+      .filter-bar{padding:16px;border-radius:22px}
+      .filter-row{flex-wrap:wrap;overflow:visible;padding-bottom:0;margin-bottom:14px;align-items:flex-start}
+      .filter-row:last-child{margin-bottom:0}
+      .filter-label{position:static;min-width:100%;background:none;padding:0 0 2px}
+      .date-picker-wrap{width:100%;justify-content:space-between}
+      .date-picker-label{max-width:calc(100% - 126px);flex:1 1 auto}
+      .date-input{width:118px;min-width:118px}
+      .filter-row:last-child .search-select-wrap{min-width:100%}
+      .filter-row:last-child #btnApplyLocation,.filter-row:last-child #btnUseMyLocation,.filter-row:last-child #btnClearLocation{flex:1 1 calc(50% - 5px)}
+    }
+
   </style>
 </head>
 <body class="shop-page">
@@ -332,7 +393,7 @@
 <div class="header">
   <div class="nav shop-nav-shell">
     <div class="shop-header-row">
-      <div class="logo" style="display:flex;align-items:center;gap:8px">
+      <div class="logo shop-brand-mark" style="display:flex;align-items:center;gap:8px">
         <img src="logo.png" alt="BarSclusive" style="height:88px">
       </div>
       <div class="shop-header-actions">
@@ -342,7 +403,7 @@
           <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">IT</button>
           <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">FR</button>
         </div>
-        <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
+        <button class="cart-btn" id="cartOpenBtn"><span class="cart-btn-icon">🛒</span><span class="cart-btn-copy" data-shop-i18n="cartHeaderBtn">Warenkorb</span><span id="cartBadge" class="cart-badge">0</span></button>
         <div class="user-menu">
           <button class="user-button" id="userBtn">👤 Login</button>
           <div class="user-dropdown" id="userDropdown">
@@ -355,7 +416,7 @@
     </div>
     <div class="shop-header-lower">
       <div class="shop-header-tabs nav-links">
-        <button class="nav-link active" id="btnDeals">🏠 Deals</button>
+        <button class="nav-link active" id="btnDeals">🍸 Deals</button>
         <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
         <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
       </div>
