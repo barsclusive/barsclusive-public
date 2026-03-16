@@ -771,9 +771,17 @@ async function doRefund(orderId) {
 // =============================================
 // AUTH
 // =============================================
-function onUserButtonClick() {
+function onUserButtonClick(ev) {
+  if (ev) { ev.preventDefault(); ev.stopPropagation(); }
   if (!sessionGet()) { openModal('loginModal'); }
-  else { document.getElementById('userDropdown').classList.toggle('show'); }
+  else {
+    var dd = document.getElementById('userDropdown');
+    if (!dd) return;
+    var willShow = !dd.classList.contains('show');
+    dd.classList.toggle('show');
+    var btn = document.getElementById('userBtn');
+    if (btn) btn.setAttribute('aria-expanded', willShow ? 'true' : 'false');
+  }
 }
 
 async function doLogin() {
@@ -902,7 +910,10 @@ window.addEventListener('popstate', (e) => {
 document.addEventListener('click', e => {
   if (e.target.classList.contains('modal')) e.target.classList.remove('active');
   if (!e.target.closest('.user-menu')) {
-    document.getElementById('userDropdown').classList.remove('show');
+    var dd = document.getElementById('userDropdown');
+    if (dd) dd.classList.remove('show');
+    var ub = document.getElementById('userBtn');
+    if (ub) ub.setAttribute('aria-expanded', 'false');
   }
 });
 
@@ -1238,7 +1249,7 @@ function applyShopTranslations() {
   if (heroTitle) heroTitle.textContent = st('heroTitle');
   if (heroSub)   heroSub.textContent   = st('heroSub');
   const btnDeals  = document.getElementById('btnDeals');
-  if (btnDeals) btnDeals.textContent = '🏠 ' + st('deals');
+  if (btnDeals) btnDeals.textContent = '🍸 ' + st('deals');
   const btnOrders = document.getElementById('btnOrders');
   if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
   document.querySelectorAll('[data-shop-i18n]').forEach(function(el) {
@@ -1695,9 +1706,15 @@ function getCartTotal() {
 function updateCartBadge() {
   getCart();
   var badge = document.getElementById('cartBadge');
+  var openBtn = document.getElementById('cartOpenBtn');
   var count = 0;
   _cart.forEach(function(c) { count += c.quantity; });
-  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline-flex' : 'none'; }
+  if (openBtn) {
+    openBtn.classList.toggle('has-items', count > 0);
+    openBtn.setAttribute('aria-label', (shopT('cartHeaderBtn') || 'Warenkorb') + (count > 0 ? ' (' + count + ')' : ''));
+    openBtn.title = count > 0 ? ((shopT('cartHeaderBtn') || 'Warenkorb') + ' (' + count + ')') : (shopT('cartHeaderBtn') || 'Warenkorb');
+  }
 }
 
 function renderCartPanel() {
@@ -2694,55 +2711,59 @@ try {
   try {
     Object.assign(SHOP_TRANSLATIONS.de, {
       menuTitle:'Mehr entdecken', menuNote:'Alles Wichtige schnell erreichbar, ohne bis zum Seitenende zu scrollen.',
-      customDateBtn:'📅 Eigenes Datum wählen', customDateLabel:'Eigenes Datum',
+      customDateBtn:'📅 Datum wählen', customDateLabel:'Datum',
       myLocationBtn:'Nach Distanz sortieren', geoCurrentLocation:'Aktueller Standort',
       favoritesNav:'Favoriten', noAccountYet:'Noch kein Konto?',
       statusPending:'Ausstehend', statusBought:'Gekauft', statusRedeemed:'Eingelöst',
       timeSlotMorning:'🌅 Morgen', timeSlotMidday:'☀️ Mittag', timeSlotEvening:'🌙 Abend', weekdaysLabel:'Wochentage',
       buyBtn:'Deal kaufen',
-      shopBenefitFastTitle:'⚡ Schnell kaufen', shopBenefitFastSub:'Direkt online sichern und später entspannt einlösen.',
-      shopBenefitLocalTitle:'🍸 Lokale Bars entdecken', shopBenefitLocalSub:'Finde Angebote in deiner Nähe und sortiere sie nach Distanz.',
-      shopBenefitExclusiveTitle:'✨ Exklusive Angebote', shopBenefitExclusiveSub:'Breakfast, Brunch, Aperitif und Event-Deals übersichtlich an einem Ort.',
-      dealsIntro:'Heute kaufen, später entspannt einlösen.'
+      shopBenefitFastTitle:'✨ Direkt sichern', shopBenefitFastSub:'In wenigen Sekunden reserviert.',
+      shopBenefitLocalTitle:'📍 In deiner Nähe', shopBenefitLocalSub:'Bars und Deals nach Distanz entdecken.',
+      shopBenefitExclusiveTitle:'🍸 Kuratierte Selektion', shopBenefitExclusiveSub:'Breakfast bis Aperitivo an einem Ort.',
+      dealsIntro:'Kuratierte Deals für Breakfast, Brunch, Aperitivo und Events.',
+      cartHeaderBtn:'Warenkorb', profitiere:'Jetzt sichern'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
       menuTitle:'Explore more', menuNote:'Quick access to the important pages without endless scrolling.',
-      customDateBtn:'📅 Choose your own date', customDateLabel:'Custom date',
+      customDateBtn:'📅 Pick a date', customDateLabel:'Date',
       myLocationBtn:'Sort by distance', geoCurrentLocation:'Current location',
       favoritesNav:'Favorites', noAccountYet:'No account yet?',
       statusPending:'Pending', statusBought:'Purchased', statusRedeemed:'Redeemed',
       timeSlotMorning:'🌅 Morning', timeSlotMidday:'☀️ Midday', timeSlotEvening:'🌙 Evening', weekdaysLabel:'Weekdays',
       buyBtn:'Buy deal',
-      shopBenefitFastTitle:'⚡ Buy quickly', shopBenefitFastSub:'Secure deals online in seconds and redeem them later with ease.',
-      shopBenefitLocalTitle:'🍸 Discover local bars', shopBenefitLocalSub:'Find nearby offers and sort them by distance.',
-      shopBenefitExclusiveTitle:'✨ Exclusive offers', shopBenefitExclusiveSub:'Breakfast, brunch, aperitif and event deals clearly in one place.',
-      dealsIntro:'Buy today, redeem later without stress.'
+      shopBenefitFastTitle:'✨ Secure instantly', shopBenefitFastSub:'Reserved in just a few seconds.',
+      shopBenefitLocalTitle:'📍 Nearby first', shopBenefitLocalSub:'Discover bars and deals by distance.',
+      shopBenefitExclusiveTitle:'🍸 Curated selection', shopBenefitExclusiveSub:'From breakfast to aperitivo in one place.',
+      dealsIntro:'Curated deals for breakfast, brunch, aperitivo and events.',
+      cartHeaderBtn:'Cart', profitiere:'Secure now'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
       menuTitle:'Scopri di più', menuNote:'Tutto importante a portata di mano, senza scorrere fino in fondo.',
-      customDateBtn:'📅 Scegli una data', customDateLabel:'Data personalizzata',
+      customDateBtn:'📅 Scegli data', customDateLabel:'Data',
       myLocationBtn:'Ordina per distanza', geoCurrentLocation:'Posizione attuale',
       favoritesNav:'Preferiti', noAccountYet:'Non hai ancora un account?',
       statusPending:'In attesa', statusBought:'Acquistato', statusRedeemed:'Riscattato',
       timeSlotMorning:'🌅 Mattina', timeSlotMidday:'☀️ Pranzo', timeSlotEvening:'🌙 Sera', weekdaysLabel:'Giorni',
       buyBtn:'Acquista deal',
-      shopBenefitFastTitle:'⚡ Acquisto rapido', shopBenefitFastSub:'Acquista online in pochi secondi e usa il deal con calma più tardi.',
-      shopBenefitLocalTitle:'🍸 Scopri bar locali', shopBenefitLocalSub:'Trova offerte vicine a te e ordinale per distanza.',
-      shopBenefitExclusiveTitle:'✨ Offerte esclusive', shopBenefitExclusiveSub:'Breakfast, brunch, aperitif ed eventi raccolti in modo chiaro in un solo posto.',
-      dealsIntro:'Acquista oggi e riscatta più tardi senza stress.'
+      shopBenefitFastTitle:'✨ Blocca subito', shopBenefitFastSub:'Prenotato in pochi secondi.',
+      shopBenefitLocalTitle:'📍 Vicino a te', shopBenefitLocalSub:'Scopri bar e deal per distanza.',
+      shopBenefitExclusiveTitle:'🍸 Selezione curata', shopBenefitExclusiveSub:'Da breakfast ad aperitivo in un solo posto.',
+      dealsIntro:'Deal curati per breakfast, brunch, aperitivo ed eventi.',
+      cartHeaderBtn:'Carrello', profitiere:'Blocca ora'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
       menuTitle:'Découvrir plus', menuNote:'Toutes les pages importantes rapidement accessibles, sans devoir scroller jusqu’en bas.',
-      customDateBtn:'📅 Choisir une date', customDateLabel:'Date personnalisée',
+      customDateBtn:'📅 Choisir date', customDateLabel:'Date',
       myLocationBtn:'Trier par distance', geoCurrentLocation:'Position actuelle',
       favoritesNav:'Favoris', noAccountYet:'Pas encore de compte ?',
       statusPending:'En attente', statusBought:'Acheté', statusRedeemed:'Utilisé',
       timeSlotMorning:'🌅 Matin', timeSlotMidday:'☀️ Midi', timeSlotEvening:'🌙 Soir', weekdaysLabel:'Jours',
       buyBtn:'Acheter l’offre',
-      shopBenefitFastTitle:'⚡ Achat rapide', shopBenefitFastSub:'Réserve en ligne en quelques secondes et utilise ton offre plus tard tranquillement.',
-      shopBenefitLocalTitle:'🍸 Découvrir des bars locaux', shopBenefitLocalSub:'Trouve des offres près de toi et trie-les par distance.',
-      shopBenefitExclusiveTitle:'✨ Offres exclusives', shopBenefitExclusiveSub:'Breakfast, brunch, aperitif et offres d’événements regroupés clairement au même endroit.',
-      dealsIntro:'Acheter aujourd’hui, utiliser plus tard en toute tranquillité.'
+      shopBenefitFastTitle:'✨ Réserver vite', shopBenefitFastSub:'Réservé en quelques secondes.',
+      shopBenefitLocalTitle:'📍 Près de toi', shopBenefitLocalSub:'Découvre bars et deals par distance.',
+      shopBenefitExclusiveTitle:'🍸 Sélection soignée', shopBenefitExclusiveSub:'Du breakfast à l’aperitivo au même endroit.',
+      dealsIntro:'Des deals sélectionnés pour breakfast, brunch, aperitivo et événements.',
+      cartHeaderBtn:'Panier', profitiere:'Réserver'
     });
   } catch(e) {}
 
@@ -2770,7 +2791,7 @@ try {
     var btnFavorites = document.getElementById('btnFavorites');
     var ddLogout = document.getElementById('dropdownLogout');
     var ddPw = document.getElementById('dropdownChangePw');
-    if (userBtn) userBtn.textContent = s ? ('👤 ' + escHtml(s.name || '')) : ('👤 ' + st('loginBtn'));
+    if (userBtn) { userBtn.textContent = s ? ('👤 ' + escHtml(s.name || '')) : ('👤 ' + st('loginBtn')); userBtn.setAttribute('aria-expanded', 'false'); }
     if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
     if (btnFavorites) btnFavorites.textContent = '❤️ ' + st('favoritesNav');
     if (ddLogout) ddLogout.textContent = st('logoutBtn');
