@@ -225,38 +225,84 @@
       .drawer-body{padding-bottom:40px}
     }
 
+
+    /* refined mobile header, hero and drawer */
+    .nav{gap:14px}
+    .nav-links{gap:10px;flex-wrap:wrap;justify-content:flex-end;flex:1}
+    .user-menu{order:4}
+    .menu-btn{order:5;margin-left:0}
+    .search-wrap{order:6}
+    .hero-shell{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center;text-align:left}
+    .hero-logo{height:88px;width:auto;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(0,0,0,.28))}
+    .hero-copy h1{margin:0 0 10px;font-size:46px;line-height:1.02;letter-spacing:-.03em}
+    .hero-copy p{margin:0;color:#b8b8bf;font-size:17px;max-width:760px}
+    .hero-benefits{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .hero-benefit-card{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;background:linear-gradient(180deg,#1b1b1f,#131317);border:1px solid rgba(255,255,255,.08);color:#f4f4f5;font-size:14px;font-weight:700;box-shadow:0 14px 28px rgba(0,0,0,.18)}
+    .hero-note{margin-top:16px;color:#cfcfd7;font-size:15px;font-weight:500}
+    .compact-date-picker{display:inline-flex;align-items:center}
+    .date-picker-trigger{display:inline-flex;align-items:center;justify-content:center;min-height:42px;white-space:nowrap}
+    .sr-date-input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+    .side-drawer{right:-380px}
+    .header{padding:16px 20px}
+    .nav-link,.user-button,.cart-btn,.menu-btn{min-height:44px}
+    @media(max-width:768px){
+      .header{padding:12px 14px}
+      .nav{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"logo lang menu" "logo actions actions" "search search search";align-items:center;gap:10px}
+      .logo{grid-area:logo}
+      .nav-links{grid-area:actions;display:grid;grid-template-columns:repeat(4,minmax(0,auto));justify-content:end;gap:8px;align-items:center}
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{grid-column:1 / span 4;justify-self:end}
+      .search-wrap{grid-area:search;order:20;max-width:none;width:100%}
+      .search-input{min-height:48px;font-size:15px;padding-left:38px}
+      .search-icon{left:14px}
+      #btnDeals,#btnFavorites,#btnOrders{padding:11px 16px;border-radius:18px;font-size:14px;justify-self:start}
+      .cart-btn{justify-self:end}
+      .user-menu{justify-self:end}
+      .menu-btn{justify-self:end;min-width:48px;padding:11px 14px;border-radius:16px;background:#17171b}
+      .hero{padding:28px 14px 16px;background:linear-gradient(180deg,#111 0%,#0a0a0c 100%)}
+      .hero-shell{grid-template-columns:1fr;gap:16px}
+      .hero-logo{height:72px}
+      .hero-copy h1{font-size:28px;line-height:1.02}
+      .hero-copy p{font-size:15px;line-height:1.45}
+      .hero-benefits{display:grid;grid-template-columns:1fr;gap:10px}
+      .hero-benefit-card{border-radius:18px;padding:13px 15px;background:linear-gradient(180deg,#18181c,#121216)}
+      .hero-note{font-size:14px;margin-top:10px}
+      .filter-bar{padding:16px;border-radius:24px}
+      .filter-row{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .filter-row::-webkit-scrollbar{display:none}
+      .filter-label{position:sticky;left:0;background:linear-gradient(90deg,#151518 0%,#151518 78%,rgba(21,21,24,0) 100%);padding-right:12px;min-width:82px;z-index:1;font-weight:700}
+      .date-picker-wrap{flex:0 0 auto}
+      .date-picker-trigger{padding:10px 14px;min-height:42px;border-radius:18px;font-size:13px}
+      #btnApplyLocation,#btnUseMyLocation,#btnClearLocation{flex:0 0 auto}
+      .location-pill{flex:0 0 auto}
+      .container{padding:18px 14px}
+      #viewGrid,#viewMap{flex:1;min-height:46px;border-radius:18px}
+      .side-drawer{width:min(340px,86vw)}
+    }
+
   </style>
   <link rel="icon" type="image/png" href="logo.png">
 
   <style id="bs-shop-refresh-style">
     :root{--bs-bg:#050505;--bs-panel:#121212;--bs-panel-2:#181818;--bs-stroke:#262626;--bs-text:#f7f7f7;--bs-muted:#a1a1aa;--bs-soft:#71717a;--bs-pink:#ff3366;--bs-pink-soft:rgba(255,51,102,.14);--bs-shadow:0 18px 45px rgba(0,0,0,.28);--bs-radius:22px}
     body.shop-page{background:radial-gradient(circle at top,#191919 0%,#0a0a0a 34%,#050505 100%);color:var(--bs-text)}
-    .header{backdrop-filter:blur(22px);background:rgba(7,7,7,.88);border-bottom-color:rgba(255,255,255,.06);padding:14px 18px}
-    .nav.shop-nav-shell{display:flex;flex-direction:column;gap:12px;align-items:stretch}
-    .shop-header-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .shop-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-    .shop-lang-switch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .shop-header-lower{display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .shop-header-tabs{display:flex;align-items:center;gap:10px;row-gap:8px;flex-wrap:wrap}
-    .logo img{height:72px !important}
+    .header{backdrop-filter:blur(22px);background:rgba(7,7,7,.88);border-bottom-color:rgba(255,255,255,.06);padding:12px 18px}
+    .nav{gap:14px;align-items:flex-start}
+    .logo img{height:46px !important}
+    .nav-links{flex:1;justify-content:flex-end;gap:10px;row-gap:8px}
     .nav-link,.user-button,.cart-btn,.filter-btn,.btn-ghost,.btn-pink,.btn-buy,.share-btn,.add-cart-btn{transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease}
     .nav-link,.user-button,.cart-btn{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;color:#f4f4f5;box-shadow:none}
     .nav-link:hover,.user-button:hover,.cart-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);background:#1a1a1a}
-    .search-wrap{max-width:420px;min-width:260px;flex:1}
+    .search-wrap{max-width:360px;min-width:220px}
     .search-input{height:40px;padding-left:36px;background:#151515;border-color:rgba(255,255,255,.08);border-radius:999px}
     .search-input::placeholder{color:#7e7e86}
-    .hero{padding:28px 20px 10px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
-    .hero>div{max-width:980px;margin:0 auto;text-align:center}
-    .hero img{display:none !important}
+    .hero{padding:28px 20px 18px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)}
+    .hero>div{max-width:980px;margin:0 auto;justify-content:space-between !important;gap:16px !important;align-items:center !important}
+    .hero img{height:72px !important}
     .hero h1{font-size:clamp(26px,4vw,44px);line-height:1.02;letter-spacing:-.03em;margin-bottom:10px}
-    .hero p{font-size:15px;color:#b7b7bd;max-width:620px;margin:0 auto}
-    .shop-benefits,.hero-utility-line{max-width:1200px;margin:0 auto;padding:0 20px}
-    .shop-benefits{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-    .shop-benefit-card{position:relative;z-index:1;min-width:0;overflow:hidden;border-radius:18px;padding:14px 15px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);box-shadow:none}
-    .shop-benefit-card:nth-child(2){background:linear-gradient(135deg,rgba(255,184,0,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
-    .shop-benefit-card:nth-child(3){background:linear-gradient(135deg,rgba(90,160,255,.14),rgba(255,51,102,.08) 55%,rgba(32,32,32,.96));}
-    .shop-benefit-title{font-size:14px;font-weight:800;margin-bottom:4px;color:#fff;line-height:1.25;overflow-wrap:anywhere}
-    .shop-benefit-sub{font-size:12px;color:#a9abb5;line-height:1.4;overflow-wrap:anywhere}
+    .hero p{font-size:15px;color:#b7b7bd;max-width:620px}
+    .hero-trust-strip,.hero-utility-line{max-width:1200px;margin:0 auto;padding:0 20px}
+    .hero-trust-strip{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+    .trust-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font-size:13px;color:#ececf1}
     .hero-utility-line{margin-top:14px;font-size:14px;color:#b8b8c2;text-align:center}
     .filter-wrap{margin:20px auto 24px}
     .filter-bar{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:18px;box-shadow:var(--bs-shadow)}
@@ -297,24 +343,12 @@
     .footer{background:transparent;border-top-color:rgba(255,255,255,.06);margin-top:42px}
     .footer a{color:#ff5a86}
     body[data-shop-view="favorites"] .hero, body[data-shop-view="orders"] .hero, body[data-shop-view="favorites"] .filter-wrap, body[data-shop-view="orders"] .filter-wrap{display:none}
-    @media(max-width:900px){
-      .shop-header-lower{flex-direction:column;align-items:stretch}
-      .search-wrap{max-width:none;min-width:0;width:100%}
-    }
+    @media(max-width:900px){.nav{align-items:center}.nav-links{justify-content:flex-start}}
     @media(max-width:768px){
-      .header{padding:10px 12px}
-      .shop-header-row{align-items:flex-start;gap:12px}
-      .shop-header-actions{justify-content:flex-end;gap:8px}
-      .shop-lang-switch{gap:6px}
-      .logo img{height:56px !important}
-      .search-wrap{width:100%;max-width:none;min-width:0}.search-input{height:38px}
-      .cart-btn,.user-button{padding:8px 12px}
-      .shop-header-lower{gap:10px}
-      .shop-header-tabs{gap:8px}
-      .hero{padding:18px 12px 10px}.hero>div{justify-content:flex-start !important}.hero h1{text-align:left !important;font-size:24px}.hero p{text-align:left !important;font-size:14px}
-      .shop-benefits,.hero-utility-line,.filter-wrap,.container{padding-left:12px;padding-right:12px}
-      .shop-benefits{grid-template-columns:1fr;gap:12px}
-      .shop-benefit-card{padding:18px}
+      .header{padding:10px 12px}.logo img{height:38px !important}.nav{gap:10px}.nav-links{width:100%;align-items:center;gap:8px}
+      .search-wrap{order:1;flex:1;min-width:0;max-width:none}.search-input{height:38px}.cart-btn,.user-button{padding:8px 12px}
+      .hero{padding:18px 12px 10px}.hero>div{justify-content:flex-start !important}.hero img{height:54px !important}.hero h1{text-align:left !important;font-size:24px}.hero p{text-align:left !important;font-size:14px}
+      .hero-trust-strip,.hero-utility-line,.filter-wrap,.container{padding-left:12px;padding-right:12px}.hero-trust-strip{justify-content:flex-start}.trust-chip{font-size:12px;padding:8px 12px}
       .filter-bar{padding:14px;border-radius:22px}.filter-row{flex-wrap:nowrap;overflow:auto;padding-bottom:2px}.filter-row::-webkit-scrollbar{display:none}.filter-label{position:sticky;left:0;background:linear-gradient(90deg,#181818 65%,rgba(24,24,24,0));padding-right:12px;min-width:72px;flex-shrink:0}
       .filter-row:last-child{flex-wrap:wrap;overflow:visible}.filter-row:last-child .filter-label{position:static;background:none;padding-right:0;min-width:100%}
       .filter-row:last-child .search-select-wrap{min-width:100%}.filter-row:last-child #btnApplyLocation,.filter-row:last-child #btnUseMyLocation,.filter-row:last-child #btnClearLocation{flex:1}
@@ -322,72 +356,58 @@
       .container > div:first-child{display:grid !important;grid-template-columns:1fr 1fr}.section-subline{font-size:13px;margin-bottom:14px}
       .modal-box,.deal-modal-box{border-radius:22px;padding:20px}.order-head{flex-direction:column;align-items:flex-start}
     }
-    .shop-brand-mark{padding:10px 14px;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 34px rgba(0,0,0,.24)}
-    .logo.shop-brand-mark img{height:92px !important;display:block}
-    .shop-header-actions{align-items:flex-start}
-    .shop-lang-switch{padding:6px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-    .shop-lang-btn{min-width:42px;min-height:36px}
-    .cart-btn,.user-button,.menu-btn{min-height:44px}
-    .shop-header-row,.shop-header-actions,.shop-header-lower,.filter-wrap,.container,.cart-panel,.modal,.deal-modal{position:relative;z-index:2}
-    .cart-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 13px}
-    .cart-btn .cart-btn-copy{font-size:13px;font-weight:700;letter-spacing:-.01em}
-    .cart-badge{position:static;top:auto;right:auto;width:auto;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:none;line-height:1}
-    .cart-btn.has-items{border-color:rgba(255,51,102,.32);background:rgba(255,51,102,.12)}
-    .user-button{max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .shop-header-tabs{padding:6px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-    .shop-header-tabs .nav-link{padding:10px 14px}
-    #btnDeals{background:rgba(255,51,102,.14);border:1px solid rgba(255,51,102,.34);color:#fff}
-    #btnDeals.active{background:linear-gradient(180deg,rgba(255,77,125,.95),rgba(255,51,102,.95));border-color:#ff4d7d;box-shadow:0 10px 22px rgba(255,51,102,.24)}
-    .shop-benefits{gap:8px;margin-top:12px}
-    .shop-benefit-card{padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.03);box-shadow:none;min-height:auto}
-    .shop-benefit-card:nth-child(1),.shop-benefit-card:nth-child(2),.shop-benefit-card:nth-child(3){background:rgba(255,255,255,.03)}
-    .shop-benefit-title{font-size:13px;margin-bottom:3px}
-    .shop-benefit-sub{font-size:12px;line-height:1.4;color:#a9abb5}
-    .shop-benefit-card,.shop-benefit-title,.shop-benefit-sub{overflow-wrap:anywhere}
-    .hero-utility-line{margin-top:10px;font-size:13px;color:#9ea2ad}
-    .filter-wrap{margin:18px auto 24px}
-    .filter-bar{padding:16px 18px;border-radius:24px}
-    .filter-row{gap:8px 10px;align-items:center}
-    .filter-label{min-width:88px;padding-top:0;align-self:center}
-    .filter-btn{padding:9px 14px;min-height:40px}
-    .filter-btn.active{box-shadow:0 8px 18px rgba(255,51,102,.18)}
-    .date-picker-wrap{gap:8px;flex-wrap:nowrap;max-width:100%}
-    .date-picker-label{padding:9px 14px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .date-input{height:40px;min-width:132px}
-    @media(max-width:900px){
-      .shop-header-actions{width:100%;justify-content:space-between}
-      .shop-header-lower{gap:12px}
-    }
+
+    /* refined mobile header, hero and drawer */
+    .nav{gap:14px}
+    .nav-links{gap:10px;flex-wrap:wrap;justify-content:flex-end;flex:1}
+    .user-menu{order:4}
+    .menu-btn{order:5;margin-left:0}
+    .search-wrap{order:6}
+    .hero-shell{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center;text-align:left}
+    .hero-logo{height:88px;width:auto;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(0,0,0,.28))}
+    .hero-copy h1{margin:0 0 10px;font-size:46px;line-height:1.02;letter-spacing:-.03em}
+    .hero-copy p{margin:0;color:#b8b8bf;font-size:17px;max-width:760px}
+    .hero-benefits{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .hero-benefit-card{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;background:linear-gradient(180deg,#1b1b1f,#131317);border:1px solid rgba(255,255,255,.08);color:#f4f4f5;font-size:14px;font-weight:700;box-shadow:0 14px 28px rgba(0,0,0,.18)}
+    .hero-note{margin-top:16px;color:#cfcfd7;font-size:15px;font-weight:500}
+    .compact-date-picker{display:inline-flex;align-items:center}
+    .date-picker-trigger{display:inline-flex;align-items:center;justify-content:center;min-height:42px;white-space:nowrap}
+    .sr-date-input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+    .side-drawer{right:-380px}
+    .header{padding:16px 20px}
+    .nav-link,.user-button,.cart-btn,.menu-btn{min-height:44px}
     @media(max-width:768px){
-      .header{padding:12px}
-      .shop-header-row{display:grid;grid-template-columns:1fr;gap:12px}
-      .shop-header-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
-      .shop-lang-switch{grid-column:1/-1;justify-content:flex-start}
-      .user-menu{min-width:0}
-      .cart-btn,.user-button,.menu-btn{width:100%;justify-content:center}
-      .user-button{max-width:none}
-      .menu-btn{padding-left:0;padding-right:0}
-      .shop-brand-mark{padding:12px 14px;border-radius:22px}
-      .logo.shop-brand-mark img{height:76px !important}
-      .shop-header-tabs{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-      .shop-header-tabs .nav-link{justify-content:center;text-align:center;padding:10px 10px}
-      .search-wrap{order:2}
-      .shop-benefits{grid-template-columns:1fr;grid-auto-flow:row;grid-auto-columns:auto;overflow:visible;padding-bottom:0}
-      .shop-benefit-card{pointer-events:none}
-      .shop-benefit-title,.shop-benefit-sub{pointer-events:none}
-      .shop-benefits::-webkit-scrollbar{display:none}
-      .shop-benefit-card{padding:12px 14px;border-radius:18px;min-height:0}
-      .shop-benefit-title{font-size:13px;line-height:1.25;white-space:normal}
-      .shop-benefit-sub{font-size:12px;line-height:1.45;white-space:normal}
-      .filter-bar{padding:16px;border-radius:22px}
-      .filter-row{flex-wrap:wrap;overflow:visible;padding-bottom:0;margin-bottom:14px;align-items:flex-start}
-      .filter-row:last-child{margin-bottom:0}
-      .filter-label{position:static;min-width:100%;background:none;padding:0 0 4px}
-      .date-picker-wrap{width:100%;justify-content:flex-start;gap:8px}
-      .date-picker-label{max-width:none;flex:1 1 calc(100% - 126px);min-height:42px}
-      .date-input{width:118px;min-width:118px}
-      .filter-row:last-child .search-select-wrap{min-width:100%}
-      .filter-row:last-child #btnApplyLocation,.filter-row:last-child #btnUseMyLocation,.filter-row:last-child #btnClearLocation{flex:1 1 calc(50% - 5px)}
+      .header{padding:12px 14px}
+      .nav{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"logo lang menu" "logo actions actions" "search search search";align-items:center;gap:10px}
+      .logo{grid-area:logo}
+      .nav-links{grid-area:actions;display:grid;grid-template-columns:repeat(4,minmax(0,auto));justify-content:end;gap:8px;align-items:center}
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{grid-column:1 / span 4;justify-self:end}
+      .search-wrap{grid-area:search;order:20;max-width:none;width:100%}
+      .search-input{min-height:48px;font-size:15px;padding-left:38px}
+      .search-icon{left:14px}
+      #btnDeals,#btnFavorites,#btnOrders{padding:11px 16px;border-radius:18px;font-size:14px;justify-self:start}
+      .cart-btn{justify-self:end}
+      .user-menu{justify-self:end}
+      .menu-btn{justify-self:end;min-width:48px;padding:11px 14px;border-radius:16px;background:#17171b}
+      .hero{padding:28px 14px 16px;background:linear-gradient(180deg,#111 0%,#0a0a0c 100%)}
+      .hero-shell{grid-template-columns:1fr;gap:16px}
+      .hero-logo{height:72px}
+      .hero-copy h1{font-size:28px;line-height:1.02}
+      .hero-copy p{font-size:15px;line-height:1.45}
+      .hero-benefits{display:grid;grid-template-columns:1fr;gap:10px}
+      .hero-benefit-card{border-radius:18px;padding:13px 15px;background:linear-gradient(180deg,#18181c,#121216)}
+      .hero-note{font-size:14px;margin-top:10px}
+      .filter-bar{padding:16px;border-radius:24px}
+      .filter-row{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+      .filter-row::-webkit-scrollbar{display:none}
+      .filter-label{position:sticky;left:0;background:linear-gradient(90deg,#151518 0%,#151518 78%,rgba(21,21,24,0) 100%);padding-right:12px;min-width:82px;z-index:1;font-weight:700}
+      .date-picker-wrap{flex:0 0 auto}
+      .date-picker-trigger{padding:10px 14px;min-height:42px;border-radius:18px;font-size:13px}
+      #btnApplyLocation,#btnUseMyLocation,#btnClearLocation{flex:0 0 auto}
+      .location-pill{flex:0 0 auto}
+      .container{padding:18px 14px}
+      #viewGrid,#viewMap{flex:1;min-height:46px;border-radius:18px}
+      .side-drawer{width:min(340px,86vw)}
     }
 
   </style>
@@ -398,39 +418,33 @@
 
 <!-- NAVIGATION -->
 <div class="header">
-  <div class="nav shop-nav-shell">
-    <div class="shop-header-row">
-      <div class="logo shop-brand-mark" style="display:flex;align-items:center;gap:8px">
-        <img src="logo.png" alt="BarSclusive" style="height:88px">
-      </div>
-      <div class="shop-header-actions">
-        <div class="shop-lang-switch">
-          <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:10px;color:#fff">DE</button>
-          <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">EN</button>
-          <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">IT</button>
-          <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:10px;color:#888">FR</button>
-        </div>
-        <button class="cart-btn" id="cartOpenBtn" type="button" onclick="if(window.toggleCartPanel){toggleCartPanel();}"><span class="cart-btn-icon">🛒</span><span class="cart-btn-copy" data-shop-i18n="cartHeaderBtn">Warenkorb</span><span id="cartBadge" class="cart-badge">0</span></button>
-        <div class="user-menu">
-          <button class="user-button" id="userBtn" type="button" onclick="if(window.onUserButtonClick){onUserButtonClick(event);}">👤 Login</button>
-          <div class="user-dropdown" id="userDropdown">
-            <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
-            <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
-          </div>
-        </div>
-        <button class="menu-btn" id="shopMenuBtn" type="button" aria-label="Menü öffnen" onclick="if(window.openShopDrawer){openShopDrawer();}">☰</button>
-      </div>
+  <div class="nav">
+    <div class="logo" style="display:flex;align-items:center;gap:8px">
+      <img src="logo.png" alt="BarSclusive" style="height:60px">
     </div>
-    <div class="shop-header-lower">
-      <div class="shop-header-tabs nav-links">
-        <button class="nav-link active" id="btnDeals" type="button">🍸 Deals</button>
-        <button class="nav-link" id="btnFavorites" type="button" style="display:none">❤️ Favoriten</button>
-        <button class="nav-link" id="btnOrders" type="button" style="display:none">📦 Bestellungen</button>
-      </div>
+    <div class="nav-links">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
         <input type="text" class="search-input" id="shopSearch" placeholder="Bar oder Deal suchen...">
       </div>
+      <button class="nav-link active" id="btnDeals">🏠 Deals</button>
+      <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
+      <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
+        <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
+        <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
+        <button class="nav-link shop-lang-btn" id="shopLangFR" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">FR</button>
+      </div>
+      <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
+      <div class="user-menu">
+        <button class="user-button" id="userBtn">👤 Login</button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
+          <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
+        </div>
+      </div>
+      <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
     </div>
   </div>
 
@@ -463,27 +477,20 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div>
-    <h1 id="heroHeadline" data-shop-i18n="heroHeadline">Die besten Bar-Deals deiner Stadt</h1>
-    <p id="heroSubline" data-shop-i18n="heroSubline">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
+  <div class="hero-shell">
+    <img src="logo.png" alt="BarSclusive" class="hero-logo">
+    <div class="hero-copy">
+      <h1 data-shop-i18n="heroTitle">🍹 Die besten Bar-Deals deiner Stadt</h1>
+      <p data-shop-i18n="heroSub">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
+      <div class="hero-benefits">
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitQuick">⚡ Schnell kaufen</div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitLocal">🍸 Lokale Bars entdecken</div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitMobile">📱 Perfekt fürs Handy</div>
+      </div>
+      <div class="hero-note" id="heroUtilityLine" data-shop-i18n="heroUtility">Heute kaufen, später entspannt einlösen.</div>
+    </div>
   </div>
 </div>
-
-<div class="shop-benefits">
-  <div class="shop-benefit-card">
-    <div class="shop-benefit-title" data-shop-i18n="shopBenefitFastTitle">✨ Jetzt sichern</div>
-    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitFastSub">Deals sofort sichern und entspannt vor Ort geniessen.</div>
-  </div>
-  <div class="shop-benefit-card">
-    <div class="shop-benefit-title" data-shop-i18n="shopBenefitLocalTitle">🍸 Lokale Bars entdecken</div>
-    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitLocalSub">Finde Angebote in deiner Nähe und sortiere sie nach Distanz.</div>
-  </div>
-  <div class="shop-benefit-card">
-    <div class="shop-benefit-title" data-shop-i18n="shopBenefitExclusiveTitle">✨ Exklusive Angebote</div>
-    <div class="shop-benefit-sub" data-shop-i18n="shopBenefitExclusiveSub">Breakfast, Brunch, Aperitif und Event-Deals übersichtlich an einem Ort.</div>
-  </div>
-</div>
-<div class="hero-utility-line" id="dealsUtilityLine" data-shop-i18n="dealsIntro">Heute kaufen, später entspannt einlösen.</div>
 
 <!-- FILTER BAR -->
 <div class="filter-wrap">
@@ -529,8 +536,8 @@
 <!-- MAIN -->
 <div class="container">
   <div style="display:flex;gap:10px;margin-bottom:16px">
-    <button type="button" id="viewGrid" data-shop-i18n="viewDeals" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🏠 Deals</button>
-    <button type="button" id="viewMap" data-shop-i18n="viewMap" style="background:#2a2a2a;color:#ccc;border:1px solid #3a3a3a;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🗺️ Karte</button>
+    <button id="viewGrid" data-shop-i18n="viewDeals" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🏠 Deals</button>
+    <button id="viewMap" data-shop-i18n="viewMap" style="background:#2a2a2a;color:#ccc;border:1px solid #3a3a3a;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🗺️ Karte</button>
   </div>
   <div id="shopMapWrap" style="display:none;border-radius:16px;overflow:hidden;border:1px solid #2a2a2a;margin-bottom:20px">
     <div class="map-state-bar">
@@ -719,6 +726,8 @@
   </div>
 </div>
 
+<script src="shop-app.js?v=20260320-1"></script>
+
 <!-- Deal Detail Modal -->
 <div id="dealDetailModal" class="deal-modal">
   <div class="deal-modal-box">
@@ -736,7 +745,7 @@
       </div>
       <div class="deal-modal-info" id="ddInfo"></div>
       <div class="share-row" id="ddShare"></div>
-      <button type="button" class="btn-buy" id="ddBuyBtn" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer" data-shop-i18n="buyBtn">Jetzt kaufen</button>
+      <button class="btn-buy" id="ddBuyBtn" style="width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer" data-shop-i18n="buyBtn">Jetzt kaufen</button>
     </div>
   </div>
 </div>
@@ -745,11 +754,10 @@
 <div id="cartPanel" class="cart-panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
     <h2 style="font-size:18px" id="cartTitle" data-shop-i18n="cartTitle">🛒 Warenkorb</h2>
-    <button type="button" id="cartCloseBtn" style="background:none;border:none;color:#999;font-size:22px;cursor:pointer">✕</button>
+    <button id="cartCloseBtn" style="background:none;border:none;color:#999;font-size:22px;cursor:pointer">✕</button>
   </div>
   <div id="cartBody"></div>
 </div>
 <div class="cart-overlay" id="cartOverlay"></div>
-<script src="shop-app.js?v=20260316-3"></script>
 </body>
 </html>
