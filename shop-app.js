@@ -2721,10 +2721,10 @@ try {
       statusPending:'Ausstehend', statusBought:'Gekauft', statusRedeemed:'Eingelöst',
       timeSlotMorning:'🌅 Morgen', timeSlotMidday:'☀️ Mittag', timeSlotEvening:'🌙 Abend', weekdaysLabel:'Wochentage',
       buyBtn:'Deal kaufen',
-      shopBenefitFastTitle:'✨ Lieblingsdeal sichern', shopBenefitFastSub:'Mit wenigen Taps kaufen und später entspannt geniessen.',
-      shopBenefitLocalTitle:'📍 Bars in deiner Nähe', shopBenefitLocalSub:'Entdecke Angebote vor Ort und sortiere sie nach Distanz.',
-      shopBenefitExclusiveTitle:'🍸 Kuratierte Auswahl', shopBenefitExclusiveSub:'Breakfast, Brunch, Aperitivo und Events auf einen Blick.',
-      dealsIntro:'Entdecke ausgewählte Deals für deinen nächsten Bar-Moment.',
+      shopBenefitFastTitle:'✨ Direkt sichern', shopBenefitFastSub:'In wenigen Sekunden reserviert.',
+      shopBenefitLocalTitle:'📍 In deiner Nähe', shopBenefitLocalSub:'Bars und Deals nach Distanz entdecken.',
+      shopBenefitExclusiveTitle:'🍸 Kuratierte Selektion', shopBenefitExclusiveSub:'Breakfast bis Aperitivo an einem Ort.',
+      dealsIntro:'Kuratierte Deals für Breakfast, Brunch, Aperitivo und Events.',
       cartHeaderBtn:'Warenkorb', profitiere:'Jetzt sichern'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
@@ -2735,10 +2735,10 @@ try {
       statusPending:'Pending', statusBought:'Purchased', statusRedeemed:'Redeemed',
       timeSlotMorning:'🌅 Morning', timeSlotMidday:'☀️ Midday', timeSlotEvening:'🌙 Evening', weekdaysLabel:'Weekdays',
       buyBtn:'Buy deal',
-      shopBenefitFastTitle:'✨ Save your next deal', shopBenefitFastSub:'Secure it in a few taps and enjoy it later.',
-      shopBenefitLocalTitle:'📍 Bars near you', shopBenefitLocalSub:'Discover nearby offers and sort them by distance.',
-      shopBenefitExclusiveTitle:'🍸 Curated picks', shopBenefitExclusiveSub:'Breakfast, brunch, aperitivo and events in one place.',
-      dealsIntro:'Discover selected deals for your next bar moment.',
+      shopBenefitFastTitle:'✨ Secure instantly', shopBenefitFastSub:'Reserved in just a few seconds.',
+      shopBenefitLocalTitle:'📍 Nearby first', shopBenefitLocalSub:'Discover bars and deals by distance.',
+      shopBenefitExclusiveTitle:'🍸 Curated selection', shopBenefitExclusiveSub:'From breakfast to aperitivo in one place.',
+      dealsIntro:'Curated deals for breakfast, brunch, aperitivo and events.',
       cartHeaderBtn:'Cart', profitiere:'Secure now'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
@@ -2749,10 +2749,10 @@ try {
       statusPending:'In attesa', statusBought:'Acquistato', statusRedeemed:'Riscattato',
       timeSlotMorning:'🌅 Mattina', timeSlotMidday:'☀️ Pranzo', timeSlotEvening:'🌙 Sera', weekdaysLabel:'Giorni',
       buyBtn:'Acquista deal',
-      shopBenefitFastTitle:'✨ Blocca il tuo deal', shopBenefitFastSub:'Acquista in pochi tocchi e goditelo con calma più tardi.',
-      shopBenefitLocalTitle:'📍 Bar vicino a te', shopBenefitLocalSub:'Scopri le offerte intorno a te e ordinale per distanza.',
-      shopBenefitExclusiveTitle:'🍸 Selezione curata', shopBenefitExclusiveSub:'Breakfast, brunch, aperitivo ed eventi in un solo posto.',
-      dealsIntro:'Scopri deal selezionati per il tuo prossimo momento al bar.',
+      shopBenefitFastTitle:'✨ Blocca subito', shopBenefitFastSub:'Prenotato in pochi secondi.',
+      shopBenefitLocalTitle:'📍 Vicino a te', shopBenefitLocalSub:'Scopri bar e deal per distanza.',
+      shopBenefitExclusiveTitle:'🍸 Selezione curata', shopBenefitExclusiveSub:'Da breakfast ad aperitivo in un solo posto.',
+      dealsIntro:'Deal curati per breakfast, brunch, aperitivo ed eventi.',
       cartHeaderBtn:'Carrello', profitiere:'Blocca ora'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
@@ -2763,10 +2763,10 @@ try {
       statusPending:'En attente', statusBought:'Acheté', statusRedeemed:'Utilisé',
       timeSlotMorning:'🌅 Matin', timeSlotMidday:'☀️ Midi', timeSlotEvening:'🌙 Soir', weekdaysLabel:'Jours',
       buyBtn:'Acheter l’offre',
-      shopBenefitFastTitle:'✨ Garde ton deal', shopBenefitFastSub:'Achète en quelques taps et profite-en plus tard en toute simplicité.',
-      shopBenefitLocalTitle:'📍 Bars près de toi', shopBenefitLocalSub:'Découvre les offres autour de toi et trie-les par distance.',
-      shopBenefitExclusiveTitle:'🍸 Sélection soignée', shopBenefitExclusiveSub:'Breakfast, brunch, aperitivo et événements au même endroit.',
-      dealsIntro:'Découvre une sélection de deals pour ton prochain moment au bar.',
+      shopBenefitFastTitle:'✨ Réserver vite', shopBenefitFastSub:'Réservé en quelques secondes.',
+      shopBenefitLocalTitle:'📍 Près de toi', shopBenefitLocalSub:'Découvre bars et deals par distance.',
+      shopBenefitExclusiveTitle:'🍸 Sélection soignée', shopBenefitExclusiveSub:'Du breakfast à l’aperitivo au même endroit.',
+      dealsIntro:'Des deals sélectionnés pour breakfast, brunch, aperitivo et événements.',
       cartHeaderBtn:'Panier', profitiere:'Réserver'
     });
   } catch(e) {}
