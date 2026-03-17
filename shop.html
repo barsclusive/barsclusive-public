@@ -416,9 +416,42 @@ object-src 'none';">
 
   </style>
 
-  <style>/* iOS touch fix: prevent hover blocking first tap */
-  @media(hover:none){.deal-card:hover{transform:none !important}}
-  @media(max-width:768px){.deal-card:hover{transform:none !important}}
+  <style id="mobile-critical-fixes">
+    /* === FIX 1: iOS DOUBLE-TAP — remove ALL hover transforms on touch devices === */
+    @media(hover:none),(pointer:coarse){
+      .deal-card:hover,
+      .nav-link:hover,.user-button:hover,.cart-btn:hover,.menu-btn:hover,
+      .btn-buy:hover,.btn-pink:hover,.btn-ghost:hover,.btn-sm:hover,
+      .filter-btn:hover,.share-btn:hover,.add-cart-btn:hover,
+      .drawer-link:hover,.drawer-action:hover{
+        transform:none !important;
+      }
+    }
+    /* === FIX 2: Mobile header — no double Deals, no double Logo, menu right === */
+    @media(max-width:768px){
+      /* Kill all hover transforms on small screens too */
+      .deal-card:hover,.nav-link:hover,.user-button:hover,.cart-btn:hover,
+      .menu-btn:hover,.btn-buy:hover,.btn-pink:hover{transform:none !important}
+      /* Hide Deals/Favorites/Orders buttons in header (they're in the drawer) */
+      #btnDeals{display:none !important}
+      /* Hide duplicate hero logo on mobile */
+      .hero-logo{display:none !important}
+      /* Clean header grid: Logo | Lang+Cart+Login | Menu */
+      .nav{display:flex !important;flex-wrap:wrap;gap:8px;align-items:center}
+      .logo{order:0;flex-shrink:0}
+      .logo img{height:44px !important}
+      .nav-links{order:1;display:flex !important;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end;flex:1}
+      .search-wrap{order:10;width:100%;max-width:none;flex-basis:100%}
+      .search-input{min-height:44px;font-size:15px}
+      .menu-btn{order:9}
+      .user-menu{order:8}
+      .cart-btn{order:7}
+      /* Hero more compact */
+      .hero{padding:18px 14px 12px}
+      .hero-copy h1{font-size:24px}
+      .hero-benefits{display:flex;flex-wrap:wrap;gap:8px}
+      .hero-benefit-card{padding:8px 14px;font-size:12px;border-radius:999px}
+    }
   </style>
 
 </head>
@@ -749,7 +782,7 @@ object-src 'none';">
   </div>
 </div>
 
-<script src="shop-app.js?v=20260317-fix3"></script>
+<script src="shop-app.js?v=20260317-v4"></script>
 
 <!-- Deal Detail Modal -->
 
