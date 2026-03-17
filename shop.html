@@ -411,6 +411,21 @@
     }
 
   </style>
+  <style id="tap-fix">
+  html{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,51,102,.15)}
+  @media(hover:none),(pointer:coarse){
+    .deal-card,.nav-link,.user-button,.cart-btn,.menu-btn,
+    .btn-buy,.btn-pink,.btn-ghost,.btn-sm,.filter-btn,
+    .share-btn,.add-cart-btn,.drawer-link,.drawer-action{
+      transition:background .15s ease,border-color .15s ease,opacity .15s ease !important;
+    }
+    .deal-card:hover,.nav-link:hover,.user-button:hover,.cart-btn:hover,
+    .menu-btn:hover,.btn-buy:hover,.btn-pink:hover,.btn-ghost:hover,
+    .filter-btn:hover,.share-btn:hover,.add-cart-btn:hover{
+      transform:none !important;
+    }
+  }
+  </style>
 </head>
 <body class="shop-page">
 
@@ -483,9 +498,9 @@
       <h1 data-shop-i18n="heroTitle">🍹 Die besten Bar-Deals deiner Stadt</h1>
       <p data-shop-i18n="heroSub">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
       <div class="hero-benefits">
-        <div class="hero-benefit-card" data-shop-i18n="heroBenefitQuick">⚡ Schnell kaufen</div>
-        <div class="hero-benefit-card" data-shop-i18n="heroBenefitLocal">🍸 Lokale Bars entdecken</div>
-        <div class="hero-benefit-card" data-shop-i18n="heroBenefitMobile">📱 Perfekt fürs Handy</div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitLocal">🍸 Exklusive Bar-Deals entdecken</div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitRedeem">🎟️ Heute sichern, später einlösen</div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitInstant">⚡ In Sekunden einlösbar</div>
       </div>
       <div class="hero-note" id="heroUtilityLine" data-shop-i18n="heroUtility">Heute kaufen, später entspannt einlösen.</div>
     </div>
@@ -726,7 +741,7 @@
   </div>
 </div>
 
-<script src="shop-app.js?v=20260320-1"></script>
+<script src="shop-app.js?v=20260317-v6"></script>
 
 <!-- Deal Detail Modal -->
 <div id="dealDetailModal" class="deal-modal">
