@@ -1717,8 +1717,8 @@ function updateCartBadge() {
 function renderCartPanel() {
   var body = document.getElementById('cartBody');
   if (!body) return;
-  try { getCart(); } catch(e) { try { _cart = JSON.parse(localStorage.getItem('barsclusive_cart')||'[]'); } catch(e2) { _cart = []; } }
-  if (!_cart || !_cart.length) {
+  getCart();
+  if (!_cart.length) {
     body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">' + (shopT('warenkorbLeer') || 'Warenkorb ist leer') + '</div>';
     return;
   }
@@ -1727,12 +1727,11 @@ function renderCartPanel() {
   var defaultEmail = s && s.email ? s.email : ((document.getElementById('cartBuyerEmail') || {}).value || '');
   body.innerHTML = '';
   _cart.forEach(function(c) {
-    try {
     var row = document.createElement('div');
     row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;gap:12px';
     var info = document.createElement('div');
     info.style.flex = '1';
-    info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title || 'Deal') + '</div><div style="font-size:12px;color:#999">' + escHtml(c.bar_name || '') + '</div>';
+    info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title) + '</div><div style="font-size:12px;color:#999">' + escHtml(c.bar_name) + '</div>';
     var controls = document.createElement('div');
     controls.style.cssText = 'display:flex;align-items:center;gap:8px';
     var btnMinus = document.createElement('button');
@@ -1748,7 +1747,7 @@ function renderCartPanel() {
     btnPlus.addEventListener('click', function() { changeCartQty(c.deal_id, 1); });
     var priceSpan = document.createElement('span');
     priceSpan.style.cssText = 'min-width:72px;text-align:right;font-weight:700';
-    priceSpan.textContent = (Number(c.price||0) * Number(c.quantity||1)).toFixed(2) + ' CHF';
+    priceSpan.textContent = (c.price * c.quantity).toFixed(2) + ' CHF';
     var btnRemove = document.createElement('button');
     btnRemove.textContent = '✕';
     btnRemove.style.cssText = 'background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px';
@@ -1756,7 +1755,6 @@ function renderCartPanel() {
     controls.append(btnMinus, qtySpan, btnPlus, priceSpan, btnRemove);
     row.append(info, controls);
     body.appendChild(row);
-    } catch(itemErr) { console.warn('Cart item render error:', itemErr); }
   });
 
   var totalDiv = document.createElement('div');
@@ -1770,7 +1768,7 @@ function renderCartPanel() {
     + '<div style="font-size:13px;font-weight:700;margin-bottom:12px">' + (shopT('checkoutTitle') || 'Checkout') + '</div>'
     + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerName">' + (shopT('nameLbl') || 'Name') + '</label><input type="text" class="form-input" id="cartBuyerName" value="' + escHtml(defaultName) + '" autocomplete="name"></div>'
     + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerEmail">' + (shopT('emailLbl') || 'Email') + '</label><input type="email" class="form-input" id="cartBuyerEmail" value="' + escHtml(defaultEmail) + '" autocomplete="email"></div>'
-    + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>' + (shopT('acceptTermsCart') || 'Ich akzeptiere die') + ' <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fAGB') || 'AGB') + '</a> ' + ((typeof shopLang!=='undefined'?shopLang:'de') === 'en' ? 'and' : (typeof shopLang!=='undefined'?shopLang:'de') === 'it' ? 'e' : (typeof shopLang!=='undefined'?shopLang:'de') === 'fr' ? 'et' : 'und') + ' <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fDatenschutz') || 'Datenschutz') + '</a>.</span></label>';
+    + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>' + (shopT('acceptTermsCart') || 'Ich akzeptiere die') + ' <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fAGB') || 'AGB') + '</a> ' + (shopLang === 'en' ? 'and' : shopLang === 'it' ? 'e' : shopLang === 'fr' ? 'et' : 'und') + ' <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fDatenschutz') || 'Datenschutz') + '</a>.</span></label>';
   body.appendChild(buyerWrap);
 
   var checkBtn = document.createElement('button');
@@ -2839,7 +2837,6 @@ try {
     else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
     saveCart();
     showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
-    try { openCartPanel(); } catch(e) {}
   };
 
   document.addEventListener('DOMContentLoaded', function(){
@@ -2853,4 +2850,162 @@ try {
     updateCustomDateLabel();
     updateShopUserUi();
   });
+})();
+
+
+// =============================================
+// FINAL EMERGENCY PATCH — runs LAST, overrides everything
+// Fixes: Login, Warenkorb, Profitiere jetzt
+// =============================================
+(function(){
+  'use strict';
+
+  // === FIX 1: BULLETPROOF renderCartPanel ===
+  window.renderCartPanel = function() {
+    var body = document.getElementById('cartBody');
+    if (!body) return;
+    var cart = [];
+    try { cart = JSON.parse(localStorage.getItem('barsclusive_cart') || '[]'); } catch(e) { cart = []; }
+    if (!cart || !cart.length) {
+      body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">' + (typeof shopT==='function' ? (shopT('warenkorbLeer')||'Warenkorb ist leer') : 'Warenkorb ist leer') + '</div>';
+      return;
+    }
+    var s = (typeof sessionGet==='function') ? sessionGet() : null;
+    var defName = (s && s.name) || '';
+    var defEmail = (s && s.email) || '';
+    var _e = function(str) { return typeof escHtml==='function' ? escHtml(str) : String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+    var _t = function(k) { return typeof shopT==='function' ? (shopT(k)||'') : ''; };
+    var lang = (typeof _shopLang!=='undefined' ? _shopLang : (typeof shopLang!=='undefined' ? shopLang : 'de'));
+    body.innerHTML = '';
+    var total = 0;
+    cart.forEach(function(c) {
+      var price = Number(c.price) || 0;
+      var qty = Number(c.quantity) || 1;
+      total += price * qty;
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;gap:12px';
+      var info = document.createElement('div');
+      info.style.flex = '1';
+      info.innerHTML = '<div style="font-weight:600;font-size:14px">' + _e(c.title||'Deal') + '</div><div style="font-size:12px;color:#999">' + _e(c.bar_name||'') + '</div>';
+      var ctrls = document.createElement('div');
+      ctrls.style.cssText = 'display:flex;align-items:center;gap:8px';
+      var mk = function(txt, fn) { var b = document.createElement('button'); b.textContent = txt; b.style.cssText = 'background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px'; b.addEventListener('click', fn); return b; };
+      var qtyEl = document.createElement('span'); qtyEl.style.cssText = 'min-width:20px;text-align:center'; qtyEl.textContent = qty;
+      var priceEl = document.createElement('span'); priceEl.style.cssText = 'min-width:72px;text-align:right;font-weight:700'; priceEl.textContent = (price*qty).toFixed(2)+' CHF';
+      var rmBtn = document.createElement('button'); rmBtn.textContent = '✕'; rmBtn.style.cssText = 'background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px';
+      rmBtn.addEventListener('click', function() { if(typeof removeFromCart==='function') removeFromCart(c.deal_id); else { try { var ca=JSON.parse(localStorage.getItem('barsclusive_cart')||'[]'); ca=ca.filter(function(x){return x.deal_id!==c.deal_id;}); localStorage.setItem('barsclusive_cart',JSON.stringify(ca)); if(typeof updateCartBadge==='function') updateCartBadge(); renderCartPanel(); } catch(e2){} } });
+      ctrls.append(mk('-', function() { if(typeof changeCartQty==='function') changeCartQty(c.deal_id,-1); }), qtyEl, mk('+', function() { if(typeof changeCartQty==='function') changeCartQty(c.deal_id,1); }), priceEl, rmBtn);
+      row.append(info, ctrls);
+      body.appendChild(row);
+    });
+    var totalDiv = document.createElement('div');
+    totalDiv.style.cssText = 'padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px';
+    totalDiv.textContent = (_t('total')||'Total') + ': ' + total.toFixed(2) + ' CHF';
+    body.appendChild(totalDiv);
+    var andW = lang==='en'?'and':lang==='it'?'e':lang==='fr'?'et':'und';
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-top:14px;padding:14px;background:#171717;border:1px solid #2a2a2a;border-radius:12px';
+    wrap.innerHTML = '<div style="font-size:13px;font-weight:700;margin-bottom:12px">'+(_t('checkoutTitle')||'Checkout')+'</div>'
+      +'<div class="form-group" style="margin-bottom:10px"><label class="form-label">'+(_t('nameLbl')||'Name')+'</label><input type="text" class="form-input" id="cartBuyerName" value="'+_e(defName)+'" autocomplete="name"></div>'
+      +'<div class="form-group" style="margin-bottom:10px"><label class="form-label">'+(_t('emailLbl')||'Email')+'</label><input type="email" class="form-input" id="cartBuyerEmail" value="'+_e(defEmail)+'" autocomplete="email"></div>'
+      +'<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>'+(_t('acceptTermsCart')||'Ich akzeptiere die')+' <a href="agb.html" target="_blank" style="color:#FF3366">'+(_t('fAGB')||'AGB')+'</a> '+andW+' <a href="datenschutz.html" target="_blank" style="color:#FF3366">'+(_t('fDatenschutz')||'Datenschutz')+'</a>.</span></label>';
+    body.appendChild(wrap);
+    var payBtn = document.createElement('button');
+    payBtn.id = 'cartCheckoutBtn';
+    payBtn.textContent = _t('jetztBezahlen') || 'Jetzt bezahlen';
+    payBtn.style.cssText = 'width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px';
+    payBtn.addEventListener('click', function() { if(typeof checkoutCart==='function') checkoutCart(); });
+    body.appendChild(payBtn);
+  };
+
+  // === FIX 2: addToCart MUST open cart ===
+  var _prevAddToCart = addToCart;
+  addToCart = function(deal) {
+    _prevAddToCart(deal);
+    try {
+      var panel = document.getElementById('cartPanel');
+      var overlay = document.getElementById('cartOverlay');
+      if (panel) panel.classList.add('active');
+      if (overlay) overlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      renderCartPanel();
+    } catch(e) {}
+  };
+
+  // === FIX 3: EVENT DELEGATION for Login, Profitiere, Cart ===
+  // This catches ALL clicks on the entire page and routes them correctly.
+  // Cannot be broken by any other code.
+  document.addEventListener('click', function(e) {
+    var target = e.target;
+
+    // LOGIN BUTTON — match by id or by text content
+    if (target.id === 'userBtn' || target.closest('#userBtn')) {
+      e.stopPropagation();
+      var s2 = (typeof sessionGet==='function') ? sessionGet() : null;
+      if (!s2) {
+        var modal = document.getElementById('loginModal');
+        if (modal) modal.classList.add('active');
+      } else {
+        var dd = document.getElementById('userDropdown');
+        if (dd) dd.classList.toggle('show');
+      }
+      return;
+    }
+
+    // PROFITIERE JETZT / BUY BUTTON
+    if (target.classList.contains('btn-buy') || target.closest('.btn-buy')) {
+      var btn = target.classList.contains('btn-buy') ? target : target.closest('.btn-buy');
+      var card = btn.closest('.deal-card');
+      if (card && typeof allDeals !== 'undefined' && allDeals.length) {
+        var titleEl = card.querySelector('.deal-title');
+        if (titleEl) {
+          var deal = allDeals.find(function(d) { return d.title === titleEl.textContent; });
+          if (deal && typeof openBuyModal === 'function') {
+            e.stopPropagation();
+            openBuyModal(deal);
+            return;
+          }
+        }
+      }
+    }
+
+    // CART OPEN BUTTON
+    if (target.id === 'cartOpenBtn' || target.closest('#cartOpenBtn')) {
+      e.stopPropagation();
+      var panel2 = document.getElementById('cartPanel');
+      var overlay2 = document.getElementById('cartOverlay');
+      if (panel2) {
+        if (panel2.classList.contains('active')) {
+          panel2.classList.remove('active');
+          if (overlay2) overlay2.style.display = 'none';
+          document.body.style.overflow = '';
+        } else {
+          panel2.classList.add('active');
+          if (overlay2) overlay2.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+          renderCartPanel();
+        }
+      }
+      return;
+    }
+
+    // LOGIN SUBMIT
+    if (target.id === 'btnLoginSubmit' || target.closest('#btnLoginSubmit')) {
+      if (typeof doLogin === 'function') doLogin();
+      return;
+    }
+
+    // BUY SUBMIT  
+    if (target.id === 'btnBuySubmit' || target.closest('#btnBuySubmit')) {
+      if (typeof doBuy === 'function') doBuy();
+      return;
+    }
+
+    // REGISTER SUBMIT
+    if (target.id === 'btnRegisterSubmit' || target.closest('#btnRegisterSubmit')) {
+      if (typeof doRegister === 'function') doRegister();
+      return;
+    }
+  }, true); // useCapture = true: fires BEFORE any other handlers
+
 })();
