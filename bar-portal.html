@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -80,82 +81,86 @@
     .modal-title{font-size:20px;font-weight:700;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
     .modal-close{background:none;border:none;color:#aaa;font-size:22px;cursor:pointer;line-height:1;flex-shrink:0}
 
-    .search-select-wrap{position:relative}
-    .suggestions-box{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#151515;border:1px solid #333;border-radius:12px;max-height:220px;overflow:auto;z-index:50;display:none;box-shadow:0 10px 25px rgba(0,0,0,.35)}
-    .suggestion-item{padding:12px 14px;border-bottom:1px solid #232323;cursor:pointer}
-    .suggestion-item:last-child{border-bottom:none}
-    .suggestion-item:hover,.suggestion-item.active{background:#222}
-    .suggestion-title{font-size:13px;font-weight:600;color:#fff}
-    .suggestion-meta{font-size:12px;color:#999;margin-top:2px}
-    .input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
-    
+```
+.search-select-wrap{position:relative}
+.suggestions-box{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#151515;border:1px solid #333;border-radius:12px;max-height:220px;overflow:auto;z-index:50;display:none;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+.suggestion-item{padding:12px 14px;border-bottom:1px solid #232323;cursor:pointer}
+.suggestion-item:last-child{border-bottom:none}
+.suggestion-item:hover,.suggestion-item.active{background:#222}
+.suggestion-title{font-size:13px;font-weight:600;color:#fff}
+.suggestion-meta{font-size:12px;color:#999;margin-top:2px}
+.input-help{display:block;color:#777;font-size:11px;margin-top:6px;line-height:1.45}
+```
+
 .codebox-field{position:relative;width:100%;padding:14px 14px 12px;border:1px solid #2f2f2f;border-radius:16px;background:linear-gradient(180deg,#1d1d1d 0%,#181818 100%);overflow:hidden}
 .codebox-input{position:absolute;inset:0;width:100%;height:100%;opacity:0;z-index:3;border:none;background:transparent;color:transparent;caret-color:transparent;cursor:text;text-transform:uppercase}
 .codebox-input::placeholder{color:transparent}
 .codebox-input:focus{outline:none}
 .codebox-grid{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;width:100%;position:relative;z-index:1}
 .codebox-group{display:flex;gap:4px;min-width:max-content}
-.codebox-slot{width:34px;height:48px;border:1px solid #3b3b3b;border-radius:10px;background:#242424;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;font-size:18px;font-weight:700;color:#fff;transition:border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .15s ease;user-select:none}
+.codebox-slot{width:34px;height:48px;border:1px solid #3b3b3b;border-radius:10px;background:#242424;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,‘Liberation Mono’,monospace;font-size:18px;font-weight:700;color:#fff;transition:border-color .15s ease, box-shadow .15s ease, background .15s ease, transform .15s ease;user-select:none}
 .codebox-slot.filled{border-color:#575757;background:#1f1f1f}
 .codebox-field.is-focused .codebox-slot{border-color:#535353}
 .codebox-field.is-focused .codebox-slot.active{border-color:#ff3366;box-shadow:0 0 0 2px rgba(255,51,102,.18);background:#191919;transform:translateY(-1px)}
 .codebox-field.mwst-field .codebox-slot{font-size:16px}
 .codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:32px}
 .toggle-check{display:flex;align-items:flex-start;gap:10px;padding:12px;background:#202020;border:1px solid #303030;border-radius:12px}
-    .toggle-check input{margin-top:2px}
-    .inline-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#232323;border:1px solid #333;color:#ccc;font-size:12px}
+.toggle-check input{margin-top:2px}
+.inline-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#232323;border:1px solid #333;color:#ccc;font-size:12px}
 
-    @media(max-width:768px){
-      .header{flex-wrap:wrap;gap:10px;padding:12px 15px}
-      .header h1{font-size:16px}
-      .header-right{flex-wrap:wrap;gap:6px}
-      .tabs{padding:0 10px}
-      .tab{padding:10px 12px;font-size:12px}
-      .tab-content{padding:15px 10px}
-      .modal-box{padding:18px 14px;max-width:calc(100vw - 20px)}
-      .form-input{font-size:14px;padding:11px}
-      .form-select{font-size:14px;padding:11px}
-      #loginScreen{padding:30px 15px}
-      .login-box{padding:24px 18px;border-radius:14px}
-      table{font-size:12px}
-      th,td{padding:8px 6px}
-      .btn-sm{padding:5px 10px;font-size:11px}
-      .stat-card{padding:14px}
-      .stat-value{font-size:22px}
-      .stats-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-      .codebox-field{padding:12px 12px 10px;border-radius:14px}
-      .codebox-grid{gap:8px 10px}
-      .codebox-slot{width:30px;height:42px;font-size:15px;border-radius:9px}
-      .codebox-field.mwst-field .codebox-slot{font-size:13px}
-      .codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:28px}
-    }
-    @media(max-width:480px){
-      .header h1 span{display:none}
-      .tabs{gap:0}
-      .codebox-grid{gap:8px}
-      .codebox-slot{width:28px;height:40px;font-size:14px}
-      .codebox-field.mwst-field .codebox-slot{font-size:12px}
-      .codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:26px}
-      .tab{padding:8px 10px;font-size:11px}
-    }
+```
+@media(max-width:768px){
+  .header{flex-wrap:wrap;gap:10px;padding:12px 15px}
+  .header h1{font-size:16px}
+  .header-right{flex-wrap:wrap;gap:6px}
+  .tabs{padding:0 10px}
+  .tab{padding:10px 12px;font-size:12px}
+  .tab-content{padding:15px 10px}
+  .modal-box{padding:18px 14px;max-width:calc(100vw - 20px)}
+  .form-input{font-size:14px;padding:11px}
+  .form-select{font-size:14px;padding:11px}
+  #loginScreen{padding:30px 15px}
+  .login-box{padding:24px 18px;border-radius:14px}
+  table{font-size:12px}
+  th,td{padding:8px 6px}
+  .btn-sm{padding:5px 10px;font-size:11px}
+  .stat-card{padding:14px}
+  .stat-value{font-size:22px}
+  .stats-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .codebox-field{padding:12px 12px 10px;border-radius:14px}
+  .codebox-grid{gap:8px 10px}
+  .codebox-slot{width:30px;height:42px;font-size:15px;border-radius:9px}
+  .codebox-field.mwst-field .codebox-slot{font-size:13px}
+  .codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:28px}
+}
+@media(max-width:480px){
+  .header h1 span{display:none}
+  .tabs{gap:0}
+  .codebox-grid{gap:8px}
+  .codebox-slot{width:28px;height:40px;font-size:14px}
+  .codebox-field.mwst-field .codebox-slot{font-size:12px}
+  .codebox-field.mwst-field .codebox-group:last-child .codebox-slot{width:26px}
+  .tab{padding:8px 10px;font-size:11px}
+}
 
-    .header-right{gap:10px;margin-left:auto}
-    #barMenuBtn{margin-left:auto;min-width:46px;border-radius:16px;background:#17171b}
-    .benefit-card{position:relative;overflow:hidden;border-radius:26px;padding:22px;box-shadow:0 22px 36px rgba(0,0,0,.24)}
-    .benefit-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(255,255,255,.14),transparent 48%);pointer-events:none}
-    .benefit-card-pink{background:linear-gradient(135deg,rgba(255,51,102,.24),rgba(19,19,24,.95) 68%)}
-    .benefit-card-amber{background:linear-gradient(135deg,rgba(255,193,7,.18),rgba(19,19,24,.96) 68%)}
-    .benefit-card-violet{background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(19,19,24,.96) 68%)}
-    .benefit-card-blue{background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(19,19,24,.96) 68%)}
-    .benefit-card-green{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(19,19,24,.96) 68%)}
-    @media(max-width:768px){
-      .header{padding:14px 15px;gap:10px}
-      .header-right{width:100%;justify-content:flex-end;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
-      .header-right::-webkit-scrollbar{display:none}
-      .benefit-card{padding:20px}
-      .side-drawer{width:min(340px,86vw)}
-    }
+.header-right{gap:10px;margin-left:auto}
+#barMenuBtn{margin-left:auto;min-width:46px;border-radius:16px;background:#17171b}
+.benefit-card{position:relative;overflow:hidden;border-radius:26px;padding:22px;box-shadow:0 22px 36px rgba(0,0,0,.24)}
+.benefit-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(255,255,255,.14),transparent 48%);pointer-events:none}
+.benefit-card-pink{background:linear-gradient(135deg,rgba(255,51,102,.24),rgba(19,19,24,.95) 68%)}
+.benefit-card-amber{background:linear-gradient(135deg,rgba(255,193,7,.18),rgba(19,19,24,.96) 68%)}
+.benefit-card-violet{background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(19,19,24,.96) 68%)}
+.benefit-card-blue{background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(19,19,24,.96) 68%)}
+.benefit-card-green{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(19,19,24,.96) 68%)}
+@media(max-width:768px){
+  .header{padding:14px 15px;gap:10px}
+  .header-right{width:100%;justify-content:flex-end;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+  .header-right::-webkit-scrollbar{display:none}
+  .benefit-card{padding:20px}
+  .side-drawer{width:min(340px,86vw)}
+}
+```
 
   </style>
   <link rel="icon" type="image/png" href="logo.png">
@@ -175,8 +180,8 @@
     .form-section{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px;margin-bottom:16px}.form-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px;font-weight:800;margin-bottom:14px}.form-section-title small{font-size:12px;color:#9fa0aa;font-weight:600}
     .correspondence-help{margin-top:8px}.mwst-legacy-block{display:none !important}
     @media(max-width:980px){.portal-benefits,.builder-extras{grid-template-columns:1fr}.builder-preview-shell{grid-template-columns:1fr}.container{padding-left:14px;padding-right:14px}}
-    @media(max-width:768px){.header{padding:10px 12px}.logo img{height:38px !important}.tabs{overflow:auto}.tab{padding:11px 14px}.container{padding-top:16px}#loginScreen{padding:20px 12px}.card{padding:20px;border-radius:20px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card{min-height:108px}.stat-value{font-size:24px}}
-    @media(max-width:560px){.stats-grid{grid-template-columns:1fr 1fr}.builder-preview-title{font-size:18px}.benefit-card{padding:16px}}
+    @media(max-width:768px){.header{padding:10px 12px}.logo img{height:38px !important}.tabs{overflow:auto}.tab{padding:10px 12px;font-size:12px}.container{padding-top:14px}#loginScreen{padding:20px 12px}.card{padding:18px;border-radius:18px}.stats-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.stat-card{min-height:90px;padding:12px;border-radius:14px}.stat-label{font-size:10px}.stat-value{font-size:20px}}
+    @media(max-width:560px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card{min-height:80px}.stat-value{font-size:18px}.builder-preview-title{font-size:18px}.benefit-card{padding:14px}}
 
     .menu-btn{background:#171717;border:1px solid rgba(255,255,255,.08);color:#fff;padding:8px 12px;border-radius:14px;cursor:pointer;font-size:15px;display:inline-flex;align-items:center;justify-content:center;min-width:44px}
     .menu-btn:hover{background:#222}
@@ -218,6 +223,7 @@
     }
 
   </style>
+
 </head>
 <body class="bar-portal-page">
 <div id="toast" class="toast" role="alert"></div>
@@ -257,6 +263,7 @@
 <div id="barDrawerOverlay" class="modal" style="display:none;background:rgba(0,0,0,.65);z-index:1100"></div>
 
 <!-- LOGIN -->
+
 <div id="loginScreen">
   <div class="container auth-shell">
     <div class="tabs">
@@ -401,6 +408,7 @@
 </div>
 
 <!-- DASHBOARD -->
+
 <div id="barDashboard">
   <div class="container">
     <div class="tabs">
@@ -411,275 +419,296 @@
       <button class="tab" data-dash-tab="settings">⚙️ <span data-i18n="tabSettings">Einstellungen</span></button>
     </div>
 
-    <!-- OVERVIEW -->
-    <div id="dashOverview" class="tab-content active">
-      <div id="barStatsFilterBar"></div>
-      <div class="stats-grid" id="statsGrid"></div>
-      <div id="barStatsDetail"></div>
-      <div style="color:#999;font-size:14px"><span data-i18n="loggedInAs">Eingeloggt als:</span> <span id="barNameDisplay"></span></div>
+```
+<!-- OVERVIEW -->
+<div id="dashOverview" class="tab-content active">
+  <div id="barStatsFilterBar"></div>
+  <div class="stats-grid" id="statsGrid"></div>
+  <div id="barStatsDetail"></div>
+  <div style="color:#999;font-size:14px"><span data-i18n="loggedInAs">Eingeloggt als:</span> <span id="barNameDisplay"></span></div>
+</div>
+
+<!-- NEW DEAL -->
+<div id="dashNewdeal" class="tab-content">
+  <div class="card" style="max-width:720px">
+    <h2>➕ <span data-i18n="tabNewDeal">Neuer Deal</span></h2>
+    <div class="form-group">
+      <label class="form-label" for="dealTitle" data-i18n="dealTitleLbl">Titel *</label>
+      <input type="text" class="form-input" id="dealTitle" placeholder="z.B. 2 Cocktails für 1">
     </div>
-
-    <!-- NEW DEAL -->
-    <div id="dashNewdeal" class="tab-content">
-      <div class="card" style="max-width:720px">
-        <h2>➕ <span data-i18n="tabNewDeal">Neuer Deal</span></h2>
+    <div class="form-group">
+      <label class="form-label" for="dealDesc" data-i18n="dealDescLbl">Beschreibung</label>
+      <input type="text" class="form-input" id="dealDesc">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label class="form-label" for="dealOrigPrice" data-i18n="origPrice">Originalpreis (CHF)</label>
+        <input type="number" class="form-input" id="dealOrigPrice" min="0" step="0.50">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="dealPrice" data-i18n="dealPriceLbl">Deal-Preis (CHF) *</label>
+        <input type="number" class="form-input" id="dealPrice" min="0" step="0.50">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="dealQty" data-i18n="maxQty">Max. Anzahl (0 = unbegrenzt)</label>
+      <input type="number" class="form-input" id="dealQty" min="0" value="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="imageLbl">Bild (optional)</label>
+      <input type="file" class="form-input" id="dealImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
+      <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 2 MB</small>
+      <div id="imagePreview" style="margin-top:8px;display:none"><img id="imagePreviewImg" style="max-width:200px;border-radius:8px" alt="Vorschau"></div>
+      <input type="hidden" id="dealImageUrl">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="categoriesLbl">Kategorien * (mind. 1)</label>
+      <div class="cats-grid">
+        <label class="cat-check"><input type="checkbox" name="cat" value="breakfast"> 🥐 Breakfast</label>
+        <label class="cat-check"><input type="checkbox" name="cat" value="lunch"> 🍽️ Lunch</label>
+        <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
+        <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
+        <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
+        <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ Pauschalgutschein</label>
+      </div>
+    </div>
+    <!-- Pauschalgutschein fields -->
+    <div id="pauschalFields" style="display:none;background:#2a2a2a;padding:16px;border-radius:10px;margin-bottom:18px;border:1px solid #FF3366">
+      <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="discountPercent">Rabatt % (mind. 15%)</label>
+          <input type="number" class="form-input" id="discountPercent" min="15" max="100" value="15">
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="minOrder">Mindestbestellung CHF (mind. 40)</label>
+          <input type="number" class="form-input" id="minOrder" min="40" value="40">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:12px;margin-bottom:0">
+        <label class="form-label" for="appliesTo">Gilt für</label>
+        <select class="form-input" id="appliesTo" style="background:#1a1a1a;color:#fff">
+          <option value="all">Alles</option>
+          <option value="drinks">Nur Getränke</option>
+          <option value="food">Nur Essen</option>
+        </select>
+      </div>
+      <p id="pauschalInfoHint" data-i18n="pauschalHint" style="color:#999;font-size:12px;margin-top:10px">💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="validityLbl">Gültigkeitsdauer *</label>
+      <div class="validity-toggle">
+        <label class="validity-opt">
+          <input type="radio" name="validType" value="recurring" checked id="vTypeRecurring">
+          <span data-i18n="recurring">Wiederkehrend</span>
+        </label>
+        <label class="validity-opt">
+          <input type="radio" name="validType" value="single" id="vTypeSingle">
+          <span data-i18n="singleDate">Einmaliges Datum</span>
+        </label>
+      </div>
+      <div id="recurringFields" style="margin-top:14px">
+        <label class="form-label" style="margin-top:10px" data-i18n="weekdaysLbl">Wochentage</label>
+        <div class="weekdays" id="weekdays">
+          <div class="wd-btn" data-weekday="Mo">Mo</div>
+          <div class="wd-btn" data-weekday="Di">Di</div>
+          <div class="wd-btn" data-weekday="Mi">Mi</div>
+          <div class="wd-btn" data-weekday="Do">Do</div>
+          <div class="wd-btn" data-weekday="Fr">Fr</div>
+          <div class="wd-btn" data-weekday="Sa">Sa</div>
+          <div class="wd-btn" data-weekday="So">So</div>
+        </div>
+      </div>
+      <div id="singleFields">
         <div class="form-group">
-          <label class="form-label" for="dealTitle" data-i18n="dealTitleLbl">Titel *</label>
-          <input type="text" class="form-input" id="dealTitle" placeholder="z.B. 2 Cocktails für 1">
+          <label class="form-label" for="singleDate" data-i18n="dateLbl">Datum</label>
+          <input type="date" class="form-input" id="singleDate">
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <label class="form-label" data-i18n="timeSlotsLbl">Zeitfenster (optional)</label>
+        <div class="cats-grid" style="margin-bottom:10px">
+          <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> 🌅 <span data-i18n="slotMorning">Morgen</span> (06–12h)</label>
+          <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> ☀️ <span data-i18n="slotMidday">Mittag</span> (11–17h)</label>
+          <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> 🌙 <span data-i18n="slotEvening">Abend</span> (16–00h)</label>
+        </div>
+        <small style="color:#999;font-size:11px" data-i18n="orCustomTimes">Oder eigene Zeiten:</small>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
+        <div class="form-group">
+          <label class="form-label" for="timeFrom" data-i18n="fromLbl">Von</label>
+          <input type="time" class="form-input" id="timeFrom">
         </div>
         <div class="form-group">
-          <label class="form-label" for="dealDesc" data-i18n="dealDescLbl">Beschreibung</label>
-          <input type="text" class="form-input" id="dealDesc">
+          <label class="form-label" for="timeTo" data-i18n="toLbl">Bis</label>
+          <input type="time" class="form-input" id="timeTo">
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div class="form-group">
-            <label class="form-label" for="dealOrigPrice" data-i18n="origPrice">Originalpreis (CHF)</label>
-            <input type="number" class="form-input" id="dealOrigPrice" min="0" step="0.50">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="dealPrice" data-i18n="dealPriceLbl">Deal-Preis (CHF) *</label>
-            <input type="number" class="form-input" id="dealPrice" min="0" step="0.50">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="dealQty" data-i18n="maxQty">Max. Anzahl (0 = unbegrenzt)</label>
-          <input type="number" class="form-input" id="dealQty" min="0" value="0">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Bild (optional)</label>
-          <input type="file" class="form-input" id="dealImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
-          <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 2 MB</small>
-          <div id="imagePreview" style="margin-top:8px;display:none"><img id="imagePreviewImg" style="max-width:200px;border-radius:8px" alt="Vorschau"></div>
-          <input type="hidden" id="dealImageUrl">
-        </div>
-        <div class="form-group">
-          <label class="form-label" data-i18n="categoriesLbl">Kategorien * (mind. 1)</label>
-          <div class="cats-grid">
-            <label class="cat-check"><input type="checkbox" name="cat" value="breakfast"> 🥐 Breakfast</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="lunch"> 🍽️ Lunch</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="aperitif"> 🍹 Aperitif</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="dinner"> 🍷 Dinner</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="events"> 🎉 Events</label>
-            <label class="cat-check"><input type="checkbox" name="cat" value="pauschalgutscheine" id="catPauschal"> 🏷️ Pauschalgutschein</label>
+      </div>
+    </div>
+    <div class="form-check">
+      <input type="checkbox" id="dealActive" checked>
+      <label for="dealActive" data-i18n="dealActiveLabel">Deal sofort aktiv</label>
+    </div>
+    
+    <div class="builder-extras">
+      <div class="builder-preview-card">
+        <div class="builder-preview-label" data-i18n="previewLabel">So sehen Kund:innen deinen Deal</div>
+        <div class="builder-preview-shell">
+          <div class="builder-preview-image" id="builderPreviewImageWrap"><img id="builderPreviewImage" alt="Deal Vorschau" style="display:none"></div>
+          <div class="builder-preview-body">
+            <div class="builder-preview-title" id="builderPreviewTitle">Dein Deal-Titel</div>
+            <div class="builder-preview-meta" id="builderPreviewMeta">BarSclusive • Live-Vorschau</div>
+            <div class="builder-preview-price"><span id="builderPreviewPrice">0.00 CHF</span><small id="builderPreviewOldPrice"></small></div>
+            <div class="builder-preview-badges"><span class="mini-chip" id="builderPreviewChipType" data-i18n="previewBadgeDeal">Deal</span><span class="mini-chip" id="builderPreviewChipValidity" data-i18n="previewBadgeActive">Aktiv</span></div>
           </div>
         </div>
-        <!-- Pauschalgutschein fields -->
-        <div id="pauschalFields" style="display:none;background:#2a2a2a;padding:16px;border-radius:10px;margin-bottom:18px;border:1px solid #FF3366">
-          <h3 style="font-size:14px;color:#FF3366;margin-bottom:12px">🏷️ Pauschalgutschein-Einstellungen</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-            <div class="form-group" style="margin-bottom:0">
-              <label class="form-label" for="discountPercent">Rabatt % (mind. 15%)</label>
-              <input type="number" class="form-input" id="discountPercent" min="15" max="100" value="15">
-            </div>
-            <div class="form-group" style="margin-bottom:0">
-              <label class="form-label" for="minOrder">Mindestbestellung CHF (mind. 40)</label>
-              <input type="number" class="form-input" id="minOrder" min="40" value="40">
-            </div>
-          </div>
-          <div class="form-group" style="margin-top:12px;margin-bottom:0">
-            <label class="form-label" for="appliesTo">Gilt für</label>
-            <select class="form-input" id="appliesTo" style="background:#1a1a1a;color:#fff">
-              <option value="all">Alles</option>
-              <option value="drinks">Nur Getränke</option>
-              <option value="food">Nur Essen</option>
-            </select>
-          </div>
-          <p id="pauschalInfoHint" data-i18n="pauschalHint" style="color:#999;font-size:12px;margin-top:10px">💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.</p>
-        </div>
-        <div class="form-group">
-          <label class="form-label" data-i18n="validityLbl">Gültigkeitsdauer *</label>
-          <div class="validity-toggle">
-            <label class="validity-opt">
-              <input type="radio" name="validType" value="recurring" checked id="vTypeRecurring">
-              <span data-i18n="recurring">Wiederkehrend</span>
-            </label>
-            <label class="validity-opt">
-              <input type="radio" name="validType" value="single" id="vTypeSingle">
-              <span data-i18n="singleDate">Einmaliges Datum</span>
-            </label>
-          </div>
-          <div id="recurringFields" style="margin-top:14px">
-            <label class="form-label" style="margin-top:10px" data-i18n="weekdaysLbl">Wochentage</label>
-            <div class="weekdays" id="weekdays">
-              <div class="wd-btn" data-weekday="Mo">Mo</div>
-              <div class="wd-btn" data-weekday="Di">Di</div>
-              <div class="wd-btn" data-weekday="Mi">Mi</div>
-              <div class="wd-btn" data-weekday="Do">Do</div>
-              <div class="wd-btn" data-weekday="Fr">Fr</div>
-              <div class="wd-btn" data-weekday="Sa">Sa</div>
-              <div class="wd-btn" data-weekday="So">So</div>
-            </div>
-          </div>
-          <div id="singleFields">
-            <div class="form-group">
-              <label class="form-label" for="singleDate" data-i18n="dateLbl">Datum</label>
-              <input type="date" class="form-input" id="singleDate">
-            </div>
-          </div>
-          <div style="margin-top:14px">
-            <label class="form-label">Zeitfenster (optional)</label>
-            <div class="cats-grid" style="margin-bottom:10px">
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="morning"> 🌅 Morgen (06–12h)</label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="midday"> ☀️ Mittag (11–17h)</label>
-              <label class="cat-check"><input type="checkbox" name="timeSlot" value="evening"> 🌙 Abend (16–00h)</label>
-            </div>
-            <small style="color:#999;font-size:11px">Oder eigene Zeiten:</small>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px">
-            <div class="form-group">
-              <label class="form-label" for="timeFrom" data-i18n="fromLbl">Von</label>
-              <input type="time" class="form-input" id="timeFrom">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="timeTo" data-i18n="toLbl">Bis</label>
-              <input type="time" class="form-input" id="timeTo">
-            </div>
-          </div>
-        </div>
-        <div class="form-check">
-          <input type="checkbox" id="dealActive" checked>
-          <label for="dealActive" data-i18n="dealActiveLabel">Deal sofort aktiv</label>
-        </div>
-        
-        <div class="builder-extras">
-          <div class="builder-preview-card">
-            <div class="builder-preview-label" data-i18n="previewLabel">So sehen Kund:innen deinen Deal</div>
-            <div class="builder-preview-shell">
-              <div class="builder-preview-image" id="builderPreviewImageWrap"><img id="builderPreviewImage" alt="Deal Vorschau" style="display:none"></div>
-              <div class="builder-preview-body">
-                <div class="builder-preview-title" id="builderPreviewTitle">Dein Deal-Titel</div>
-                <div class="builder-preview-meta" id="builderPreviewMeta">BarSclusive • Live-Vorschau</div>
-                <div class="builder-preview-price"><span id="builderPreviewPrice">0.00 CHF</span><small id="builderPreviewOldPrice"></small></div>
-                <div class="builder-preview-badges"><span class="mini-chip" id="builderPreviewChipType" data-i18n="previewBadgeDeal">Deal</span><span class="mini-chip" id="builderPreviewChipValidity" data-i18n="previewBadgeActive">Aktiv</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="builder-preview-card builder-estimate-card">
-            <div class="builder-preview-label" data-i18n="estimateLabel">Auszahlungs-Schätzung</div>
-            <div class="estimate-value" id="builderPayoutEstimate">0.00 CHF</div>
-            <p class="estimate-copy" id="builderPayoutCopy" data-i18n="estimateHint">Geschätzter Betrag pro Einlösung für Fixpreis-Deals.</p>
-          </div>
-        </div>
-
-        <button class="btn-pink" id="btnCreateDeal" data-i18n="createDeal">Deal erstellen</button>
+      </div>
+      <div class="builder-preview-card builder-estimate-card">
+        <div class="builder-preview-label" data-i18n="estimateLabel">Auszahlungs-Schätzung</div>
+        <div class="estimate-value" id="builderPayoutEstimate">0.00 CHF</div>
+        <p class="estimate-copy" id="builderPayoutCopy" data-i18n="estimateHint">Geschätzter Betrag pro Einlösung für Fixpreis-Deals.</p>
       </div>
     </div>
 
-    <!-- MY DEALS -->
-    <div id="dashMydeals" class="tab-content">
-      <div class="deal-list" id="dealList"></div>
+    <button class="btn-pink" id="btnCreateDeal" data-i18n="createDeal">Deal erstellen</button>
+  </div>
+</div>
+
+<!-- MY DEALS -->
+<div id="dashMydeals" class="tab-content">
+  <div class="deal-list" id="dealList"></div>
+</div>
+
+<!-- REDEEM -->
+<div id="dashRedeem" class="tab-content">
+  <div class="redeem-box">
+    <h2>🔑 <span data-i18n="redeemTitle">Gutschein einlösen</span></h2>
+    <p style="color:#999;margin-bottom:20px" data-i18n="redeemHint">Gutschein-Code des Kunden eingeben</p>
+    <div class="err-msg" id="redeemErr" aria-live="polite"></div>
+    <div class="form-group">
+      <input type="text" class="form-input" id="redeemCode" placeholder="XXXX-XXXX" style="text-align:center;font-size:20px;letter-spacing:2px;text-transform:uppercase" autocomplete="off">
     </div>
-
-    <!-- VOUCHERS -->
-
-    <!-- SETTINGS -->
-    <div id="dashSettings" class="tab-content">
-      <div class="card">
-        <h2>⚙️ <span data-i18n="tabSettings">Einstellungen</span></h2>
-        <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="profileTitle">Stammdaten</h3>
-        <div class="err-msg" id="profErr" aria-live="polite"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div class="form-group" style="grid-column:1 / -1">
-            <label class="form-label" data-i18n="addressLbl">Adresse</label>
-            <div class="search-select-wrap">
-              <input type="text" class="form-input" id="profAddressSearch" placeholder="Adresse suchen und auswählen" autocomplete="off">
-              <div id="profAddressSuggestions" class="suggestions-box"></div>
-            </div>
-            <input type="hidden" id="profAddress">
-            <small class="input-help" data-i18n="profileAddressHelp">Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.</small>
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="zipLbl">PLZ</label>
-            <input type="text" class="form-input" id="profZip" placeholder="4000" readonly>
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="cityLbl">Stadt</label>
-            <input type="text" class="form-input" id="profCity" placeholder="Basel" readonly>
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="phoneLbl">Telefon</label>
-            <input type="tel" class="form-input" id="profPhone" placeholder="+41...">
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="ibanLbl">IBAN</label>
-            <div class="codebox-field iban-field" id="profIbanField" style="--slots:21">
-              <input type="text" class="codebox-input" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
-              <div class="codebox-grid" id="profIbanGrid"></div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" data-i18n="twintLbl">Twint</label>
-            <input type="text" class="form-input" id="profTwint" placeholder="+41...">
-          </div>
-        </div>
-        <div class="mwst-legacy-block" style="margin-bottom:18px;display:none">
-          <label class="form-label" data-i18n="mwstLabel">MWST</label>
-          <label class="toggle-check" for="profNoMwst">
-            <input type="checkbox" id="profNoMwst" checked>
-            <span data-i18n="notMwstLiable">Ich bin nicht MWST-pflichtig</span>
-          </label>
-        </div>
-        <div class="form-group mwst-legacy-block" id="profMwstNumGroup" style="display:none">
-          <label class="form-label" data-i18n="mwstNumberLabel">MWST-Nummer</label>
-          <div class="codebox-field mwst-field" id="profMwstNumberField" style="--slots:16">
-            <input type="text" class="codebox-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
-            <div class="codebox-grid" id="profMwstNumberGrid"></div>
-          </div>
-        </div>
-        <div style="margin-bottom:18px">
-          <label class="form-label">📍 <span data-i18n="locationLabel">Standort</span></label>
-          <div class="inline-meta">
-            <span class="pill" id="profAddressMeta" data-i18n="addressNotSelected">Noch keine Adresse gewählt</span>
-            <button type="button" id="btnGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">📍 <span data-i18n="checkMapSelection">Auswahl auf Karte prüfen</span></button>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-            <input type="text" class="form-input" id="profLat" placeholder="Breitengrad" style="width:120px" readonly>
-            <input type="text" class="form-input" id="profLng" placeholder="Längengrad" style="width:120px" readonly>
-          </div>
-          <div id="profMapWrap" style="display:none;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid #3a3a3a">
-            <div id="profMap" style="height:200px;width:100%"></div>
-          </div>
-          <small class="input-help" data-i18n="locationHelp">Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.</small>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="profLangSelect" data-i18n="correspondenceLang">Korrespondenzsprache</label>
-          <select class="form-input" id="profLangSelect">
-            <option value="de" data-i18n="langGerman">Deutsch</option>
-            <option value="en" data-i18n="langEnglish">English</option>
-            <option value="it" data-i18n="langItalian">Italiano</option>
-            <option value="fr" data-i18n="langFrench">Français</option>
-          </select>
-          <small class="input-help correspondence-help" data-i18n="correspondenceHint">Diese Sprache wird für E-Mails und die Kommunikation mit der Bar verwendet.</small>
-        </div>
-        <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
-        <hr style="border:none;border-top:1px solid #333;margin:24px 0">
-        <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="changePassword">Passwort ändern</h3>
-        <div class="err-msg" id="pwErr" aria-live="polite"></div>
-        <div class="form-group">
-          <label class="form-label" for="pwOld" data-i18n="oldPassword">Altes Passwort</label>
-          <input type="password" class="form-input" id="pwOld" autocomplete="current-password">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="pwNew" data-i18n="newPasswordLbl">Neues Passwort (mind. 8 Zeichen)</label>
-          <input type="password" class="form-input" id="pwNew" autocomplete="new-password">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="pwConfirm" data-i18n="confirmPassword">Passwort bestätigen</label>
-          <input type="password" class="form-input" id="pwConfirm" autocomplete="new-password">
-        </div>
-        <button class="btn-pink" id="btnChangePassword" data-i18n="changePasswordBtn">Passwort ändern</button>
-        <hr style="border:none;border-top:1px solid #333;margin:24px 0">
-        <h3 style="font-size:16px;margin-bottom:12px;color:#ef4444" data-i18n="deleteAccountTitle">Account löschen</h3>
-        <p style="color:#999;font-size:13px;margin-bottom:12px" data-i18n="deleteAccountWarning">Alle Deals werden deaktiviert. Diese Aktion ist endgültig und kann nicht rückgängig gemacht werden.</p>
-        <button id="btnDeleteAccount" style="background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px" data-i18n="deleteAccountBtn">Account endgültig löschen</button>
+    <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
+    <div id="redeemResult" style="display:none;margin-top:20px">
+      <div class="code-display">
+        <div class="code-title" data-i18n="redeemSuccess">✅ Gutschein eingelöst!</div>
+        <div class="code-val" id="redeemDeal"></div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- VOUCHERS -->
 
+<!-- SETTINGS -->
+<div id="dashSettings" class="tab-content">
+  <div class="card">
+    <h2>⚙️ <span data-i18n="tabSettings">Einstellungen</span></h2>
+    <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="profileTitle">Stammdaten</h3>
+    <div class="err-msg" id="profErr" aria-live="polite"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group" style="grid-column:1 / -1">
+        <label class="form-label" data-i18n="addressLbl">Adresse</label>
+        <div class="search-select-wrap">
+          <input type="text" class="form-input" id="profAddressSearch" placeholder="Adresse suchen und auswählen" autocomplete="off">
+          <div id="profAddressSuggestions" class="suggestions-box"></div>
+        </div>
+        <input type="hidden" id="profAddress">
+        <small class="input-help" data-i18n="profileAddressHelp">Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.</small>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="zipLbl">PLZ</label>
+        <input type="text" class="form-input" id="profZip" placeholder="4000" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="cityLbl">Stadt</label>
+        <input type="text" class="form-input" id="profCity" placeholder="Basel" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="phoneLbl">Telefon</label>
+        <input type="tel" class="form-input" id="profPhone" placeholder="+41...">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="ibanLbl">IBAN</label>
+        <div class="codebox-field iban-field" id="profIbanField" style="--slots:21">
+          <input type="text" class="codebox-input" id="profIban" placeholder="CH00 0000 0000 0000 0000 0" inputmode="text" autocomplete="off" spellcheck="false">
+          <div class="codebox-grid" id="profIbanGrid"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="twintLbl">Twint</label>
+        <input type="text" class="form-input" id="profTwint" placeholder="+41...">
+      </div>
+    </div>
+    <div class="mwst-legacy-block" style="margin-bottom:18px;display:none">
+      <label class="form-label" data-i18n="mwstLabel">MWST</label>
+      <label class="toggle-check" for="profNoMwst">
+        <input type="checkbox" id="profNoMwst" checked>
+        <span data-i18n="notMwstLiable">Ich bin nicht MWST-pflichtig</span>
+      </label>
+    </div>
+    <div class="form-group mwst-legacy-block" id="profMwstNumGroup" style="display:none">
+      <label class="form-label" data-i18n="mwstNumberLabel">MWST-Nummer</label>
+      <div class="codebox-field mwst-field" id="profMwstNumberField" style="--slots:16">
+        <input type="text" class="codebox-input" id="profMwstNumber" placeholder="CHE-123.456.789 MWST" inputmode="text" autocomplete="off" spellcheck="false">
+        <div class="codebox-grid" id="profMwstNumberGrid"></div>
+      </div>
+    </div>
+    <div style="margin-bottom:18px">
+      <label class="form-label">📍 <span data-i18n="locationLabel">Standort</span></label>
+      <div class="inline-meta">
+        <span class="pill" id="profAddressMeta" data-i18n="addressNotSelected">Noch keine Adresse gewählt</span>
+        <button type="button" id="btnGeocode" style="background:#2196F3;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap">📍 <span data-i18n="checkMapSelection">Auswahl auf Karte prüfen</span></button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+        <input type="text" class="form-input" id="profLat" placeholder="Breitengrad" style="width:120px" readonly>
+        <input type="text" class="form-input" id="profLng" placeholder="Längengrad" style="width:120px" readonly>
+      </div>
+      <div id="profMapWrap" style="display:none;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid #3a3a3a">
+        <div id="profMap" style="height:200px;width:100%"></div>
+      </div>
+      <small class="input-help" data-i18n="locationHelp">Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.</small>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="profLangSelect" data-i18n="correspondenceLang">Korrespondenzsprache</label>
+      <select class="form-input" id="profLangSelect">
+        <option value="de" data-i18n="langGerman">Deutsch</option>
+        <option value="en" data-i18n="langEnglish">English</option>
+        <option value="it" data-i18n="langItalian">Italiano</option>
+        <option value="fr" data-i18n="langFrench">Français</option>
+      </select>
+      <small class="input-help correspondence-help" data-i18n="correspondenceHint">Diese Sprache wird für E-Mails und die Kommunikation mit der Bar verwendet.</small>
+    </div>
+    <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
+    <hr style="border:none;border-top:1px solid #333;margin:24px 0">
+    <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="changePassword">Passwort ändern</h3>
+    <div class="err-msg" id="pwErr" aria-live="polite"></div>
+    <div class="form-group">
+      <label class="form-label" for="pwOld" data-i18n="oldPassword">Altes Passwort</label>
+      <input type="password" class="form-input" id="pwOld" autocomplete="current-password">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="pwNew" data-i18n="newPasswordLbl">Neues Passwort (mind. 8 Zeichen)</label>
+      <input type="password" class="form-input" id="pwNew" autocomplete="new-password">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="pwConfirm" data-i18n="confirmPassword">Passwort bestätigen</label>
+      <input type="password" class="form-input" id="pwConfirm" autocomplete="new-password">
+    </div>
+    <button class="btn-pink" id="btnChangePassword" data-i18n="changePasswordBtn">Passwort ändern</button>
+    <hr style="border:none;border-top:1px solid #333;margin:24px 0">
+    <h3 style="font-size:16px;margin-bottom:12px;color:#ef4444" data-i18n="deleteAccountTitle">Account löschen</h3>
+    <p style="color:#999;font-size:13px;margin-bottom:12px" data-i18n="deleteAccountWarning">Alle Deals werden deaktiviert. Diese Aktion ist endgültig und kann nicht rückgängig gemacht werden.</p>
+    <button id="btnDeleteAccount" style="background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px" data-i18n="deleteAccountBtn">Account endgültig löschen</button>
+  </div>
+</div>
+```
+
+  </div>
+</div>
 
 <!-- EDIT DEAL MODAL -->
+
 <div id="editModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
     <div class="modal-title">
@@ -710,16 +739,16 @@
       <input type="number" class="form-input" id="editQty" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label">Bild ändern (optional)</label>
+      <label class="form-label" data-i18n="editImageLbl">Bild ändern (optional)</label>
       <input type="file" class="form-input" id="editImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
       <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild"></div>
       <input type="hidden" id="editImageUrl">
     </div>
     <div class="form-group">
-      <label class="form-label">Gültigkeitsdauer</label>
+      <label class="form-label" data-i18n="validityLbl">Gültigkeitsdauer</label>
       <div class="validity-toggle">
-        <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> Wiederkehrend</label>
-        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> Einmaliges Datum</label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="recurring" checked id="editVTypeRecurring"> <span data-i18n="recurring">Wiederkehrend</span></label>
+        <label class="validity-opt"><input type="radio" name="editValidType" value="single" id="editVTypeSingle"> <span data-i18n="singleDate">Einmaliges Datum</span></label>
       </div>
     </div>
     <div id="editRecurringFields" style="margin-top:8px">
@@ -730,26 +759,26 @@
     </div>
     <div id="editSingleFields" style="display:none;margin-top:8px">
       <div class="form-group">
-        <label class="form-label">Datum</label>
+        <label class="form-label" data-i18n="dateLbl">Datum</label>
         <input type="date" class="form-input" id="editSingleDate">
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px">
       <div class="form-group">
-        <label class="form-label">Von (Uhrzeit)</label>
+        <label class="form-label" data-i18n="fromTimeLbl">Von (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeFrom">
       </div>
       <div class="form-group">
-        <label class="form-label">Bis (Uhrzeit)</label>
+        <label class="form-label" data-i18n="toTimeLbl">Bis (Uhrzeit)</label>
         <input type="time" class="form-input" id="editTimeTo">
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">Zeitfenster</label>
+      <label class="form-label" data-i18n="timeSlotsLbl">Zeitfenster</label>
       <div class="cats-grid" style="margin-top:6px">
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> 🌅 Morgen</label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> ☀️ Mittag</label>
-        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> 🌙 Abend</label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="morning"> 🌅 <span data-i18n="slotMorning">Morgen</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="midday"> ☀️ <span data-i18n="slotMidday">Mittag</span></label>
+        <label class="cat-check"><input type="checkbox" name="editTimeSlot" value="evening"> 🌙 <span data-i18n="slotEvening">Abend</span></label>
       </div>
     </div>
     <div class="form-check" style="margin-bottom:20px">
@@ -762,41 +791,44 @@
 </div>
 
 <!-- PASSWORD RESET MODAL -->
+
 <div id="barResetPasswordModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
     <div class="modal-title">
       🔑 <span data-i18n="resetPasswordTitle">Passwort zurücksetzen</span>
       <button class="modal-close" id="btnCloseBarResetModal">✕</button>
     </div>
-    
-    <!-- Step 1: Email eingeben -->
-    <div id="barResetStep1">
-      <p style="color:#999;margin-bottom:16px" id="barResetInfo1" data-i18n="resetInfo1">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
-      <div class="form-group">
-        <label class="form-label" for="barResetEmail" data-i18n="email">Email</label>
-        <input type="email" class="form-input" id="barResetEmail" autocomplete="email">
-      </div>
-      <button class="btn-pink" id="btnBarSendResetCode" data-i18n="sendCode">Code senden</button>
-      <button class="btn-ghost" id="btnBarCancelReset1" data-i18n="cancelLbl">Abbrechen</button>
-    </div>
-    
-    <!-- Step 2: Code + neues Passwort -->
-    <div id="barResetStep2" style="display:none">
-      <p style="color:#999;margin-bottom:16px" id="barResetInfo2" data-i18n="resetInfo2">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
-      <div class="form-group">
-        <label class="form-label" for="barResetCode" data-i18n="code6">Code (6-stellig)</label>
-        <input type="text" class="form-input" id="barResetCode" maxlength="6" placeholder="123456">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="barResetNewPassword" data-i18n="newPassword">Neues Passwort (mind. 8 Zeichen)</label>
-        <input type="password" class="form-input" id="barResetNewPassword" autocomplete="new-password">
-      </div>
-      <button class="btn-pink" id="btnBarResetPassword" data-i18n="changePasswordBtn">Passwort ändern</button>
-      <button class="btn-ghost" id="btnBarBackToStep1" data-i18n="backBtn">Zurück</button>
-    </div>
+
+```
+<!-- Step 1: Email eingeben -->
+<div id="barResetStep1">
+  <p style="color:#999;margin-bottom:16px" id="barResetInfo1" data-i18n="resetInfo1">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
+  <div class="form-group">
+    <label class="form-label" for="barResetEmail" data-i18n="email">Email</label>
+    <input type="email" class="form-input" id="barResetEmail" autocomplete="email">
   </div>
+  <button class="btn-pink" id="btnBarSendResetCode" data-i18n="sendCode">Code senden</button>
+  <button class="btn-ghost" id="btnBarCancelReset1" data-i18n="cancelLbl">Abbrechen</button>
 </div>
 
+<!-- Step 2: Code + neues Passwort -->
+<div id="barResetStep2" style="display:none">
+  <p style="color:#999;margin-bottom:16px" id="barResetInfo2" data-i18n="resetInfo2">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
+  <div class="form-group">
+    <label class="form-label" for="barResetCode" data-i18n="code6">Code (6-stellig)</label>
+    <input type="text" class="form-input" id="barResetCode" maxlength="6" placeholder="123456">
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="barResetNewPassword" data-i18n="newPassword">Neues Passwort (mind. 8 Zeichen)</label>
+    <input type="password" class="form-input" id="barResetNewPassword" autocomplete="new-password">
+  </div>
+  <button class="btn-pink" id="btnBarResetPassword" data-i18n="changePasswordBtn">Passwort ändern</button>
+  <button class="btn-ghost" id="btnBarBackToStep1" data-i18n="backBtn">Zurück</button>
+</div>
+```
+
+  </div>
+</div>
 
 <div id="voucherDetailModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box" style="max-width:760px">
@@ -809,6 +841,7 @@
 </div>
 
 <!-- FOOTER -->
+
 <div class="footer" style="background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;margin-top:60px;border-top:1px solid #2a2a2a;font-size:13px">
   <p>© 2026 BarSclusive</p>
   <p style="margin-top:12px">
@@ -823,5 +856,6 @@
 </div>
 
 <script src="bar-app.js?v=20260318-2"></script>
+
 </body>
 </html>
