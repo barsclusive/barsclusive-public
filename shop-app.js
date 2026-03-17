@@ -1114,6 +1114,9 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Meine Bestellungen', changePw:'Passwort ändern',
     heroTitle:'🍹 Die besten Bar-Deals deiner Stadt',
     heroSub:'Exklusive Angebote für Breakfast, Brunch, Aperitif und Events',
+    heroBenefitLocal:'🍸 Exklusive Bar-Deals entdecken',
+    heroBenefitRedeem:'🎟️ Heute sichern, später einlösen',
+    heroBenefitInstant:'⚡ In Sekunden einlösbar',
     buyBtn:'Deal kaufen', changePasswordTitle:'Passwort ändern',
     oldPassword:'Altes Passwort', newPassword:'Neues Passwort',
     confirmPassword:'Passwort bestätigen', savePw:'Speichern',
@@ -1141,6 +1144,9 @@ const SHOP_TRANSLATIONS = {
     myOrders:'My Orders', changePw:'Change Password',
     heroTitle:'🍹 The best bar deals in your city',
     heroSub:'Exclusive offers for Breakfast, Brunch, Aperitif and Events',
+    heroBenefitLocal:'🍸 Discover exclusive bar deals',
+    heroBenefitRedeem:'🎟️ Get it today, redeem later',
+    heroBenefitInstant:'⚡ Redeemable in seconds',
     buyBtn:'Buy Deal', changePasswordTitle:'Change Password',
     oldPassword:'Old Password', newPassword:'New Password',
     confirmPassword:'Confirm Password', savePw:'Save',
@@ -1168,6 +1174,9 @@ const SHOP_TRANSLATIONS = {
     myOrders:'I miei ordini', changePw:'Cambia Password',
     heroTitle:'🍹 Le migliori offerte bar della tua città',
     heroSub:'Offerte esclusive per colazione, brunch, aperitivo ed eventi',
+    heroBenefitLocal:'🍸 Scopri offerte esclusive',
+    heroBenefitRedeem:'🎟️ Acquista oggi, riscatta dopo',
+    heroBenefitInstant:'⚡ Riscattabile in pochi secondi',
     buyBtn:'Acquista Deal', changePasswordTitle:'Cambia Password',
     oldPassword:'Vecchia Password', newPassword:'Nuova Password',
     confirmPassword:'Conferma Password', savePw:'Salva', cancelBtn:'Annulla',
@@ -1194,6 +1203,9 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Mes commandes', changePw:'Changer mot de passe',
     heroTitle:'🍹 Les meilleures offres bar de ta ville',
     heroSub:'Offres exclusives pour petit-déjeuner, brunch, apéritif et événements',
+    heroBenefitLocal:'🍸 D\u00e9couvre des offres exclusives',
+    heroBenefitRedeem:'🎟\ufe0f R\u00e9serve aujourd\u0027hui, utilise plus tard',
+    heroBenefitInstant:'\u26a1 Utilisable en quelques secondes',
     buyBtn:'Acheter Deal', changePasswordTitle:'Changer mot de passe',
     oldPassword:'Ancien mot de passe', newPassword:'Nouveau mot de passe',
     confirmPassword:'Confirmer', savePw:'Enregistrer', cancelBtn:'Annuler',
@@ -1705,8 +1717,8 @@ function updateCartBadge() {
 function renderCartPanel() {
   var body = document.getElementById('cartBody');
   if (!body) return;
-  getCart();
-  if (!_cart.length) {
+  try { getCart(); } catch(e) { try { _cart = JSON.parse(localStorage.getItem('barsclusive_cart')||'[]'); } catch(e2) { _cart = []; } }
+  if (!_cart || !_cart.length) {
     body.innerHTML = '<div style="text-align:center;padding:40px;color:#666">' + (shopT('warenkorbLeer') || 'Warenkorb ist leer') + '</div>';
     return;
   }
@@ -1715,11 +1727,12 @@ function renderCartPanel() {
   var defaultEmail = s && s.email ? s.email : ((document.getElementById('cartBuyerEmail') || {}).value || '');
   body.innerHTML = '';
   _cart.forEach(function(c) {
+    try {
     var row = document.createElement('div');
     row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;gap:12px';
     var info = document.createElement('div');
     info.style.flex = '1';
-    info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title) + '</div><div style="font-size:12px;color:#999">' + escHtml(c.bar_name) + '</div>';
+    info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title || 'Deal') + '</div><div style="font-size:12px;color:#999">' + escHtml(c.bar_name || '') + '</div>';
     var controls = document.createElement('div');
     controls.style.cssText = 'display:flex;align-items:center;gap:8px';
     var btnMinus = document.createElement('button');
@@ -1735,7 +1748,7 @@ function renderCartPanel() {
     btnPlus.addEventListener('click', function() { changeCartQty(c.deal_id, 1); });
     var priceSpan = document.createElement('span');
     priceSpan.style.cssText = 'min-width:72px;text-align:right;font-weight:700';
-    priceSpan.textContent = (c.price * c.quantity).toFixed(2) + ' CHF';
+    priceSpan.textContent = (Number(c.price||0) * Number(c.quantity||1)).toFixed(2) + ' CHF';
     var btnRemove = document.createElement('button');
     btnRemove.textContent = '✕';
     btnRemove.style.cssText = 'background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px';
@@ -1743,6 +1756,7 @@ function renderCartPanel() {
     controls.append(btnMinus, qtySpan, btnPlus, priceSpan, btnRemove);
     row.append(info, controls);
     body.appendChild(row);
+    } catch(itemErr) { console.warn('Cart item render error:', itemErr); }
   });
 
   var totalDiv = document.createElement('div');
@@ -1756,7 +1770,7 @@ function renderCartPanel() {
     + '<div style="font-size:13px;font-weight:700;margin-bottom:12px">' + (shopT('checkoutTitle') || 'Checkout') + '</div>'
     + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerName">' + (shopT('nameLbl') || 'Name') + '</label><input type="text" class="form-input" id="cartBuyerName" value="' + escHtml(defaultName) + '" autocomplete="name"></div>'
     + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerEmail">' + (shopT('emailLbl') || 'Email') + '</label><input type="email" class="form-input" id="cartBuyerEmail" value="' + escHtml(defaultEmail) + '" autocomplete="email"></div>'
-    + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>' + (shopT('acceptTermsCart') || 'Ich akzeptiere die') + ' <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fAGB') || 'AGB') + '</a> ' + (shopLang === 'en' ? 'and' : shopLang === 'it' ? 'e' : shopLang === 'fr' ? 'et' : 'und') + ' <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fDatenschutz') || 'Datenschutz') + '</a>.</span></label>';
+    + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>' + (shopT('acceptTermsCart') || 'Ich akzeptiere die') + ' <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fAGB') || 'AGB') + '</a> ' + ((typeof shopLang!=='undefined'?shopLang:'de') === 'en' ? 'and' : (typeof shopLang!=='undefined'?shopLang:'de') === 'it' ? 'e' : (typeof shopLang!=='undefined'?shopLang:'de') === 'fr' ? 'et' : 'und') + ' <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fDatenschutz') || 'Datenschutz') + '</a>.</span></label>';
   body.appendChild(buyerWrap);
 
   var checkBtn = document.createElement('button');
@@ -2825,6 +2839,7 @@ try {
     else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
     saveCart();
     showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
+    try { openCartPanel(); } catch(e) {}
   };
 
   document.addEventListener('DOMContentLoaded', function(){
