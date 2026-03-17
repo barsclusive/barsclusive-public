@@ -416,15 +416,9 @@ object-src 'none';">
 
   </style>
 
-  <style>
-    /* MOBILE TOUCH FIX: disable hover transforms that block iOS first-tap */
-    @media(max-width:768px){
-      .deal-card:hover{transform:none !important}
-      .btn-buy:hover,.btn-pink:hover{transform:none !important}
-    }
-    @media(hover:none){
-      .deal-card:hover{transform:none !important}
-    }
+  <style>/* iOS touch fix: prevent hover blocking first tap */
+  @media(hover:none){.deal-card:hover{transform:none !important}}
+  @media(max-width:768px){.deal-card:hover{transform:none !important}}
   </style>
 
 </head>
@@ -755,7 +749,7 @@ object-src 'none';">
   </div>
 </div>
 
-<script src="shop-app.js?v=20260320-1"></script>
+<script src="shop-app.js?v=20260317-fix3"></script>
 
 <!-- Deal Detail Modal -->
 
