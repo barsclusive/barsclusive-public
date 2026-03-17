@@ -411,19 +411,24 @@
     }
 
   </style>
-  <style id="tap-fix">
+  <style id="critical-fixes">
   html{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,51,102,.15)}
+  *{-webkit-tap-highlight-color:rgba(255,51,102,.12)}
   @media(hover:none),(pointer:coarse){
     .deal-card,.nav-link,.user-button,.cart-btn,.menu-btn,
     .btn-buy,.btn-pink,.btn-ghost,.btn-sm,.filter-btn,
     .share-btn,.add-cart-btn,.drawer-link,.drawer-action{
-      transition:background .15s ease,border-color .15s ease,opacity .15s ease !important;
+      transition:background .12s ease,border-color .12s ease !important;
     }
     .deal-card:hover,.nav-link:hover,.user-button:hover,.cart-btn:hover,
     .menu-btn:hover,.btn-buy:hover,.btn-pink:hover,.btn-ghost:hover,
     .filter-btn:hover,.share-btn:hover,.add-cart-btn:hover{
       transform:none !important;
     }
+  }
+  @media(max-width:768px){
+    #btnDeals{display:none !important}
+    .hero-logo{display:none !important}
   }
   </style>
 </head>
@@ -741,7 +746,7 @@
   </div>
 </div>
 
-<script src="shop-app.js?v=20260317-v6"></script>
+<script src="shop-app.js?v=20260317-v7"></script>
 
 <!-- Deal Detail Modal -->
 <div id="dealDetailModal" class="deal-modal">
