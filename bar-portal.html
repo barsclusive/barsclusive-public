@@ -224,6 +224,17 @@
 
   </style>
 
+  <style id="tap-fix">
+    html{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,51,102,.15)}
+    @media(hover:none),(pointer:coarse){
+      .btn-pink,.btn-ghost,.btn-sm,.tab,.lang-btn,.btn-logout,.menu-btn,
+      .drawer-link,.cat-check,.wd-btn,.validity-opt,.filter-btn{
+        transition:background .15s ease,border-color .15s ease,opacity .15s ease !important;
+      }
+      .btn-pink:hover,.btn-sm:hover,.menu-btn:hover,.drawer-link:hover{transform:none !important}
+    }
+  </style>
+
 </head>
 <body class="bar-portal-page">
 <div id="toast" class="toast" role="alert"></div>
@@ -855,7 +866,7 @@
   </p>
 </div>
 
-<script src="bar-app.js?v=20260317-v4"></script>
+<script src="bar-app.js?v=20260317-v5"></script>
 
 </body>
 </html>
