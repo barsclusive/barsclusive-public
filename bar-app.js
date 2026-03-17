@@ -99,7 +99,7 @@ locationHelp:‘Taken from the selected address and can be fine-tuned on the map
 zipReq:‘ZIP *’,
 mwstNumberLabel:‘VAT number’,
 portalTitle:‘Bar Portal’, forgotPw:‘Forgot password?’, resetInfo1:‘Enter your email address. We will send you a 6-digit code.’, resetInfo2:‘Enter the 6-digit code from your email and choose a new password.’, sendCode:‘Send code’, backBtn:‘Back’, code6:‘Code (6 digits)’,
-editImageLbl:‘Change image (optional)’, imageLbl:‘Image (optional)’, fromTimeLbl:‘From (time)’, toTimeLbl:‘To (time)’, timeSlotsLbl:‘Time slots’, slotMorning:‘Morning’, slotMidday:‘Midday’, slotEvening:‘Evening’, orCustomTimes:‘Or set custom times:’
+editImageLbl:‘Change image (optional)’, imageLbl:‘Image (optional)’, fromTimeLbl:‘From (time)’, toTimeLbl:‘To (time)’, timeSlotsLbl:‘Time slots’, slotMorning:‘Morning’, slotMidday:‘Midday’, slotEvening:‘Evening’, orCustomTimes:‘Or custom times:’
 },
 it: {
 logout:‘Esci’, login:‘Login’, register:‘Registrati’,
