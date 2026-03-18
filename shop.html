@@ -1725,6 +1725,36 @@
 
   </style>
 
+
+  <style id="shop-final-entry-concept">
+    .shop-top-auth{max-width:1200px;margin:0 auto;padding:10px 20px 0;display:flex;justify-content:flex-end;gap:10px}
+    .shop-top-auth-btn{appearance:none;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#1a1a1f,#121217);color:#f5f5f7;border-radius:14px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 14px 26px rgba(0,0,0,.18)}
+    .shop-top-auth-btn.shop-top-auth-primary{background:linear-gradient(180deg,#ff4d7d,#ff3366);border-color:rgba(255,255,255,.08);box-shadow:0 18px 34px rgba(255,51,102,.24)}
+    body.shop-user-logged-out .user-menu{display:none !important}
+    body.shop-user-logged-in .shop-top-auth{display:none !important}
+    body.shop-user-logged-out .shop-top-auth{display:flex}
+    .hero-shell{grid-template-columns:1fr !important;max-width:980px !important;gap:20px !important}
+    .hero-brand{display:flex !important;align-items:center !important;justify-content:flex-start !important}
+    .hero-copy{max-width:760px}
+    .hero-copy p{max-width:680px}
+    .hero-benefits{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px !important;margin-top:20px !important}
+    .hero-actions{margin-top:20px !important;display:flex;justify-content:flex-start}
+    .hero-secondary-cta{display:none !important}
+    .hero-primary-cta{min-width:240px;justify-content:center}
+    @media(max-width:768px){
+      #btnDeals{display:none !important}
+      .shop-top-auth{padding:10px 12px 0;justify-content:stretch}
+      .shop-top-auth-btn{flex:1 1 0}
+      .hero{padding-top:18px !important}
+      .hero-shell{padding:22px 18px !important}
+      .hero-brand{justify-content:center !important}
+      .hero-copy h1{margin-top:4px}
+      .hero-benefits{grid-template-columns:1fr !important;margin-top:18px !important}
+      .hero-actions{margin-top:18px !important}
+      .hero-primary-cta{width:100%;min-width:0}
+    }
+  </style>
+
 </head>
 <body class="shop-page">
 
@@ -1764,6 +1794,11 @@
 
 </div>
 
+<div class="shop-top-auth" id="shopTopAuth">
+  <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin">Einloggen</button>
+  <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister">Registrieren</button>
+</div>
+
 <div id="shopDrawer" class="side-drawer" aria-hidden="true">
   <div class="drawer-header">
     <div class="drawer-title" data-shop-i18n="menuTitle">Mehr entdecken</div>
@@ -1799,16 +1834,15 @@
     <div class="hero-copy">
       <h1 data-shop-i18n="heroTitle">🍹 Die besten Bar-Deals deiner Stadt</h1>
       <p data-shop-i18n="heroSub">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
-      <div class="hero-actions">
-        <a href="#shopFocusArea" class="hero-primary-cta" id="btnDiscoverDeals" data-shop-i18n="discoverDeals">🍸 Deals entdecken</a>
-        <a href="#shopFocusArea" class="hero-secondary-cta" id="btnExploreCity" data-shop-i18n="discoverByCity">📍 Stadt wählen</a>
-      </div>
       <div class="hero-benefits">
         <div class="hero-benefit-card" data-shop-i18n="heroBenefitQuick">⚡ Schnell sichern</div>
         <div class="hero-benefit-card" data-shop-i18n="heroBenefitLocal">🍸 Bars in deiner Nähe entdecken</div>
         <div class="hero-benefit-card" data-shop-i18n="heroBenefitMobile">🎟️ Digital einlösbar</div>
       </div>
       <div class="hero-note" id="heroUtilityLine" data-shop-i18n="heroUtility">Heute kaufen, später entspannt einlösen.</div>
+      <div class="hero-actions">
+        <a href="#shopFocusArea" class="hero-primary-cta" id="btnDiscoverDeals" data-shop-i18n="discoverDeals">🍸 Jetzt Deals entdecken</a>
+      </div>
     </div>
   </div>
 </div>
