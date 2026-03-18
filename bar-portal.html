@@ -251,6 +251,22 @@
       .entry-cta-wrap{max-width:none;padding:0 4px}
     }
   </style>
+
+  <style id="bar-entry-unlock-fix">
+    body:not(.bar-entry-locked) #barEntryHero,
+    body:not(.bar-entry-locked) .auth-benefits,
+    body:not(.bar-entry-locked) .entry-cta-wrap{display:none !important}
+    @media(max-width:768px){
+      body:not(.bar-entry-locked) .header{padding:12px 14px !important}
+      body:not(.bar-entry-locked) .header-right{width:100% !important;display:grid !important;grid-template-columns:repeat(5,minmax(0,1fr)) !important;gap:8px !important;align-items:center !important}
+      body:not(.bar-entry-locked) .header-right .lang-btn{padding:10px 0 !important}
+      body:not(.bar-entry-locked) .header-auth-actions{grid-column:1 / -1 !important;display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;margin-left:0 !important}
+      body:not(.bar-entry-locked) .header-auth-btn{width:100% !important;min-height:42px !important}
+      body:not(.bar-entry-locked) #btnLogout{grid-column:1 / span 4 !important;width:100% !important}
+      body:not(.bar-entry-locked) #barMenuBtn{grid-column:5 !important;width:100% !important;justify-content:center !important}
+    }
+  </style>
+
 </head>
 <body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
@@ -266,8 +282,8 @@
     <button class="lang-btn" id="langIT">IT</button>
     <button class="lang-btn" id="langFR">FR</button>
     <div class="header-auth-actions" id="barHeaderAuth">
-      <button class="header-auth-btn active" id="barHeaderLoginBtn" type="button" data-i18n="login">Login</button>
-      <button class="header-auth-btn" id="barHeaderRegisterBtn" type="button" data-i18n="register">Registrieren</button>
+      <button class="header-auth-btn active" id="barHeaderLoginBtn" type="button" data-i18n="login" onclick="return window.focusBarEntryAuth ? window.focusBarEntryAuth('login', event) : false;">Login</button>
+      <button class="header-auth-btn" id="barHeaderRegisterBtn" type="button" data-i18n="register" onclick="return window.focusBarEntryAuth ? window.focusBarEntryAuth('register', event) : false;">Registrieren</button>
     </div>
     <button class="btn-logout" id="btnLogout" style="display:none" data-i18n="logout">Ausloggen</button>
     <button class="menu-btn" id="barMenuBtn" aria-label="Menü öffnen">☰</button>
@@ -330,8 +346,8 @@
       </div>
     </div>
     <div class="entry-cta-wrap">
-      <button class="btn-pink entry-cta-btn" id="btnBarEntryLogin" type="button" data-i18n="login">Einloggen</button>
-      <button class="btn-ghost entry-cta-btn" id="btnBarEntryRegister" type="button" data-i18n="registerBtn">Jetzt registrieren</button>
+      <button class="btn-pink entry-cta-btn" id="btnBarEntryLogin" type="button" data-i18n="login" onclick="return window.focusBarEntryAuth ? window.focusBarEntryAuth('login', event) : false;">Einloggen</button>
+      <button class="btn-ghost entry-cta-btn" id="btnBarEntryRegister" type="button" data-i18n="registerBtn" onclick="return window.focusBarEntryAuth ? window.focusBarEntryAuth('register', event) : false;">Jetzt registrieren</button>
       <a href="so-funktionierts.html" class="entry-cta-link" data-i18n="entryHowItWorks">Weitere Details unter So funktioniert's</a>
     </div>
     <div id="loginForm" class="tab-content active">
