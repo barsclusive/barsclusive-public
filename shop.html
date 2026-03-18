@@ -280,6 +280,135 @@
     }
 
   </style>
+
+  <style id="shop-header-cleanup-hotfix">
+    #logoHomeBtn,
+    #btnDeals{
+      display:none !important;
+    }
+
+    .hero-logo{
+      height:120px !important;
+      width:auto;
+    }
+
+    #userBtn{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:180px;
+    }
+
+    .menu-btn{
+      margin-left:auto;
+    }
+
+    @media(max-width:768px){
+      .header{
+        padding:12px 14px !important;
+      }
+
+      .nav{
+        display:block !important;
+      }
+
+      .nav-links{
+        width:100%;
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto auto auto;
+        grid-template-areas:
+          "search search search search"
+          "lang cart user menu";
+        gap:10px;
+        align-items:center;
+      }
+
+      .search-wrap{
+        grid-area:search;
+        width:100%;
+        max-width:none !important;
+        order:unset !important;
+      }
+
+      .search-input{
+        min-height:48px;
+        font-size:15px;
+        padding-left:38px;
+      }
+
+      .search-icon{
+        left:14px;
+      }
+
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang;
+        justify-self:start;
+        display:flex !important;
+        gap:8px !important;
+        flex-wrap:nowrap;
+      }
+
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"] .nav-link{
+        min-width:56px;
+        min-height:56px;
+        border-radius:16px !important;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        padding:0 12px !important;
+      }
+
+      #cartOpenBtn{
+        grid-area:cart;
+        justify-self:end;
+        min-width:56px;
+        min-height:56px;
+        border-radius:999px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      .user-menu{
+        grid-area:user;
+        justify-self:end;
+        width:auto;
+      }
+
+      #userBtn{
+        min-height:56px;
+        padding:0 18px !important;
+        border-radius:999px;
+        max-width:150px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      #shopMenuBtn{
+        grid-area:menu;
+        justify-self:end;
+        min-width:56px;
+        min-height:56px;
+        padding:0 16px !important;
+        border-radius:16px;
+        margin-left:0 !important;
+      }
+
+      .hero{
+        padding-top:26px;
+      }
+
+      .hero-shell{
+        grid-template-columns:1fr !important;
+        gap:18px;
+      }
+
+      .hero-logo{
+        height:104px !important;
+      }
+    }
+  </style>
   <link rel="icon" type="image/png" href="logo.png">
 
   <style id="bs-shop-refresh-style">
@@ -411,6 +540,46 @@
     }
 
   </style>
+
+  <style id="shop-mobile-conversion-hotfix">
+    @media(max-width:768px){
+      .header{padding:10px 12px !important}
+      .nav{gap:8px !important}
+      .nav-links{gap:8px !important}
+      .search-wrap{margin-top:0 !important}
+      .hero{padding:10px 12px 6px !important;background:linear-gradient(180deg,#0f0f11 0%,rgba(10,10,12,.94) 100%) !important}
+      .hero-shell{grid-template-columns:68px minmax(0,1fr) !important;gap:12px !important;align-items:center !important}
+      .hero-logo,.hero img{height:58px !important;width:auto}
+      .hero-copy h1,.hero h1{text-align:left !important;font-size:21px !important;line-height:1.04 !important;margin-bottom:4px !important}
+      .hero-copy p,.hero p{text-align:left !important;font-size:13px !important;line-height:1.35 !important;max-width:none !important}
+      .hero-benefits,.hero-trust-strip,.hero-utility-line{display:none !important}
+      .hero-note{margin-top:6px !important;font-size:12px !important;line-height:1.35 !important}
+      .filter-wrap{margin:10px auto 12px !important;padding-left:12px !important;padding-right:12px !important}
+      .filter-bar{padding:10px 10px 8px !important;border-radius:20px !important}
+      .filter-row{gap:8px !important;margin-bottom:8px !important;padding-bottom:2px !important}
+      .filter-row:last-child{gap:8px !important}
+      .filter-label{min-width:66px !important;font-size:11px !important;padding-top:8px !important}
+      .filter-btn{padding:8px 12px !important;font-size:12px !important}
+      .date-picker-trigger,.date-picker-label{padding:8px 12px !important;min-height:38px !important;border-radius:16px !important;font-size:12px !important}
+      #locationInput.form-input{height:38px !important;font-size:13px !important}
+      .filter-row:last-child .search-select-wrap{min-width:100% !important}
+      .filter-row:last-child #btnApplyLocation,
+      .filter-row:last-child #btnUseMyLocation,
+      .filter-row:last-child #btnClearLocation{flex:1 1 calc(50% - 4px) !important;min-height:40px !important}
+      .location-pill{flex:1 1 100% !important;justify-content:center !important}
+      .container{padding:10px 12px 16px !important}
+      .container > div:first-child{display:grid !important;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px !important}
+      #viewGrid,#viewMap{min-height:40px !important;padding:9px 12px !important;font-size:13px !important}
+      .deals-grid{gap:14px !important}
+    }
+    @media(max-width:560px){
+      .hero-shell{grid-template-columns:56px minmax(0,1fr) !important;gap:10px !important}
+      .hero-logo,.hero img{height:50px !important}
+      .hero-copy h1,.hero h1{font-size:19px !important}
+      .hero-copy p,.hero p{font-size:12.5px !important}
+    }
+  </style>
+
 </head>
 <body class="shop-page">
 
