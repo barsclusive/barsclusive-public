@@ -3334,3 +3334,51 @@ try {
     });
   });
 })();
+
+
+(function(){
+  try {
+    Object.assign(SHOP_TRANSLATIONS.de, { headerLogin:'Einloggen', headerRegister:'Registrieren', discoverDeals:'🍸 Jetzt Deals entdecken' });
+    Object.assign(SHOP_TRANSLATIONS.en, { headerLogin:'Log in', headerRegister:'Register', discoverDeals:'🍸 Discover deals now' });
+    Object.assign(SHOP_TRANSLATIONS.it, { headerLogin:'Accedi', headerRegister:'Registrati', discoverDeals:'🍸 Scopri i deal ora' });
+    Object.assign(SHOP_TRANSLATIONS.fr, { headerLogin:'Connexion', headerRegister:'Inscription', discoverDeals:'🍸 Découvrir les deals' });
+  } catch(e) {}
+
+  function openShopHeaderAuth(target){
+    if (target === 'register') {
+      if (typeof openModal === 'function') openModal('registerModal');
+      if (typeof closeModal === 'function') closeModal('loginModal');
+    } else {
+      if (typeof openModal === 'function') openModal('loginModal');
+      if (typeof closeModal === 'function') closeModal('registerModal');
+    }
+  }
+
+  function syncShopEntryHeader(){
+    var logged = !!(typeof sessionGet === 'function' && sessionGet());
+    document.body.classList.toggle('shop-user-logged-in', logged);
+    document.body.classList.toggle('shop-user-logged-out', !logged);
+    var userBtn = document.getElementById('userBtn');
+    if (userBtn && !logged && typeof shopT === 'function') userBtn.textContent = '👤 ' + (shopT('loginBtn') || 'Login / Registrieren');
+  }
+
+  if (typeof updateShopUserUi === 'function') {
+    var _prevUpdateShopUserUi = updateShopUserUi;
+    updateShopUserUi = function(){
+      _prevUpdateShopUserUi();
+      syncShopEntryHeader();
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    ['shopHeaderLoginBtn','shopHeaderRegisterBtn'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', function(ev){
+        ev.preventDefault();
+        openShopHeaderAuth(this.getAttribute('data-shop-auth-target') || 'login');
+      });
+    });
+    syncShopEntryHeader();
+  });
+})();
