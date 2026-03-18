@@ -51,7 +51,7 @@ de: {
   locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
   zipReq:'PLZ *',
   mwstNumberLabel:'MWST-Nummer',
-  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
+  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)', barEntryHeadline:'Deine Bar auf BarSclusive', barEntrySub:'Mehr Gäste, mehr Sichtbarkeit ohne Fixkosten und ohne Risiko.', benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten', benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.', benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen', benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.', benefitCustomTitle:'Komplett personalisierbar', benefitCustomSub:'Produkt, Zeitraum und Konditionen bestimmst du selbst.'
 },
 en: {
   logout:'Logout', login:'Login', register:'Register',
@@ -97,7 +97,7 @@ en: {
   locationHelp:'Taken from the selected address and can be fine-tuned on the map.',
   zipReq:'ZIP *',
   mwstNumberLabel:'VAT number',
-  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)'
+  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)', barEntryHeadline:'Your bar on BarSclusive', barEntrySub:'More guests, more visibility, without fixed costs and without risk.', benefitGuestsTitle:'New guests in your preferred time slots', benefitGuestsSub:'Reach people exactly when you need them.', benefitOnlySalesTitle:'You only pay for real sales', benefitOnlySalesSub:'Commission only applies to vouchers that are actually sold.', benefitCustomTitle:'Fully customizable', benefitCustomSub:'Product, timing and conditions are entirely up to you.'
 },
 it: {
   logout:'Esci', login:'Login', register:'Registrati',
@@ -143,7 +143,7 @@ it: {
   locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.',
   zipReq:'CAP *',
   mwstNumberLabel:'Numero IVA',
-  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)'
+  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)', barEntryHeadline:'Il tuo bar su BarSclusive', barEntrySub:'Più ospiti, più visibilità, senza costi fissi e senza rischi.', benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci', benefitGuestsSub:'Raggiungi le persone proprio quando ti servono.', benefitOnlySalesTitle:'Paghi solo per vendite reali', benefitOnlySalesSub:'La commissione si applica solo ai voucher davvero venduti.', benefitCustomTitle:'Completamente personalizzabile', benefitCustomSub:'Prodotto, periodo e condizioni li decidi tu.'
 },
 fr: {
   logout:'Déconnexion', login:'Connexion', register:'Inscription',
@@ -189,7 +189,7 @@ fr: {
   locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.',
   zipReq:'NPA *',
   mwstNumberLabel:'Numéro TVA',
-  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)'
+  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)', barEntryHeadline:'Votre bar sur BarSclusive', barEntrySub:'Plus de clients, plus de visibilité, sans coûts fixes et sans risque.', benefitGuestsTitle:'De nouveaux clients aux moments que vous choisissez', benefitGuestsSub:'Touchez les bonnes personnes exactement quand vous en avez besoin.', benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes', benefitOnlySalesSub:'La commission ne s’applique qu’aux bons réellement vendus.', benefitCustomTitle:'Entièrement personnalisable', benefitCustomSub:'Produit, période et conditions, vous décidez de tout.'
 }
 };
 
@@ -2617,7 +2617,12 @@ applyProfileToForm = function(b) {
     if (registerBtn) registerBtn.classList.toggle('active', active === 'register');
   }
 
-  function focusBarAuth(name){
+  function focusBarAuth(name, event){
+    if (event) {
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      if (typeof event.stopPropagation === 'function') event.stopPropagation();
+    }
+    document.body.classList.remove('bar-entry-locked');
     var loginForm = document.getElementById('loginForm');
     var registerForm = document.getElementById('registerForm');
     if (loginForm) loginForm.classList.toggle('active', name === 'login');
@@ -2628,7 +2633,9 @@ applyProfileToForm = function(b) {
       var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
       window.scrollTo({ top: top, behavior: 'smooth' });
     }
+    return false;
   }
+  window.focusBarEntryAuth = focusBarAuth;
 
   var _prevShowAuthScreenPatch = typeof showAuthScreen === 'function' ? showAuthScreen : null;
   if (_prevShowAuthScreenPatch) {
@@ -2644,93 +2651,16 @@ applyProfileToForm = function(b) {
     var headerRegister = document.getElementById('barHeaderRegisterBtn');
     var becomePartner = document.getElementById('btnBecomePartner');
 
-    if (headerLogin) headerLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login'); });
-    if (headerRegister) headerRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
-    if (becomePartner) becomePartner.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
+    if (headerLogin) headerLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login', ev); });
+    if (headerRegister) headerRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register', ev); });
+    var entryLogin = document.getElementById('btnBarEntryLogin');
+    var entryRegister = document.getElementById('btnBarEntryRegister');
+    if (entryLogin) entryLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login', ev); });
+    if (entryRegister) entryRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register', ev); });
+    if (becomePartner) becomePartner.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register', ev); });
 
     syncBarHeaderAuthState('login');
     var headerAuth = document.getElementById('barHeaderAuth');
     if (headerAuth && typeof sessionGet === 'function' && sessionGet()) headerAuth.style.display = 'none';
-  });
-})();
-
-
-// ===== BAR ENTRY TRANSLATION HOTFIX =====
-(function(){
-  try {
-    Object.assign(TRANSLATIONS.de, {
-      barEntryHeadline:'Deine Bar auf BarSclusive',
-      barEntrySub:'Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.',
-      benefitFreeTitle:'Kostenlose Registrierung',
-      benefitFreeSub:'Ohne Einrichtungsgebühr. Einfach loslegen.',
-      benefitNoRunningTitle:'Keine laufenden Fixkosten',
-      benefitNoRunningSub:'Kein Monatsabo und keine wiederkehrenden Kosten.',
-      benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',
-      benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.',
-      benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',
-      benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.',
-      benefitReachTitle:'Mehr Sichtbarkeit für deine Bar, ohne Werbekosten',
-      benefitReachSub:'BarSclusive bringt neue Gäste direkt zu dir.',
-      benefitCustomTitle:'Komplett personalisierbar',
-      benefitCustomSub:'Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.',
-      entryHowItWorks:"Weitere Details unter So funktioniert's"
-    });
-    Object.assign(TRANSLATIONS.en, {
-      barEntryHeadline:'Your bar on BarSclusive',
-      barEntrySub:'More guests, more visibility – without fixed costs and without risk.',
-      benefitFreeTitle:'Free registration',
-      benefitFreeSub:'No setup fee. Get started right away.',
-      benefitNoRunningTitle:'No ongoing fixed costs',
-      benefitNoRunningSub:'No monthly subscription and no recurring costs.',
-      benefitGuestsTitle:'New guests in your preferred time slots',
-      benefitGuestsSub:'Reach people exactly when you need them.',
-      benefitOnlySalesTitle:'You only pay for real sales',
-      benefitOnlySalesSub:'Commission only applies to vouchers that are actually sold.',
-      benefitReachTitle:'More visibility for your bar, without ad spend',
-      benefitReachSub:'BarSclusive brings new guests directly to you.',
-      benefitCustomTitle:'Fully customizable',
-      benefitCustomSub:'Product, time frame and conditions – you stay in control.',
-      entryHowItWorks:'More details under How it works'
-    });
-    Object.assign(TRANSLATIONS.it, {
-      barEntryHeadline:'Il tuo bar su BarSclusive',
-      barEntrySub:'Più ospiti, più visibilità – senza costi fissi e senza rischi.',
-      benefitFreeTitle:'Registrazione gratuita',
-      benefitFreeSub:'Senza costi di attivazione. Parti subito.',
-      benefitNoRunningTitle:'Nessun costo fisso ricorrente',
-      benefitNoRunningSub:'Nessun abbonamento mensile e nessun costo ricorrente.',
-      benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci',
-      benefitGuestsSub:'Raggiungi le persone proprio quando ne hai bisogno.',
-      benefitOnlySalesTitle:'Paghi solo per vendite reali',
-      benefitOnlySalesSub:'La commissione si applica solo ai voucher effettivamente venduti.',
-      benefitReachTitle:'Più visibilità per il tuo bar, senza costi pubblicitari',
-      benefitReachSub:'BarSclusive porta nuovi ospiti direttamente da te.',
-      benefitCustomTitle:'Completamente personalizzabile',
-      benefitCustomSub:'Prodotto, periodo e condizioni – decidi tutto tu.',
-      entryHowItWorks:'Maggiori dettagli in Come funziona'
-    });
-    Object.assign(TRANSLATIONS.fr, {
-      barEntryHeadline:'Votre bar sur BarSclusive',
-      barEntrySub:'Plus de clients, plus de visibilité – sans coûts fixes et sans risque.',
-      benefitFreeTitle:'Inscription gratuite',
-      benefitFreeSub:'Sans frais de mise en place. Commencez tout de suite.',
-      benefitNoRunningTitle:'Pas de coûts fixes récurrents',
-      benefitNoRunningSub:'Aucun abonnement mensuel et aucun coût récurrent.',
-      benefitGuestsTitle:'De nouveaux clients aux moments que vous choisissez',
-      benefitGuestsSub:'Touchez les bonnes personnes exactement quand vous en avez besoin.',
-      benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes',
-      benefitOnlySalesSub:'La commission s’applique uniquement aux bons réellement vendus.',
-      benefitReachTitle:'Plus de visibilité pour votre bar, sans frais publicitaires',
-      benefitReachSub:'BarSclusive vous apporte directement de nouveaux clients.',
-      benefitCustomTitle:'Entièrement personnalisable',
-      benefitCustomSub:'Produit, période et conditions – vous gardez le contrôle.',
-      entryHowItWorks:'Plus de détails dans Comment ça marche'
-    });
-  } catch(e) {}
-
-  document.addEventListener('DOMContentLoaded', function(){
-    try {
-      if (typeof setLang === 'function') setLang(currentLang || 'de');
-    } catch(e) {}
   });
 })();
