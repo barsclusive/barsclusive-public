@@ -1112,7 +1112,7 @@ const SHOP_TRANSLATIONS = {
     deals:'Deals', orders:'Bestellungen',
     loginBtn:'Login / Registrieren', logoutBtn:'Ausloggen',
     myOrders:'Meine Bestellungen', changePw:'Passwort ändern',
-    heroTitle:'🍹 Die besten Bar-Deals deiner Stadt',
+    heroTitle:'Die besten Bar-Deals deiner Stadt',
     heroSub:'Exklusive Angebote für Breakfast, Brunch, Aperitif und Events',
     buyBtn:'Deal kaufen', changePasswordTitle:'Passwort ändern',
     oldPassword:'Altes Passwort', newPassword:'Neues Passwort',
@@ -1139,7 +1139,7 @@ const SHOP_TRANSLATIONS = {
     deals:'Deals', orders:'Orders',
     loginBtn:'Login / Register', logoutBtn:'Logout',
     myOrders:'My Orders', changePw:'Change Password',
-    heroTitle:'🍹 The best bar deals in your city',
+    heroTitle:'The best bar deals in your city',
     heroSub:'Exclusive offers for Breakfast, Brunch, Aperitif and Events',
     buyBtn:'Buy Deal', changePasswordTitle:'Change Password',
     oldPassword:'Old Password', newPassword:'New Password',
@@ -1166,7 +1166,7 @@ const SHOP_TRANSLATIONS = {
     deals:'Deals', orders:'Ordini',
     loginBtn:'Login / Registrati', logoutBtn:'Esci',
     myOrders:'I miei ordini', changePw:'Cambia Password',
-    heroTitle:'🍹 Le migliori offerte bar della tua città',
+    heroTitle:'Le migliori offerte bar della tua città',
     heroSub:'Offerte esclusive per colazione, brunch, aperitivo ed eventi',
     buyBtn:'Acquista Deal', changePasswordTitle:'Cambia Password',
     oldPassword:'Vecchia Password', newPassword:'Nuova Password',
@@ -1192,7 +1192,7 @@ const SHOP_TRANSLATIONS = {
     deals:'Deals', orders:'Commandes',
     loginBtn:'Connexion / Inscription', logoutBtn:'Déconnexion',
     myOrders:'Mes commandes', changePw:'Changer mot de passe',
-    heroTitle:'🍹 Les meilleures offres bar de ta ville',
+    heroTitle:'Les meilleures offres bar de ta ville',
     heroSub:'Offres exclusives pour petit-déjeuner, brunch, apéritif et événements',
     buyBtn:'Acheter Deal', changePasswordTitle:'Changer mot de passe',
     oldPassword:'Ancien mot de passe', newPassword:'Nouveau mot de passe',
@@ -3294,25 +3294,65 @@ try {
       entryBadge:'BarSclusive Shop',
       discoverDeals:'🍸 Deals entdecken',
       discoverByCity:'📍 Stadt wählen',
-      heroSub:'Exklusive Angebote für Frühstück, Lunch, Aperitivo und Events'
+      heroSub:'Exklusive Angebote für Frühstück, Lunch, Aperitivo und Events',
+      hbNearTitle:'Exklusive Deals in deiner Nähe',
+      hbNearSub:'Egal ob Matcha, Kaffee, Gipfeli, Snack, Bier oder Cocktail – finde auf einen Blick, was läuft.',
+      hbEmailTitle:'Sofort per E-Mail',
+      hbEmailSub:'Dein Gutschein kommt direkt nach dem Kauf in dein Postfach.',
+      hbRefundTitle:'48h Rückerstattung',
+      hbRefundSub:'Nicht zufrieden? Geld zurück – sofern nicht bereits eingelöst.',
+      hbSmartTitle:'Spontan ausgehen, clever sparen',
+      hbSmartSub:'Tag, Uhrzeit, Kategorie – finde genau das, was du suchst.',
+      heroHowLink:"Weitere Details unter So funktioniert’s →",
+      noLoginHint:'Auch ohne Konto möglich – stöbere einfach drauflos.'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
       entryBadge:'BarSclusive Shop',
       discoverDeals:'🍸 Explore deals',
       discoverByCity:'📍 Choose city',
-      heroSub:'Exclusive offers for breakfast, lunch, aperitivo and events'
+      heroSub:'Exclusive offers for breakfast, lunch, aperitivo and events',
+      hbNearTitle:'Exclusive deals near you',
+      hbNearSub:'Whether matcha, coffee, croissants, snacks, beer or cocktails – discover what’s on at a glance.',
+      hbEmailTitle:'Instant email delivery',
+      hbEmailSub:'Your voucher arrives right after purchase.',
+      hbRefundTitle:'48h refund policy',
+      hbRefundSub:'Not happy? Money back – as long as not already redeemed.',
+      hbSmartTitle:'Go out spontaneously, save smartly',
+      hbSmartSub:'Day, time, category – find exactly what you’re looking for.',
+      heroHowLink:'More details under How it works →',
+      noLoginHint:'No account needed – just browse and discover.'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
       entryBadge:'BarSclusive Shop',
       discoverDeals:'🍸 Scopri i deal',
       discoverByCity:'📍 Scegli la città',
-      heroSub:'Offerte esclusive per colazione, pranzo, aperitivo ed eventi'
+      heroSub:'Offerte esclusive per colazione, pranzo, aperitivo ed eventi',
+      hbNearTitle:'Deal esclusivi vicino a te',
+      hbNearSub:'Che sia matcha, caffè, cornetto, snack, birra o cocktail – scopri a colpo d’occhio cosa c’è.',
+      hbEmailTitle:'Subito via e-mail',
+      hbEmailSub:'Il tuo voucher arriva subito dopo l’acquisto.',
+      hbRefundTitle:'Rimborso entro 48h',
+      hbRefundSub:'Non soddisfatto? Rimborso garantito – se non ancora utilizzato.',
+      hbSmartTitle:'Esci spontaneamente, risparmia in modo furbo',
+      hbSmartSub:'Giorno, orario, categoria – trova esattamente quello che cerchi.',
+      heroHowLink:'Maggiori dettagli in Come funziona →',
+      noLoginHint:'Possibile anche senza account – inizia a scoprire.'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
       entryBadge:'BarSclusive Shop',
       discoverDeals:'🍸 Découvrir les deals',
       discoverByCity:'📍 Choisir la ville',
-      heroSub:'Offres exclusives pour le petit-déjeuner, le lunch, l’apéritif et les événements'
+      heroSub:'Offres exclusives pour le petit-déjeuner, le lunch, l’apéritif et les événements',
+      hbNearTitle:'Deals exclusifs près de chez toi',
+      hbNearSub:'Que ce soit matcha, café, croissant, snack, bière ou cocktail – découvre en un coup d’œil ce qui t’attend.',
+      hbEmailTitle:'Reçu instantanément par e-mail',
+      hbEmailSub:'Ton bon arrive directement après l’achat.',
+      hbRefundTitle:'Remboursement sous 48h',
+      hbRefundSub:'Pas satisfait ? Remboursement garanti – tant que le bon n’a pas été utilisé.',
+      hbSmartTitle:'Sortir spontanément, économiser malin',
+      hbSmartSub:'Jour, heure, catégorie – trouve exactement ce que tu cherches.',
+      heroHowLink:'Plus de détails sous Comment ça marche →',
+      noLoginHint:'Possible sans compte – découvre directement.'
     });
   } catch(e) {}
 
@@ -3384,85 +3424,16 @@ try {
 })();
 
 
-// ===== SHOP ENTRY + HEADER LAYOUT FIX =====
+// ===== FINAL ENTRY LOCK PATCH =====
 (function(){
-  try {
-    ['de','en','it','fr'].forEach(function(lang){ if (!SHOP_TRANSLATIONS[lang]) SHOP_TRANSLATIONS[lang] = {}; });
-    Object.assign(SHOP_TRANSLATIONS.de,{
-      heroTitle:'Bar-Deals schneller finden und spontan besser ausgehen',
-      heroSub:'Du musst nicht mehr selber recherchieren, wo in deiner Umgebung etwas läuft. Hier findest du auf einen Blick am gewünschten Tag, zur gewünschten Zeit und in der passenden Kategorie genau das, was du suchst.',
-      entryBadge:'BarSclusive Shop',
-      entryHowItWorks:"Weitere Details unter So funktioniert's",
-      discoverDeals:'🍸 Jetzt Deals entdecken',
-      shopBenefitNearbyTitle:'Exklusive Deals in deiner Nähe',
-      shopBenefitNearbySub:'Lokale Bars einfach entdecken und passende Angebote schneller finden.',
-      shopBenefitMailTitle:'Sofort per E-Mail erhalten',
-      shopBenefitMailSub:'Dein Voucher ist direkt nach dem Kauf digital verfügbar und sofort griffbereit.',
-      shopBenefitRefundTitle:'48 Stunden Rückerstattung',
-      shopBenefitRefundSub:'Bleib flexibel, falls sich deine Pläne kurzfristig ändern.',
-      shopBenefitSpontaneousTitle:'Spontan ausgehen, clever sparen',
-      shopBenefitSpontaneousSub:'Geniesse starke Angebote genau dann, wenn du spontan etwas unternehmen willst.',
-      shopBenefitDiscoverTitle:'Lokale Bars einfach entdecken',
-      shopBenefitDiscoverSub:'Finde schneller die passenden Orte für Aperitivo, Dinner, Events und mehr.'
-    });
-    Object.assign(SHOP_TRANSLATIONS.en,{
-      heroTitle:'Find bar deals faster and go out more spontaneously',
-      heroSub:'You no longer need to research on your own what is happening around you. Here you can see at a glance what fits your day, time and category.',
-      entryBadge:'BarSclusive Shop', entryHowItWorks:'More details under How it works', discoverDeals:'🍸 Discover deals now',
-      shopBenefitNearbyTitle:'Exclusive deals near you', shopBenefitNearbySub:'Discover local bars and find the right offers faster.',
-      shopBenefitMailTitle:'Receive it instantly by email', shopBenefitMailSub:'Your voucher is digitally available right after purchase and ready when you need it.',
-      shopBenefitRefundTitle:'48-hour refund', shopBenefitRefundSub:'Stay flexible if your plans change at short notice.',
-      shopBenefitSpontaneousTitle:'Go out spontaneously, save smartly', shopBenefitSpontaneousSub:'Enjoy strong offers exactly when you feel like doing something spontaneous.',
-      shopBenefitDiscoverTitle:'Discover local bars easily', shopBenefitDiscoverSub:'Find the right places faster for aperitivo, dinner, events and more.'
-    });
-    Object.assign(SHOP_TRANSLATIONS.it,{
-      heroTitle:'Trova più in fretta i deal bar e organizza uscite più spontanee',
-      heroSub:'Non devi più cercare da solo cosa succede nella tua zona. Qui trovi subito quello che cerchi per il giorno, l’orario e la categoria desiderata.',
-      entryBadge:'BarSclusive Shop', entryHowItWorks:'Maggiori dettagli su Come funziona', discoverDeals:'🍸 Scopri i deal ora',
-      shopBenefitNearbyTitle:'Deal esclusivi vicino a te', shopBenefitNearbySub:'Scopri facilmente i bar locali e trova più in fretta le offerte giuste.',
-      shopBenefitMailTitle:'Ricevilo subito via email', shopBenefitMailSub:'Il tuo voucher è disponibile in digitale subito dopo l’acquisto.',
-      shopBenefitRefundTitle:'Rimborso entro 48 ore', shopBenefitRefundSub:'Rimani flessibile se i tuoi piani cambiano all’ultimo momento.',
-      shopBenefitSpontaneousTitle:'Esci all’improvviso, risparmia con intelligenza', shopBenefitSpontaneousSub:'Approfitta di ottime offerte proprio quando hai voglia di uscire spontaneamente.',
-      shopBenefitDiscoverTitle:'Scopri facilmente i bar locali', shopBenefitDiscoverSub:'Trova più in fretta i posti giusti per aperitivo, cena, eventi e altro.'
-    });
-    Object.assign(SHOP_TRANSLATIONS.fr,{
-      heroTitle:'Trouve plus vite des deals bar et sors plus spontanément',
-      heroSub:'Tu n’as plus besoin de chercher toi-même ce qui se passe autour de toi. Ici, tu trouves en un coup d’œil ce qui convient au jour, à l’heure et à la catégorie souhaités.',
-      entryBadge:'BarSclusive Shop', entryHowItWorks:'Plus de détails sous Comment ça marche', discoverDeals:'🍸 Découvrir les deals',
-      shopBenefitNearbyTitle:'Des deals exclusifs près de chez toi', shopBenefitNearbySub:'Découvre facilement les bars locaux et trouve plus vite les bonnes offres.',
-      shopBenefitMailTitle:'Reçu immédiatement par email', shopBenefitMailSub:'Ton voucher est disponible en version numérique juste après l’achat.',
-      shopBenefitRefundTitle:'Remboursement sous 48 heures', shopBenefitRefundSub:'Reste flexible si tes plans changent à la dernière minute.',
-      shopBenefitSpontaneousTitle:'Sortir spontanément, économiser intelligemment', shopBenefitSpontaneousSub:'Profite de belles offres exactement quand tu veux improviser une sortie.',
-      shopBenefitDiscoverTitle:'Découvrir facilement les bars locaux', shopBenefitDiscoverSub:'Trouve plus vite les bons endroits pour l’apéritif, le dîner, les événements et plus encore.'
-    });
-  } catch(e) {}
-
-  function openShopHeaderAuth(target){
-    if (target === 'register') { if (typeof openModal === 'function') openModal('registerModal'); if (typeof closeModal === 'function') closeModal('loginModal'); }
-    else { if (typeof openModal === 'function') openModal('loginModal'); if (typeof closeModal === 'function') closeModal('registerModal'); }
-  }
-
-  function syncShopEntryUi(){
-    var logged = !!(typeof sessionGet === 'function' && sessionGet());
-    document.body.classList.toggle('shop-user-logged-in', logged);
-    document.body.classList.toggle('shop-user-logged-out', !logged);
-    var locked = document.body.classList.contains('shop-entry-locked') && !document.body.classList.contains('shop-entry-unlocked');
-    var discovery = document.getElementById('shopDiscoverySection');
-    var tools = document.getElementById('shopHeaderDiscoveryTools');
-    var auth = document.getElementById('shopTopAuth');
-    var footer = document.querySelector('.footer');
-    if (discovery) discovery.style.display = locked ? 'none' : '';
-    if (tools) tools.style.display = locked ? 'none' : 'flex';
-    if (footer) footer.style.display = locked ? 'none' : '';
-    if (auth) auth.style.display = logged ? 'none' : 'flex';
-  }
-
   function unlockShopEntry(scrollToDiscovery){
     document.body.classList.remove('shop-entry-locked');
-    document.body.classList.add('shop-entry-unlocked');
-    syncShopEntryUi();
+    var section = document.getElementById('shopDiscoverySection');
+    if (section) section.style.display = '';
+    var footer = document.querySelector('.footer');
+    if (footer) footer.style.display = '';
     if (scrollToDiscovery) {
-      var target = document.getElementById('shopFocusArea') || document.getElementById('shopDiscoverySection');
+      var target = document.getElementById('shopFocusArea') || document.getElementById('shopViewToggle') || section;
       if (target) {
         var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
         window.scrollTo({ top: top, behavior: 'smooth' });
@@ -3470,26 +3441,22 @@ try {
     }
   }
 
-  if (typeof updateShopUserUi === 'function') {
-    var _prevUpdateShopUserUi_entry = updateShopUserUi;
-    updateShopUserUi = function(){
-      _prevUpdateShopUserUi_entry.apply(this, arguments);
-      syncShopEntryUi();
+  var _prevShowViewEntryPatch = typeof showView === 'function' ? showView : null;
+  if (_prevShowViewEntryPatch) {
+    showView = function(view){
+      if (view === 'deals' || view === 'favorites' || view === 'orders') unlockShopEntry(false);
+      return _prevShowViewEntryPatch.apply(this, arguments);
     };
   }
 
   document.addEventListener('DOMContentLoaded', function(){
-    ['shopHeaderLoginBtn','shopHeaderRegisterBtn'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('click', function(ev){
-        ev.preventDefault();
-        openShopHeaderAuth(this.getAttribute('data-shop-auth-target') || 'login');
-      });
-    });
-
     var cta = document.getElementById('btnDiscoverDeals');
-    if (cta) cta.addEventListener('click', function(ev){ ev.preventDefault(); unlockShopEntry(true); }, true);
+    if (cta) {
+      cta.addEventListener('click', function(ev){
+        ev.preventDefault();
+        unlockShopEntry(true);
+      }, true);
+    }
 
     ['btnDeals','drawerDealsBtn'].forEach(function(id){
       var el = document.getElementById(id);
@@ -3499,8 +3466,6 @@ try {
 
     if (window.location.hash === '#shopFocusArea' || new URLSearchParams(window.location.search).get('deal')) {
       unlockShopEntry(false);
-    } else {
-      syncShopEntryUi();
     }
   });
 })();
