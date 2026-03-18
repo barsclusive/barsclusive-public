@@ -3382,3 +3382,81 @@ try {
     syncShopEntryHeader();
   });
 })();
+
+
+// ===== ENTRY CONTENT COPY PATCH =====
+(function(){
+  ['de','en','it','fr'].forEach(function(lang){ if (!SHOP_TRANSLATIONS[lang]) SHOP_TRANSLATIONS[lang] = {}; });
+  Object.assign(SHOP_TRANSLATIONS.de,{
+    entryBadge:'BarSclusive Shop',
+    heroTitle:'Bar-Deals schneller finden und spontan besser ausgehen',
+    heroSub:'Du musst nicht mehr selber recherchieren, wo in deiner Umgebung etwas läuft. Hier findest du auf einen Blick am gewünschten Tag, zur gewünschten Zeit und in der passenden Kategorie genau das, was du suchst.',
+    introBenefitNearbyTitle:'Exklusive Deals in deiner Nähe',
+    introBenefitNearbySub:'Lokale Bars einfach entdecken und passende Angebote schneller finden.',
+    introBenefitMailTitle:'Sofort per E-Mail erhalten',
+    introBenefitMailSub:'Nach dem Kauf ist dein Gutschein direkt digital verfügbar und bereit für später.',
+    introBenefitRefundTitle:'48 Stunden Rückerstattung',
+    introBenefitRefundSub:'Mehr Flexibilität, falls sich deine Pläne kurzfristig ändern.',
+    introBenefitSmartTitle:'Spontan ausgehen, clever sparen',
+    introBenefitSmartSub:'Weniger suchen, besser auswählen und den Abend entspannter planen.',
+    heroUtility:'Heute kaufen, später entspannt einlösen.',
+    discoverDeals:'🍸 Jetzt Deals entdecken',
+    introLearnMore:"Weitere Details unter So funktioniert's",
+    headerLogin:'Einloggen',
+    headerRegister:'Registrieren'
+  });
+  Object.assign(SHOP_TRANSLATIONS.en,{
+    entryBadge:'BarSclusive Shop',
+    heroTitle:'Find bar deals faster and go out more spontaneously',
+    heroSub:'No more endless research to see what is happening nearby. Find the right option for your preferred day, time and category at a glance.',
+    introBenefitNearbyTitle:'Exclusive deals near you',
+    introBenefitNearbySub:'Discover local bars more easily and find fitting offers faster.',
+    introBenefitMailTitle:'Delivered instantly by email',
+    introBenefitMailSub:'After purchase, your voucher is available digitally right away and ready for later.',
+    introBenefitRefundTitle:'48-hour refund',
+    introBenefitRefundSub:'More flexibility if your plans change at short notice.',
+    introBenefitSmartTitle:'Go out spontaneously, save smart',
+    introBenefitSmartSub:'Less searching, better choices and a smoother evening plan.',
+    heroUtility:'Buy today, redeem later without stress.',
+    discoverDeals:'🍸 Discover deals now',
+    introLearnMore:"More details under How it works",
+    headerLogin:'Log in',
+    headerRegister:'Register'
+  });
+  Object.assign(SHOP_TRANSLATIONS.it,{
+    entryBadge:'BarSclusive Shop',
+    heroTitle:'Trova i deal bar più in fretta ed esci meglio, anche all ultimo momento',
+    heroSub:'Non devi più cercare da solo cosa succede vicino a te. Qui trovi a colpo d occhio quello che cerchi per giorno, orario e categoria.',
+    introBenefitNearbyTitle:'Deal esclusivi vicino a te',
+    introBenefitNearbySub:'Scopri più facilmente i bar locali e trova più in fretta le offerte giuste.',
+    introBenefitMailTitle:'Ricevi tutto subito via email',
+    introBenefitMailSub:'Dopo l acquisto, il voucher è subito disponibile in digitale e pronto per dopo.',
+    introBenefitRefundTitle:'Rimborso entro 48 ore',
+    introBenefitRefundSub:'Più flessibilità se i tuoi piani cambiano all ultimo momento.',
+    introBenefitSmartTitle:'Esci all improvviso, risparmia con intelligenza',
+    introBenefitSmartSub:'Meno ricerca, scelte migliori e una serata più facile da organizzare.',
+    heroUtility:'Acquista oggi, usa il voucher più tardi con calma.',
+    discoverDeals:'🍸 Scopri i deal ora',
+    introLearnMore:'Più dettagli in Come funziona',
+    headerLogin:'Accedi',
+    headerRegister:'Registrati'
+  });
+  Object.assign(SHOP_TRANSLATIONS.fr,{
+    entryBadge:'BarSclusive Shop',
+    heroTitle:'Trouvez plus vite les deals bars et sortez plus librement',
+    heroSub:'Plus besoin de chercher vous-même ce qui se passe près de chez vous. Ici, vous trouvez d un coup d oeil ce qui vous convient selon le jour, l heure et la catégorie.',
+    introBenefitNearbyTitle:'Deals exclusifs près de vous',
+    introBenefitNearbySub:'Découvrez plus facilement les bars locaux et trouvez plus vite les bonnes offres.',
+    introBenefitMailTitle:'Reçu tout de suite par email',
+    introBenefitMailSub:'Après l achat, votre voucher est disponible immédiatement en version numérique.',
+    introBenefitRefundTitle:'Remboursement sous 48 heures',
+    introBenefitRefundSub:'Plus de flexibilité si vos plans changent au dernier moment.',
+    introBenefitSmartTitle:'Sortir spontanément, économiser intelligemment',
+    introBenefitSmartSub:'Moins de recherche, de meilleurs choix et une soirée plus simple à organiser.',
+    heroUtility:'Achetez aujourd hui, utilisez plus tard en toute tranquillité.',
+    discoverDeals:'🍸 Découvrir les deals',
+    introLearnMore:'Plus de détails dans Comment ça marche',
+    headerLogin:'Connexion',
+    headerRegister:'Inscription'
+  });
+})();
