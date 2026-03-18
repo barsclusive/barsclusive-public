@@ -234,6 +234,16 @@
     body.bar-entry-locked #loginForm,
     body.bar-entry-locked #registerForm{display:none !important}
     body.bar-entry-locked .footer{display:none}
+    /* hide header logo in entry state (shown large in hero) */
+    body.bar-entry-locked .header .logo{display:none !important}
+    /* spread header: lang left, auth+menu right */
+    body.bar-entry-locked .header{justify-content:flex-end}
+    body.bar-entry-locked .header-right{width:100%;display:flex;align-items:center;gap:10px}
+    body.bar-entry-locked #langDE,
+    body.bar-entry-locked #langEN,
+    body.bar-entry-locked #langIT,
+    body.bar-entry-locked #langFR{margin-right:0}
+    body.bar-entry-locked .header-auth-actions{margin-left:auto}
     @media(max-width:768px){
       .bar-entry-logo{height:96px}
       .bar-entry-hero{padding:6px 0 18px}
