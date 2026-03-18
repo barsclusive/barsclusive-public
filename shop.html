@@ -1791,6 +1791,256 @@
       .shop-top-auth{padding:0 12px 10px !important}
     }
   </style>
+
+  <style id="shop-entry-header-refine-final">
+    body.shop-entry-locked #shopDiscoverySection,
+    body.shop-entry-locked .footer{display:none !important}
+    body.shop-entry-locked .search-wrap,
+    body.shop-entry-locked #cartOpenBtn,
+    body.shop-entry-locked #btnDeals,
+    body.shop-entry-locked #btnFavorites,
+    body.shop-entry-locked #btnOrders,
+    body.shop-entry-locked .user-menu{display:none !important}
+    body.shop-entry-unlocked .hero{display:none !important}
+
+    .header .nav-links{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:flex-end !important;
+      gap:10px !important;
+      flex-wrap:wrap !important;
+    }
+    .shop-top-auth{
+      display:flex !important;
+      align-items:center !important;
+      gap:8px !important;
+      padding:0 !important;
+      margin:0 !important;
+    }
+    .shop-top-auth-btn{
+      min-height:42px !important;
+      padding:0 14px !important;
+      border-radius:14px !important;
+      white-space:nowrap !important;
+    }
+
+    .hero-shell{
+      max-width:820px !important;
+      margin:0 auto !important;
+    }
+    .hero-brand{
+      width:100% !important;
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:center !important;
+      justify-content:center !important;
+      margin:0 auto 18px !important;
+      text-align:center !important;
+    }
+    .hero-badge{
+      margin-bottom:12px !important;
+      align-self:center !important;
+    }
+    .hero-logo{
+      height:92px !important;
+      width:auto !important;
+      margin:0 auto !important;
+      display:block !important;
+    }
+    .hero-copy{
+      max-width:820px !important;
+      margin:0 auto !important;
+    }
+    .hero-copy h1{
+      font-size:44px !important;
+      line-height:1.05 !important;
+      letter-spacing:-.03em !important;
+    }
+    .hero-copy p{
+      max-width:none !important;
+      font-size:18px !important;
+      line-height:1.7 !important;
+      color:#d8d8de !important;
+    }
+    .hero-benefits-detailed{
+      display:grid !important;
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      gap:14px !important;
+      margin-top:24px !important;
+    }
+    .hero-benefit-card{
+      display:block !important;
+      padding:20px 20px !important;
+      border-radius:24px !important;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(16,16,20,.96)) !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      box-shadow:0 18px 30px rgba(0,0,0,.18) !important;
+    }
+    .hero-benefit-card .benefit-title{
+      display:block !important;
+      font-size:18px !important;
+      font-weight:800 !important;
+      color:#fff !important;
+      line-height:1.2 !important;
+    }
+    .hero-benefit-card .benefit-sub{
+      display:block !important;
+      margin-top:8px !important;
+      font-size:15px !important;
+      line-height:1.55 !important;
+      color:#cfd0d7 !important;
+      font-weight:500 !important;
+    }
+    .hero-note{
+      display:none !important;
+    }
+    .hero-actions{
+      display:flex !important;
+      flex-direction:column !important;
+      gap:12px !important;
+      align-items:flex-start !important;
+      margin-top:24px !important;
+    }
+    .hero-primary-cta{
+      width:100% !important;
+      justify-content:center !important;
+      min-height:56px !important;
+      font-size:18px !important;
+      border-radius:18px !important;
+    }
+    .hero-secondary-link{
+      color:#ff86a6 !important;
+      font-size:15px !important;
+      font-weight:700 !important;
+      text-decoration:none !important;
+      padding-left:2px !important;
+    }
+    .hero-secondary-link:hover{text-decoration:underline !important}
+
+    @media (max-width: 768px){
+      .header{
+        padding:14px 15px !important;
+      }
+      .header .nav-links{
+        width:100% !important;
+        justify-content:flex-end !important;
+        gap:8px !important;
+      }
+      .shop-top-auth{
+        order:2 !important;
+        width:auto !important;
+      }
+      .shop-top-auth-btn{
+        min-height:40px !important;
+        padding:0 12px !important;
+        font-size:13px !important;
+        border-radius:12px !important;
+      }
+      #shopMenuBtn{
+        order:3 !important;
+        margin-left:0 !important;
+      }
+      .hero{
+        padding-top:18px !important;
+      }
+      .hero-shell{
+        padding:0 18px 6px !important;
+      }
+      .hero-copy h1{
+        font-size:28px !important;
+        line-height:1.08 !important;
+      }
+      .hero-copy p{
+        font-size:16px !important;
+        line-height:1.65 !important;
+      }
+      .hero-logo{
+        height:82px !important;
+      }
+      .hero-benefits-detailed{
+        grid-template-columns:1fr !important;
+        gap:12px !important;
+      }
+      .hero-benefit-card{
+        padding:18px 18px !important;
+        border-radius:20px !important;
+      }
+      .hero-benefit-card .benefit-title{
+        font-size:17px !important;
+      }
+      .hero-benefit-card .benefit-sub{
+        font-size:14px !important;
+      }
+      .hero-actions{
+        margin-top:22px !important;
+      }
+      .hero-secondary-link{
+        font-size:14px !important;
+      }
+    }
+  </style>
+
+
+  <style id="shop-final-header-benefits-fix">
+    body.shop-entry-locked #shopDiscoverySection,
+    body.shop-entry-locked .footer{display:none !important;}
+    body.shop-entry-unlocked .hero{display:none !important;}
+    body.shop-entry-locked .search-wrap,
+    body.shop-entry-locked #cartOpenBtn,
+    body.shop-entry-locked .user-menu,
+    body.shop-entry-locked #btnDeals,
+    body.shop-entry-locked #btnFavorites,
+    body.shop-entry-locked #btnOrders{display:none !important;}
+
+    .header{padding:12px 18px !important;}
+    .header .nav{max-width:1200px;margin:0 auto;}
+    .header .nav-links{display:flex !important;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:10px !important;row-gap:10px !important;}
+    .shop-lang-group{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow:auto;scrollbar-width:none;}
+    .shop-lang-group::-webkit-scrollbar{display:none;}
+    .shop-header-auth-inline{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;}
+    .shop-header-auth-inline .shop-top-auth-btn{margin:0;}
+    body.shop-user-logged-in .shop-header-auth-inline{display:none !important;}
+    body.shop-user-logged-out .shop-header-auth-inline{display:flex !important;}
+
+    .hero-shell{grid-template-columns:minmax(0,1fr) !important;max-width:980px !important;gap:22px !important;justify-items:center !important;text-align:center !important;}
+    .hero-brand{justify-content:center !important;align-items:center !important;}
+    .hero-copy{text-align:center !important;max-width:780px;}
+    .hero-copy p{max-width:760px !important;margin:0 auto !important;}
+    .hero-benefits-detailed{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px !important;}
+    .hero-note,.hero-actions{justify-content:center;}
+
+    @media (max-width: 900px){
+      .hero-benefits-detailed{grid-template-columns:1fr !important;}
+    }
+
+    @media (max-width: 768px){
+      .header{padding:12px 14px !important;}
+      .header .nav-links{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto !important;
+        grid-template-areas:
+          "lang menu"
+          "auth auth"
+          "search search"
+          "tools tools";
+        gap:10px !important;
+        align-items:center !important;
+      }
+      .shop-lang-group{grid-area:lang;justify-content:flex-start;}
+      .menu-btn{grid-area:menu !important;justify-self:end !important;min-width:48px !important;padding:11px 14px !important;border-radius:16px !important;}
+      .shop-header-auth-inline{grid-area:auth;display:grid !important;grid-template-columns:1fr 1fr;gap:10px;width:100%;}
+      .shop-header-auth-inline .shop-top-auth-btn{width:100%;padding:12px 14px !important;border-radius:16px !important;}
+      .search-wrap{grid-area:search !important;width:100% !important;max-width:none !important;}
+      #cartOpenBtn{grid-area:tools;justify-self:start;}
+      .user-menu{grid-area:tools;justify-self:end;}
+      .hero-shell{padding:26px 18px 12px !important;gap:18px !important;}
+      .hero-logo{height:78px !important;}
+      .hero-copy h1{font-size:30px !important;line-height:1.05 !important;}
+      .hero-copy p{font-size:15px !important;line-height:1.52 !important;}
+      .hero-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px;}
+      .hero-primary-cta,.hero-secondary-link{width:100%;text-align:center;justify-content:center;}
+    }
+  </style>
 </head>
 <body class="shop-page shop-entry-locked">
 
@@ -1808,7 +2058,7 @@
       <button class="nav-link active" id="btnDeals">🏠 Deals</button>
       <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
       <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
-      <div style="display:flex;align-items:center;gap:8px">
+      <div class="shop-lang-group" style="display:flex;align-items:center;gap:8px">
         <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
         <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
         <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
@@ -1822,16 +2072,16 @@
           <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
         </div>
       </div>
+      <div class="shop-header-auth-inline shop-top-auth" id="shopTopAuth">
+        <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin">Einloggen</button>
+        <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister">Registrieren</button>
+      </div>
       <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
     </div>
   </div>
 
 </div>
 
-<div class="shop-top-auth" id="shopTopAuth">
-  <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin">Einloggen</button>
-  <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister">Registrieren</button>
-</div>
 
 <div id="shopDrawer" class="side-drawer" aria-hidden="true">
   <div class="drawer-header">
@@ -1866,16 +2116,34 @@
       <img src="logo.png" alt="BarSclusive" class="hero-logo">
     </div>
     <div class="hero-copy">
-      <h1 data-shop-i18n="heroTitle">🍹 Die besten Bar-Deals deiner Stadt</h1>
-      <p data-shop-i18n="heroSub">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
-      <div class="hero-benefits">
-        <div class="hero-benefit-card" data-shop-i18n="heroBenefitQuick">⚡ Schnell sichern</div>
-        <div class="hero-benefit-card" data-shop-i18n="heroBenefitLocal">🍸 Bars in deiner Nähe entdecken</div>
-        <div class="hero-benefit-card" data-shop-i18n="heroBenefitMobile">🎟️ Digital einlösbar</div>
+      <h1 data-shop-i18n="heroTitle">Bar-Deals schneller finden und spontan besser ausgehen</h1>
+      <p data-shop-i18n="heroSub">Du musst nicht mehr selber recherchieren, wo in deiner Umgebung etwas läuft. Hier findest du auf einen Blick am gewünschten Tag, zur gewünschten Zeit und in der passenden Kategorie genau das, was du suchst.</p>
+      <div class="hero-benefits hero-benefits-detailed">
+        <div class="hero-benefit-card">
+          <span class="benefit-title" data-shop-i18n="shopBenefitNearbyTitle">Exklusive Deals in deiner Nähe</span>
+          <span class="benefit-sub" data-shop-i18n="shopBenefitNearbySub">Lokale Bars einfach entdecken und passende Angebote schneller finden.</span>
+        </div>
+        <div class="hero-benefit-card">
+          <span class="benefit-title" data-shop-i18n="shopBenefitMailTitle">Sofort per E-Mail erhalten</span>
+          <span class="benefit-sub" data-shop-i18n="shopBenefitMailSub">Dein Voucher ist direkt nach dem Kauf digital verfügbar und sofort griffbereit.</span>
+        </div>
+        <div class="hero-benefit-card">
+          <span class="benefit-title" data-shop-i18n="shopBenefitRefundTitle">48 Stunden Rückerstattung</span>
+          <span class="benefit-sub" data-shop-i18n="shopBenefitRefundSub">Bleib flexibel, falls sich deine Pläne kurzfristig ändern.</span>
+        </div>
+        <div class="hero-benefit-card">
+          <span class="benefit-title" data-shop-i18n="shopBenefitSpontaneousTitle">Spontan ausgehen, clever sparen</span>
+          <span class="benefit-sub" data-shop-i18n="shopBenefitSpontaneousSub">Geniesse starke Angebote genau dann, wenn du spontan etwas unternehmen willst.</span>
+        </div>
+        <div class="hero-benefit-card">
+          <span class="benefit-title" data-shop-i18n="shopBenefitDiscoverTitle">Lokale Bars einfach entdecken</span>
+          <span class="benefit-sub" data-shop-i18n="shopBenefitDiscoverSub">Finde schneller die passenden Orte für Aperitivo, Dinner, Events und mehr.</span>
+        </div>
       </div>
-      <div class="hero-note" id="heroUtilityLine" data-shop-i18n="heroUtility">Heute kaufen, später entspannt einlösen.</div>
+      <div class="hero-note" id="heroUtilityLine" data-shop-i18n="heroUtility">Weitere Details unter So funktioniert's.</div>
       <div class="hero-actions">
         <a href="#shopFocusArea" class="hero-primary-cta" id="btnDiscoverDeals" data-shop-i18n="discoverDeals">🍸 Jetzt Deals entdecken</a>
+        <a href="so-funktionierts.html" class="hero-secondary-link" id="shopHowItWorksLink" data-shop-i18n="entryHowItWorks">Weitere Details unter So funktioniert's</a>
       </div>
     </div>
   </div>
