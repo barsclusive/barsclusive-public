@@ -659,7 +659,14 @@ async function doLogout() {
 function showAuthScreen(show) {
   document.getElementById('loginScreen').style.display  = show ? 'block' : 'none';
   document.getElementById('barDashboard').style.display = show ? 'none'  : 'block';
-  if (show) setTimeout(function() { focusAuthForm(getActiveAuthFormName(), false); }, 80);
+  if (show && window.innerWidth <= 900) {
+    setTimeout(function() {
+      var loginScreen = document.getElementById('loginScreen');
+      if (!loginScreen) return;
+      var top = Math.max((loginScreen.getBoundingClientRect().top + window.scrollY) - 76, 0);
+      window.scrollTo({ top: top, behavior: 'auto' });
+    }, 40);
+  }
 }
 
 function getActiveAuthFormName() {
