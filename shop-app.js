@@ -3481,3 +3481,106 @@ try {
     }
   });
 })();
+
+
+// ===== DISCOVERY MODE CLEANUP HOTFIX =====
+(function(){
+  var DISCOVERY_PROMO_TEXTS = [
+    '⚡ Schnell sichern',
+    '🍸 Bars in deiner Nähe entdecken',
+    '🎟️ Digital einlösbar',
+    'Heute kaufen, später entspannt einlösen.',
+    '🍸 Jetzt Deals entdecken'
+  ];
+
+  function getDiscoveryAnchor(){
+    return document.getElementById('shopFocusArea') || document.getElementById('shopDiscoverySection') || document.querySelector('.filter-wrap');
+  }
+
+  function hideDiscoveryPromoArtifacts(){
+    [
+      '.hero',
+      '.hero-trust-strip',
+      '.hero-utility-line',
+      '.hero-primary-cta',
+      '.hero-secondary-cta',
+      '#btnDiscoverDeals',
+      '#headerDealsBtn'
+    ].forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        if (el) el.style.display = 'none';
+      });
+    });
+
+    document.querySelectorAll('section,div,p,a,button,span,strong').forEach(function(el){
+      var txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!txt) return;
+      if (DISCOVERY_PROMO_TEXTS.indexOf(txt) === -1) return;
+      if (el.closest('#shopDiscoverySection, #dealsView, #ordersView, #favoritesView, #shopDrawer, .header, .filter-wrap')) return;
+      el.style.display = 'none';
+      var parent = el.parentElement;
+      if (parent && parent.children.length === 1 && !parent.id) parent.style.display = 'none';
+    });
+  }
+
+  function activateDiscoveryMode(scrollToFilters){
+    document.body.classList.remove('shop-entry-locked');
+    document.body.classList.add('shop-discovery-active');
+    document.body.setAttribute('data-shop-view', 'deals');
+
+    var discovery = document.getElementById('shopDiscoverySection');
+    if (discovery) discovery.style.display = '';
+    var footer = document.querySelector('.footer');
+    if (footer) footer.style.display = '';
+    var dealsView = document.getElementById('dealsView');
+    if (dealsView) dealsView.style.display = 'block';
+    var ordersView = document.getElementById('ordersView');
+    if (ordersView) ordersView.style.display = 'none';
+    var favoritesView = document.getElementById('favoritesView');
+    if (favoritesView) favoritesView.style.display = 'none';
+
+    var btnDeals = document.getElementById('btnDeals');
+    if (btnDeals) btnDeals.classList.add('active');
+    var btnOrders = document.getElementById('btnOrders');
+    if (btnOrders) btnOrders.classList.remove('active');
+    var btnFavorites = document.getElementById('btnFavorites');
+    if (btnFavorites) btnFavorites.classList.remove('active');
+
+    hideDiscoveryPromoArtifacts();
+
+    if (scrollToFilters) {
+      var target = getDiscoveryAnchor();
+      if (target) {
+        var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    }
+  }
+
+  window.activateShopDiscoveryMode = activateDiscoveryMode;
+
+  var _prevShowViewDiscoveryPatch = typeof showView === 'function' ? showView : null;
+  if (_prevShowViewDiscoveryPatch) {
+    showView = function(view){
+      document.body.setAttribute('data-shop-view', view || 'deals');
+      if (view === 'deals') activateDiscoveryMode(false);
+      return _prevShowViewDiscoveryPatch.apply(this, arguments);
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    ['btnDiscoverDeals','headerDealsBtn','btnDeals','drawerDealsBtn'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', function(ev){
+        if (id === 'btnDiscoverDeals' || id === 'headerDealsBtn') ev.preventDefault();
+        activateDiscoveryMode(id === 'btnDiscoverDeals' || id === 'headerDealsBtn');
+      }, true);
+    });
+
+    if (!document.body.classList.contains('shop-entry-locked')) {
+      document.body.classList.add('shop-discovery-active');
+      hideDiscoveryPromoArtifacts();
+    }
+  });
+})();
