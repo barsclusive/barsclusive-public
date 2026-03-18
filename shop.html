@@ -52,8 +52,8 @@
     .date-input{padding:8px 12px;background:#2a2a2a;border:1px solid #3a3a3a;border-radius:8px;color:#fff;font-size:13px}
     .container{max-width:1200px;margin:0 auto;padding:30px 20px}
     .deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
-    .deal-card{background:#1a1a1a;border-radius:20px;overflow:hidden;border:1px solid #2a2a2a;transition:transform .2s}
-    .deal-card:hover{transform:translateY(-4px)}
+    .deal-card{background:#1a1a1a;border-radius:20px;overflow:hidden;border:1px solid #2a2a2a;transition:box-shadow .2s}
+    .deal-card:hover{box-shadow:0 8px 24px rgba(255,51,102,.15)}
     .deal-image{width:100%;height:200px;background:#2a2a2a;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
     .deal-image img{width:100%;height:100%;object-fit:cover}
     .badge-discount{position:absolute;top:15px;right:15px;background:#FF3366;color:#fff;padding:6px 12px;border-radius:15px;font-weight:700;font-size:13px}
@@ -205,8 +205,8 @@
     .add-cart-btn{background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;margin-left:8px}
     .add-cart-btn:hover{background:#FF3366;border-color:#FF3366}
 
-    .menu-btn{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;color:#f4f4f5;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform .18s ease,background .18s ease,border-color .18s ease;min-width:44px}
-    .menu-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);background:#1a1a1a}
+    .menu-btn{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;color:#f4f4f5;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background .18s ease,border-color .18s ease;min-width:44px}
+    .menu-btn:hover{border-color:rgba(255,255,255,.16);background:#1a1a1a}
     .side-drawer{position:fixed;top:0;right:-360px;width:320px;max-width:88vw;height:100vh;background:#101010;border-left:1px solid #2a2a2a;z-index:1201;transition:right .28s ease;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.45)}
     .side-drawer.active{right:0}
     .drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid #222}
@@ -289,9 +289,9 @@
     .nav{gap:14px;align-items:flex-start}
     .logo img{height:46px !important}
     .nav-links{flex:1;justify-content:flex-end;gap:10px;row-gap:8px}
-    .nav-link,.user-button,.cart-btn,.filter-btn,.btn-ghost,.btn-pink,.btn-buy,.share-btn,.add-cart-btn{transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease}
+    .nav-link,.user-button,.cart-btn,.filter-btn,.btn-ghost,.btn-pink,.btn-buy,.share-btn,.add-cart-btn{transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease}
     .nav-link,.user-button,.cart-btn{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:9px 14px;color:#f4f4f5;box-shadow:none}
-    .nav-link:hover,.user-button:hover,.cart-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);background:#1a1a1a}
+    .nav-link:hover,.user-button:hover,.cart-btn:hover{border-color:rgba(255,255,255,.16);background:#1a1a1a}
     .search-wrap{max-width:360px;min-width:220px}
     .search-input{height:40px;padding-left:36px;background:#151515;border-color:rgba(255,255,255,.08);border-radius:999px}
     .search-input::placeholder{color:#7e7e86}
@@ -320,7 +320,7 @@
     .deals-grid{gap:18px}
     .deal-card,.order-card,.modal-box,.deal-modal-box,.cart-panel{background:linear-gradient(180deg,#161616 0%,#111 100%);border:1px solid rgba(255,255,255,.08);box-shadow:var(--bs-shadow)}
     .deal-card{border-radius:24px;overflow:hidden}
-    .deal-card:hover{transform:translateY(-6px)}
+    .deal-card:hover{box-shadow:0 10px 28px rgba(255,51,102,.18)}
     .deal-image{height:214px;background:#111}
     .badge-discount{background:rgba(255,51,102,.96);box-shadow:0 8px 22px rgba(255,51,102,.32)}
     .badge-cat,.badge-dist{backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12)}
@@ -333,7 +333,8 @@
     .price-new{font-size:30px;letter-spacing:-.03em}
     .price-old{font-size:14px;color:#72727a}
     .btn-buy{background:linear-gradient(180deg,#fff,#f1f1f1);border-radius:14px;min-height:48px;font-weight:800;letter-spacing:-.01em}
-    .btn-buy:hover,.btn-pink:hover{transform:translateY(-1px)}
+    .btn-buy:hover{background:linear-gradient(180deg,#f8f8f8,#eee)}
+    .btn-pink:hover{background:linear-gradient(180deg,#ff5580,#ff2255)}
     .btn-pink{background:linear-gradient(180deg,#ff4d7d,#ff3366);border-radius:14px;box-shadow:0 14px 30px rgba(255,51,102,.24)}
     .btn-ghost{background:#171717;border-radius:14px}
     .section-subline{color:#9b9ba5;font-size:14px;margin-bottom:18px;max-width:760px}
@@ -410,26 +411,6 @@
       .side-drawer{width:min(340px,86vw)}
     }
 
-  </style>
-  <style id="critical-fixes">
-  html{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,51,102,.15)}
-  *{-webkit-tap-highlight-color:rgba(255,51,102,.12)}
-  @media(hover:none),(pointer:coarse){
-    .deal-card,.nav-link,.user-button,.cart-btn,.menu-btn,
-    .btn-buy,.btn-pink,.btn-ghost,.btn-sm,.filter-btn,
-    .share-btn,.add-cart-btn,.drawer-link,.drawer-action{
-      transition:background .12s ease,border-color .12s ease !important;
-    }
-    .deal-card:hover,.nav-link:hover,.user-button:hover,.cart-btn:hover,
-    .menu-btn:hover,.btn-buy:hover,.btn-pink:hover,.btn-ghost:hover,
-    .filter-btn:hover,.share-btn:hover,.add-cart-btn:hover{
-      transform:none !important;
-    }
-  }
-  @media(max-width:768px){
-    #btnDeals{display:none !important}
-    .hero-logo{display:none !important}
-  }
   </style>
 </head>
 <body class="shop-page">
@@ -746,7 +727,7 @@
   </div>
 </div>
 
-<script src="shop-app.js?v=20260317-v7"></script>
+<script src="shop-app.js?v=20260318-fix"></script>
 
 <!-- Deal Detail Modal -->
 <div id="dealDetailModal" class="deal-modal">
@@ -779,5 +760,114 @@
   <div id="cartBody"></div>
 </div>
 <div class="cart-overlay" id="cartOverlay"></div>
+
+<style>
+html{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,51,102,.12)}
+@media(max-width:768px){
+  #btnDeals{display:none !important}
+  .hero-logo{display:none !important}
+}
+</style>
+
+<script>
+// INLINE FIX: runs AFTER shop-app.js, guarantees cart + login + buy work
+(function(){
+  // FIX A: Bulletproof renderCartPanel
+  window.renderCartPanel = function(){
+    var body = document.getElementById('cartBody');
+    if(!body) return;
+    var cart=[];
+    try{cart=JSON.parse(localStorage.getItem('barsclusive_cart')||'[]');}catch(e){cart=[];}
+    if(!cart||!cart.length){
+      body.innerHTML='<div style="text-align:center;padding:40px;color:#666">'+(typeof shopT==='function'?(shopT('warenkorbLeer')||'Warenkorb ist leer'):'Warenkorb ist leer')+'</div>';
+      return;
+    }
+    var s=(typeof sessionGet==='function')?sessionGet():null;
+    var dn=(s&&s.name)||'',de=(s&&s.email)||'';
+    var _e=function(v){return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+    var _t=function(k){return typeof shopT==='function'?(shopT(k)||''):'';};
+    var lang=(typeof _shopLang!=='undefined'?_shopLang:(typeof shopLang!=='undefined'?shopLang:'de'));
+    body.innerHTML='';
+    var total=0;
+    cart.forEach(function(c){
+      var p=Number(c.price)||0,q=Number(c.quantity)||1;total+=p*q;
+      var row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;gap:12px';
+      var info=document.createElement('div');info.style.flex='1';
+      info.innerHTML='<div style="font-weight:600;font-size:14px">'+_e(c.title||'Deal')+'</div><div style="font-size:12px;color:#999">'+_e(c.bar_name||'')+'</div>';
+      var ctrls=document.createElement('div');ctrls.style.cssText='display:flex;align-items:center;gap:8px';
+      function mkb(t,fn){var b=document.createElement('button');b.textContent=t;b.style.cssText='background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';b.addEventListener('click',fn);return b;}
+      var qs=document.createElement('span');qs.style.cssText='min-width:20px;text-align:center';qs.textContent=q;
+      var ps=document.createElement('span');ps.style.cssText='min-width:72px;text-align:right;font-weight:700';ps.textContent=(p*q).toFixed(2)+' CHF';
+      var rm=document.createElement('button');rm.textContent='\u2715';rm.style.cssText='background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px';
+      rm.addEventListener('click',function(){if(typeof removeFromCart==='function')removeFromCart(c.deal_id);else{try{var a=JSON.parse(localStorage.getItem('barsclusive_cart')||'[]');localStorage.setItem('barsclusive_cart',JSON.stringify(a.filter(function(x){return x.deal_id!==c.deal_id;})));if(typeof updateCartBadge==='function')updateCartBadge();renderCartPanel();}catch(e2){}}});
+      ctrls.append(mkb('-',function(){if(typeof changeCartQty==='function')changeCartQty(c.deal_id,-1);}),qs,mkb('+',function(){if(typeof changeCartQty==='function')changeCartQty(c.deal_id,1);}),ps,rm);
+      row.append(info,ctrls);body.appendChild(row);
+    });
+    var td=document.createElement('div');td.style.cssText='padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px';
+    td.textContent=(_t('total')||'Total')+': '+total.toFixed(2)+' CHF';body.appendChild(td);
+    var aw=lang==='en'?'and':lang==='it'?'e':lang==='fr'?'et':'und';
+    var w=document.createElement('div');w.style.cssText='margin-top:14px;padding:14px;background:#171717;border:1px solid #2a2a2a;border-radius:12px';
+    w.innerHTML='<div style="font-size:13px;font-weight:700;margin-bottom:12px">'+(_t('checkoutTitle')||'Checkout')+'</div>'
+      +'<div class="form-group" style="margin-bottom:10px"><label class="form-label">'+(_t('nameLbl')||'Name')+'</label><input type="text" class="form-input" id="cartBuyerName" value="'+_e(dn)+'" autocomplete="name"></div>'
+      +'<div class="form-group" style="margin-bottom:10px"><label class="form-label">'+(_t('emailLbl')||'Email')+'</label><input type="email" class="form-input" id="cartBuyerEmail" value="'+_e(de)+'" autocomplete="email"></div>'
+      +'<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>'+(_t('acceptTermsCart')||'Ich akzeptiere die')+' <a href="agb.html" target="_blank" style="color:#FF3366">'+(_t('fAGB')||'AGB')+'</a> '+aw+' <a href="datenschutz.html" target="_blank" style="color:#FF3366">'+(_t('fDatenschutz')||'Datenschutz')+'</a>.</span></label>';
+    body.appendChild(w);
+    var pb=document.createElement('button');pb.id='cartCheckoutBtn';pb.textContent=_t('jetztBezahlen')||'Jetzt bezahlen';
+    pb.style.cssText='width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px';
+    pb.addEventListener('click',function(){if(typeof checkoutCart==='function')checkoutCart();});
+    body.appendChild(pb);
+  };
+
+  // FIX B: addToCart must open+render cart
+  var _prevATC=typeof addToCart==='function'?addToCart:null;
+  if(_prevATC){
+    addToCart=function(deal){
+      _prevATC(deal);
+      try{
+        var p=document.getElementById('cartPanel'),o=document.getElementById('cartOverlay');
+        if(p)p.classList.add('active');if(o)o.style.display='block';
+        document.body.style.overflow='hidden';
+        renderCartPanel();
+      }catch(e){}
+    };
+  }
+
+  // FIX C: Global click delegation (useCapture) for Login + Profitiere + Cart
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    // Login
+    if(t.id==='userBtn'||t.closest&&t.closest('#userBtn')){
+      e.stopPropagation();
+      var s2=(typeof sessionGet==='function')?sessionGet():null;
+      if(!s2){var m=document.getElementById('loginModal');if(m)m.classList.add('active');}
+      else{var dd=document.getElementById('userDropdown');if(dd)dd.classList.toggle('show');}
+      return;
+    }
+    // Profitiere jetzt
+    if(t.classList&&(t.classList.contains('btn-buy')||(t.closest&&t.closest('.btn-buy')))){
+      var btn=t.classList.contains('btn-buy')?t:t.closest('.btn-buy');
+      var card=btn?btn.closest('.deal-card'):null;
+      if(card&&typeof allDeals!=='undefined'){
+        var ti=card.querySelector('.deal-title');
+        if(ti){var d=allDeals.find(function(x){return x.title===ti.textContent;});
+        if(d&&typeof openBuyModal==='function'){e.stopPropagation();openBuyModal(d);return;}}
+      }
+    }
+    // Cart open
+    if(t.id==='cartOpenBtn'||(t.closest&&t.closest('#cartOpenBtn'))){
+      e.stopPropagation();
+      var p2=document.getElementById('cartPanel'),o2=document.getElementById('cartOverlay');
+      if(p2&&p2.classList.contains('active')){p2.classList.remove('active');if(o2)o2.style.display='none';document.body.style.overflow='';}
+      else if(p2){p2.classList.add('active');if(o2)o2.style.display='block';document.body.style.overflow='hidden';renderCartPanel();}
+      return;
+    }
+    // Modal submit buttons
+    if(t.id==='btnLoginSubmit'||(t.closest&&t.closest('#btnLoginSubmit'))){if(typeof doLogin==='function')doLogin();return;}
+    if(t.id==='btnBuySubmit'||(t.closest&&t.closest('#btnBuySubmit'))){if(typeof doBuy==='function')doBuy();return;}
+    if(t.id==='btnRegisterSubmit'||(t.closest&&t.closest('#btnRegisterSubmit'))){if(typeof doRegister==='function')doRegister();return;}
+  },true);
+})();
+</script>
+
 </body>
 </html>
