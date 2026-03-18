@@ -218,6 +218,24 @@
     }
 
   </style>
+
+  <style id="bar-auth-ux-hotfix">
+    #loginForm,#registerForm{scroll-margin-top:88px}
+    @media(max-width:768px){
+      .auth-shell{display:flex;flex-direction:column;gap:14px}
+      .auth-shell>.tabs{order:1;margin-bottom:0}
+      .auth-shell>#loginForm,.auth-shell>#registerForm{order:2;margin:0}
+      .auth-shell>.auth-benefits{order:3;grid-template-columns:1fr 1fr;gap:10px;margin:0 auto 6px;max-width:none}
+      .auth-shell>.auth-benefits .benefit-card{padding:14px;border-radius:18px}
+      .auth-shell>.auth-benefits .benefit-title{font-size:15px;margin-bottom:4px}
+      .auth-shell>.auth-benefits .benefit-sub{font-size:13px;line-height:1.35}
+      #loginForm .card,#registerForm .card{margin-top:0}
+    }
+    @media(max-width:560px){
+      .auth-shell>.auth-benefits{grid-template-columns:1fr}
+    }
+  </style>
+
 </head>
 <body class="bar-portal-page">
 <div id="toast" class="toast" role="alert"></div>
@@ -822,6 +840,6 @@
   </p>
 </div>
 
-<script src="bar-app.js?v=20260318-2"></script>
+<script src="bar-app.js?v=20260318-3"></script>
 </body>
 </html>
