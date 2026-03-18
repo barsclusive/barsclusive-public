@@ -675,12 +675,16 @@ function getActiveAuthFormName() {
 }
 
 function focusAuthForm(name, smooth) {
-  if (window.innerWidth > 900) return;
   var form = document.getElementById(name === 'register' ? 'registerForm' : 'loginForm');
   if (!form || form.classList.contains('active') === false) return;
   var target = form.querySelector('.card') || form;
   var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
   window.scrollTo({ top: top, behavior: smooth ? 'smooth' : 'auto' });
+}
+
+function focusAuthEntry(name, smooth) {
+  switchAuthTab(name, getAuthTabButton(name));
+  setTimeout(function() { focusAuthForm(name, smooth !== false); }, 60);
 }
 
 
@@ -1269,11 +1273,16 @@ async function doCreateDeal() {
 }
 
 // ── TAB SWITCHING ─────────────────────────────────────────────────────────
+function getAuthTabButton(name) {
+  return document.querySelector('[data-auth-tab="' + name + '"]');
+}
+
 function switchAuthTab(name, btn) {
   document.getElementById('loginForm').classList.toggle('active', name === 'login');
   document.getElementById('registerForm').classList.toggle('active', name === 'register');
   document.querySelectorAll('[data-auth-tab]').forEach(function(t) { t.classList.remove('active'); });
-  btn.classList.add('active');
+  var targetBtn = btn || getAuthTabButton(name);
+  if (targetBtn) targetBtn.classList.add('active');
   setTimeout(function() { focusAuthForm(name, true); }, 30);
 }
 
@@ -1489,6 +1498,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Auth tabs
   document.querySelectorAll('[data-auth-tab]').forEach(function(btn) {
     btn.addEventListener('click', function() { switchAuthTab(this.dataset.authTab, this); });
+  });
+
+
+  document.querySelectorAll('[data-auth-target]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      focusAuthEntry(this.dataset.authTarget || 'login', true);
+    });
   });
 
   // Login / Register
@@ -2621,4 +2638,35 @@ applyProfileToForm = function(b) {
     var barDrawerClose = document.getElementById('barDrawerClose'); if (barDrawerClose) barDrawerClose.addEventListener('click', closeBarDrawer);
     var barDrawerOverlay = document.getElementById('barDrawerOverlay'); if (barDrawerOverlay) barDrawerOverlay.addEventListener('click', closeBarDrawer);
   });
+})();
+
+
+// ===== ENTRY FOCUS PATCH: clearer intro within same bar portal page =====
+(function(){
+  try {
+    Object.assign(TRANSLATIONS.de, {
+      portalEntryBadge:'BarSclusive Partnerbereich',
+      portalEntryTitle:'Neue Gäste gewinnen ohne laufende Fixkosten',
+      portalEntrySub:'Erstelle Angebote, erreiche neue Gäste und verwalte Einlösungen direkt im bestehenden Bar-Portal.',
+      registerNow:'Jetzt registrieren'
+    });
+    Object.assign(TRANSLATIONS.en, {
+      portalEntryBadge:'BarSclusive partner area',
+      portalEntryTitle:'Win new guests without ongoing fixed costs',
+      portalEntrySub:'Create offers, reach new guests and manage redemptions directly inside the existing bar portal.',
+      registerNow:'Register now'
+    });
+    Object.assign(TRANSLATIONS.it, {
+      portalEntryBadge:'Area partner BarSclusive',
+      portalEntryTitle:'Acquisisci nuovi ospiti senza costi fissi ricorrenti',
+      portalEntrySub:'Crea offerte, raggiungi nuovi ospiti e gestisci i riscatti direttamente nel portale bar esistente.',
+      registerNow:'Registrati ora'
+    });
+    Object.assign(TRANSLATIONS.fr, {
+      portalEntryBadge:'Espace partenaires BarSclusive',
+      portalEntryTitle:'Gagnez de nouveaux clients sans coûts fixes récurrents',
+      portalEntrySub:'Créez des offres, attirez de nouveaux clients et gérez les utilisations directement dans le portail bar existant.',
+      registerNow:'S’inscrire maintenant'
+    });
+  } catch(e) {}
 })();
