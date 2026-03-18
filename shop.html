@@ -1023,63 +1023,48 @@
     }
   </style>
 
-
-  <style id="shop-discovery-active-layout">
-    body.shop-discovery-active .hero,
-    body.shop-discovery-active .shop-top-auth,
-    body.shop-discovery-active .shop-no-login-hint,
-    body.shop-discovery-active .hero-trust-strip,
-    body.shop-discovery-active .hero-utility-line,
-    body.shop-discovery-active .hero-primary-cta,
-    body.shop-discovery-active .hero-secondary-cta,
-    body.shop-discovery-active .header-deals-btn{display:none !important}
-
-    body.shop-discovery-active #shopDiscoverySection,
-    body.shop-discovery-active .footer{display:block}
-
+  <style id="shop-mobile-unlocked-layout-fix">
     @media(max-width:768px){
-      body.shop-discovery-active .header{padding:12px !important}
-      body.shop-discovery-active .nav{align-items:flex-start !important}
-      body.shop-discovery-active .nav-links{
-        display:grid !important;
-        grid-template-columns:1fr auto !important;
-        grid-template-areas:
-          'lang lang'
-          'search search'
-          'cart menu' !important;
+      body:not(.shop-entry-locked) .header{padding:12px !important}
+      body:not(.shop-entry-locked) .nav{display:grid !important;grid-template-columns:64px minmax(0,1fr) !important;align-items:start !important;gap:12px !important}
+      body:not(.shop-entry-locked) .shop-header-logo{display:flex !important;align-items:flex-start !important;justify-content:flex-start !important}
+      body:not(.shop-entry-locked) .shop-header-logo img{height:52px !important;width:auto !important}
+      body:not(.shop-entry-locked) .nav-links{
         width:100% !important;
-        gap:10px !important;
+        display:grid !important;
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+        grid-template-areas:
+          "lang lang lang lang"
+          "search search search search"
+          "cart user user menu" !important;
+        gap:8px !important;
         align-items:center !important;
       }
-      body.shop-discovery-active .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
         grid-area:lang !important;
-        justify-content:flex-start !important;
-        margin-right:0 !important;
         display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
         gap:8px !important;
-        flex-wrap:nowrap !important;
+        margin:0 !important;
         overflow-x:auto !important;
+        padding-bottom:2px !important;
       }
-      body.shop-discovery-active .search-wrap{
-        grid-area:search !important;
-        display:block !important;
-        max-width:none !important;
-        min-width:0 !important;
-      }
-      body.shop-discovery-active #cartOpenBtn{
-        grid-area:cart !important;
-        justify-self:start !important;
-        display:inline-flex !important;
-      }
-      body.shop-discovery-active .user-menu{
-        grid-area:cart !important;
-        justify-self:start !important;
-      }
-      body.shop-discovery-active #shopMenuBtn{
-        grid-area:menu !important;
-        justify-self:end !important;
-        margin-left:0 !important;
-      }
+      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
+      body:not(.shop-entry-locked) .search-wrap{grid-area:search !important;order:initial !important;max-width:none !important;min-width:0 !important;width:100% !important;margin:0 !important}
+      body:not(.shop-entry-locked) .search-input{height:44px !important}
+      body:not(.shop-entry-locked) #cartOpenBtn{grid-area:cart !important;width:100% !important;justify-content:center !important}
+      body:not(.shop-entry-locked) .user-menu{grid-area:user !important;min-width:0 !important}
+      body:not(.shop-entry-locked) .user-button{width:100% !important;display:flex !important;align-items:center !important;justify-content:center !important;min-width:0 !important;overflow:hidden !important;text-overflow:ellipsis !important}
+      body:not(.shop-entry-locked) #shopMenuBtn{grid-area:menu !important;width:100% !important;justify-content:center !important;margin-left:0 !important}
+      body:not(.shop-entry-locked) #btnDeals,
+      body:not(.shop-entry-locked) #headerDealsBtn{display:none !important}
+    }
+    @media(max-width:480px){
+      body:not(.shop-entry-locked) .nav{grid-template-columns:54px minmax(0,1fr) !important;gap:10px !important}
+      body:not(.shop-entry-locked) .shop-header-logo img{height:46px !important}
+      body:not(.shop-entry-locked) .nav-links{grid-template-columns:repeat(4,minmax(0,1fr)) !important}
+      body:not(.shop-entry-locked) .user-button,body:not(.shop-entry-locked) .cart-btn,body:not(.shop-entry-locked) .menu-btn{min-height:42px !important;padding:8px 10px !important}
     }
   </style>
 
@@ -1108,22 +1093,22 @@
       </div>
       <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
       <div class="user-menu">
-        <button class="user-button" id="userBtn">👤 Login</button>
+        <button class="user-button" id="userBtn" type="button" onclick="return window.handleShopUserButton ? window.handleShopUserButton(event) : false;">👤 Login</button>
         <div class="user-dropdown" id="userDropdown">
           <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
           <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
         </div>
       </div>
-      <button class="nav-link header-deals-btn" id="headerDealsBtn" data-shop-i18n="discoverDealsShort">🍸 Jetzt Deals entdecken</button>
-      <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
+      <button class="nav-link header-deals-btn" id="headerDealsBtn" type="button" data-shop-i18n="discoverDealsShort">🍸 Jetzt Deals entdecken</button>
+      <button class="menu-btn" id="shopMenuBtn" type="button" aria-label="Menü öffnen">☰</button>
     </div>
   </div>
 
 </div>
 
 <div class="shop-top-auth" id="shopTopAuth">
-  <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin">Einloggen</button>
-  <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister">Registrieren</button>
+  <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin" onclick="return window.openShopHeaderAuth ? window.openShopHeaderAuth('login', event) : false;">Einloggen</button>
+  <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister" onclick="return window.openShopHeaderAuth ? window.openShopHeaderAuth('register', event) : false;">Registrieren</button>
 </div>
 <div class="shop-no-login-hint" id="shopNoLoginHint" data-shop-i18n="noLoginHint">Auch ohne Konto möglich – stöbere einfach drauflos.</div>
 
