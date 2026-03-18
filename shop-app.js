@@ -3282,3 +3282,55 @@ try {
     setShopLang(localStorage.getItem('barsclusive_lang') || hotfixLang() || 'de');
   });
 })();
+
+
+// ===== ENTRY FOCUS PATCH: cleaner shop intro within same page =====
+(function(){
+  try {
+    ['de','en','it','fr'].forEach(function(lang){
+      if (!SHOP_TRANSLATIONS[lang]) SHOP_TRANSLATIONS[lang] = {};
+    });
+    Object.assign(SHOP_TRANSLATIONS.de, {
+      entryBadge:'BarSclusive Shop',
+      discoverDeals:'🍸 Deals entdecken',
+      discoverByCity:'📍 Stadt wählen',
+      heroSub:'Exklusive Angebote für Frühstück, Lunch, Aperitivo und Events'
+    });
+    Object.assign(SHOP_TRANSLATIONS.en, {
+      entryBadge:'BarSclusive Shop',
+      discoverDeals:'🍸 Explore deals',
+      discoverByCity:'📍 Choose city',
+      heroSub:'Exclusive offers for breakfast, lunch, aperitivo and events'
+    });
+    Object.assign(SHOP_TRANSLATIONS.it, {
+      entryBadge:'BarSclusive Shop',
+      discoverDeals:'🍸 Scopri i deal',
+      discoverByCity:'📍 Scegli la città',
+      heroSub:'Offerte esclusive per colazione, pranzo, aperitivo ed eventi'
+    });
+    Object.assign(SHOP_TRANSLATIONS.fr, {
+      entryBadge:'BarSclusive Shop',
+      discoverDeals:'🍸 Découvrir les deals',
+      discoverByCity:'📍 Choisir la ville',
+      heroSub:'Offres exclusives pour le petit-déjeuner, le lunch, l’apéritif et les événements'
+    });
+  } catch(e) {}
+
+  function scrollShopFocus(){
+    var target = document.getElementById('shopFocusArea') || document.getElementById('shopViewToggle') || document.querySelector('.filter-wrap');
+    if (!target) return;
+    var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    ['btnDiscoverDeals','btnExploreCity'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', function(ev){
+        ev.preventDefault();
+        scrollShopFocus();
+      });
+    });
+  });
+})();
