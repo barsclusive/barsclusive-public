@@ -659,32 +659,6 @@ async function doLogout() {
 function showAuthScreen(show) {
   document.getElementById('loginScreen').style.display  = show ? 'block' : 'none';
   document.getElementById('barDashboard').style.display = show ? 'none'  : 'block';
-  if (show && window.innerWidth <= 900) {
-    setTimeout(function() {
-      var loginScreen = document.getElementById('loginScreen');
-      if (!loginScreen) return;
-      var top = Math.max((loginScreen.getBoundingClientRect().top + window.scrollY) - 76, 0);
-      window.scrollTo({ top: top, behavior: 'auto' });
-    }, 40);
-  }
-}
-
-function getActiveAuthFormName() {
-  var registerForm = document.getElementById('registerForm');
-  return registerForm && registerForm.classList.contains('active') ? 'register' : 'login';
-}
-
-function focusAuthForm(name, smooth) {
-  var form = document.getElementById(name === 'register' ? 'registerForm' : 'loginForm');
-  if (!form || form.classList.contains('active') === false) return;
-  var target = form.querySelector('.card') || form;
-  var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
-  window.scrollTo({ top: top, behavior: smooth ? 'smooth' : 'auto' });
-}
-
-function focusAuthEntry(name, smooth) {
-  switchAuthTab(name, getAuthTabButton(name));
-  setTimeout(function() { focusAuthForm(name, smooth !== false); }, 60);
 }
 
 
@@ -1273,17 +1247,11 @@ async function doCreateDeal() {
 }
 
 // ── TAB SWITCHING ─────────────────────────────────────────────────────────
-function getAuthTabButton(name) {
-  return document.querySelector('[data-auth-tab="' + name + '"]');
-}
-
 function switchAuthTab(name, btn) {
   document.getElementById('loginForm').classList.toggle('active', name === 'login');
   document.getElementById('registerForm').classList.toggle('active', name === 'register');
   document.querySelectorAll('[data-auth-tab]').forEach(function(t) { t.classList.remove('active'); });
-  var targetBtn = btn || getAuthTabButton(name);
-  if (targetBtn) targetBtn.classList.add('active');
-  setTimeout(function() { focusAuthForm(name, true); }, 30);
+  btn.classList.add('active');
 }
 
 var TAB_IDS = {
@@ -1498,14 +1466,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Auth tabs
   document.querySelectorAll('[data-auth-tab]').forEach(function(btn) {
     btn.addEventListener('click', function() { switchAuthTab(this.dataset.authTab, this); });
-  });
-
-
-  document.querySelectorAll('[data-auth-target]').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      focusAuthEntry(this.dataset.authTarget || 'login', true);
-    });
   });
 
   // Login / Register
@@ -2641,60 +2601,75 @@ applyProfileToForm = function(b) {
 })();
 
 
-// ===== ENTRY FOCUS PATCH: clearer intro within same bar portal page =====
+// ===== PORTAL ENTRY COPY PATCH =====
 (function(){
-  try {
-    Object.assign(TRANSLATIONS.de, {
-      portalEntryBadge:'BarSclusive Partnerbereich',
-      portalEntryTitle:'Neue Gäste gewinnen ohne laufende Fixkosten',
-      portalEntrySub:'Erstelle Angebote, erreiche neue Gäste und verwalte Einlösungen direkt im bestehenden Bar-Portal.',
-      registerNow:'Jetzt registrieren'
-    });
-    Object.assign(TRANSLATIONS.en, {
-      portalEntryBadge:'BarSclusive partner area',
-      portalEntryTitle:'Win new guests without ongoing fixed costs',
-      portalEntrySub:'Create offers, reach new guests and manage redemptions directly inside the existing bar portal.',
-      registerNow:'Register now'
-    });
-    Object.assign(TRANSLATIONS.it, {
-      portalEntryBadge:'Area partner BarSclusive',
-      portalEntryTitle:'Acquisisci nuovi ospiti senza costi fissi ricorrenti',
-      portalEntrySub:'Crea offerte, raggiungi nuovi ospiti e gestisci i riscatti direttamente nel portale bar esistente.',
-      registerNow:'Registrati ora'
-    });
-    Object.assign(TRANSLATIONS.fr, {
-      portalEntryBadge:'Espace partenaires BarSclusive',
-      portalEntryTitle:'Gagnez de nouveaux clients sans coûts fixes récurrents',
-      portalEntrySub:'Créez des offres, attirez de nouveaux clients et gérez les utilisations directement dans le portail bar existant.',
-      registerNow:'S’inscrire maintenant'
-    });
-  } catch(e) {}
-})();
-
-
-(function(){
-  try {
-    Object.assign(TRANSLATIONS.de, { becomePartnerNow:'Jetzt Partner werden' });
-    Object.assign(TRANSLATIONS.en, { becomePartnerNow:'Become a partner now' });
-    Object.assign(TRANSLATIONS.it, { becomePartnerNow:'Diventa partner ora' });
-    Object.assign(TRANSLATIONS.fr, { becomePartnerNow:'Devenir partenaire' });
-  } catch(e) {}
-
-  function syncBarEntryVisibility(showAuth){
-    var visible = typeof showAuth === 'boolean' ? showAuth : !(typeof sessionGet === 'function' && sessionGet());
-    document.body.classList.toggle('bar-auth-visible', !!visible);
-    document.body.classList.toggle('bar-dashboard-visible', !visible);
-  }
-
-  if (typeof showAuthScreen === 'function') {
-    var _prevShowAuthScreen = showAuthScreen;
-    showAuthScreen = function(show){
-      _prevShowAuthScreen(show);
-      syncBarEntryVisibility(show);
-    };
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    syncBarEntryVisibility();
+  ['de','en','it','fr'].forEach(function(lang){ if (!TRANSLATIONS[lang]) TRANSLATIONS[lang] = {}; });
+  Object.assign(TRANSLATIONS.de,{
+    portalEntryBadge:'BarSclusive Partnerbereich',
+    portalEntryTitle:'Neue Gäste gewinnen ohne laufende Fixkosten',
+    portalEntrySub:'Fülle ruhigere Zeiten gezielt mit neuen Gästen, erhöhe die Sichtbarkeit deiner Bar und zahle nur dann, wenn daraus echte Verkäufe entstehen.',
+    barIntroBenefitFreeTitle:'Kostenlose Registrierung',
+    barIntroBenefitFreeSub:'Starte ohne Einrichtungsgebühr und ohne unnötige Hürden.',
+    barIntroBenefitFixedTitle:'Keine laufenden Fixkosten',
+    barIntroBenefitFixedSub:'Kein Monatsabo und keine wiederkehrenden Grundgebühren.',
+    barIntroBenefitGuestsTitle:'Neue Gäste in schwachen Zeiten',
+    barIntroBenefitGuestsSub:'Setze gezielte Anreize, wenn du zusätzliche Frequenz brauchst.',
+    barIntroBenefitVisibilityTitle:'Mehr Sichtbarkeit für deine Bar',
+    barIntroBenefitVisibilitySub:'BarSclusive bringt dein Angebot genau dort ins Blickfeld, wo Gäste suchen.',
+    barIntroBenefitSalesTitle:'Du zahlst nur bei echten Verkäufen',
+    barIntroBenefitSalesSub:'Es fallen nur bei verkauften beziehungsweise eingelösten Gutscheinen Provisionen an.',
+    portalLearnMore:"Weitere Details unter So funktioniert's",
+    becomePartnerNow:'Jetzt Partner werden'
+  });
+  Object.assign(TRANSLATIONS.en,{
+    portalEntryBadge:'BarSclusive Partner area',
+    portalEntryTitle:'Win new guests without ongoing fixed costs',
+    portalEntrySub:'Fill quieter time slots with new guests, boost your bar visibility and only pay when real sales happen.',
+    barIntroBenefitFreeTitle:'Free registration',
+    barIntroBenefitFreeSub:'Start without setup fees and without unnecessary hurdles.',
+    barIntroBenefitFixedTitle:'No ongoing fixed costs',
+    barIntroBenefitFixedSub:'No monthly subscription and no recurring base fees.',
+    barIntroBenefitGuestsTitle:'New guests in slower periods',
+    barIntroBenefitGuestsSub:'Use targeted incentives when you need extra footfall.',
+    barIntroBenefitVisibilityTitle:'More visibility for your bar',
+    barIntroBenefitVisibilitySub:'BarSclusive puts your offer where guests are already searching.',
+    barIntroBenefitSalesTitle:'You only pay for real sales',
+    barIntroBenefitSalesSub:'Commissions are only due for vouchers that are actually sold or redeemed.',
+    portalLearnMore:'More details under How it works',
+    becomePartnerNow:'Become a partner now'
+  });
+  Object.assign(TRANSLATIONS.it,{
+    portalEntryBadge:'Area partner BarSclusive',
+    portalEntryTitle:'Ottieni nuovi ospiti senza costi fissi ricorrenti',
+    portalEntrySub:'Riempie i momenti più tranquilli con nuovi ospiti, aumenta la visibilità del tuo bar e paghi solo quando ci sono vere vendite.',
+    barIntroBenefitFreeTitle:'Registrazione gratuita',
+    barIntroBenefitFreeSub:'Parti senza costi di attivazione e senza ostacoli inutili.',
+    barIntroBenefitFixedTitle:'Nessun costo fisso ricorrente',
+    barIntroBenefitFixedSub:'Nessun abbonamento mensile e nessun costo base ricorrente.',
+    barIntroBenefitGuestsTitle:'Nuovi ospiti nei momenti più deboli',
+    barIntroBenefitGuestsSub:'Crea incentivi mirati quando hai bisogno di più affluenza.',
+    barIntroBenefitVisibilityTitle:'Più visibilità per il tuo bar',
+    barIntroBenefitVisibilitySub:'BarSclusive porta la tua offerta davanti agli ospiti che stanno già cercando.',
+    barIntroBenefitSalesTitle:'Paghi solo per vendite reali',
+    barIntroBenefitSalesSub:'Le commissioni si applicano solo ai voucher realmente venduti o riscattati.',
+    portalLearnMore:'Più dettagli in Come funziona',
+    becomePartnerNow:'Diventa partner ora'
+  });
+  Object.assign(TRANSLATIONS.fr,{
+    portalEntryBadge:'Espace partenaire BarSclusive',
+    portalEntryTitle:'Gagnez de nouveaux clients sans coûts fixes récurrents',
+    portalEntrySub:'Remplissez les périodes plus calmes avec de nouveaux clients, augmentez la visibilité de votre bar et ne payez que lorsqu il y a de vraies ventes.',
+    barIntroBenefitFreeTitle:'Inscription gratuite',
+    barIntroBenefitFreeSub:'Démarrez sans frais de mise en place et sans obstacles inutiles.',
+    barIntroBenefitFixedTitle:'Pas de coûts fixes récurrents',
+    barIntroBenefitFixedSub:'Aucun abonnement mensuel et aucun frais de base récurrent.',
+    barIntroBenefitGuestsTitle:'De nouveaux clients en période creuse',
+    barIntroBenefitGuestsSub:'Créez des incitations ciblées lorsque vous avez besoin de plus de fréquentation.',
+    barIntroBenefitVisibilityTitle:'Plus de visibilité pour votre bar',
+    barIntroBenefitVisibilitySub:'BarSclusive place votre offre exactement là où les clients cherchent déjà.',
+    barIntroBenefitSalesTitle:'Vous ne payez qu en cas de vraies ventes',
+    barIntroBenefitSalesSub:'Les commissions ne s appliquent qu aux vouchers réellement vendus ou utilisés.',
+    portalLearnMore:'Plus de détails dans Comment ça marche',
+    becomePartnerNow:'Devenir partenaire'
   });
 })();
