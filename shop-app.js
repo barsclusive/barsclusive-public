@@ -90,10 +90,7 @@ function restoreLocationState() {
     if (!parsed) return;
     _locationState = Object.assign(_locationState, parsed);
     if (parsed.label && document.getElementById('locationInput')) document.getElementById('locationInput').value = parsed.label;
-    // Location input is used as the origin for distance sorting.
-    // Do not keep a city text filter for geocoded/manual locations, otherwise
-    // nearby deals disappear when there is no bar exactly at that address.
-    filters.city = parsed.source === 'filter' ? (parsed.textFilter || '') : '';
+    filters.city = parsed.textFilter || '';
     if (isValidCoord(Number(parsed.lat)) && isValidCoord(Number(parsed.lng))) {
       _userLat = Number(parsed.lat);
       _userLng = Number(parsed.lng);
@@ -164,9 +161,7 @@ function applySelectedLocation(place) {
   };
   _userLat = Number(place.lat);
   _userLng = Number(place.lng);
-  // Important: a searched address/city is the reference point for distance sorting,
-  // not a hard filter for bars in the same address string.
-  filters.city = '';
+  filters.city = _locationState.textFilter;
   saveLocationState();
   updateLocationUi();
   sortDealsByDistance();
@@ -178,20 +173,16 @@ async function applyLocation() {
   var results = await geocodeLocationQuery(val);
   if (results.length) {
     applySelectedLocation(mapLocationResult(results[0]));
-    if (typeof showToast === 'function') {
-      showToast(shopT('dealsSortedByDistance') || '📍 Deals werden nach Nähe sortiert');
-    }
   } else {
-    filters.city = '';
-    _locationState = { label: '', lat: null, lng: null, source: '', textFilter: '' };
+    filters.city = val.toLowerCase();
+    _locationState.label = val;
+    _locationState.textFilter = val.toLowerCase();
+    _locationState.source = 'text';
+    _locationState.lat = null; _locationState.lng = null;
     _userLat = null; _userLng = null;
     saveLocationState();
     updateLocationUi();
-    if (input) input.value = val;
     renderDeals();
-    if (typeof showToast === 'function') {
-      showToast(shopT('locationSearchNoResult') || 'Standort nicht gefunden. Bitte gib einen Ort oder eine Adresse genauer ein.', true);
-    }
   }
 }
 function clearLocation() {
@@ -1372,14 +1363,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var btnClearLoc = document.getElementById('btnClearLocation');
   if (btnClearLoc) btnClearLoc.addEventListener('click', clearLocation);
   var btnUseMyLocation = document.getElementById('btnUseMyLocation');
-  if (btnUseMyLocation) btnUseMyLocation.addEventListener('click', function() {
-    var locValue = (locInput && locInput.value || '').trim();
-    if (locValue) {
-      applyLocation();
-      return;
-    }
-    requestGeoPermission();
-  });
+  if (btnUseMyLocation) btnUseMyLocation.addEventListener('click', requestGeoPermission);
   var locInput = document.getElementById('locationInput');
   var locSuggestions = document.getElementById('locationSuggestions');
   function closeLocationSuggestions() { if (locSuggestions) { locSuggestions.style.display = 'none'; locSuggestions.innerHTML = ''; } }
@@ -3528,24 +3512,20 @@ try {
 (function(){
   try {
     Object.assign(SHOP_TRANSLATIONS.de, {
-      locationPermissionRequired:'Standortzugriff blockiert. Bitte aktiviere den Standort in Safari oder in den iPhone-Einstellungen.',
-      locationTimeout:'Standort konnte nicht rechtzeitig ermittelt werden. Bitte versuche es erneut.',
-      locationSearchNoResult:'Standort nicht gefunden. Bitte gib einen Ort oder eine Adresse genauer ein.'
+      locationPermissionRequired:'Standortzugriff blockiert. Bitte aktiviere den Standort in Safari oder in den Einstellungen.',
+      locationTimeout:'Standort konnte nicht rechtzeitig ermittelt werden. Bitte versuche es erneut.'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
-      locationPermissionRequired:'Location access is blocked. Please allow location in Safari or in your iPhone settings.',
-      locationTimeout:'Your location could not be determined in time. Please try again.',
-      locationSearchNoResult:'Location not found. Please enter a more precise city or address.'
+      locationPermissionRequired:'Location access is blocked. Please allow location in Safari or in your settings.',
+      locationTimeout:'Your location could not be determined in time. Please try again.'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
-      locationPermissionRequired:"L'accesso alla posizione è bloccato. Attiva la posizione in Safari o nelle impostazioni del tuo iPhone.",
-      locationTimeout:'Non è stato possibile determinare la posizione in tempo. Riprova.',
-      locationSearchNoResult:'Posizione non trovata. Inserisci una città o un indirizzo più preciso.'
+      locationPermissionRequired:"L'accesso alla posizione è bloccato. Attiva la posizione in Safari o nelle impostazioni.",
+      locationTimeout:'Non è stato possibile determinare la posizione in tempo. Riprova.'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
-      locationPermissionRequired:"L'accès à la localisation est bloqué. Autorise la localisation dans Safari ou dans les réglages de ton iPhone.",
-      locationTimeout:"La position n'a pas pu être déterminée à temps. Réessaie.",
-      locationSearchNoResult:"Position introuvable. Saisis une ville ou une adresse plus précise."
+      locationPermissionRequired:"L'accès à la localisation est bloqué. Autorise la localisation dans Safari ou dans les réglages.",
+      locationTimeout:"La position n'a pas pu être déterminée à temps. Réessaie."
     });
   } catch(e) {}
 
