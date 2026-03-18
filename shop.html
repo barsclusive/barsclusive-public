@@ -1261,6 +1261,131 @@
     }
   </style>
 
+
+  <style id="shop-mobile-unlocked-header-v5">
+    @media (max-width: 768px){
+      body:not(.shop-entry-locked) .header{padding:10px 12px !important}
+      body:not(.shop-entry-locked) .nav{
+        display:grid !important;
+        grid-template-columns:92px minmax(0,1fr) minmax(0,1fr) 64px !important;
+        grid-template-areas:
+          "logo lang lang lang"
+          "search search search search"
+          "cart user user menu" !important;
+        align-items:center !important;
+        column-gap:8px !important;
+        row-gap:10px !important;
+      }
+      body:not(.shop-entry-locked) .shop-header-logo{
+        grid-area:logo !important;
+        width:92px !important;
+        min-width:92px !important;
+        max-width:92px !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-start !important;
+        overflow:hidden !important;
+      }
+      body:not(.shop-entry-locked) .shop-header-logo img{
+        display:block !important;
+        width:100% !important;
+        max-width:100% !important;
+        height:auto !important;
+        max-height:48px !important;
+        object-fit:contain !important;
+      }
+      body:not(.shop-entry-locked) .nav-links{
+        display:contents !important;
+        width:auto !important;
+      }
+      body:not(.shop-entry-locked) #shopLangWrap{
+        grid-area:lang !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-end !important;
+        gap:6px !important;
+        min-width:0 !important;
+        width:100% !important;
+        margin:0 !important;
+        overflow:hidden !important;
+        flex-wrap:nowrap !important;
+      }
+      body:not(.shop-entry-locked) .shop-lang-btn{
+        flex:0 0 auto !important;
+        min-width:42px !important;
+        min-height:38px !important;
+        padding:6px 8px !important;
+        border-radius:16px !important;
+        font-size:11px !important;
+        line-height:1 !important;
+      }
+      body:not(.shop-entry-locked) .search-wrap{
+        grid-area:search !important;
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+        margin:0 !important;
+      }
+      body:not(.shop-entry-locked) .search-input{height:44px !important}
+      body:not(.shop-entry-locked) #cartOpenBtn{
+        grid-area:cart !important;
+        width:100% !important;
+        min-width:0 !important;
+        justify-content:center !important;
+      }
+      body:not(.shop-entry-locked) .user-menu{
+        grid-area:user !important;
+        width:100% !important;
+        min-width:0 !important;
+      }
+      body:not(.shop-entry-locked) .user-button{
+        width:100% !important;
+        min-width:0 !important;
+        min-height:42px !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+        white-space:nowrap !important;
+      }
+      body:not(.shop-entry-locked) #shopMenuBtn{
+        grid-area:menu !important;
+        width:100% !important;
+        min-width:0 !important;
+        justify-content:center !important;
+        margin-left:0 !important;
+      }
+      body:not(.shop-entry-locked) #btnDeals,
+      body:not(.shop-entry-locked) #headerDealsBtn,
+      body:not(.shop-entry-locked) .shop-top-auth,
+      body:not(.shop-entry-locked) .shop-no-login-hint,
+      body:not(.shop-entry-locked) .hero{display:none !important}
+    }
+
+    @media (max-width: 430px){
+      body:not(.shop-entry-locked) .nav{
+        grid-template-columns:84px minmax(0,1fr) minmax(0,1fr) 58px !important;
+        column-gap:6px !important;
+        row-gap:8px !important;
+      }
+      body:not(.shop-entry-locked) .shop-header-logo{
+        width:84px !important;
+        min-width:84px !important;
+        max-width:84px !important;
+      }
+      body:not(.shop-entry-locked) .shop-header-logo img{max-height:42px !important}
+      body:not(.shop-entry-locked) #shopLangWrap{gap:5px !important}
+      body:not(.shop-entry-locked) .shop-lang-btn{
+        min-width:38px !important;
+        min-height:36px !important;
+        padding:5px 6px !important;
+        font-size:10.5px !important;
+        border-radius:14px !important;
+      }
+    }
+  </style>
+
 </head>
 <body class="shop-page shop-entry-locked">
 
@@ -1278,7 +1403,7 @@
       <button class="nav-link active" id="btnDeals">🏠 Deals</button>
       <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
       <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
-      <div style="display:flex;align-items:center;gap:8px">
+      <div id="shopLangWrap" class="shop-lang-wrap" style="display:flex;align-items:center;gap:8px">
         <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
         <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
         <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
