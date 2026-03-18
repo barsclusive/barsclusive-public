@@ -462,6 +462,24 @@
 
   </style>
 
+
+  <style id="bar-final-entry-concept">
+    .portal-top-auth{max-width:1100px;margin:0 auto;padding:10px 20px 0;display:flex;justify-content:flex-end;gap:10px}
+    .portal-top-auth-btn{appearance:none;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#1a1a1f,#121217);color:#f5f5f7;border-radius:14px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 14px 26px rgba(0,0,0,.18)}
+    .portal-top-auth-btn.portal-top-auth-primary{background:linear-gradient(180deg,#ff4d7d,#ff3366);border-color:rgba(255,255,255,.08);box-shadow:0 18px 34px rgba(255,51,102,.24)}
+    body.bar-auth-visible .portal-top-auth{display:flex}
+    body.bar-dashboard-visible .portal-top-auth{display:none !important}
+    #loginScreen .auth-shell > .tabs{display:none !important}
+    #loginScreen .auth-shell > .auth-benefits{display:none !important}
+    .portal-entry-actions{margin-top:20px !important;justify-content:flex-start}
+    .portal-entry-actions .portal-intro-cta{width:100%;max-width:340px}
+    @media(max-width:768px){
+      .portal-top-auth{padding:10px 12px 0;justify-content:stretch}
+      .portal-top-auth-btn{flex:1 1 0}
+      .portal-entry-actions .portal-intro-cta{max-width:none}
+    }
+  </style>
+
 </head>
 <body class="bar-portal-page">
 <div id="toast" class="toast" role="alert"></div>
@@ -480,6 +498,11 @@
     <button class="menu-btn" id="barMenuBtn" aria-label="Menü öffnen">☰</button>
   </div>
 
+</div>
+
+<div class="portal-top-auth" id="portalTopAuth">
+  <button class="portal-top-auth-btn" type="button" data-auth-target="login" data-i18n="login">Einloggen</button>
+  <button class="portal-top-auth-btn portal-top-auth-primary" type="button" data-auth-target="register" data-i18n="registerNow">Jetzt registrieren</button>
 </div>
 
 <div id="barDrawer" class="side-drawer" aria-hidden="true">
@@ -510,10 +533,6 @@
           <div class="portal-entry-badge" data-i18n="portalEntryBadge">BarSclusive Partnerbereich</div>
           <h1 data-i18n="portalEntryTitle">Neue Gäste gewinnen ohne laufende Fixkosten</h1>
           <p data-i18n="portalEntrySub">Erstelle Angebote, erreiche neue Gäste und verwalte Einlösungen direkt im bestehenden Bar-Portal.</p>
-          <div class="portal-entry-actions">
-            <button class="btn-pink portal-intro-cta" id="introLoginBtn" data-auth-target="login" data-i18n="login">Einloggen</button>
-            <button class="btn-ghost portal-intro-cta" id="introRegisterBtn" data-auth-target="register" data-i18n="registerNow">Jetzt registrieren</button>
-          </div>
         </div>
       </div>
       <div class="portal-entry-benefits">
@@ -529,6 +548,9 @@
           <div class="benefit-title" data-i18n="benefitReachTitle">Mehr Sichtbarkeit</div>
           <div class="benefit-sub" data-i18n="benefitReachSub">BarSclusive bringt neue Gäste direkt zu dir.</div>
         </div>
+      </div>
+      <div class="portal-entry-actions">
+        <button class="btn-pink portal-intro-cta" id="introPartnerBtn" data-auth-target="register" data-i18n="becomePartnerNow">Jetzt Partner werden</button>
       </div>
     </div>
   </div>
