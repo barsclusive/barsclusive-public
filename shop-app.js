@@ -3304,7 +3304,8 @@ try {
       hbSmartTitle:'Spontan ausgehen, clever sparen',
       hbSmartSub:'Tag, Uhrzeit, Kategorie – finde genau das, was du suchst.',
       heroHowLink:"Weitere Details unter So funktioniert’s →",
-      noLoginHint:'Auch ohne Konto möglich – stöbere einfach drauflos.'
+      noLoginHint:'Auch ohne Konto möglich – stöbere einfach drauflos.',
+      discoverDealsShort:'🍸 Jetzt Deals entdecken'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
       entryBadge:'BarSclusive Shop',
@@ -3320,7 +3321,8 @@ try {
       hbSmartTitle:'Go out spontaneously, save smartly',
       hbSmartSub:'Day, time, category – find exactly what you’re looking for.',
       heroHowLink:'More details under How it works →',
-      noLoginHint:'No account needed – just browse and discover.'
+      noLoginHint:'No account needed – just browse and discover.',
+      discoverDealsShort:'🍸 Explore deals now'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
       entryBadge:'BarSclusive Shop',
@@ -3336,7 +3338,8 @@ try {
       hbSmartTitle:'Esci spontaneamente, risparmia in modo furbo',
       hbSmartSub:'Giorno, orario, categoria – trova esattamente quello che cerchi.',
       heroHowLink:'Maggiori dettagli in Come funziona →',
-      noLoginHint:'Possibile anche senza account – inizia a scoprire.'
+      noLoginHint:'Possibile anche senza account – inizia a scoprire.',
+      discoverDealsShort:'🍸 Scopri i deal ora'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
       entryBadge:'BarSclusive Shop',
@@ -3352,7 +3355,8 @@ try {
       hbSmartTitle:'Sortir spontanément, économiser malin',
       hbSmartSub:'Jour, heure, catégorie – trouve exactement ce que tu cherches.',
       heroHowLink:'Plus de détails sous Comment ça marche →',
-      noLoginHint:'Possible sans compte – découvre directement.'
+      noLoginHint:'Possible sans compte – découvre directement.',
+      discoverDealsShort:'🍸 Découvrir les deals'
     });
   } catch(e) {}
 
@@ -3453,6 +3457,14 @@ try {
     var cta = document.getElementById('btnDiscoverDeals');
     if (cta) {
       cta.addEventListener('click', function(ev){
+        ev.preventDefault();
+        unlockShopEntry(true);
+      }, true);
+    }
+
+    var headerDeals = document.getElementById('headerDealsBtn');
+    if (headerDeals) {
+      headerDeals.addEventListener('click', function(ev){
         ev.preventDefault();
         unlockShopEntry(true);
       }, true);
