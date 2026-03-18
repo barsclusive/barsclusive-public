@@ -236,6 +236,40 @@
     }
   </style>
 
+
+  <style id="bar-final-entry-polish">
+    #loginForm,#registerForm{scroll-margin-top:92px}
+
+    @media(max-width:768px){
+      #loginScreen{padding:18px 12px 28px !important}
+      .auth-shell{display:flex !important;flex-direction:column !important;gap:14px !important}
+      .auth-shell>.tabs{order:1;margin-bottom:0 !important}
+      .auth-shell>.auth-benefits{
+        order:2 !important;
+        display:grid !important;
+        grid-template-columns:1fr 1fr;
+        gap:10px !important;
+        margin:0 auto 4px !important;
+        max-width:none !important;
+      }
+      .auth-shell>#loginForm,
+      .auth-shell>#registerForm{order:3 !important;margin:0 !important}
+      .auth-shell>.auth-benefits .benefit-card{
+        padding:16px !important;
+        border-radius:18px !important;
+        min-height:100%;
+      }
+      .auth-shell>.auth-benefits .benefit-title{font-size:15px !important;margin-bottom:6px !important}
+      .auth-shell>.auth-benefits .benefit-sub{font-size:13px !important;line-height:1.4 !important}
+      #loginForm .card,
+      #registerForm .card{margin-top:0 !important}
+    }
+
+    @media(max-width:430px){
+      .auth-shell>.auth-benefits{grid-template-columns:1fr !important}
+    }
+  </style>
+
 </head>
 <body class="bar-portal-page">
 <div id="toast" class="toast" role="alert"></div>
