@@ -1978,69 +1978,18 @@
         font-size:14px !important;
       }
     }
-  </style>
-
-
-  <style id="shop-final-header-benefits-fix">
-    body.shop-entry-locked #shopDiscoverySection,
-    body.shop-entry-locked .footer{display:none !important;}
-    body.shop-entry-unlocked .hero{display:none !important;}
-    body.shop-entry-locked .search-wrap,
-    body.shop-entry-locked #cartOpenBtn,
-    body.shop-entry-locked .user-menu,
-    body.shop-entry-locked #btnDeals,
-    body.shop-entry-locked #btnFavorites,
-    body.shop-entry-locked #btnOrders{display:none !important;}
-
-    .header{padding:12px 18px !important;}
-    .header .nav{max-width:1200px;margin:0 auto;}
-    .header .nav-links{display:flex !important;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:10px !important;row-gap:10px !important;}
-    .shop-lang-group{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow:auto;scrollbar-width:none;}
-    .shop-lang-group::-webkit-scrollbar{display:none;}
-    .shop-header-auth-inline{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;}
-    .shop-header-auth-inline .shop-top-auth-btn{margin:0;}
-    body.shop-user-logged-in .shop-header-auth-inline{display:none !important;}
-    body.shop-user-logged-out .shop-header-auth-inline{display:flex !important;}
-
-    .hero-shell{grid-template-columns:minmax(0,1fr) !important;max-width:980px !important;gap:22px !important;justify-items:center !important;text-align:center !important;}
-    .hero-brand{justify-content:center !important;align-items:center !important;}
-    .hero-copy{text-align:center !important;max-width:780px;}
-    .hero-copy p{max-width:760px !important;margin:0 auto !important;}
-    .hero-benefits-detailed{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px !important;}
-    .hero-note,.hero-actions{justify-content:center;}
-
-    @media (max-width: 900px){
-      .hero-benefits-detailed{grid-template-columns:1fr !important;}
+  
+    @media(max-width:768px){
+      .hero-shell{padding:24px 20px !important;gap:18px !important;}
+      .hero-brand{align-items:center !important;justify-content:center !important;text-align:center !important;width:100% !important;}
+      .hero-copy{width:100% !important;text-align:center !important;}
+      .hero-copy h1,.hero-copy p{text-align:center !important;margin-left:auto !important;margin-right:auto !important;}
+      .hero-benefits{margin-top:16px !important;}
+      .shop-top-auth{padding:8px 12px 12px !important;}
+      .shop-top-auth-btn{min-height:48px !important;}
     }
+</style>
 
-    @media (max-width: 768px){
-      .header{padding:12px 14px !important;}
-      .header .nav-links{
-        display:grid !important;
-        grid-template-columns:minmax(0,1fr) auto !important;
-        grid-template-areas:
-          "lang menu"
-          "auth auth"
-          "search search"
-          "tools tools";
-        gap:10px !important;
-        align-items:center !important;
-      }
-      .shop-lang-group{grid-area:lang;justify-content:flex-start;}
-      .menu-btn{grid-area:menu !important;justify-self:end !important;min-width:48px !important;padding:11px 14px !important;border-radius:16px !important;}
-      .shop-header-auth-inline{grid-area:auth;display:grid !important;grid-template-columns:1fr 1fr;gap:10px;width:100%;}
-      .shop-header-auth-inline .shop-top-auth-btn{width:100%;padding:12px 14px !important;border-radius:16px !important;}
-      .search-wrap{grid-area:search !important;width:100% !important;max-width:none !important;}
-      #cartOpenBtn{grid-area:tools;justify-self:start;}
-      .user-menu{grid-area:tools;justify-self:end;}
-      .hero-shell{padding:26px 18px 12px !important;gap:18px !important;}
-      .hero-logo{height:78px !important;}
-      .hero-copy h1{font-size:30px !important;line-height:1.05 !important;}
-      .hero-copy p{font-size:15px !important;line-height:1.52 !important;}
-      .hero-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px;}
-      .hero-primary-cta,.hero-secondary-link{width:100%;text-align:center;justify-content:center;}
-    }
-  </style>
 </head>
 <body class="shop-page shop-entry-locked">
 
@@ -2058,7 +2007,7 @@
       <button class="nav-link active" id="btnDeals">🏠 Deals</button>
       <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
       <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
-      <div class="shop-lang-group" style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
         <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
         <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
         <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
@@ -2072,16 +2021,16 @@
           <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
         </div>
       </div>
-      <div class="shop-header-auth-inline shop-top-auth" id="shopTopAuth">
-        <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin">Einloggen</button>
-        <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister">Registrieren</button>
-      </div>
       <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
     </div>
   </div>
 
 </div>
 
+<div class="shop-top-auth" id="shopTopAuth">
+  <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin">Einloggen</button>
+  <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister">Registrieren</button>
+</div>
 
 <div id="shopDrawer" class="side-drawer" aria-hidden="true">
   <div class="drawer-header">
