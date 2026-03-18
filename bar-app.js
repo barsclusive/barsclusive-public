@@ -2670,3 +2670,31 @@ applyProfileToForm = function(b) {
     });
   } catch(e) {}
 })();
+
+
+(function(){
+  try {
+    Object.assign(TRANSLATIONS.de, { becomePartnerNow:'Jetzt Partner werden' });
+    Object.assign(TRANSLATIONS.en, { becomePartnerNow:'Become a partner now' });
+    Object.assign(TRANSLATIONS.it, { becomePartnerNow:'Diventa partner ora' });
+    Object.assign(TRANSLATIONS.fr, { becomePartnerNow:'Devenir partenaire' });
+  } catch(e) {}
+
+  function syncBarEntryVisibility(showAuth){
+    var visible = typeof showAuth === 'boolean' ? showAuth : !(typeof sessionGet === 'function' && sessionGet());
+    document.body.classList.toggle('bar-auth-visible', !!visible);
+    document.body.classList.toggle('bar-dashboard-visible', !visible);
+  }
+
+  if (typeof showAuthScreen === 'function') {
+    var _prevShowAuthScreen = showAuthScreen;
+    showAuthScreen = function(show){
+      _prevShowAuthScreen(show);
+      syncBarEntryVisibility(show);
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    syncBarEntryVisibility();
+  });
+})();
