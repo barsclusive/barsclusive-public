@@ -1114,7 +1114,6 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Meine Bestellungen', changePw:'Passwort ändern',
     heroTitle:'🍹 Die besten Bar-Deals deiner Stadt',
     heroSub:'Exklusive Angebote für Breakfast, Brunch, Aperitif und Events',
-    heroBenefitLocal:'🍸 Exklusive Bar-Deals entdecken',heroBenefitRedeem:'🎟️ Heute sichern, später einlösen',heroBenefitInstant:'⚡ In Sekunden einlösbar',
     buyBtn:'Deal kaufen', changePasswordTitle:'Passwort ändern',
     oldPassword:'Altes Passwort', newPassword:'Neues Passwort',
     confirmPassword:'Passwort bestätigen', savePw:'Speichern',
@@ -1142,7 +1141,6 @@ const SHOP_TRANSLATIONS = {
     myOrders:'My Orders', changePw:'Change Password',
     heroTitle:'🍹 The best bar deals in your city',
     heroSub:'Exclusive offers for Breakfast, Brunch, Aperitif and Events',
-    heroBenefitLocal:'🍸 Discover exclusive bar deals',heroBenefitRedeem:'🎟️ Get it today, redeem later',heroBenefitInstant:'⚡ Redeemable in seconds',
     buyBtn:'Buy Deal', changePasswordTitle:'Change Password',
     oldPassword:'Old Password', newPassword:'New Password',
     confirmPassword:'Confirm Password', savePw:'Save',
@@ -1170,7 +1168,6 @@ const SHOP_TRANSLATIONS = {
     myOrders:'I miei ordini', changePw:'Cambia Password',
     heroTitle:'🍹 Le migliori offerte bar della tua città',
     heroSub:'Offerte esclusive per colazione, brunch, aperitivo ed eventi',
-    heroBenefitLocal:'🍸 Scopri offerte esclusive',heroBenefitRedeem:'🎟️ Acquista oggi, riscatta dopo',heroBenefitInstant:'⚡ Riscattabile in pochi secondi',
     buyBtn:'Acquista Deal', changePasswordTitle:'Cambia Password',
     oldPassword:'Vecchia Password', newPassword:'Nuova Password',
     confirmPassword:'Conferma Password', savePw:'Salva', cancelBtn:'Annulla',
@@ -1197,7 +1194,6 @@ const SHOP_TRANSLATIONS = {
     myOrders:'Mes commandes', changePw:'Changer mot de passe',
     heroTitle:'🍹 Les meilleures offres bar de ta ville',
     heroSub:'Offres exclusives pour petit-déjeuner, brunch, apéritif et événements',
-    heroBenefitLocal:'🍸 D\u00e9couvre des offres exclusives',heroBenefitRedeem:'🎟\ufe0f R\u00e9serve aujourd\u0027hui, utilise plus tard',heroBenefitInstant:'\u26a1 Utilisable en quelques secondes',
     buyBtn:'Acheter Deal', changePasswordTitle:'Changer mot de passe',
     oldPassword:'Ancien mot de passe', newPassword:'Nouveau mot de passe',
     confirmPassword:'Confirmer', savePw:'Enregistrer', cancelBtn:'Annuler',
@@ -2829,7 +2825,6 @@ try {
     else _cart.push({ deal_id: deal.id, title: deal.title, bar_name: deal.bar_name, price: deal.deal_price, quantity: 1, image_url: deal.image_url || '' });
     saveCart();
     showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
-    try { openCartPanel(); } catch(e) {}
   };
 
   document.addEventListener('DOMContentLoaded', function(){
@@ -2842,5 +2837,448 @@ try {
     var customDate = document.getElementById('customDate'); if (customDate) customDate.addEventListener('change', updateCustomDateLabel);
     updateCustomDateLabel();
     updateShopUserUi();
+  });
+})();
+
+
+// =============================================
+// HOTFIX 2026-03-17 — stable login/cart/buy + immediate i18n + home triggers
+// =============================================
+(function(){
+  var HOTFIX_SESSION_TTL = 90 * 60 * 1000;
+
+  function hotfixLang(){
+    return String(_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || 'de').toLowerCase();
+  }
+
+  ['de','en','it','fr'].forEach(function(lang){
+    if (!SHOP_TRANSLATIONS[lang]) SHOP_TRANSLATIONS[lang] = {};
+  });
+
+  Object.assign(SHOP_TRANSLATIONS.de, {
+    heroBenefitQuick:'⚡ Schnell sichern',
+    heroBenefitLocal:'🍸 Bars in deiner Nähe entdecken',
+    heroBenefitMobile:'🎟️ Digital einlösbar',
+    heroUtility:'Heute kaufen, später entspannt einlösen.',
+    payNowBtn:'💳 Jetzt bezahlen',
+    buyDealTitle:'Deal kaufen',
+    favoritesHeading:'❤️ Meine Favoriten',
+    favoritesSubline:'Behalte starke Deals im Blick und kaufe später in Ruhe.',
+    ordersHeading:'📦 Meine Bestellungen',
+    ordersSubline:'Alle Gutscheine, Statusmeldungen und Rückerstattungen an einem Ort.',
+    shareCopy:'Link kopieren'
+  });
+  Object.assign(SHOP_TRANSLATIONS.en, {
+    heroBenefitQuick:'⚡ Secure in seconds',
+    heroBenefitLocal:'🍸 Discover bars nearby',
+    heroBenefitMobile:'🎟️ Easy digital redemption',
+    heroUtility:'Buy now, redeem later without stress.',
+    payNowBtn:'💳 Pay now',
+    buyDealTitle:'Buy deal',
+    favoritesHeading:'❤️ My favorites',
+    favoritesSubline:'Keep strong deals in view and buy later when it suits you.',
+    ordersHeading:'📦 My orders',
+    ordersSubline:'All vouchers, status updates and refunds in one place.',
+    shareCopy:'Copy link'
+  });
+  Object.assign(SHOP_TRANSLATIONS.it, {
+    heroBenefitQuick:'⚡ Acquista in pochi secondi',
+    heroBenefitLocal:'🍸 Scopri bar vicini',
+    heroBenefitMobile:'🎟️ Riscatto digitale semplice',
+    heroUtility:'Acquista oggi, usa il voucher più tardi con calma.',
+    payNowBtn:'💳 Paga ora',
+    buyDealTitle:'Acquista deal',
+    favoritesHeading:'❤️ I miei preferiti',
+    favoritesSubline:'Tieni d’occhio i deal migliori e acquistali con calma più tardi.',
+    ordersHeading:'📦 I miei ordini',
+    ordersSubline:'Tutti i voucher, gli aggiornamenti di stato e i rimborsi in un unico posto.',
+    shareCopy:'Copia link'
+  });
+  Object.assign(SHOP_TRANSLATIONS.fr, {
+    heroBenefitQuick:'⚡ Réserver en quelques secondes',
+    heroBenefitLocal:'🍸 Découvrir des bars proches',
+    heroBenefitMobile:'🎟️ Utilisation numérique facile',
+    heroUtility:'Acheter aujourd’hui, utiliser plus tard en toute tranquillité.',
+    payNowBtn:'💳 Payer maintenant',
+    buyDealTitle:'Acheter le deal',
+    favoritesHeading:'❤️ Mes favoris',
+    favoritesSubline:'Garde les meilleures offres sous les yeux et achète plus tard tranquillement.',
+    ordersHeading:'📦 Mes commandes',
+    ordersSubline:'Tous les vouchers, statuts et remboursements au même endroit.',
+    shareCopy:'Copier le lien'
+  });
+
+  function hotfixUpdateNavButtons(){
+    var dealsBtn = document.getElementById('btnDeals');
+    if (dealsBtn) dealsBtn.setAttribute('type', 'button');
+    var cartBtn = document.getElementById('cartOpenBtn');
+    if (cartBtn) cartBtn.setAttribute('type', 'button');
+    var userBtn = document.getElementById('userBtn');
+    if (userBtn) userBtn.setAttribute('type', 'button');
+  }
+
+  function hotfixNormalizeCartItems(items){
+    var list = [];
+    if (Array.isArray(items)) list = items;
+    else if (items && Array.isArray(items.items)) list = items.items;
+    else list = [];
+    return list.map(function(item){
+      var dealId = String(item && (item.deal_id || item.dealId || item.id || '') || '');
+      var quantity = Math.max(1, Number(item && (item.quantity || item.qty || item.count || 1) || 1) || 1);
+      var price = Number(item && (item.price || item.deal_price || item.amount || 0) || 0);
+      var fallbackDeal = allDeals.find(function(d){ return String(d.id) === dealId; }) || null;
+      return {
+        deal_id: dealId,
+        title: String(item && (item.title || item.deal_title || item.name) || (fallbackDeal ? fallbackDeal.title : '') || ''),
+        bar_name: String(item && (item.bar_name || item.barName || item.bar) || (fallbackDeal ? fallbackDeal.bar_name : '') || ''),
+        price: isFinite(price) ? price : Number((fallbackDeal && fallbackDeal.deal_price) || 0),
+        quantity: quantity,
+        image_url: String(item && (item.image_url || item.image || item.img) || (fallbackDeal ? fallbackDeal.image_url : '') || '')
+      };
+    }).filter(function(item){
+      return item.deal_id || item.title;
+    });
+  }
+
+  getCart = function(){
+    try {
+      var raw = localStorage.getItem('barsclusive_cart') || '[]';
+      _cart = hotfixNormalizeCartItems(JSON.parse(raw));
+    } catch(e) {
+      _cart = [];
+    }
+    try { localStorage.setItem('barsclusive_cart', JSON.stringify(_cart)); } catch(e) {}
+    return _cart;
+  };
+
+  saveCart = function(){
+    try { localStorage.setItem('barsclusive_cart', JSON.stringify(_cart || [])); } catch(e) {}
+    updateCartBadge();
+  };
+
+  sessionSet = function(token, name, email, role, extra){
+    var extras = {};
+    if (typeof extra === 'string') extras.lang = extra;
+    else if (extra && typeof extra === 'object') extras = extra;
+    _session = {
+      token: token,
+      name: name,
+      email: email,
+      role: role,
+      expiresAt: Date.now() + HOTFIX_SESSION_TTL,
+      userId: extras.userId || '',
+      lang: extras.lang || hotfixLang()
+    };
+    try { localStorage.setItem('barsclusive_customer_session', JSON.stringify(_session)); } catch(e) {}
+    if (typeof updateShopUserUi === 'function') updateShopUserUi();
+    else {
+      var userBtn = document.getElementById('userBtn');
+      if (userBtn) userBtn.textContent = '👤 ' + String(name || '');
+    }
+    var ordersBtn = document.getElementById('btnOrders');
+    if (ordersBtn) ordersBtn.style.display = 'block';
+    var favBtn = document.getElementById('btnFavorites');
+    if (favBtn) favBtn.style.display = 'block';
+    if (extras.lang) setShopLang(extras.lang);
+  };
+
+  sessionGet = function(){
+    if (!_session) {
+      try {
+        var raw = localStorage.getItem('barsclusive_customer_session');
+        if (raw) _session = JSON.parse(raw);
+      } catch(e) {}
+    }
+    if (!_session || !Number(_session.expiresAt) || Date.now() > Number(_session.expiresAt)) {
+      sessionClear();
+      return null;
+    }
+    return _session;
+  };
+
+  sessionClear = function(){
+    _session = null;
+    try { localStorage.removeItem('barsclusive_customer_session'); } catch(e) {}
+    var userBtn = document.getElementById('userBtn');
+    if (userBtn) userBtn.textContent = '👤 ' + (shopT('loginBtn') || 'Login');
+    var ordersBtn = document.getElementById('btnOrders');
+    if (ordersBtn) ordersBtn.style.display = 'none';
+    var favBtn = document.getElementById('btnFavorites');
+    if (favBtn) favBtn.style.display = 'none';
+    var dropdown = document.getElementById('userDropdown');
+    if (dropdown) dropdown.classList.remove('show');
+    _favorites = [];
+    if (typeof updateShopUserUi === 'function') updateShopUserUi();
+  };
+
+  function hotfixShowDealsLoading(){
+    var loading = document.getElementById('dealsLoading');
+    var list = document.getElementById('dealsList');
+    if (loading) loading.style.display = '';
+    if (list) list.style.display = 'none';
+  }
+
+  function hotfixHideDealsLoading(){
+    var loading = document.getElementById('dealsLoading');
+    var list = document.getElementById('dealsList');
+    if (loading) loading.style.display = 'none';
+    if (list) list.style.display = '';
+  }
+
+  loadDeals = async function(forceRefresh){
+    forceRefresh = !!forceRefresh;
+    var lang = hotfixLang();
+    var now = Date.now();
+    var cacheKey = 'barsclusive_deals_cache_' + lang;
+    if (!forceRefresh) {
+      try {
+        var raw = localStorage.getItem(cacheKey);
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && parsed.lang === lang && Array.isArray(parsed.data) && (now - Number(parsed.timestamp || 0) < 30 * 60 * 1000)) {
+            dealsCache = parsed;
+            allDeals = parsed.data;
+            attachDistances();
+            hotfixHideDealsLoading();
+            renderDeals();
+            return;
+          }
+        }
+      } catch(e) {}
+    }
+    hotfixShowDealsLoading();
+    try {
+      var response = await fetch(BACKEND_URL + '?action=getActiveDeals&lang=' + encodeURIComponent(lang), { cache: 'no-store' });
+      if (!response.ok) throw new Error('network');
+      var data = await response.json();
+      if (!data.success) throw new Error(data.error || 'load');
+      allDeals = Array.isArray(data.deals) ? data.deals : [];
+      attachDistances();
+      dealsCache = { data: allDeals, timestamp: now, lang: lang };
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(dealsCache));
+        localStorage.setItem('barsclusive_deals_cache', JSON.stringify(dealsCache));
+      } catch(e) {}
+      hotfixHideDealsLoading();
+      renderDeals();
+    } catch (e) {
+      hotfixHideDealsLoading();
+      showToast(shopT('networkReload') || 'Verbindungsfehler - bitte neu laden', true);
+      if (!allDeals.length) renderDeals();
+    }
+  };
+
+  var hotfixApplyShopTranslationsBase = typeof applyShopTranslations === 'function' ? applyShopTranslations : function(){};
+  applyShopTranslations = function(){
+    hotfixApplyShopTranslationsBase();
+    var heroUtility = document.getElementById('heroUtilityLine');
+    if (heroUtility) heroUtility.textContent = shopT('heroUtility') || heroUtility.textContent;
+    var buyModalTitle = document.getElementById('buyModalTitle');
+    if (buyModalTitle) buyModalTitle.textContent = shopT('buyDealTitle') || buyModalTitle.textContent;
+    var buySubmit = document.getElementById('btnBuySubmit');
+    if (buySubmit) buySubmit.textContent = shopT('payNowBtn') || buySubmit.textContent;
+    var favHeading = document.getElementById('favoritesHeading');
+    if (favHeading) favHeading.textContent = shopT('favoritesHeading') || favHeading.textContent;
+    var favSub = document.getElementById('favoritesSubline');
+    if (favSub) favSub.textContent = shopT('favoritesSubline') || favSub.textContent;
+    var ordersHeading = document.getElementById('ordersHeading');
+    if (ordersHeading) ordersHeading.textContent = shopT('ordersHeading') || ordersHeading.textContent;
+    var ordersSub = document.getElementById('ordersSubline');
+    if (ordersSub) ordersSub.textContent = shopT('ordersSubline') || ordersSub.textContent;
+    hotfixUpdateNavButtons();
+    try { renderCartPanel(); } catch(e) {}
+  };
+
+  setShopLang = function(lang){
+    lang = String(lang || 'de').toLowerCase();
+    if (!SHOP_TRANSLATIONS[lang]) lang = 'de';
+    var previous = hotfixLang();
+    _shopLang = lang;
+    shopLang = lang;
+    try { localStorage.setItem('barsclusive_lang', lang); } catch(e) {}
+    document.documentElement.lang = lang;
+    document.querySelectorAll('.shop-lang-btn').forEach(function(btn){
+      btn.classList.remove('active');
+      btn.style.borderColor = '#333';
+      btn.style.color = '#888';
+    });
+    var activeBtn = document.getElementById('shopLang' + lang.toUpperCase());
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+      activeBtn.style.borderColor = '#FF3366';
+      activeBtn.style.color = '#fff';
+    }
+    applyShopTranslations();
+    if (previous !== lang) {
+      closeDealDetail();
+      hotfixShowDealsLoading();
+      loadDeals(true);
+    } else {
+      renderDeals();
+    }
+  };
+
+  var hotfixBuildDealCardBase = typeof buildDealCard === 'function' ? buildDealCard : null;
+  if (hotfixBuildDealCardBase) {
+    buildDealCard = function(deal){
+      var card = hotfixBuildDealCardBase(deal);
+      if (card) card.dataset.dealId = String(deal.id || '');
+      var buyBtn = card ? card.querySelector('.btn-buy') : null;
+      if (buyBtn) {
+        buyBtn.dataset.dealId = String(deal.id || '');
+        buyBtn.setAttribute('type', 'button');
+      }
+      var cartBtn = card ? card.querySelector('.add-cart-btn') : null;
+      if (cartBtn) {
+        cartBtn.dataset.dealId = String(deal.id || '');
+        cartBtn.setAttribute('type', 'button');
+      }
+      return card;
+    };
+  }
+
+  openCartPanel = function(){
+    var panel = document.getElementById('cartPanel');
+    var overlay = document.getElementById('cartOverlay');
+    if (!panel) return;
+    try { renderCartPanel(); } catch(e) {}
+    panel.classList.add('active');
+    if (overlay) overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  };
+
+  closeCartPanel = function(){
+    var panel = document.getElementById('cartPanel');
+    var overlay = document.getElementById('cartOverlay');
+    if (panel) panel.classList.remove('active');
+    if (overlay) overlay.style.display = 'none';
+    var drawer = document.getElementById('shopDrawer');
+    if (!(drawer && drawer.classList.contains('active'))) document.body.style.overflow = '';
+  };
+
+  addToCart = function(deal){
+    if (!deal) return;
+    getCart();
+    var existing = _cart.find(function(item){ return String(item.deal_id) === String(deal.id); });
+    if (existing) existing.quantity += 1;
+    else _cart.push({
+      deal_id: String(deal.id),
+      title: deal.title,
+      bar_name: deal.bar_name,
+      price: Number(deal.deal_price || 0),
+      quantity: 1,
+      image_url: deal.image_url || ''
+    });
+    saveCart();
+    renderCartPanel();
+    showToast('🛒 ' + deal.title + ' ' + (shopT('addedToCartSuffix') || 'zum Warenkorb hinzugefügt'));
+  };
+
+  function hotfixGoHome(){
+    try { closeShopDrawer(); } catch(e) {}
+    try { toggleMapView(false); } catch(e) {}
+    showView('deals');
+    var list = document.getElementById('dealsList');
+    if (list && !list.children.length) renderDeals();
+  }
+
+  function hotfixFindDealById(id){
+    return allDeals.find(function(deal){ return String(deal.id) === String(id); }) || null;
+  }
+
+  document.addEventListener('click', function(event){
+    var buyBtn = event.target.closest('.btn-buy[data-deal-id]');
+    if (buyBtn && buyBtn.id !== 'ddBuyBtn') {
+      var buyDeal = hotfixFindDealById(buyBtn.dataset.dealId);
+      if (buyDeal) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        openBuyModal(buyDeal);
+        return;
+      }
+    }
+    var addBtn = event.target.closest('.add-cart-btn[data-deal-id]');
+    if (addBtn) {
+      var cartDeal = hotfixFindDealById(addBtn.dataset.dealId);
+      if (cartDeal) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        addToCart(cartDeal);
+        return;
+      }
+    }
+  }, true);
+
+  function hotfixBindStaticButtons(){
+    var userBtn = document.getElementById('userBtn');
+    if (userBtn) {
+      userBtn.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        onUserButtonClick();
+      }, true);
+    }
+
+    var cartBtn = document.getElementById('cartOpenBtn');
+    if (cartBtn) {
+      cartBtn.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        toggleCartPanel();
+      }, true);
+    }
+
+    var dealsBtn = document.getElementById('btnDeals');
+    if (dealsBtn) {
+      dealsBtn.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        hotfixGoHome();
+      }, true);
+    }
+
+    var logoBtn = document.getElementById('logoHomeBtn');
+    if (logoBtn) {
+      logoBtn.addEventListener('click', function(event){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        hotfixGoHome();
+      }, true);
+      logoBtn.addEventListener('keydown', function(event){
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          hotfixGoHome();
+        }
+      });
+    }
+  }
+
+  var hotfixDoLoginBase = typeof doLogin === 'function' ? doLogin : null;
+  if (hotfixDoLoginBase) {
+    doLogin = async function(){
+      var result = await hotfixDoLoginBase.apply(this, arguments);
+      var loginModal = document.getElementById('loginModal');
+      if (loginModal && sessionGet()) loginModal.classList.remove('active');
+      return result;
+    };
+  }
+
+  var hotfixDoRegisterBase = typeof doRegister === 'function' ? doRegister : null;
+  if (hotfixDoRegisterBase) {
+    doRegister = async function(){
+      var result = await hotfixDoRegisterBase.apply(this, arguments);
+      var registerModal = document.getElementById('registerModal');
+      if (registerModal && sessionGet()) registerModal.classList.remove('active');
+      return result;
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    hotfixUpdateNavButtons();
+    hotfixBindStaticButtons();
+    getCart();
+    updateCartBadge();
+    try { renderCartPanel(); } catch(e) {}
+    setShopLang(localStorage.getItem('barsclusive_lang') || hotfixLang() || 'de');
   });
 })();
