@@ -659,6 +659,21 @@ async function doLogout() {
 function showAuthScreen(show) {
   document.getElementById('loginScreen').style.display  = show ? 'block' : 'none';
   document.getElementById('barDashboard').style.display = show ? 'none'  : 'block';
+  if (show) setTimeout(function() { focusAuthForm(getActiveAuthFormName(), false); }, 80);
+}
+
+function getActiveAuthFormName() {
+  var registerForm = document.getElementById('registerForm');
+  return registerForm && registerForm.classList.contains('active') ? 'register' : 'login';
+}
+
+function focusAuthForm(name, smooth) {
+  if (window.innerWidth > 900) return;
+  var form = document.getElementById(name === 'register' ? 'registerForm' : 'loginForm');
+  if (!form || form.classList.contains('active') === false) return;
+  var target = form.querySelector('.card') || form;
+  var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+  window.scrollTo({ top: top, behavior: smooth ? 'smooth' : 'auto' });
 }
 
 
@@ -1252,6 +1267,7 @@ function switchAuthTab(name, btn) {
   document.getElementById('registerForm').classList.toggle('active', name === 'register');
   document.querySelectorAll('[data-auth-tab]').forEach(function(t) { t.classList.remove('active'); });
   btn.classList.add('active');
+  setTimeout(function() { focusAuthForm(name, true); }, 30);
 }
 
 var TAB_IDS = {
