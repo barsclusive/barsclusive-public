@@ -219,57 +219,22 @@
 
   </style>
 
-  <style id="bar-entry-layout-clean">
-    html{scroll-behavior:smooth}
-    #authFocusSection,#loginForm,#registerForm{scroll-margin-top:96px}
-    .portal-top-auth{max-width:1100px;margin:0 auto;padding:10px 20px 0;display:flex;justify-content:flex-end;gap:10px}
-    .portal-top-auth-btn{
-      appearance:none;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#1a1a1f,#121217);color:#f5f5f7;
-      border-radius:14px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 14px 26px rgba(0,0,0,.18)
-    }
-    .portal-top-auth-btn.portal-top-auth-primary{
-      background:linear-gradient(180deg,#ff4d7d,#ff3366);border-color:rgba(255,255,255,.08);box-shadow:0 18px 34px rgba(255,51,102,.24)
-    }
-    body.bar-auth-visible .portal-top-auth{display:flex}
-    body.bar-dashboard-visible .portal-top-auth{display:none !important}
-    .portal-entry{max-width:980px;margin:0 auto 26px;padding-top:0}
-    .portal-entry-card{
-      padding:30px 30px 26px;border-radius:30px;border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));box-shadow:0 24px 54px rgba(0,0,0,.24)
-    }
-    .portal-entry-brand{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:center}
-    .portal-entry-logo{height:96px;width:auto;max-width:100%;filter:drop-shadow(0 16px 32px rgba(0,0,0,.28))}
-    .portal-entry-badge{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#f5f5f6;margin-bottom:14px
-    }
-    .portal-entry-copy h1{font-size:clamp(32px,4vw,50px);line-height:1.02;letter-spacing:-.035em;margin:0 0 12px;max-width:720px}
-    .portal-entry-copy p{margin:0;max-width:700px;color:#bfc0c9;font-size:16px;line-height:1.55}
-    .portal-entry-benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px}
-    .portal-entry-benefits .benefit-card{margin:0;min-height:100%;padding:18px;border-radius:20px}
-    .portal-entry-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:22px;justify-content:flex-start}
-    .portal-entry-actions .portal-intro-cta{width:auto;min-width:250px;padding:14px 20px;border-radius:16px;margin-top:0}
-    .portal-meta-link{display:inline-flex;align-items:center;gap:8px;color:#ff789d;text-decoration:none;font-size:13px;font-weight:700}
-    .auth-shell{max-width:920px;margin:0 auto}
-    #loginScreen .auth-shell > .tabs,
-    #loginScreen .auth-shell > .auth-benefits{display:none !important}
+  <style id="bar-header-auth-fix">
+    .header-auth-actions{display:flex;align-items:center;gap:8px;margin-left:8px}
+    .header-auth-btn{background:#16161a;border:1px solid #333;color:#f5f5f6;min-height:42px;padding:0 14px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s ease}
+    .header-auth-btn.active,.header-auth-btn:hover{border-color:#FF3366;color:#fff;box-shadow:0 10px 24px rgba(255,51,102,.16)}
+    .entry-cta-wrap{display:flex;flex-direction:column;gap:10px;max-width:760px;margin:0 auto 28px}
+    .entry-cta-btn{min-height:54px;font-size:18px}
+    .entry-cta-link{color:#ff7b9d;text-decoration:none;font-weight:700;padding-left:2px}
+    .entry-cta-link:hover{text-decoration:underline}
     @media(max-width:768px){
-      .portal-top-auth{padding:10px 12px 0;justify-content:stretch}
-      .portal-top-auth-btn{flex:1 1 0}
-      .portal-entry{padding:0 !important;margin-bottom:18px !important}
-      .portal-entry-card{padding:22px 18px !important;border-radius:24px !important}
-      .portal-entry-brand{grid-template-columns:1fr !important;gap:16px !important}
-      .portal-entry-logo{height:80px !important}
-      .portal-entry-copy h1{font-size:30px !important}
-      .portal-entry-copy p{font-size:14px !important}
-      .portal-entry-benefits{grid-template-columns:1fr !important;gap:10px !important;margin-top:20px !important}
-      .portal-entry-benefits .benefit-card{padding:16px !important;border-radius:18px !important}
-      .portal-entry-actions{flex-direction:column;align-items:stretch}
-      .portal-entry-actions .portal-intro-cta{width:100%;min-width:0;max-width:none}
-      .portal-meta-link{font-size:12px}
+      .header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+      .header-auth-actions{order:2;display:flex;gap:8px;margin-left:0}
+      .header-auth-btn{min-height:40px;padding:0 12px;font-size:13px;border-radius:12px}
+      .menu-btn{order:3}
+      .entry-cta-wrap{margin:6px auto 24px}
     }
   </style>
-
 </head>
 <body class="bar-portal-page">
 <div id="toast" class="toast" role="alert"></div>
@@ -284,6 +249,10 @@
     <button class="lang-btn" id="langEN">EN</button>
     <button class="lang-btn" id="langIT">IT</button>
     <button class="lang-btn" id="langFR">FR</button>
+    <div class="header-auth-actions" id="barHeaderAuth">
+      <button class="header-auth-btn active" id="barHeaderLoginBtn" type="button" data-i18n="login">Login</button>
+      <button class="header-auth-btn" id="barHeaderRegisterBtn" type="button" data-i18n="register">Registrieren</button>
+    </div>
     <button class="btn-logout" id="btnLogout" style="display:none" data-i18n="logout">Ausloggen</button>
     <button class="menu-btn" id="barMenuBtn" aria-label="Menü öffnen">☰</button>
   </div>
@@ -308,48 +277,36 @@
 </div>
 <div id="barDrawerOverlay" class="modal" style="display:none;background:rgba(0,0,0,.65);z-index:1100"></div>
 
-
 <!-- LOGIN -->
 <div id="loginScreen">
-  <div class="container portal-entry">
-    <div class="portal-entry-card">
-      <div class="portal-entry-brand">
-        <img src="logo.png" alt="BarSclusive" class="portal-entry-logo">
-        <div class="portal-entry-copy">
-          <div class="portal-entry-badge" data-i18n="portalEntryBadge">BarSclusive Partnerbereich</div>
-          <h1 data-i18n="portalEntryTitle">Neue Gäste gewinnen ohne laufende Fixkosten</h1>
-          <p data-i18n="portalEntrySub">Fülle ruhigere Zeiten gezielt mit neuen Gästen, erhöhe die Sichtbarkeit deiner Bar und zahle nur dann, wenn daraus echte Verkäufe entstehen.</p>
-        </div>
+  <div class="container auth-shell">
+
+    <div class="auth-benefits">
+      <div class="benefit-card benefit-card-pink">
+        <div class="benefit-title" data-i18n="benefitFreeTitle">Kostenlose Registrierung</div>
+        <div class="benefit-sub" data-i18n="benefitFreeSub">Ohne Einrichtungsgebühr.</div>
       </div>
-      <div class="portal-entry-benefits">
-        <div class="benefit-card benefit-card-pink">
-          <div class="benefit-title" data-i18n="barIntroBenefitFreeTitle">Kostenlose Registrierung</div>
-          <div class="benefit-sub" data-i18n="barIntroBenefitFreeSub">Starte ohne Einrichtungsgebühr und ohne unnötige Hürden.</div>
-        </div>
-        <div class="benefit-card benefit-card-amber">
-          <div class="benefit-title" data-i18n="barIntroBenefitFixedTitle">Keine laufenden Fixkosten</div>
-          <div class="benefit-sub" data-i18n="barIntroBenefitFixedSub">Kein Monatsabo und keine wiederkehrenden Grundgebühren.</div>
-        </div>
-        <div class="benefit-card benefit-card-violet">
-          <div class="benefit-title" data-i18n="barIntroBenefitGuestsTitle">Neue Gäste in schwachen Zeiten</div>
-          <div class="benefit-sub" data-i18n="barIntroBenefitGuestsSub">Setze gezielte Anreize, wenn du zusätzliche Frequenz brauchst.</div>
-        </div>
-        <div class="benefit-card benefit-card-blue">
-          <div class="benefit-title" data-i18n="barIntroBenefitVisibilityTitle">Mehr Sichtbarkeit für deine Bar</div>
-          <div class="benefit-sub" data-i18n="barIntroBenefitVisibilitySub">BarSclusive bringt dein Angebot genau dort ins Blickfeld, wo Gäste suchen.</div>
-        </div>
-        <div class="benefit-card benefit-card-green">
-          <div class="benefit-title" data-i18n="barIntroBenefitSalesTitle">Du zahlst nur bei echten Verkäufen</div>
-          <div class="benefit-sub" data-i18n="barIntroBenefitSalesSub">Es fallen nur bei verkauften beziehungsweise eingelösten Gutscheinen Provisionen an.</div>
-        </div>
+      <div class="benefit-card benefit-card-amber">
+        <div class="benefit-title" data-i18n="benefitNoRunningTitle">Keine laufenden Kosten</div>
+        <div class="benefit-sub" data-i18n="benefitNoRunningSub">Kein Monatsabo und keine wiederkehrenden Fixkosten.</div>
       </div>
-      <div class="portal-entry-actions">
-        <button class="btn-pink portal-intro-cta" id="introPartnerBtn" data-auth-target="register" data-i18n="becomePartnerNow">Jetzt Partner werden</button>
-        <a href="so-funktionierts.html" class="portal-meta-link" data-i18n="portalLearnMore">Weitere Details unter So funktioniert's</a>
+      <div class="benefit-card benefit-card-violet">
+        <div class="benefit-title" data-i18n="benefitFastTitle">Deal in wenigen Minuten erstellt</div>
+        <div class="benefit-sub" data-i18n="benefitFastSub">Schnell online, sauber geführt und direkt auf dem Handy bearbeitbar.</div>
+      </div>
+      <div class="benefit-card benefit-card-blue">
+        <div class="benefit-title" data-i18n="benefitPayoutTitle">90 % Auszahlung</div>
+        <div class="benefit-sub" data-i18n="benefitPayoutSub">Nach Einlösung bei Fixpreis-Deals.</div>
+      </div>
+      <div class="benefit-card benefit-card-green">
+        <div class="benefit-title" data-i18n="benefitReachTitle">Mehr Sichtbarkeit</div>
+        <div class="benefit-sub" data-i18n="benefitReachSub">BarSclusive bringt neue Gäste direkt zu dir.</div>
       </div>
     </div>
-  </div>
-  <div class="container auth-shell" id="authFocusSection">
+    <div class="entry-cta-wrap">
+      <button class="btn-pink entry-cta-btn" id="btnBecomePartner" type="button" data-i18n="becomePartner">Jetzt Partner werden</button>
+      <a href="so-funktionierts.html" class="entry-cta-link" data-i18n="entryHowItWorks">Weitere Details unter So funktioniert's</a>
+    </div>
     <div id="loginForm" class="tab-content active">
       <div class="card">
         <h2>🔑 <span data-i18n="barLogin">Bar Login</span></h2>
@@ -372,7 +329,6 @@
       <div class="card">
         <h2>✨ <span data-i18n="registerBar">Bar registrieren</span></h2>
         <div class="err-msg" id="regErr" aria-live="polite"></div>
-
         <div class="form-group">
           <label class="form-label" for="regBarName" data-i18n="barName">Bar-Name *</label>
           <input type="text" class="form-input" id="regBarName">
