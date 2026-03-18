@@ -476,7 +476,332 @@
     }
 
   </style>
-<link rel="icon" type="image/png" href="logo.png">
+
+  <style id="shop-header-cleanup-hotfix">
+    #logoHomeBtn,
+    #btnDeals{
+      display:none !important;
+    }
+
+    .hero-logo{
+      height:120px !important;
+      width:auto;
+    }
+
+    #userBtn{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:180px;
+    }
+
+    .menu-btn{
+      margin-left:auto;
+    }
+
+    @media(max-width:768px){
+      .header{
+        padding:12px 14px !important;
+      }
+
+      .nav{
+        display:block !important;
+      }
+
+      .nav-links{
+        width:100%;
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto auto auto;
+        grid-template-areas:
+          "search search search search"
+          "lang cart user menu";
+        gap:10px;
+        align-items:center;
+      }
+
+      .search-wrap{
+        grid-area:search;
+        width:100%;
+        max-width:none !important;
+        order:unset !important;
+      }
+
+      .search-input{
+        min-height:48px;
+        font-size:15px;
+        padding-left:38px;
+      }
+
+      .search-icon{
+        left:14px;
+      }
+
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang;
+        justify-self:start;
+        display:flex !important;
+        gap:8px !important;
+        flex-wrap:nowrap;
+      }
+
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"] .nav-link{
+        min-width:56px;
+        min-height:56px;
+        border-radius:16px !important;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        padding:0 12px !important;
+      }
+
+      #cartOpenBtn{
+        grid-area:cart;
+        justify-self:end;
+        min-width:56px;
+        min-height:56px;
+        border-radius:999px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      .user-menu{
+        grid-area:user;
+        justify-self:end;
+        width:auto;
+      }
+
+      #userBtn{
+        min-height:56px;
+        padding:0 18px !important;
+        border-radius:999px;
+        max-width:150px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      #shopMenuBtn{
+        grid-area:menu;
+        justify-self:end;
+        min-width:56px;
+        min-height:56px;
+        padding:0 16px !important;
+        border-radius:16px;
+        margin-left:0 !important;
+      }
+
+      .hero{
+        padding-top:26px;
+      }
+
+      .hero-shell{
+        grid-template-columns:1fr !important;
+        gap:18px;
+      }
+
+      .hero-logo{
+        height:104px !important;
+      }
+    }
+  
+
+    html{scroll-behavior:smooth}
+    #shopFocusArea{scroll-margin-top:96px}
+    #btnDeals{display:none !important}
+
+    .hero{
+      padding:22px 20px 12px !important;
+      background:linear-gradient(180deg,rgba(255,255,255,.04),transparent) !important;
+    }
+    .hero-shell{
+      max-width:1120px !important;
+      margin:0 auto !important;
+      padding:26px 28px !important;
+      border-radius:30px !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(18,18,20,.96) 62%) !important;
+      box-shadow:0 28px 60px rgba(0,0,0,.26) !important;
+      align-items:center !important;
+      gap:26px !important;
+    }
+    .hero-brand{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:12px;
+      min-width:0;
+    }
+    .hero-brand .hero-logo{
+      height:112px !important;
+      width:auto !important;
+      max-width:100% !important;
+      filter:drop-shadow(0 16px 32px rgba(0,0,0,.34)) !important;
+    }
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:#f5f5f6;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .hero-copy{min-width:0}
+    .hero-copy h1{
+      margin:0 0 10px !important;
+      font-size:clamp(30px,4vw,50px) !important;
+      line-height:1.02 !important;
+      letter-spacing:-.035em !important;
+      max-width:720px;
+    }
+    .hero-copy p{
+      margin:0 !important;
+      max-width:660px !important;
+      color:#c0c0c8 !important;
+      font-size:16px !important;
+      line-height:1.55 !important;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+    .hero-primary-cta,
+    .hero-secondary-cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      font-size:15px;
+      font-weight:700;
+      text-decoration:none;
+      transition:transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .hero-primary-cta{
+      background:#FF3366;
+      color:#fff;
+      box-shadow:0 18px 34px rgba(255,51,102,.28);
+    }
+    .hero-secondary-cta{
+      background:#17171a;
+      color:#f5f5f6;
+    }
+    .hero-primary-cta:hover,
+    .hero-secondary-cta:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.16);
+    }
+    .hero-benefits{
+      margin-top:20px !important;
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      gap:10px !important;
+      width:100%;
+      max-width:760px;
+    }
+    .hero-benefit-card{
+      display:flex !important;
+      align-items:flex-start !important;
+      justify-content:flex-start !important;
+      min-height:100% !important;
+      padding:14px 16px !important;
+      border-radius:18px !important;
+      background:linear-gradient(180deg,#18181c,#131317) !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      box-shadow:none !important;
+      font-size:14px !important;
+      line-height:1.45 !important;
+      font-weight:700 !important;
+    }
+    .hero-note{
+      margin-top:14px !important;
+      color:#d3d3da !important;
+      font-size:14px !important;
+      font-weight:500 !important;
+    }
+    .filter-wrap{
+      margin:16px auto 22px !important;
+    }
+
+    @media(max-width:768px){
+      .header{padding:12px 12px 10px !important}
+      .nav{
+        display:grid !important;
+        grid-template-columns:auto 1fr auto !important;
+        grid-template-areas:
+          "logo lang menu"
+          "search search search"
+          "cart user user" !important;
+        gap:10px !important;
+        align-items:center !important;
+      }
+      .logo{grid-area:logo !important}
+      .logo img{height:46px !important}
+      .nav-links{
+        display:grid !important;
+        grid-template-columns:auto 1fr auto !important;
+        grid-template-areas:
+          "lang lang lang"
+          "search search search"
+          "cart user menu" !important;
+        align-items:center !important;
+        gap:10px !important;
+        width:100% !important;
+      }
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang !important;
+        justify-self:start !important;
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:8px !important;
+      }
+      .search-wrap{
+        grid-area:search !important;
+        order:initial !important;
+        width:100% !important;
+        max-width:none !important;
+      }
+      #cartOpenBtn{grid-area:cart !important;justify-self:start !important}
+      .user-menu{grid-area:user !important;justify-self:stretch !important;min-width:0}
+      #userBtn{width:100% !important;justify-content:center !important;white-space:nowrap !important}
+      .menu-btn{grid-area:menu !important;justify-self:end !important}
+      .hero{padding:18px 12px 8px !important}
+      .hero-shell{
+        grid-template-columns:1fr !important;
+        padding:22px 18px !important;
+        gap:18px !important;
+        text-align:left !important;
+      }
+      .hero-brand{gap:10px !important}
+      .hero-brand .hero-logo{height:84px !important}
+      .hero-copy h1{font-size:30px !important}
+      .hero-copy p{font-size:15px !important}
+      .hero-actions{gap:10px !important}
+      .hero-primary-cta,.hero-secondary-cta{flex:1 1 calc(50% - 5px);min-width:0 !important}
+      .hero-benefits{grid-template-columns:1fr !important;max-width:none !important}
+      .hero-benefit-card{padding:13px 14px !important;border-radius:16px !important}
+      .filter-wrap{margin-top:14px !important}
+    }
+
+    @media(max-width:430px){
+      .hero-shell{padding:20px 16px !important}
+      .hero-brand .hero-logo{height:76px !important}
+      .hero-copy h1{font-size:27px !important}
+      .hero-primary-cta,.hero-secondary-cta{flex:1 1 100% !important}
+    }
+
+  </style>
+  <link rel="icon" type="image/png" href="logo.png">
 
   <style id="bs-shop-refresh-style">
     :root{--bs-bg:#050505;--bs-panel:#121212;--bs-panel-2:#181818;--bs-stroke:#262626;--bs-text:#f7f7f7;--bs-muted:#a1a1aa;--bs-soft:#71717a;--bs-pink:#ff3366;--bs-pink-soft:rgba(255,51,102,.14);--bs-shadow:0 18px 45px rgba(0,0,0,.28);--bs-radius:22px}
@@ -804,138 +1129,677 @@
 
   </style>
 
-  <style id="shop-entry-layout-clean">
-    .header{padding:12px 18px}
-    .nav{gap:14px;align-items:center}
-    .logo img{height:42px !important}
-    .nav-links{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;row-gap:10px;flex-wrap:wrap}
-    .nav-link,.user-button,.cart-btn,.menu-btn{
-      min-height:42px;
-      padding:9px 14px;
+  <style id="shop-mobile-conversion-hotfix">
+    @media(max-width:768px){
+      .header{padding:10px 12px !important}
+      .nav{gap:8px !important}
+      .nav-links{gap:8px !important}
+      .search-wrap{margin-top:0 !important}
+      .hero{padding:10px 12px 6px !important;background:linear-gradient(180deg,#0f0f11 0%,rgba(10,10,12,.94) 100%) !important}
+      .hero-shell{grid-template-columns:68px minmax(0,1fr) !important;gap:12px !important;align-items:center !important}
+      .hero-logo,.hero img{height:58px !important;width:auto}
+      .hero-copy h1,.hero h1{text-align:left !important;font-size:21px !important;line-height:1.04 !important;margin-bottom:4px !important}
+      .hero-copy p,.hero p{text-align:left !important;font-size:13px !important;line-height:1.35 !important;max-width:none !important}
+      .hero-benefits,.hero-trust-strip,.hero-utility-line{display:none !important}
+      .hero-note{margin-top:6px !important;font-size:12px !important;line-height:1.35 !important}
+      .filter-wrap{margin:10px auto 12px !important;padding-left:12px !important;padding-right:12px !important}
+      .filter-bar{padding:10px 10px 8px !important;border-radius:20px !important}
+      .filter-row{gap:8px !important;margin-bottom:8px !important;padding-bottom:2px !important}
+      .filter-row:last-child{gap:8px !important}
+      .filter-label{min-width:66px !important;font-size:11px !important;padding-top:8px !important}
+      .filter-btn{padding:8px 12px !important;font-size:12px !important}
+      .date-picker-trigger,.date-picker-label{padding:8px 12px !important;min-height:38px !important;border-radius:16px !important;font-size:12px !important}
+      #locationInput.form-input{height:38px !important;font-size:13px !important}
+      .filter-row:last-child .search-select-wrap{min-width:100% !important}
+      .filter-row:last-child #btnApplyLocation,
+      .filter-row:last-child #btnUseMyLocation,
+      .filter-row:last-child #btnClearLocation{flex:1 1 calc(50% - 4px) !important;min-height:40px !important}
+      .location-pill{flex:1 1 100% !important;justify-content:center !important}
+      .container{padding:10px 12px 16px !important}
+      .container > div:first-child{display:grid !important;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px !important}
+      #viewGrid,#viewMap{min-height:40px !important;padding:9px 12px !important;font-size:13px !important}
+      .deals-grid{gap:14px !important}
+    }
+    @media(max-width:560px){
+      .hero-shell{grid-template-columns:56px minmax(0,1fr) !important;gap:10px !important}
+      .hero-logo,.hero img{height:50px !important}
+      .hero-copy h1,.hero h1{font-size:19px !important}
+      .hero-copy p,.hero p{font-size:12.5px !important}
+    }
+  
+
+    html{scroll-behavior:smooth}
+    #shopFocusArea{scroll-margin-top:96px}
+    #btnDeals{display:none !important}
+
+    .hero{
+      padding:22px 20px 12px !important;
+      background:linear-gradient(180deg,rgba(255,255,255,.04),transparent) !important;
+    }
+    .hero-shell{
+      max-width:1120px !important;
+      margin:0 auto !important;
+      padding:26px 28px !important;
+      border-radius:30px !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(18,18,20,.96) 62%) !important;
+      box-shadow:0 28px 60px rgba(0,0,0,.26) !important;
+      align-items:center !important;
+      gap:26px !important;
+    }
+    .hero-brand{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:12px;
+      min-width:0;
+    }
+    .hero-brand .hero-logo{
+      height:112px !important;
+      width:auto !important;
+      max-width:100% !important;
+      filter:drop-shadow(0 16px 32px rgba(0,0,0,.34)) !important;
+    }
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
       border-radius:999px;
-      background:#141418;
+      background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.08);
-      color:#f5f5f7;
+      color:#f5f5f6;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
     }
-    .search-wrap{min-width:220px;max-width:340px}
-    .search-input{height:42px;padding-left:36px;border-radius:999px}
+    .hero-copy{min-width:0}
+    .hero-copy h1{
+      margin:0 0 10px !important;
+      font-size:clamp(30px,4vw,50px) !important;
+      line-height:1.02 !important;
+      letter-spacing:-.035em !important;
+      max-width:720px;
+    }
+    .hero-copy p{
+      margin:0 !important;
+      max-width:660px !important;
+      color:#c0c0c8 !important;
+      font-size:16px !important;
+      line-height:1.55 !important;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+    .hero-primary-cta,
+    .hero-secondary-cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      font-size:15px;
+      font-weight:700;
+      text-decoration:none;
+      transition:transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .hero-primary-cta{
+      background:#FF3366;
+      color:#fff;
+      box-shadow:0 18px 34px rgba(255,51,102,.28);
+    }
+    .hero-secondary-cta{
+      background:#17171a;
+      color:#f5f5f6;
+    }
+    .hero-primary-cta:hover,
+    .hero-secondary-cta:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.16);
+    }
+    .hero-benefits{
+      margin-top:20px !important;
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      gap:10px !important;
+      width:100%;
+      max-width:760px;
+    }
+    .hero-benefit-card{
+      display:flex !important;
+      align-items:flex-start !important;
+      justify-content:flex-start !important;
+      min-height:100% !important;
+      padding:14px 16px !important;
+      border-radius:18px !important;
+      background:linear-gradient(180deg,#18181c,#131317) !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      box-shadow:none !important;
+      font-size:14px !important;
+      line-height:1.45 !important;
+      font-weight:700 !important;
+    }
+    .hero-note{
+      margin-top:14px !important;
+      color:#d3d3da !important;
+      font-size:14px !important;
+      font-weight:500 !important;
+    }
+    .filter-wrap{
+      margin:16px auto 22px !important;
+    }
+
+    @media(max-width:768px){
+      .header{padding:12px 12px 10px !important}
+      .nav{
+        display:grid !important;
+        grid-template-columns:auto 1fr auto !important;
+        grid-template-areas:
+          "logo lang menu"
+          "search search search"
+          "cart user user" !important;
+        gap:10px !important;
+        align-items:center !important;
+      }
+      .logo{grid-area:logo !important}
+      .logo img{height:46px !important}
+      .nav-links{
+        display:grid !important;
+        grid-template-columns:auto 1fr auto !important;
+        grid-template-areas:
+          "lang lang lang"
+          "search search search"
+          "cart user menu" !important;
+        align-items:center !important;
+        gap:10px !important;
+        width:100% !important;
+      }
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang !important;
+        justify-self:start !important;
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:8px !important;
+      }
+      .search-wrap{
+        grid-area:search !important;
+        order:initial !important;
+        width:100% !important;
+        max-width:none !important;
+      }
+      #cartOpenBtn{grid-area:cart !important;justify-self:start !important}
+      .user-menu{grid-area:user !important;justify-self:stretch !important;min-width:0}
+      #userBtn{width:100% !important;justify-content:center !important;white-space:nowrap !important}
+      .menu-btn{grid-area:menu !important;justify-self:end !important}
+      .hero{padding:18px 12px 8px !important}
+      .hero-shell{
+        grid-template-columns:1fr !important;
+        padding:22px 18px !important;
+        gap:18px !important;
+        text-align:left !important;
+      }
+      .hero-brand{gap:10px !important}
+      .hero-brand .hero-logo{height:84px !important}
+      .hero-copy h1{font-size:30px !important}
+      .hero-copy p{font-size:15px !important}
+      .hero-actions{gap:10px !important}
+      .hero-primary-cta,.hero-secondary-cta{flex:1 1 calc(50% - 5px);min-width:0 !important}
+      .hero-benefits{grid-template-columns:1fr !important;max-width:none !important}
+      .hero-benefit-card{padding:13px 14px !important;border-radius:16px !important}
+      .filter-wrap{margin-top:14px !important}
+    }
+
+    @media(max-width:430px){
+      .hero-shell{padding:20px 16px !important}
+      .hero-brand .hero-logo{height:76px !important}
+      .hero-copy h1{font-size:27px !important}
+      .hero-primary-cta,.hero-secondary-cta{flex:1 1 100% !important}
+    }
+
+  </style>
+
+
+  <style id="shop-final-ui-polish">
+    .hero-shell{max-width:1040px !important;grid-template-columns:96px minmax(0,1fr) !important;gap:18px !important;align-items:center !important}
+    .hero-logo{height:92px !important;width:auto;object-fit:contain;filter:drop-shadow(0 10px 24px rgba(0,0,0,.28))}
+    .hero-copy h1{max-width:760px}
+    .hero-copy p{max-width:640px}
+
+    @media(max-width:768px){
+      .header{padding:10px 12px !important}
+      .nav{display:block !important}
+      .nav-links{
+        width:100%;
+        display:grid !important;
+        grid-template-columns:auto minmax(0,1fr) auto;
+        grid-template-areas:
+          "search search search"
+          "lang lang lang"
+          "cart user menu";
+        gap:10px !important;
+        align-items:center !important;
+      }
+      .search-wrap{
+        grid-area:search;
+        width:100%;
+        max-width:none !important;
+        min-width:0 !important;
+        order:unset !important;
+      }
+      .search-input{height:50px !important;min-height:50px !important;font-size:15px !important;padding-left:40px !important}
+      .search-icon{left:14px !important}
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang;
+        width:100%;
+        display:flex !important;
+        justify-content:flex-start !important;
+        gap:8px !important;
+        flex-wrap:nowrap !important;
+        overflow-x:auto;
+        padding-bottom:2px;
+      }
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"] .nav-link{
+        flex:0 0 auto;
+        min-width:44px;
+        min-height:44px;
+        padding:0 12px !important;
+        border-radius:14px !important;
+      }
+      #cartOpenBtn,
+      #shopMenuBtn{
+        width:52px;
+        min-width:52px !important;
+        height:52px;
+        min-height:52px !important;
+        padding:0 !important;
+        border-radius:16px !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+      #cartOpenBtn{grid-area:cart;justify-self:start !important}
+      .user-menu{grid-area:user;width:100%;min-width:0;justify-self:stretch !important}
+      #userBtn{
+        width:100%;
+        max-width:none !important;
+        min-height:52px !important;
+        padding:0 16px !important;
+        border-radius:18px !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+        font-size:15px !important;
+      }
+      #shopMenuBtn{grid-area:menu;justify-self:end !important;margin-left:0 !important}
+
+      .hero{
+        padding:16px 12px 8px !important;
+        background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0) 100%) !important;
+      }
+      .hero-shell{
+        max-width:none !important;
+        grid-template-columns:76px minmax(0,1fr) !important;
+        gap:14px !important;
+        align-items:center !important;
+      }
+      .hero-logo{height:76px !important}
+      .hero-copy h1{font-size:28px !important;line-height:1.04 !important;margin:0 0 6px !important}
+      .hero-copy p{font-size:14px !important;line-height:1.42 !important;margin:0 !important}
+      .hero-benefits{display:none !important}
+      .hero-note{display:block !important;margin-top:10px !important;font-size:13px !important;line-height:1.4 !important;color:#cfcfd7 !important}
+
+      .filter-wrap{margin:10px auto 12px !important;padding-left:12px !important;padding-right:12px !important}
+      .filter-bar{
+        padding:14px !important;
+        border-radius:22px !important;
+        display:flex;
+        flex-direction:column;
+        gap:14px;
+      }
+      .filter-row{
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:8px !important;
+        align-items:center !important;
+        overflow:visible !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+      .filter-label{
+        position:static !important;
+        left:auto !important;
+        width:100% !important;
+        min-width:0 !important;
+        background:none !important;
+        padding:0 !important;
+        font-size:12px !important;
+        font-weight:700 !important;
+        color:#d8d8dd !important;
+      }
+      .filter-btn,
+      .date-picker-label{
+        min-height:40px !important;
+        padding:9px 14px !important;
+        border-radius:999px !important;
+        font-size:13px !important;
+      }
+      .date-picker-wrap{max-width:100% !important}
+      .search-select-wrap{width:100% !important;max-width:none !important;min-width:0 !important}
+      #locationInput.form-input{height:44px !important;min-height:44px !important;border-radius:16px !important}
+      #btnApplyLocation,
+      #btnUseMyLocation,
+      #btnClearLocation{flex:1 1 calc(50% - 4px) !important}
+      .location-pill{width:100% !important;justify-content:flex-start !important}
+
+      .container{padding:10px 12px 18px !important}
+      .container > div:first-child{
+        display:grid !important;
+        grid-template-columns:1fr 1fr;
+        gap:8px !important;
+        margin-bottom:12px !important;
+      }
+      #viewGrid,
+      #viewMap{
+        min-height:44px !important;
+        padding:10px 14px !important;
+        border-radius:18px !important;
+        font-size:14px !important;
+      }
+      .deals-grid{gap:14px !important}
+    }
+
+    @media(max-width:430px){
+      .hero-shell{grid-template-columns:68px minmax(0,1fr) !important;gap:12px !important}
+      .hero-logo{height:68px !important}
+      .hero-copy h1{font-size:25px !important}
+      .hero-copy p{font-size:13.5px !important}
+      #userBtn{font-size:14px !important;padding:0 12px !important}
+      .filter-btn,
+      .date-picker-label{font-size:12.5px !important}
+    }
+  
+
+    html{scroll-behavior:smooth}
+    #shopFocusArea{scroll-margin-top:96px}
+    #btnDeals{display:none !important}
+
+    .hero{
+      padding:22px 20px 12px !important;
+      background:linear-gradient(180deg,rgba(255,255,255,.04),transparent) !important;
+    }
+    .hero-shell{
+      max-width:1120px !important;
+      margin:0 auto !important;
+      padding:26px 28px !important;
+      border-radius:30px !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(18,18,20,.96) 62%) !important;
+      box-shadow:0 28px 60px rgba(0,0,0,.26) !important;
+      align-items:center !important;
+      gap:26px !important;
+    }
+    .hero-brand{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:12px;
+      min-width:0;
+    }
+    .hero-brand .hero-logo{
+      height:112px !important;
+      width:auto !important;
+      max-width:100% !important;
+      filter:drop-shadow(0 16px 32px rgba(0,0,0,.34)) !important;
+    }
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:#f5f5f6;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .hero-copy{min-width:0}
+    .hero-copy h1{
+      margin:0 0 10px !important;
+      font-size:clamp(30px,4vw,50px) !important;
+      line-height:1.02 !important;
+      letter-spacing:-.035em !important;
+      max-width:720px;
+    }
+    .hero-copy p{
+      margin:0 !important;
+      max-width:660px !important;
+      color:#c0c0c8 !important;
+      font-size:16px !important;
+      line-height:1.55 !important;
+    }
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+    .hero-primary-cta,
+    .hero-secondary-cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      font-size:15px;
+      font-weight:700;
+      text-decoration:none;
+      transition:transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .hero-primary-cta{
+      background:#FF3366;
+      color:#fff;
+      box-shadow:0 18px 34px rgba(255,51,102,.28);
+    }
+    .hero-secondary-cta{
+      background:#17171a;
+      color:#f5f5f6;
+    }
+    .hero-primary-cta:hover,
+    .hero-secondary-cta:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.16);
+    }
+    .hero-benefits{
+      margin-top:20px !important;
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      gap:10px !important;
+      width:100%;
+      max-width:760px;
+    }
+    .hero-benefit-card{
+      display:flex !important;
+      align-items:flex-start !important;
+      justify-content:flex-start !important;
+      min-height:100% !important;
+      padding:14px 16px !important;
+      border-radius:18px !important;
+      background:linear-gradient(180deg,#18181c,#131317) !important;
+      border:1px solid rgba(255,255,255,.08) !important;
+      box-shadow:none !important;
+      font-size:14px !important;
+      line-height:1.45 !important;
+      font-weight:700 !important;
+    }
+    .hero-note{
+      margin-top:14px !important;
+      color:#d3d3da !important;
+      font-size:14px !important;
+      font-weight:500 !important;
+    }
+    .filter-wrap{
+      margin:16px auto 22px !important;
+    }
+
+    @media(max-width:768px){
+      .header{padding:12px 12px 10px !important}
+      .nav{
+        display:grid !important;
+        grid-template-columns:auto 1fr auto !important;
+        grid-template-areas:
+          "logo lang menu"
+          "search search search"
+          "cart user user" !important;
+        gap:10px !important;
+        align-items:center !important;
+      }
+      .logo{grid-area:logo !important}
+      .logo img{height:46px !important}
+      .nav-links{
+        display:grid !important;
+        grid-template-columns:auto 1fr auto !important;
+        grid-template-areas:
+          "lang lang lang"
+          "search search search"
+          "cart user menu" !important;
+        align-items:center !important;
+        gap:10px !important;
+        width:100% !important;
+      }
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang !important;
+        justify-self:start !important;
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:8px !important;
+      }
+      .search-wrap{
+        grid-area:search !important;
+        order:initial !important;
+        width:100% !important;
+        max-width:none !important;
+      }
+      #cartOpenBtn{grid-area:cart !important;justify-self:start !important}
+      .user-menu{grid-area:user !important;justify-self:stretch !important;min-width:0}
+      #userBtn{width:100% !important;justify-content:center !important;white-space:nowrap !important}
+      .menu-btn{grid-area:menu !important;justify-self:end !important}
+      .hero{padding:18px 12px 8px !important}
+      .hero-shell{
+        grid-template-columns:1fr !important;
+        padding:22px 18px !important;
+        gap:18px !important;
+        text-align:left !important;
+      }
+      .hero-brand{gap:10px !important}
+      .hero-brand .hero-logo{height:84px !important}
+      .hero-copy h1{font-size:30px !important}
+      .hero-copy p{font-size:15px !important}
+      .hero-actions{gap:10px !important}
+      .hero-primary-cta,.hero-secondary-cta{flex:1 1 calc(50% - 5px);min-width:0 !important}
+      .hero-benefits{grid-template-columns:1fr !important;max-width:none !important}
+      .hero-benefit-card{padding:13px 14px !important;border-radius:16px !important}
+      .filter-wrap{margin-top:14px !important}
+    }
+
+    @media(max-width:430px){
+      .hero-shell{padding:20px 16px !important}
+      .hero-brand .hero-logo{height:76px !important}
+      .hero-copy h1{font-size:27px !important}
+      .hero-primary-cta,.hero-secondary-cta{flex:1 1 100% !important}
+    }
+
+  </style>
+
+
+  <style id="shop-final-entry-concept">
     .shop-top-auth{max-width:1200px;margin:0 auto;padding:10px 20px 0;display:flex;justify-content:flex-end;gap:10px}
-    .shop-top-auth-btn{
-      appearance:none;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#1a1a1f,#121217);color:#f5f5f7;
-      border-radius:14px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 14px 26px rgba(0,0,0,.18)
-    }
-    .shop-top-auth-btn.shop-top-auth-primary{
-      background:linear-gradient(180deg,#ff4d7d,#ff3366);border-color:rgba(255,255,255,.08);box-shadow:0 18px 34px rgba(255,51,102,.24)
-    }
+    .shop-top-auth-btn{appearance:none;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,#1a1a1f,#121217);color:#f5f5f7;border-radius:14px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 14px 26px rgba(0,0,0,.18)}
+    .shop-top-auth-btn.shop-top-auth-primary{background:linear-gradient(180deg,#ff4d7d,#ff3366);border-color:rgba(255,255,255,.08);box-shadow:0 18px 34px rgba(255,51,102,.24)}
     body.shop-user-logged-out .user-menu{display:none !important}
     body.shop-user-logged-in .shop-top-auth{display:none !important}
     body.shop-user-logged-out .shop-top-auth{display:flex}
-    .hero{
-      padding:18px 20px 22px;
-      background:linear-gradient(180deg,rgba(255,255,255,.03),transparent)
-    }
-    .hero-shell{
-      max-width:1040px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:22px;align-items:start;text-align:left;
-      padding:28px;border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
-      border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 54px rgba(0,0,0,.24)
-    }
-    .hero-brand{display:flex;align-items:center;gap:14px;justify-content:flex-start}
-    .hero-logo{height:108px;width:auto;object-fit:contain;filter:drop-shadow(0 16px 32px rgba(0,0,0,.28))}
-    .hero-badge{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#f5f5f7
-    }
-    .hero-copy h1{margin:0 0 12px;font-size:clamp(32px,4.2vw,52px);line-height:1.02;letter-spacing:-.035em;max-width:760px}
-    .hero-copy p{margin:0;max-width:720px;color:#bfc0c9;font-size:16px;line-height:1.58}
-    .hero-benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
-    .hero-benefit-card{
-      display:flex;flex-direction:column;gap:6px;padding:18px;border-radius:22px;background:linear-gradient(180deg,#17171b,#111115);
-      border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 32px rgba(0,0,0,.16)
-    }
-    .hero-benefit-title{font-size:15px;font-weight:800;line-height:1.25;color:#fff}
-    .hero-benefit-sub{font-size:13px;line-height:1.5;color:#b8b8c2}
-    .hero-note{margin-top:18px;color:#d2d2d9;font-size:14px;font-weight:500;max-width:720px}
-    .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:22px}
-    .hero-primary-cta{
-      display:inline-flex;align-items:center;justify-content:center;min-width:240px;min-height:50px;padding:14px 22px;border-radius:16px;
-      background:linear-gradient(180deg,#ff4d7d,#ff3366);color:#fff;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 18px 34px rgba(255,51,102,.28)
-    }
-    .hero-meta-link{display:inline-flex;align-items:center;gap:8px;color:#ff789d;text-decoration:none;font-size:13px;font-weight:700}
-    #shopFocusArea{scroll-margin-top:96px}
-    .filter-wrap{max-width:1200px;margin:20px auto 24px;padding:0 20px}
-    .filter-bar{
-      background:linear-gradient(180deg,#171717,#121212);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:18px 18px 14px;box-shadow:0 18px 40px rgba(0,0,0,.18)
-    }
-    .filter-row{gap:10px;align-items:flex-start}
-    .filter-label{min-width:78px;padding-top:9px;color:#9fa0aa;font-size:12px;font-weight:700;letter-spacing:.02em}
-    .filter-btn{min-height:40px;padding:9px 14px;border-radius:999px;background:#18181c;border:1px solid rgba(255,255,255,.08)}
-    .filter-btn.active{background:#ff3366;border-color:#ff3366;box-shadow:0 12px 28px rgba(255,51,102,.24)}
-    .date-picker-wrap{display:inline-flex;align-items:center}
-    .date-picker-label{
-      display:inline-flex;align-items:center;min-height:40px;padding:9px 14px;border-radius:999px;background:#18181c;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer
-    }
-    #locationInput.form-input{min-height:42px;border-radius:16px !important;background:#151519;border:1px solid rgba(255,255,255,.08)}
-    #shopViewToggle{display:flex;gap:10px;margin-bottom:16px}
-    #viewGrid,#viewMap{border-radius:999px !important;min-height:42px;padding:10px 16px !important;font-size:13px !important;font-weight:700 !important}
-    body[data-shop-view="favorites"] .hero,body[data-shop-view="orders"] .hero,body[data-shop-view="favorites"] .filter-wrap,body[data-shop-view="orders"] .filter-wrap{display:none}
+    .hero-shell{grid-template-columns:1fr !important;max-width:980px !important;gap:20px !important}
+    .hero-brand{display:flex !important;align-items:center !important;justify-content:flex-start !important}
+    .hero-copy{max-width:760px}
+    .hero-copy p{max-width:680px}
+    .hero-benefits{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px !important;margin-top:20px !important}
+    .hero-actions{margin-top:20px !important;display:flex;justify-content:flex-start}
+    .hero-secondary-cta{display:none !important}
+    .hero-primary-cta{min-width:240px;justify-content:center}
     @media(max-width:768px){
-      .header{padding:10px 12px}
-      .nav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
-      .logo img{height:40px !important}
-      .nav-links{
-        display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"search search search" "lang lang lang" "cart user menu";gap:10px;width:100%
-      }
-      .search-wrap{grid-area:search;max-width:none;min-width:0}
-      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{grid-area:lang;display:flex !important;justify-content:flex-start;gap:6px !important;flex-wrap:wrap}
-      .cart-btn{grid-area:cart}
-      .user-menu{grid-area:user;justify-self:end}
-      .menu-btn{grid-area:menu;justify-self:end}
-      #btnDeals,#btnFavorites,#btnOrders{display:none !important}
+      #btnDeals{display:none !important}
       .shop-top-auth{padding:10px 12px 0;justify-content:stretch}
       .shop-top-auth-btn{flex:1 1 0}
-      .hero{padding:14px 12px 18px;min-height:calc(100svh - 148px)}
-      .hero-shell{padding:22px 18px;border-radius:24px;min-height:100%}
-      .hero-brand{gap:12px}
-      .hero-logo{height:88px}
-      .hero-copy h1{font-size:30px}
-      .hero-copy p{font-size:14px}
-      .hero-benefits{grid-template-columns:1fr;gap:10px;margin-top:18px}
-      .hero-benefit-card{padding:16px;border-radius:18px}
-      .hero-actions{margin-top:18px;flex-direction:column;align-items:stretch}
+      .hero{padding-top:18px !important}
+      .hero-shell{padding:22px 18px !important}
+      .hero-brand{justify-content:center !important}
+      .hero-copy h1{margin-top:4px}
+      .hero-benefits{grid-template-columns:1fr !important;margin-top:18px !important}
+      .hero-actions{margin-top:18px !important}
       .hero-primary-cta{width:100%;min-width:0}
-      .hero-meta-link{font-size:12px}
-      .filter-wrap{margin:10px auto 16px;padding:0 12px}
-      .filter-bar{padding:14px 12px 12px;border-radius:20px}
-      .filter-row{flex-wrap:nowrap;overflow:auto;padding-bottom:2px;margin-bottom:10px}
-      .filter-row::-webkit-scrollbar{display:none}
-      .filter-row:last-child{flex-wrap:wrap;overflow:visible;gap:8px}
-      .filter-row:last-child .filter-label{min-width:100%;padding-top:0}
-      .filter-label{position:sticky;left:0;background:linear-gradient(90deg,#151515 72%,rgba(21,21,21,0));min-width:74px;padding-right:12px;flex-shrink:0}
-      .filter-row:last-child .filter-label{position:static;background:none;padding-right:0}
-      .search-select-wrap{min-width:100%}
-      #btnApplyLocation,#btnUseMyLocation,#btnClearLocation{flex:1 1 calc(50% - 4px)}
-      .container{padding:16px 12px}
-      #shopViewToggle{display:grid !important;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-    }
-    @media(max-width:480px){
-      .hero-copy h1{font-size:27px}
-      .hero-logo{height:80px}
-      .shop-top-auth-btn{padding:11px 14px;font-size:13px}
-      .nav-link.shop-lang-btn{font-size:11px !important;padding:4px 8px !important}
     }
   </style>
 
+
+  <style id="shop-entry-lock-fix">
+    body.shop-entry-locked #shopDiscoverySection,
+    body.shop-entry-locked .footer{display:none}
+    body.shop-entry-locked .hero{padding-bottom:18px !important}
+    body.shop-entry-locked .hero-actions{margin-top:20px !important}
+    .header .logo{display:none !important}
+    .hero-brand{align-items:center !important}
+    .hero-shell{grid-template-columns:minmax(0,1fr) !important;max-width:980px !important}
+    .hero-copy{text-align:left !important}
+    .hero-primary-cta{min-width:240px}
+    @media(max-width:768px){
+      .header{padding:12px !important}
+      .nav-links{display:grid !important;grid-template-columns:minmax(0,1fr) auto auto !important;grid-template-areas:
+        "lang lang lang"
+        "search search search"
+        "cart user menu" !important;gap:10px !important;align-items:center !important}
+      .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{grid-area:lang !important;justify-content:flex-start !important;display:flex !important;gap:8px !important;flex-wrap:nowrap !important;overflow:auto !important}
+      .search-wrap{grid-area:search !important;width:100% !important;max-width:none !important}
+      #cartOpenBtn{grid-area:cart !important;justify-self:start !important}
+      .user-menu{grid-area:user !important;justify-self:stretch !important;min-width:0 !important}
+      #userBtn{width:100% !important;justify-content:center !important}
+      #shopMenuBtn{grid-area:menu !important;justify-self:end !important}
+      .hero{padding:18px 12px 16px !important}
+      .hero-shell{padding:24px 18px !important;gap:18px !important;justify-items:start !important}
+      .hero-brand{align-items:flex-start !important}
+      .hero-brand .hero-logo{height:88px !important}
+      .hero-copy h1{font-size:28px !important}
+      .hero-copy p{font-size:14px !important;max-width:none !important}
+      .hero-benefits{display:grid !important;grid-template-columns:1fr !important;gap:10px !important;max-width:none !important}
+      .hero-benefit-card{padding:14px 15px !important;border-radius:16px !important}
+      .hero-actions{width:100% !important}
+      .hero-primary-cta{width:100% !important;justify-content:center !important}
+      .shop-top-auth{padding:0 12px 10px !important}
+    }
+  </style>
 </head>
-<body class="shop-page">
+<body class="shop-page shop-entry-locked">
 
 <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
 
 <!-- NAVIGATION -->
 <div class="header">
   <div class="nav">
-    <div class="logo" id="logoHomeBtn" role="button" tabindex="0" aria-label="Zur Startseite" style="display:flex;align-items:center;gap:8px;cursor:pointer">
-      <img src="logo.png" alt="BarSclusive" style="height:60px">
-    </div>
+
     <div class="nav-links">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
@@ -994,46 +1858,31 @@
 </div>
 <div id="shopDrawerOverlay" class="cart-overlay"></div>
 
-
 <!-- HERO -->
 <div class="hero">
   <div class="hero-shell">
     <div class="hero-brand">
+      <span class="hero-badge" data-shop-i18n="entryBadge">BarSclusive Shop</span>
       <img src="logo.png" alt="BarSclusive" class="hero-logo">
     </div>
     <div class="hero-copy">
-      <span class="hero-badge" data-shop-i18n="entryBadge">BarSclusive Shop</span>
-      <h1 data-shop-i18n="heroTitle">Bar-Deals schneller finden und spontan besser ausgehen</h1>
-      <p data-shop-i18n="heroSub">Du musst nicht mehr selber recherchieren, wo in deiner Umgebung etwas läuft. Hier findest du auf einen Blick am gewünschten Tag, zur gewünschten Zeit und in der passenden Kategorie genau das, was du suchst.</p>
+      <h1 data-shop-i18n="heroTitle">🍹 Die besten Bar-Deals deiner Stadt</h1>
+      <p data-shop-i18n="heroSub">Exklusive Angebote für Breakfast, Brunch, Aperitif und Events</p>
       <div class="hero-benefits">
-        <div class="hero-benefit-card">
-          <div class="hero-benefit-title" data-shop-i18n="introBenefitNearbyTitle">Exklusive Deals in deiner Nähe</div>
-          <div class="hero-benefit-sub" data-shop-i18n="introBenefitNearbySub">Lokale Bars einfach entdecken und passende Angebote schneller finden.</div>
-        </div>
-        <div class="hero-benefit-card">
-          <div class="hero-benefit-title" data-shop-i18n="introBenefitMailTitle">Sofort per E-Mail erhalten</div>
-          <div class="hero-benefit-sub" data-shop-i18n="introBenefitMailSub">Nach dem Kauf ist dein Gutschein direkt digital verfügbar und bereit für später.</div>
-        </div>
-        <div class="hero-benefit-card">
-          <div class="hero-benefit-title" data-shop-i18n="introBenefitRefundTitle">48 Stunden Rückerstattung</div>
-          <div class="hero-benefit-sub" data-shop-i18n="introBenefitRefundSub">Mehr Flexibilität, falls sich deine Pläne kurzfristig ändern.</div>
-        </div>
-        <div class="hero-benefit-card">
-          <div class="hero-benefit-title" data-shop-i18n="introBenefitSmartTitle">Spontan ausgehen, clever sparen</div>
-          <div class="hero-benefit-sub" data-shop-i18n="introBenefitSmartSub">Weniger suchen, besser auswählen und den Abend entspannter planen.</div>
-        </div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitQuick">⚡ Schnell sichern</div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitLocal">🍸 Bars in deiner Nähe entdecken</div>
+        <div class="hero-benefit-card" data-shop-i18n="heroBenefitMobile">🎟️ Digital einlösbar</div>
       </div>
       <div class="hero-note" id="heroUtilityLine" data-shop-i18n="heroUtility">Heute kaufen, später entspannt einlösen.</div>
       <div class="hero-actions">
         <a href="#shopFocusArea" class="hero-primary-cta" id="btnDiscoverDeals" data-shop-i18n="discoverDeals">🍸 Jetzt Deals entdecken</a>
-        <a href="so-funktionierts.html" class="hero-meta-link" data-shop-i18n="introLearnMore">Weitere Details unter So funktioniert's</a>
       </div>
     </div>
   </div>
 </div>
 
-
 <!-- FILTER BAR -->
+<div id="shopDiscoverySection">
 <div class="filter-wrap" id="shopFocusArea">
   <div class="filter-bar">
     <div class="filter-row">
@@ -1113,6 +1962,7 @@
     <p class="section-subline" id="ordersSubline" data-shop-i18n="ordersSubline">Alle Gutscheine, Statusmeldungen und Rückerstattungen an einem Ort.</p>
     <div id="ordersList"></div>
   </div>
+</div>
 </div>
 
 <!-- FOOTER -->
