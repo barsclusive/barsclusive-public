@@ -2601,75 +2601,55 @@ applyProfileToForm = function(b) {
 })();
 
 
-// ===== PORTAL ENTRY COPY PATCH =====
+// ===== FINAL HEADER AUTH + CTA PATCH =====
 (function(){
-  ['de','en','it','fr'].forEach(function(lang){ if (!TRANSLATIONS[lang]) TRANSLATIONS[lang] = {}; });
-  Object.assign(TRANSLATIONS.de,{
-    portalEntryBadge:'BarSclusive Partnerbereich',
-    portalEntryTitle:'Neue Gäste gewinnen ohne laufende Fixkosten',
-    portalEntrySub:'Fülle ruhigere Zeiten gezielt mit neuen Gästen, erhöhe die Sichtbarkeit deiner Bar und zahle nur dann, wenn daraus echte Verkäufe entstehen.',
-    barIntroBenefitFreeTitle:'Kostenlose Registrierung',
-    barIntroBenefitFreeSub:'Starte ohne Einrichtungsgebühr und ohne unnötige Hürden.',
-    barIntroBenefitFixedTitle:'Keine laufenden Fixkosten',
-    barIntroBenefitFixedSub:'Kein Monatsabo und keine wiederkehrenden Grundgebühren.',
-    barIntroBenefitGuestsTitle:'Neue Gäste in schwachen Zeiten',
-    barIntroBenefitGuestsSub:'Setze gezielte Anreize, wenn du zusätzliche Frequenz brauchst.',
-    barIntroBenefitVisibilityTitle:'Mehr Sichtbarkeit für deine Bar',
-    barIntroBenefitVisibilitySub:'BarSclusive bringt dein Angebot genau dort ins Blickfeld, wo Gäste suchen.',
-    barIntroBenefitSalesTitle:'Du zahlst nur bei echten Verkäufen',
-    barIntroBenefitSalesSub:'Es fallen nur bei verkauften beziehungsweise eingelösten Gutscheinen Provisionen an.',
-    portalLearnMore:"Weitere Details unter So funktioniert's",
-    becomePartnerNow:'Jetzt Partner werden'
-  });
-  Object.assign(TRANSLATIONS.en,{
-    portalEntryBadge:'BarSclusive Partner area',
-    portalEntryTitle:'Win new guests without ongoing fixed costs',
-    portalEntrySub:'Fill quieter time slots with new guests, boost your bar visibility and only pay when real sales happen.',
-    barIntroBenefitFreeTitle:'Free registration',
-    barIntroBenefitFreeSub:'Start without setup fees and without unnecessary hurdles.',
-    barIntroBenefitFixedTitle:'No ongoing fixed costs',
-    barIntroBenefitFixedSub:'No monthly subscription and no recurring base fees.',
-    barIntroBenefitGuestsTitle:'New guests in slower periods',
-    barIntroBenefitGuestsSub:'Use targeted incentives when you need extra footfall.',
-    barIntroBenefitVisibilityTitle:'More visibility for your bar',
-    barIntroBenefitVisibilitySub:'BarSclusive puts your offer where guests are already searching.',
-    barIntroBenefitSalesTitle:'You only pay for real sales',
-    barIntroBenefitSalesSub:'Commissions are only due for vouchers that are actually sold or redeemed.',
-    portalLearnMore:'More details under How it works',
-    becomePartnerNow:'Become a partner now'
-  });
-  Object.assign(TRANSLATIONS.it,{
-    portalEntryBadge:'Area partner BarSclusive',
-    portalEntryTitle:'Ottieni nuovi ospiti senza costi fissi ricorrenti',
-    portalEntrySub:'Riempie i momenti più tranquilli con nuovi ospiti, aumenta la visibilità del tuo bar e paghi solo quando ci sono vere vendite.',
-    barIntroBenefitFreeTitle:'Registrazione gratuita',
-    barIntroBenefitFreeSub:'Parti senza costi di attivazione e senza ostacoli inutili.',
-    barIntroBenefitFixedTitle:'Nessun costo fisso ricorrente',
-    barIntroBenefitFixedSub:'Nessun abbonamento mensile e nessun costo base ricorrente.',
-    barIntroBenefitGuestsTitle:'Nuovi ospiti nei momenti più deboli',
-    barIntroBenefitGuestsSub:'Crea incentivi mirati quando hai bisogno di più affluenza.',
-    barIntroBenefitVisibilityTitle:'Più visibilità per il tuo bar',
-    barIntroBenefitVisibilitySub:'BarSclusive porta la tua offerta davanti agli ospiti che stanno già cercando.',
-    barIntroBenefitSalesTitle:'Paghi solo per vendite reali',
-    barIntroBenefitSalesSub:'Le commissioni si applicano solo ai voucher realmente venduti o riscattati.',
-    portalLearnMore:'Più dettagli in Come funziona',
-    becomePartnerNow:'Diventa partner ora'
-  });
-  Object.assign(TRANSLATIONS.fr,{
-    portalEntryBadge:'Espace partenaire BarSclusive',
-    portalEntryTitle:'Gagnez de nouveaux clients sans coûts fixes récurrents',
-    portalEntrySub:'Remplissez les périodes plus calmes avec de nouveaux clients, augmentez la visibilité de votre bar et ne payez que lorsqu il y a de vraies ventes.',
-    barIntroBenefitFreeTitle:'Inscription gratuite',
-    barIntroBenefitFreeSub:'Démarrez sans frais de mise en place et sans obstacles inutiles.',
-    barIntroBenefitFixedTitle:'Pas de coûts fixes récurrents',
-    barIntroBenefitFixedSub:'Aucun abonnement mensuel et aucun frais de base récurrent.',
-    barIntroBenefitGuestsTitle:'De nouveaux clients en période creuse',
-    barIntroBenefitGuestsSub:'Créez des incitations ciblées lorsque vous avez besoin de plus de fréquentation.',
-    barIntroBenefitVisibilityTitle:'Plus de visibilité pour votre bar',
-    barIntroBenefitVisibilitySub:'BarSclusive place votre offre exactement là où les clients cherchent déjà.',
-    barIntroBenefitSalesTitle:'Vous ne payez qu en cas de vraies ventes',
-    barIntroBenefitSalesSub:'Les commissions ne s appliquent qu aux vouchers réellement vendus ou utilisés.',
-    portalLearnMore:'Plus de détails dans Comment ça marche',
-    becomePartnerNow:'Devenir partenaire'
+  try {
+    Object.assign(TRANSLATIONS.de, { becomePartner:'Jetzt Partner werden', entryHowItWorks:"Weitere Details unter So funktioniert's" });
+    Object.assign(TRANSLATIONS.en, { becomePartner:'Become a partner now', entryHowItWorks:'More details under How it works' });
+    Object.assign(TRANSLATIONS.it, { becomePartner:'Diventa partner ora', entryHowItWorks:'Maggiori dettagli in Come funziona' });
+    Object.assign(TRANSLATIONS.fr, { becomePartner:'Devenir partenaire', entryHowItWorks:'Plus de détails dans Comment ça marche' });
+  } catch(e) {}
+
+  function syncBarHeaderAuthState(active){
+    var loginBtn = document.getElementById('barHeaderLoginBtn');
+    var registerBtn = document.getElementById('barHeaderRegisterBtn');
+    if (loginBtn) loginBtn.classList.toggle('active', active === 'login');
+    if (registerBtn) registerBtn.classList.toggle('active', active === 'register');
+  }
+
+  function focusBarAuth(name){
+    var loginForm = document.getElementById('loginForm');
+    var registerForm = document.getElementById('registerForm');
+    if (loginForm) loginForm.classList.toggle('active', name === 'login');
+    if (registerForm) registerForm.classList.toggle('active', name === 'register');
+    syncBarHeaderAuthState(name);
+    var target = name === 'register' ? registerForm : loginForm;
+    if (target) {
+      var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  }
+
+  var _prevShowAuthScreenPatch = typeof showAuthScreen === 'function' ? showAuthScreen : null;
+  if (_prevShowAuthScreenPatch) {
+    showAuthScreen = function(show){
+      _prevShowAuthScreenPatch(show);
+      var headerAuth = document.getElementById('barHeaderAuth');
+      if (headerAuth) headerAuth.style.display = show ? 'flex' : 'none';
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var headerLogin = document.getElementById('barHeaderLoginBtn');
+    var headerRegister = document.getElementById('barHeaderRegisterBtn');
+    var becomePartner = document.getElementById('btnBecomePartner');
+
+    if (headerLogin) headerLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login'); });
+    if (headerRegister) headerRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
+    if (becomePartner) becomePartner.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
+
+    syncBarHeaderAuthState('login');
+    var headerAuth = document.getElementById('barHeaderAuth');
+    if (headerAuth && typeof sessionGet === 'function' && sessionGet()) headerAuth.style.display = 'none';
   });
 })();
