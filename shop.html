@@ -1022,6 +1022,67 @@
       .hero-how-link{font-size:12.5px}
     }
   </style>
+
+
+  <style id="shop-discovery-active-layout">
+    body.shop-discovery-active .hero,
+    body.shop-discovery-active .shop-top-auth,
+    body.shop-discovery-active .shop-no-login-hint,
+    body.shop-discovery-active .hero-trust-strip,
+    body.shop-discovery-active .hero-utility-line,
+    body.shop-discovery-active .hero-primary-cta,
+    body.shop-discovery-active .hero-secondary-cta,
+    body.shop-discovery-active .header-deals-btn{display:none !important}
+
+    body.shop-discovery-active #shopDiscoverySection,
+    body.shop-discovery-active .footer{display:block}
+
+    @media(max-width:768px){
+      body.shop-discovery-active .header{padding:12px !important}
+      body.shop-discovery-active .nav{align-items:flex-start !important}
+      body.shop-discovery-active .nav-links{
+        display:grid !important;
+        grid-template-columns:1fr auto !important;
+        grid-template-areas:
+          'lang lang'
+          'search search'
+          'cart menu' !important;
+        width:100% !important;
+        gap:10px !important;
+        align-items:center !important;
+      }
+      body.shop-discovery-active .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang !important;
+        justify-content:flex-start !important;
+        margin-right:0 !important;
+        display:flex !important;
+        gap:8px !important;
+        flex-wrap:nowrap !important;
+        overflow-x:auto !important;
+      }
+      body.shop-discovery-active .search-wrap{
+        grid-area:search !important;
+        display:block !important;
+        max-width:none !important;
+        min-width:0 !important;
+      }
+      body.shop-discovery-active #cartOpenBtn{
+        grid-area:cart !important;
+        justify-self:start !important;
+        display:inline-flex !important;
+      }
+      body.shop-discovery-active .user-menu{
+        grid-area:cart !important;
+        justify-self:start !important;
+      }
+      body.shop-discovery-active #shopMenuBtn{
+        grid-area:menu !important;
+        justify-self:end !important;
+        margin-left:0 !important;
+      }
+    }
+  </style>
+
 </head>
 <body class="shop-page shop-entry-locked">
 
