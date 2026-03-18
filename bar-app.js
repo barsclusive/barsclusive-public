@@ -2561,10 +2561,10 @@ applyProfileToForm = function(b) {
 // ===== FINAL MERGE PATCH: sidebar + richer auth benefits =====
 (function(){
   try {
-    Object.assign(TRANSLATIONS.de, { menuTitle:'Mehr entdecken', menuNote:'Wichtige Infos schnell erreichbar, auch wenn weiter unten viele Inhalte sichtbar sind.', benefitFreeTitle:'Kostenlose Registrierung', benefitFreeSub:'Ohne Einrichtungsgebühr. Einfach loslegen.', benefitNoRunningTitle:'Keine laufenden Fixkosten', benefitNoRunningSub:'Kein Monatsabo und keine wiederkehrenden Kosten.', benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten', benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.', benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen', benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.', benefitReachTitle:'Mehr Sichtbarkeit für deine Bar, ohne Werbekosten', benefitReachSub:'BarSclusive bringt neue Gäste direkt zu dir.', barEntryHeadline:'Deine Bar auf BarSclusive', barEntrySub:'Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.', benefitCustomTitle:'Komplett personalisierbar', benefitCustomSub:'Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.'' });
-    Object.assign(TRANSLATIONS.en, { menuTitle:'Explore more', menuNote:'Important pages stay easy to reach, even when there is a lot to scroll through.', benefitFreeTitle:'Free registration', benefitFreeSub:'No setup fee. Just get started.', benefitNoRunningTitle:'No ongoing fixed costs', benefitNoRunningSub:'No monthly subscription and no recurring costs.', benefitGuestsTitle:'New guests at the times you choose', benefitGuestsSub:'Reach people exactly when you need them.', benefitOnlySalesTitle:'You only pay on actual sales', benefitOnlySalesSub:'Only sold vouchers include a commission.', benefitReachTitle:'More visibility for your bar, without ad costs', benefitReachSub:'BarSclusive brings new guests directly to you.', barEntryHeadline:'Your bar on BarSclusive', barEntrySub:'More guests, more visibility – no fixed costs and no risk.', benefitCustomTitle:'Fully customisable', benefitCustomSub:'Product, time frame and conditions – you decide everything.'' });
-    Object.assign(TRANSLATIONS.it, { menuTitle:'Scopri di più', menuNote:'Le informazioni importanti restano raggiungibili rapidamente, anche con molte sezioni nella pagina.', benefitFreeTitle:'Registrazione gratuita', benefitFreeSub:'Nessun costo di attivazione. Inizia subito.', benefitNoRunningTitle:'Nessun costo fisso ricorrente', benefitNoRunningSub:'Nessun abbonamento mensile e nessun costo ricorrente.', benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci', benefitGuestsSub:'Raggiungi le persone esattamente quando ne hai bisogno.', benefitOnlySalesTitle:'Paghi solo sulle vendite reali', benefitOnlySalesSub:'Solo i voucher venduti prevedono una commissione.', benefitReachTitle:'Più visibilità per il tuo bar, senza costi pubblicitari', benefitReachSub:'BarSclusive porta nuovi ospiti direttamente da te.', barEntryHeadline:'Il tuo bar su BarSclusive', barEntrySub:'Più ospiti, più visibilità – senza costi fissi e senza rischio.', benefitCustomTitle:'Completamente personalizzabile', benefitCustomSub:'Prodotto, periodo e condizioni – decidi tutto tu.'' });
-    Object.assign(TRANSLATIONS.fr, { menuTitle:'Découvrir plus', menuNote:'Les pages importantes restent accessibles rapidement, même quand le contenu est long.', benefitFreeTitle:'Inscription gratuite', benefitFreeSub:'Sans frais de mise en place. Lancez-vous.', benefitNoRunningTitle:'Pas de coûts fixes récurrents', benefitNoRunningSub:'Aucun abonnement mensuel ni coût récurrent.', benefitGuestsTitle:'De nouveaux clients aux horaires de ton choix', benefitGuestsSub:'Touchez des gens exactement quand vous en avez besoin.', benefitOnlySalesTitle:'Vous ne payez que sur les ventes réelles', benefitOnlySalesSub:'Seuls les bons vendus incluent une commission.', benefitReachTitle:'Plus de visibilité pour votre bar, sans frais publicitaires', benefitReachSub:'BarSclusive amène de nouveaux clients directement chez vous.', barEntryHeadline:'Votre bar sur BarSclusive', barEntrySub:'Plus de clients, plus de visibilité – sans coûts fixes et sans risque.', benefitCustomTitle:'Entièrement personnalisable', benefitCustomSub:'Produit, période et conditions – vous décidez de tout.'' });
+    Object.assign(TRANSLATIONS.de, { menuTitle:'Mehr entdecken', menuNote:'Wichtige Infos schnell erreichbar, auch wenn weiter unten viele Inhalte sichtbar sind.', benefitFreeTitle:'Kostenlose Registrierung', benefitFreeSub:'Ohne Einrichtungsgebühr.', benefitNoRunningTitle:'Keine laufenden Kosten', benefitNoRunningSub:'Kein Monatsabo und keine wiederkehrenden Fixkosten.', benefitFastTitle:'Deal in wenigen Minuten erstellt', benefitFastSub:'Schnell online, sauber geführt und direkt auf dem Handy bearbeitbar.', benefitPayoutTitle:'90 % Auszahlung', benefitPayoutSub:'Nach Einlösung bei Fixpreis-Deals.', benefitReachTitle:'Mehr Sichtbarkeit', benefitReachSub:'BarSclusive bringt neue Gäste direkt zu dir.' });
+    Object.assign(TRANSLATIONS.en, { menuTitle:'Explore more', menuNote:'Important pages stay easy to reach, even when there is a lot to scroll through.', benefitFreeTitle:'Free registration', benefitFreeSub:'No setup fee.', benefitNoRunningTitle:'No ongoing costs', benefitNoRunningSub:'No monthly subscription and no recurring fixed costs.', benefitFastTitle:'Create a deal in minutes', benefitFastSub:'Quick to publish, clearly guided and easy to manage on mobile.', benefitPayoutTitle:'90% payout', benefitPayoutSub:'After redemption for fixed-price deals.', benefitReachTitle:'More visibility', benefitReachSub:'BarSclusive brings new guests directly to you.' });
+    Object.assign(TRANSLATIONS.it, { menuTitle:'Scopri di più', menuNote:'Le informazioni importanti restano raggiungibili rapidamente, anche con molte sezioni nella pagina.', benefitFreeTitle:'Registrazione gratuita', benefitFreeSub:'Nessun costo di attivazione.', benefitNoRunningTitle:'Nessun costo ricorrente', benefitNoRunningSub:'Nessun abbonamento mensile e nessun costo fisso ricorrente.', benefitFastTitle:'Deal creato in pochi minuti', benefitFastSub:'Online in fretta, guidato bene e facile da gestire da mobile.', benefitPayoutTitle:'90% di payout', benefitPayoutSub:'Dopo il riscatto per i deal a prezzo fisso.', benefitReachTitle:'Più visibilità', benefitReachSub:'BarSclusive porta nuovi ospiti direttamente da te.' });
+    Object.assign(TRANSLATIONS.fr, { menuTitle:'Découvrir plus', menuNote:'Les pages importantes restent accessibles rapidement, même quand le contenu est long.', benefitFreeTitle:'Inscription gratuite', benefitFreeSub:'Sans frais de mise en place.', benefitNoRunningTitle:'Pas de coûts récurrents', benefitNoRunningSub:'Aucun abonnement mensuel ni coût fixe récurrent.', benefitFastTitle:'Offre créée en quelques minutes', benefitFastSub:'Mise en ligne rapide, guidée clairement et facile à gérer sur mobile.', benefitPayoutTitle:'90 % de versement', benefitPayoutSub:'Après utilisation pour les offres à prix fixe.', benefitReachTitle:'Plus de visibilité', benefitReachSub:'BarSclusive amène de nouveaux clients directement chez vous.' });
   } catch(e) {}
 
   function openBarDrawer() {
@@ -2617,14 +2617,7 @@ applyProfileToForm = function(b) {
     if (registerBtn) registerBtn.classList.toggle('active', active === 'register');
   }
 
-  function unlockBarEntry(){
-    document.body.classList.remove('bar-entry-locked');
-    var footer = document.querySelector('.footer');
-    if (footer) footer.style.display = '';
-  }
-
   function focusBarAuth(name){
-    unlockBarEntry();
     var loginForm = document.getElementById('loginForm');
     var registerForm = document.getElementById('registerForm');
     if (loginForm) loginForm.classList.toggle('active', name === 'login');
@@ -2643,7 +2636,6 @@ applyProfileToForm = function(b) {
       _prevShowAuthScreenPatch(show);
       var headerAuth = document.getElementById('barHeaderAuth');
       if (headerAuth) headerAuth.style.display = show ? 'flex' : 'none';
-      if (!show) unlockBarEntry();
     };
   }
 
@@ -2651,14 +2643,10 @@ applyProfileToForm = function(b) {
     var headerLogin = document.getElementById('barHeaderLoginBtn');
     var headerRegister = document.getElementById('barHeaderRegisterBtn');
     var becomePartner = document.getElementById('btnBecomePartner');
-    var entryLogin = document.getElementById('btnBarEntryLogin');
-    var entryRegister = document.getElementById('btnBarEntryRegister');
 
     if (headerLogin) headerLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login'); });
     if (headerRegister) headerRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
     if (becomePartner) becomePartner.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
-    if (entryLogin) entryLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login'); });
-    if (entryRegister) entryRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
 
     syncBarHeaderAuthState('login');
     var headerAuth = document.getElementById('barHeaderAuth');
