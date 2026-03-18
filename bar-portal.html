@@ -199,24 +199,6 @@
     .auth-shell{max-width:920px;margin:0 auto}
     @media(max-width:768px){.auth-benefits{grid-template-columns:1fr}.benefit-card{padding:18px}}
 
-
-    .header-right{gap:10px;margin-left:auto}
-    #barMenuBtn{margin-left:auto;min-width:46px;border-radius:16px;background:#17171b}
-    .benefit-card{position:relative;overflow:hidden;border-radius:26px;padding:22px;box-shadow:0 22px 36px rgba(0,0,0,.24)}
-    .benefit-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at top left,rgba(255,255,255,.14),transparent 48%);pointer-events:none}
-    .benefit-card-pink{background:linear-gradient(135deg,rgba(255,51,102,.24),rgba(19,19,24,.95) 68%)}
-    .benefit-card-amber{background:linear-gradient(135deg,rgba(255,193,7,.18),rgba(19,19,24,.96) 68%)}
-    .benefit-card-violet{background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(19,19,24,.96) 68%)}
-    .benefit-card-blue{background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(19,19,24,.96) 68%)}
-    .benefit-card-green{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(19,19,24,.96) 68%)}
-    @media(max-width:768px){
-      .header{padding:14px 15px;gap:10px}
-      .header-right{width:100%;justify-content:flex-end;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
-      .header-right::-webkit-scrollbar{display:none}
-      .benefit-card{padding:20px}
-      .side-drawer{width:min(340px,86vw)}
-    }
-
   </style>
 
   <style id="bar-header-auth-fix">
@@ -235,8 +217,32 @@
       .entry-cta-wrap{margin:6px auto 24px}
     }
   </style>
+
+  <style id="bar-entry-lock">
+    .bar-entry-hero{text-align:center;padding:10px 0 24px;max-width:760px;margin:0 auto}
+    .bar-entry-logo{height:120px;width:auto;filter:drop-shadow(0 16px 32px rgba(0,0,0,.34));margin-bottom:18px}
+    .bar-entry-headline{font-size:clamp(26px,4vw,42px);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:10px}
+    .bar-entry-sub{font-size:16px;color:#b0b0b8;max-width:520px;margin:0 auto;line-height:1.5}
+    .entry-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:420px;margin:0 auto 28px}
+    .entry-cta-wrap .btn-pink,.entry-cta-wrap .btn-ghost{width:100%}
+    .entry-cta-link{text-align:center}
+    .auth-benefits .benefit-card-pink{background:linear-gradient(135deg,rgba(255,51,102,.24),rgba(19,19,24,.95) 68%)}
+    .auth-benefits .benefit-card-amber{background:linear-gradient(135deg,rgba(255,193,7,.18),rgba(19,19,24,.96) 68%)}
+    .auth-benefits .benefit-card-violet{background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(19,19,24,.96) 68%)}
+    .auth-benefits .benefit-card-blue{background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(19,19,24,.96) 68%)}
+    .auth-benefits .benefit-card-green{background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(19,19,24,.96) 68%)}
+    body.bar-entry-locked #loginForm,
+    body.bar-entry-locked #registerForm{display:none !important}
+    body.bar-entry-locked .footer{display:none}
+    @media(max-width:768px){
+      .bar-entry-logo{height:96px}
+      .bar-entry-hero{padding:6px 0 18px}
+      .bar-entry-sub{font-size:14px}
+      .entry-cta-wrap{max-width:none;padding:0 4px}
+    }
+  </style>
 </head>
-<body class="bar-portal-page">
+<body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
 
 <div class="header">
@@ -281,30 +287,41 @@
 <div id="loginScreen">
   <div class="container auth-shell">
 
+    <div class="bar-entry-hero" id="barEntryHero">
+      <img src="logo.png" alt="BarSclusive" class="bar-entry-logo">
+      <h1 class="bar-entry-headline" data-i18n="barEntryHeadline">Deine Bar auf BarSclusive</h1>
+      <p class="bar-entry-sub" data-i18n="barEntrySub">Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.</p>
+    </div>
+
     <div class="auth-benefits">
       <div class="benefit-card benefit-card-pink">
         <div class="benefit-title" data-i18n="benefitFreeTitle">Kostenlose Registrierung</div>
-        <div class="benefit-sub" data-i18n="benefitFreeSub">Ohne Einrichtungsgebühr.</div>
+        <div class="benefit-sub" data-i18n="benefitFreeSub">Ohne Einrichtungsgebühr. Einfach loslegen.</div>
       </div>
       <div class="benefit-card benefit-card-amber">
         <div class="benefit-title" data-i18n="benefitNoRunningTitle">Keine laufenden Fixkosten</div>
-        <div class="benefit-sub" data-i18n="benefitNoRunningSub">Kein Monatsabo und keine wiederkehrenden Grundgebühren.</div>
+        <div class="benefit-sub" data-i18n="benefitNoRunningSub">Kein Monatsabo und keine wiederkehrenden Kosten.</div>
       </div>
       <div class="benefit-card benefit-card-violet">
-        <div class="benefit-title" data-i18n="benefitFastTitle">Neue Gäste in schwachen Zeiten</div>
-        <div class="benefit-sub" data-i18n="benefitFastSub">Setze gezielte Anreize, wenn du zusätzliche Frequenz brauchst.</div>
+        <div class="benefit-title" data-i18n="benefitGuestsTitle">Neue Gäste in deinen gewünschten Zeiten</div>
+        <div class="benefit-sub" data-i18n="benefitGuestsSub">Erreiche Leute genau dann, wenn du sie brauchst.</div>
       </div>
       <div class="benefit-card benefit-card-blue">
-        <div class="benefit-title" data-i18n="benefitPayoutTitle">Du zahlst nur bei echten Verkäufen</div>
-        <div class="benefit-sub" data-i18n="benefitPayoutSub">Es fallen nur bei verkauften beziehungsweise eingelösten Gutscheinen Provisionen an.</div>
+        <div class="benefit-title" data-i18n="benefitOnlySalesTitle">Du zahlst nur bei echten Verkäufen</div>
+        <div class="benefit-sub" data-i18n="benefitOnlySalesSub">Nur verkaufte Gutscheine beinhalten eine Provision.</div>
       </div>
       <div class="benefit-card benefit-card-green">
-        <div class="benefit-title" data-i18n="benefitReachTitle">Mehr Sichtbarkeit für deine Bar</div>
-        <div class="benefit-sub" data-i18n="benefitReachSub">BarSclusive bringt dein Angebot genau dort ins Blickfeld, wo Gäste suchen.</div>
+        <div class="benefit-title" data-i18n="benefitReachTitle">Mehr Sichtbarkeit für deine Bar, ohne Werbekosten</div>
+        <div class="benefit-sub" data-i18n="benefitReachSub">BarSclusive bringt neue Gäste direkt zu dir.</div>
+      </div>
+      <div class="benefit-card benefit-card-pink">
+        <div class="benefit-title" data-i18n="benefitCustomTitle">Komplett personalisierbar</div>
+        <div class="benefit-sub" data-i18n="benefitCustomSub">Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.</div>
       </div>
     </div>
     <div class="entry-cta-wrap">
-      <button class="btn-pink entry-cta-btn" id="btnBecomePartner" type="button" data-i18n="becomePartner">Jetzt Partner werden</button>
+      <button class="btn-pink entry-cta-btn" id="btnBarEntryLogin" type="button" data-i18n="login">Einloggen</button>
+      <button class="btn-ghost entry-cta-btn" id="btnBarEntryRegister" type="button" data-i18n="registerBtn">Jetzt registrieren</button>
       <a href="so-funktionierts.html" class="entry-cta-link" data-i18n="entryHowItWorks">Weitere Details unter So funktioniert's</a>
     </div>
     <div id="loginForm" class="tab-content active">
