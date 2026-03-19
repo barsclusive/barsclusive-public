@@ -2672,3 +2672,140 @@ document.addEventListener('DOMContentLoaded', function(){
   setTimeout(refreshEntryTranslationsNow, 120);
 });
 
+
+
+// ===== STABLE AUTH + ENTRY TRANSLATION PATCH =====
+(function(){
+  try {
+    Object.assign(TRANSLATIONS.de, {
+      barEntryHeadline:'Deine Bar auf BarSclusive',
+      barEntrySub:'Mehr Sichtbarkeit, neue Gäste und keine laufenden Fixkosten.',
+      benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',
+      benefitGuestsSub:'Setze gezielte Anreize, wenn du zusätzliche Frequenz brauchst.',
+      benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',
+      benefitOnlySalesSub:'Provisionen fallen nur bei verkauften beziehungsweise eingelösten Gutscheinen an.',
+      benefitCustomTitle:'Mehr Sichtbarkeit für deine Bar',
+      benefitCustomSub:'BarSclusive bringt dein Angebot genau dort ins Blickfeld, wo Gäste suchen.'
+    });
+    Object.assign(TRANSLATIONS.en, {
+      barEntryHeadline:'Your bar on BarSclusive',
+      barEntrySub:'More visibility, new guests and no ongoing fixed costs.',
+      benefitGuestsTitle:'New guests in the times you want',
+      benefitGuestsSub:'Create targeted incentives when you need additional footfall.',
+      benefitOnlySalesTitle:'You only pay for real sales',
+      benefitOnlySalesSub:'Commissions only apply to vouchers that are sold or redeemed.',
+      benefitCustomTitle:'More visibility for your bar',
+      benefitCustomSub:'BarSclusive puts your offer right where guests are searching.'
+    });
+    Object.assign(TRANSLATIONS.it, {
+      barEntryHeadline:'Il tuo bar su BarSclusive',
+      barEntrySub:'Più visibilità, nuovi ospiti e nessun costo fisso ricorrente.',
+      benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci',
+      benefitGuestsSub:'Crea incentivi mirati quando hai bisogno di più frequenza.',
+      benefitOnlySalesTitle:'Paghi solo per vendite reali',
+      benefitOnlySalesSub:'Le commissioni si applicano solo ai voucher venduti o riscattati.',
+      benefitCustomTitle:'Più visibilità per il tuo bar',
+      benefitCustomSub:'BarSclusive porta la tua offerta proprio dove gli ospiti stanno cercando.'
+    });
+    Object.assign(TRANSLATIONS.fr, {
+      barEntryHeadline:'Votre bar sur BarSclusive',
+      barEntrySub:'Plus de visibilité, de nouveaux clients et aucun coût fixe récurrent.',
+      benefitGuestsTitle:'De nouveaux clients aux moments souhaités',
+      benefitGuestsSub:'Créez des incitations ciblées quand vous avez besoin de plus de fréquentation.',
+      benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes',
+      benefitOnlySalesSub:'Les commissions s’appliquent uniquement aux bons vendus ou utilisés.',
+      benefitCustomTitle:'Plus de visibilité pour votre bar',
+      benefitCustomSub:'BarSclusive met votre offre en avant exactement là où les clients recherchent.'
+    });
+  } catch (e) {}
+
+  function setBarEntryLocked(locked) {
+    if (!document.body) return;
+    document.body.classList.toggle('bar-entry-locked', !!locked);
+  }
+
+  function syncBarAuthButtons(active) {
+    var loginBtn = document.getElementById('barHeaderLoginBtn');
+    var registerBtn = document.getElementById('barHeaderRegisterBtn');
+    if (loginBtn) loginBtn.classList.toggle('active', active === 'login');
+    if (registerBtn) registerBtn.classList.toggle('active', active === 'register');
+  }
+
+  function openBarAuthSection(target) {
+    var name = target === 'register' ? 'register' : 'login';
+    setBarEntryLocked(false);
+    var loginScreen = document.getElementById('loginScreen');
+    var dashboard = document.getElementById('barDashboard');
+    if (loginScreen) loginScreen.style.display = 'block';
+    if (dashboard) dashboard.style.display = 'none';
+    var headerAuth = document.getElementById('barHeaderAuth');
+    if (headerAuth) headerAuth.style.display = 'flex';
+    var logoutBtn = document.getElementById('btnLogout');
+    if (logoutBtn && !(typeof sessionGet === 'function' && sessionGet())) logoutBtn.style.display = 'none';
+    var loginForm = document.getElementById('loginForm');
+    var registerForm = document.getElementById('registerForm');
+    if (loginForm) loginForm.classList.toggle('active', name === 'login');
+    if (registerForm) registerForm.classList.toggle('active', name === 'register');
+    syncBarAuthButtons(name);
+    try { applyTranslations(); } catch (e) {}
+    var targetEl = name === 'register' ? registerForm : loginForm;
+    if (targetEl) {
+      var top = Math.max((targetEl.getBoundingClientRect().top + window.scrollY) - 88, 0);
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+  }
+
+  var _stableOrigShowAuthScreen = typeof showAuthScreen === 'function' ? showAuthScreen : null;
+  if (_stableOrigShowAuthScreen) {
+    showAuthScreen = function(show) {
+      _stableOrigShowAuthScreen(show);
+      var logged = !!(typeof sessionGet === 'function' && sessionGet());
+      var headerAuth = document.getElementById('barHeaderAuth');
+      if (show) {
+        if (headerAuth) headerAuth.style.display = 'flex';
+        if (!logged) {
+          setBarEntryLocked(true);
+          syncBarAuthButtons('login');
+        }
+      } else {
+        setBarEntryLocked(false);
+        if (headerAuth) headerAuth.style.display = 'none';
+      }
+      try { applyTranslations(); } catch (e) {}
+    };
+  }
+
+  var _stableOrigSetLang = typeof setLang === 'function' ? setLang : null;
+  if (_stableOrigSetLang) {
+    setLang = function(lang) {
+      _stableOrigSetLang(lang);
+      try { applyTranslations(); } catch (e) {}
+      var loginForm = document.getElementById('loginForm');
+      var registerForm = document.getElementById('registerForm');
+      syncBarAuthButtons(registerForm && registerForm.classList.contains('active') ? 'register' : 'login');
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    [
+      ['btnBarEntryLogin', 'login'],
+      ['btnBarEntryRegister', 'register'],
+      ['barHeaderLoginBtn', 'login'],
+      ['barHeaderRegisterBtn', 'register']
+    ].forEach(function(pair) {
+      var el = document.getElementById(pair[0]);
+      if (!el) return;
+      el.addEventListener('click', function(ev) {
+        ev.preventDefault();
+        openBarAuthSection(pair[1]);
+      });
+    });
+
+    setTimeout(function() {
+      if (!(typeof sessionGet === 'function' && sessionGet())) {
+        try { applyTranslations(); } catch (e) {}
+        syncBarAuthButtons('login');
+      }
+    }, 0);
+  });
+})();
