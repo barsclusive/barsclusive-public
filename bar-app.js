@@ -51,6 +51,20 @@ de: {
   locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
   zipReq:'PLZ *',
   mwstNumberLabel:'MWST-Nummer',
+  barEntryHeadline:'Deine Bar auf BarSclusive',
+  barEntrySub:'Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.',
+  benefitFreeTitle:'Kostenlose Registrierung',
+  benefitFreeSub:'Ohne Einrichtungsgebühr. Einfach loslegen.',
+  benefitNoRunningTitle:'Keine laufenden Fixkosten',
+  benefitNoRunningSub:'Kein Monatsabo und keine wiederkehrenden Kosten.',
+  benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',
+  benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.',
+  benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',
+  benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.',
+  benefitReachTitle:'Mehr Sichtbarkeit für deine Bar, ohne Werbekosten',
+  benefitReachSub:'BarSclusive bringt neue Gäste direkt zu dir.',
+  benefitCustomTitle:'Komplett personalisierbar',
+  benefitCustomSub:'Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.',
   portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
 },
 en: {
@@ -1722,11 +1736,6 @@ function trPayoutForVoucher_(voucher) {
   if (status === 'refunded') return t('noPayout');
   return payout === 'paid' ? t('payoutPaid') : t('payoutPending');
 }
-function effectiveBarPayout_(voucher) {
-  var status = String((voucher && voucher.status) || '').toLowerCase();
-  if (status === 'refunded') return 0;
-  return Number((voucher && voucher.bar_payout) || 0) || 0;
-}
 function getBarStatLabel_(filterKey) {
   if (filterKey === 'sold') return t('soldCount') || 'Verkauft';
   if (filterKey === 'redeemed') return t('redeemed') || 'Eingelöst';
@@ -1783,7 +1792,7 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<td>' + escHtml(String(v.deal_title || '')) + '</td>' +
       '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
       '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#22c55e">CHF ' + effectiveBarPayout_(v).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
       '<td>' + escHtml(trPayoutForVoucher_(v)) + '</td>' +
       '</tr>';
@@ -1803,7 +1812,7 @@ function renderVoucherPanel_(targetId, vouchers) {
     '<div class="money-grid">' +
       '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.price_paid)||0);},0).toFixed(2) + '</div></div>' +
       '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + effectiveBarPayout_(v);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
@@ -1843,7 +1852,7 @@ function openVoucherDetail(v) {
     '<div class="money-grid">' +
       '<div class="money-card"><div class="money-label">' + t('priceLbl') + '</div><div class="money-value">CHF ' + Number(v.price_paid||0).toFixed(2) + '</div></div>' +
       '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + Number(v.platform_fee||0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + effectiveBarPayout_(v).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="font-size:14px;font-weight:700;margin-bottom:8px">' + escHtml(v.deal_title || '') + '</div>' +
     '<div style="color:#999;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
@@ -1875,9 +1884,9 @@ function renderBarStats(period) {
   var notRedeemed = vouchers.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; }).length;
   var gross = vouchers.reduce(function(a,v){ return a + (Number(v.price_paid)||0); }, 0);
   var fees = vouchers.reduce(function(a,v){ return a + (Number(v.platform_fee)||0); }, 0);
-  var net = vouchers.reduce(function(a,v){ return a + effectiveBarPayout_(v); }, 0);
-  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + effectiveBarPayout_(v); }, 0);
-  var paid = vouchers.filter(function(v){ return v.status !== 'refunded' && v.payout_status === 'paid'; }).reduce(function(a,v){ return a + effectiveBarPayout_(v); }, 0);
+  var net = vouchers.reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var paid = vouchers.filter(function(v){ return v.payout_status === 'paid'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
 
   var grid = document.getElementById('statsGrid'); if (!grid) return;
   grid.innerHTML = '';
@@ -1909,7 +1918,7 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   if (filterKey === 'redeemed') items = items.filter(function(v){ return v.status === 'redeemed'; });
   else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
   else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
-  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.status !== 'refunded' && v.payout_status === 'paid'; });
+  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
   detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
   renderVoucherPanel_('overviewVoucherPanel', items);
 }
