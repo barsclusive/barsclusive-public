@@ -51,7 +51,7 @@ de: {
   locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
   zipReq:'PLZ *',
   mwstNumberLabel:'MWST-Nummer',
-  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)', barEntryHeadline:'Deine Bar auf BarSclusive', barEntrySub:'Mehr Gäste, mehr Sichtbarkeit ohne Fixkosten und ohne Risiko.', benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten', benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.', benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen', benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.', benefitCustomTitle:'Komplett personalisierbar', benefitCustomSub:'Produkt, Zeitraum und Konditionen bestimmst du selbst.'
+  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
 },
 en: {
   logout:'Logout', login:'Login', register:'Register',
@@ -97,7 +97,7 @@ en: {
   locationHelp:'Taken from the selected address and can be fine-tuned on the map.',
   zipReq:'ZIP *',
   mwstNumberLabel:'VAT number',
-  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)', barEntryHeadline:'Your bar on BarSclusive', barEntrySub:'More guests, more visibility, without fixed costs and without risk.', benefitGuestsTitle:'New guests in your preferred time slots', benefitGuestsSub:'Reach people exactly when you need them.', benefitOnlySalesTitle:'You only pay for real sales', benefitOnlySalesSub:'Commission only applies to vouchers that are actually sold.', benefitCustomTitle:'Fully customizable', benefitCustomSub:'Product, timing and conditions are entirely up to you.'
+  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)'
 },
 it: {
   logout:'Esci', login:'Login', register:'Registrati',
@@ -143,7 +143,7 @@ it: {
   locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.',
   zipReq:'CAP *',
   mwstNumberLabel:'Numero IVA',
-  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)', barEntryHeadline:'Il tuo bar su BarSclusive', barEntrySub:'Più ospiti, più visibilità, senza costi fissi e senza rischi.', benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci', benefitGuestsSub:'Raggiungi le persone proprio quando ti servono.', benefitOnlySalesTitle:'Paghi solo per vendite reali', benefitOnlySalesSub:'La commissione si applica solo ai voucher davvero venduti.', benefitCustomTitle:'Completamente personalizzabile', benefitCustomSub:'Prodotto, periodo e condizioni li decidi tu.'
+  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)'
 },
 fr: {
   logout:'Déconnexion', login:'Connexion', register:'Inscription',
@@ -189,7 +189,7 @@ fr: {
   locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.',
   zipReq:'NPA *',
   mwstNumberLabel:'Numéro TVA',
-  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)', barEntryHeadline:'Votre bar sur BarSclusive', barEntrySub:'Plus de clients, plus de visibilité, sans coûts fixes et sans risque.', benefitGuestsTitle:'De nouveaux clients aux moments que vous choisissez', benefitGuestsSub:'Touchez les bonnes personnes exactement quand vous en avez besoin.', benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes', benefitOnlySalesSub:'La commission ne s’applique qu’aux bons réellement vendus.', benefitCustomTitle:'Entièrement personnalisable', benefitCustomSub:'Produit, période et conditions, vous décidez de tout.'
+  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)'
 }
 };
 
@@ -710,20 +710,20 @@ function ensureBarFilterBar() {
     btn.className = 'bar-stats-filter-btn';
     btn.dataset.period = f[0];
     btn.textContent = f[1][currentLang] || f[1].de;
-    btn.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+    btn.style.cssText = 'background:#827a56;color:#fffaf0;border:1px solid #98875e;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
     btn.addEventListener('click', function() { _barStatsPeriod = f[0]; highlightBarFilterBtn(f[0]); renderBarStats(f[0]); });
     wrap.appendChild(btn);
   });
   var fromInp = document.createElement('input'); fromInp.type='date'; fromInp.id='barSfFrom';
-  fromInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
+  fromInp.style.cssText = 'background:#827a56;color:#fffaf0;border:1px solid #98875e;padding:4px 8px;border-radius:6px;font-size:12px';
   wrap.appendChild(fromInp);
-  var span = document.createElement('span'); span.textContent='–'; span.style.cssText='color:#666;font-size:12px';
+  var span = document.createElement('span'); span.textContent='–'; span.style.cssText='color:#8f7b5b;font-size:12px';
   wrap.appendChild(span);
   var toInp = document.createElement('input'); toInp.type='date'; toInp.id='barSfTo';
-  toInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
+  toInp.style.cssText = 'background:#827a56;color:#fffaf0;border:1px solid #98875e;padding:4px 8px;border-radius:6px;font-size:12px';
   wrap.appendChild(toInp);
   var applyBtn = document.createElement('button'); applyBtn.textContent='OK';
-  applyBtn.style.cssText = 'background:#FF3366;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+  applyBtn.style.cssText = 'background:#b7772d;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
   applyBtn.addEventListener('click', function() {
     var f = document.getElementById('barSfFrom'), tt = document.getElementById('barSfTo');
     if (!f || !f.value) { showToast(currentLang === 'de' ? 'Bitte Von-Datum wählen' : currentLang === 'en' ? 'Please choose a from date' : currentLang === 'it' ? 'Seleziona una data iniziale' : 'Veuillez choisir une date de début', true); return; }
@@ -740,8 +740,8 @@ function ensureBarFilterBar() {
 
 function highlightBarFilterBtn(period) {
   document.querySelectorAll('.bar-stats-filter-btn').forEach(function(b) {
-    if (b.dataset.period === period) { b.style.background='#FF3366'; b.style.color='#fff'; b.style.borderColor='#FF3366'; }
-    else { b.style.background='#222'; b.style.color='#ccc'; b.style.borderColor='#333'; }
+    if (b.dataset.period === period) { b.style.background='#b7772d'; b.style.color='#fff'; b.style.borderColor='#b7772d'; }
+    else { b.style.background='#827a56'; b.style.color='#fffaf0'; b.style.borderColor='#98875e'; }
   });
 }
 
@@ -767,7 +767,7 @@ async function loadBarStats(period) {
   }
 
   var grid = document.getElementById('statsGrid');
-  grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
+  grid.innerHTML = '<div style="color:#8a7758;padding:20px">Laden...</div>';
 
   if (_dataCache.statsLoading) return;
   _dataCache.statsLoading = true;
@@ -814,10 +814,10 @@ function renderBarStats(period) {
   cardsDiv.className = 'stats-grid';
   [
     [t('soldCount') || 'Verkauft', sold, '#fff', 'sold'],
-    [t('redeemed') || 'Eingelöst', redeemed, '#22c55e', 'redeemed'],
-    [t('notRedeemed') || 'Nicht eingelöst', notRedeemed, '#f59e0b', 'not_redeemed'],
-    [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
-    [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
+    [t('redeemed') || 'Eingelöst', redeemed, '#7f8351', 'redeemed'],
+    [t('notRedeemed') || 'Nicht eingelöst', notRedeemed, '#c59144', 'not_redeemed'],
+    [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#b07142', 'pending_payout'],
+    [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#8f7d58', 'paid_out'],
     [t('activeDeals') || 'Aktive Deals', _barStatsDeals, '#fff', null],
   ].forEach(function(s) {
     var card = document.createElement('div'); card.className = 'stat-card';
@@ -841,13 +841,13 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   else if (filterKey === 'paid_out') items = filteredVouchers.filter(function(v) { return v.payout_status === 'paid'; });
   else { detailEl.innerHTML = ''; return; }
 
-  if (!items.length) { detailEl.innerHTML = '<div style="color:#666;text-align:center;padding:20px">Keine Daten für diesen Zeitraum</div>'; return; }
+  if (!items.length) { detailEl.innerHTML = '<div style="color:#8f7b5b;text-align:center;padding:20px">Keine Daten für diesen Zeitraum</div>'; return; }
   var html = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + label + ' (' + items.length + ')</div>';
   html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>Datum</th><th>Code</th><th>Deal</th><th>Preis</th><th>Status</th><th>Auszahl.</th></tr></thead><tbody>';
   items.forEach(function(v) {
-    var sc = v.status === 'redeemed' ? '#22c55e' : v.status === 'refunded' ? '#ef4444' : '#f59e0b';
+    var sc = v.status === 'redeemed' ? '#7f8351' : v.status === 'refunded' ? '#b07142' : '#c59144';
     var st = v.status === 'redeemed' ? 'Eingelöst' : v.status === 'refunded' ? 'Erstattet' : 'Offen';
-    var pc = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
+    var pc = v.payout_status === 'paid' ? '#8f7d58' : '#b07142';
     var pt = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
     html += '<tr><td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-') + '</td><td style="font-family:monospace">' + ((v.code_display || v.code) || '-') + '</td><td>' + (v.deal_title || '-') + '</td><td style="text-align:right">' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + st + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td></tr>';
   });
@@ -863,7 +863,7 @@ async function loadMyDeals() {
   if (_dataCache.deals) { renderMyDeals(_dataCache.deals); }
   else {
     var el = document.getElementById('dealList');
-    el.innerHTML = '<div class="empty" style="padding:20px;color:#999">Laden...</div>';
+    el.innerHTML = '<div class="empty" style="padding:20px;color:#8a7758">Laden...</div>';
   }
   // Refresh in background
   if (_dataCache.dealsLoading) return;
@@ -918,7 +918,7 @@ function renderMyDeals(deals) {
     btnEdit.addEventListener('click', function() { openEditModal(d); });
 
     var btnDel = document.createElement('button');
-    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#2a2a2a;color:#ef4444;border:1px solid #ef4444;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
+    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#867d58;color:#b07142;border:1px solid #b07142;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
     btnDel.textContent = t('deleteDealBtn') || 'Löschen';
     (function(dealId) { btnDel.addEventListener('click', function() { deleteDeal(dealId); }); })(d.id);
 
@@ -1059,7 +1059,7 @@ async function loadMyVouchers() {
   if (_dataCache.vouchers) { renderVouchers(_dataCache.vouchers); }
   else {
     var tbody = document.getElementById('voucherBody');
-    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#999">Laden...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:20px;text-align:center;color:#8a7758">Laden...</td></tr>';
   }
   if (_dataCache.vouchersLoading) return;
   _dataCache.vouchersLoading = true;
@@ -1742,8 +1742,8 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<td style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</td>' +
       '<td>' + escHtml(String(v.deal_title || '')) + '</td>' +
       '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#b07142">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#7f8351">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
       '<td>' + escHtml(trPayout_(v.payout_status)) + '</td>' +
       '</tr>';
@@ -1762,12 +1762,12 @@ function renderVoucherPanel_(targetId, vouchers) {
     '</div>' +
     '<div class="money-grid">' +
       '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.price_paid)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#b07142">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#7f8351">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
     '</div>' +
-    '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
+    '<div style="color:#8a7758;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
-      (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
+      (rows || '<tr><td colspan="8" style="padding:18px;color:#8f7b5b;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
   var sEl = document.getElementById('voucherFilterStatus'); if (sEl) sEl.value = f.status;
   var pEl = document.getElementById('voucherFilterPayout'); if (pEl) pEl.value = f.payout;
@@ -1802,11 +1802,11 @@ function openVoucherDetail(v) {
   body.innerHTML = '' +
     '<div class="money-grid">' +
       '<div class="money-card"><div class="money-label">' + t('priceLbl') + '</div><div class="money-value">CHF ' + Number(v.price_paid||0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + Number(v.platform_fee||0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#b07142">CHF ' + Number(v.platform_fee||0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#7f8351">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="font-size:14px;font-weight:700;margin-bottom:8px">' + escHtml(v.deal_title || '') + '</div>' +
-    '<div style="color:#999;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
+    '<div style="color:#8a7758;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
     '<div class="timeline-list">' + timeline.map(function(it){ return '<div class="timeline-item"><div class="timeline-dot"></div><div><div class="timeline-title">' + escHtml(it.title) + '</div><div class="timeline-meta">' + escHtml(fmtDateTime_(it.when)) + (it.meta ? ' · ' + escHtml(it.meta) : '') + '</div></div></div>'; }).join('') + '</div>';
   modal.classList.add('active');
 }
@@ -1844,13 +1844,13 @@ function renderBarStats(period) {
   var cardsDiv = document.createElement('div'); cardsDiv.className = 'stats-grid';
   [
     [t('soldCount'), sold, '#fff', 'sold'],
-    [t('redeemed'), redeemed, '#22c55e', 'redeemed'],
-    [t('notRedeemed'), notRedeemed, '#f59e0b', 'not_redeemed'],
+    [t('redeemed'), redeemed, '#7f8351', 'redeemed'],
+    [t('notRedeemed'), notRedeemed, '#c59144', 'not_redeemed'],
     [t('grossSales'), gross.toFixed(2) + ' CHF', '#fff', 'all'],
-    [t('commissionLbl'), fees.toFixed(2) + ' CHF', '#ef4444', 'all'],
-    [t('netRevenue'), net.toFixed(2) + ' CHF', '#22c55e', 'all'],
-    [t('pendingPayout'), pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
-    [t('paidOut'), paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
+    [t('commissionLbl'), fees.toFixed(2) + ' CHF', '#b07142', 'all'],
+    [t('netRevenue'), net.toFixed(2) + ' CHF', '#7f8351', 'all'],
+    [t('pendingPayout'), pending.toFixed(2) + ' CHF', '#b07142', 'pending_payout'],
+    [t('paidOut'), paid.toFixed(2) + ' CHF', '#8f7d58', 'paid_out'],
     [t('activeDeals'), _barStatsDeals, '#fff', null]
   ].forEach(function(s) {
     var card = document.createElement('div'); card.className = 'stat-card';
@@ -2617,12 +2617,7 @@ applyProfileToForm = function(b) {
     if (registerBtn) registerBtn.classList.toggle('active', active === 'register');
   }
 
-  function focusBarAuth(name, event){
-    if (event) {
-      if (typeof event.preventDefault === 'function') event.preventDefault();
-      if (typeof event.stopPropagation === 'function') event.stopPropagation();
-    }
-    document.body.classList.remove('bar-entry-locked');
+  function focusBarAuth(name){
     var loginForm = document.getElementById('loginForm');
     var registerForm = document.getElementById('registerForm');
     if (loginForm) loginForm.classList.toggle('active', name === 'login');
@@ -2633,9 +2628,7 @@ applyProfileToForm = function(b) {
       var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
       window.scrollTo({ top: top, behavior: 'smooth' });
     }
-    return false;
   }
-  window.focusBarEntryAuth = focusBarAuth;
 
   var _prevShowAuthScreenPatch = typeof showAuthScreen === 'function' ? showAuthScreen : null;
   if (_prevShowAuthScreenPatch) {
@@ -2651,13 +2644,9 @@ applyProfileToForm = function(b) {
     var headerRegister = document.getElementById('barHeaderRegisterBtn');
     var becomePartner = document.getElementById('btnBecomePartner');
 
-    if (headerLogin) headerLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login', ev); });
-    if (headerRegister) headerRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register', ev); });
-    var entryLogin = document.getElementById('btnBarEntryLogin');
-    var entryRegister = document.getElementById('btnBarEntryRegister');
-    if (entryLogin) entryLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login', ev); });
-    if (entryRegister) entryRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register', ev); });
-    if (becomePartner) becomePartner.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register', ev); });
+    if (headerLogin) headerLogin.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('login'); });
+    if (headerRegister) headerRegister.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
+    if (becomePartner) becomePartner.addEventListener('click', function(ev){ ev.preventDefault(); focusBarAuth('register'); });
 
     syncBarHeaderAuthState('login');
     var headerAuth = document.getElementById('barHeaderAuth');
