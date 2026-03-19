@@ -1722,6 +1722,11 @@ function trPayoutForVoucher_(voucher) {
   if (status === 'refunded') return t('noPayout');
   return payout === 'paid' ? t('payoutPaid') : t('payoutPending');
 }
+function effectiveBarPayout_(voucher) {
+  var status = String((voucher && voucher.status) || '').toLowerCase();
+  if (status === 'refunded') return 0;
+  return Number((voucher && voucher.bar_payout) || 0) || 0;
+}
 function getBarStatLabel_(filterKey) {
   if (filterKey === 'sold') return t('soldCount') || 'Verkauft';
   if (filterKey === 'redeemed') return t('redeemed') || 'Eingelöst';
@@ -1778,7 +1783,7 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<td>' + escHtml(String(v.deal_title || '')) + '</td>' +
       '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
       '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#22c55e">CHF ' + effectiveBarPayout_(v).toFixed(2) + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
       '<td>' + escHtml(trPayoutForVoucher_(v)) + '</td>' +
       '</tr>';
@@ -1798,7 +1803,7 @@ function renderVoucherPanel_(targetId, vouchers) {
     '<div class="money-grid">' +
       '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.price_paid)||0);},0).toFixed(2) + '</div></div>' +
       '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + effectiveBarPayout_(v);},0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
@@ -1838,7 +1843,7 @@ function openVoucherDetail(v) {
     '<div class="money-grid">' +
       '<div class="money-card"><div class="money-label">' + t('priceLbl') + '</div><div class="money-value">CHF ' + Number(v.price_paid||0).toFixed(2) + '</div></div>' +
       '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + Number(v.platform_fee||0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + effectiveBarPayout_(v).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="font-size:14px;font-weight:700;margin-bottom:8px">' + escHtml(v.deal_title || '') + '</div>' +
     '<div style="color:#999;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
@@ -1870,9 +1875,9 @@ function renderBarStats(period) {
   var notRedeemed = vouchers.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; }).length;
   var gross = vouchers.reduce(function(a,v){ return a + (Number(v.price_paid)||0); }, 0);
   var fees = vouchers.reduce(function(a,v){ return a + (Number(v.platform_fee)||0); }, 0);
-  var net = vouchers.reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
-  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
-  var paid = vouchers.filter(function(v){ return v.payout_status === 'paid'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var net = vouchers.reduce(function(a,v){ return a + effectiveBarPayout_(v); }, 0);
+  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + effectiveBarPayout_(v); }, 0);
+  var paid = vouchers.filter(function(v){ return v.status !== 'refunded' && v.payout_status === 'paid'; }).reduce(function(a,v){ return a + effectiveBarPayout_(v); }, 0);
 
   var grid = document.getElementById('statsGrid'); if (!grid) return;
   grid.innerHTML = '';
@@ -1904,7 +1909,7 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   if (filterKey === 'redeemed') items = items.filter(function(v){ return v.status === 'redeemed'; });
   else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
   else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
-  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
+  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.status !== 'refunded' && v.payout_status === 'paid'; });
   detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
   renderVoucherPanel_('overviewVoucherPanel', items);
 }
@@ -2935,5 +2940,36 @@ applyProfileToForm = function(b) {
       var input = document.getElementById('redeemCode');
       if (input) setTimeout(function(){ input.focus(); }, 60);
     }
+  });
+})();
+
+
+// ===== LIVE I18N RERENDER (NO RELOAD) =====
+(function(){
+  function rerenderActiveDashboard(){
+    try { if (typeof applyTranslations === 'function') applyTranslations(); } catch(e) {}
+    try { if (typeof rerenderLocalizedViews_ === 'function') rerenderLocalizedViews_(); } catch(e) {}
+    try {
+      if (typeof sessionGet === 'function' && sessionGet()) {
+        var activeTab = document.querySelector('#barDashboard .tab.active');
+        var tabName = activeTab ? activeTab.getAttribute('data-dash-tab') : 'overview';
+        if (tabName === 'overview' && typeof loadBarStats === 'function') loadBarStats(_barStatsPeriod || 'all');
+        else if (tabName === 'mydeals' && typeof loadMyDeals === 'function') loadMyDeals();
+        else if (tabName === 'settings' && typeof loadProfile === 'function') loadProfile();
+        else if (tabName === 'redeem') {
+          try { if (typeof bindRedeemUi === 'function') bindRedeemUi(); } catch(e) {}
+        }
+      }
+    } catch(e) {}
+  }
+
+  var _origSetLangLiveI18n = setLang;
+  setLang = function(lang){
+    _origSetLangLiveI18n(lang);
+    rerenderActiveDashboard();
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(rerenderActiveDashboard, 0);
   });
 })();
