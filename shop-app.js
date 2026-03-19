@@ -840,6 +840,88 @@ async function doLogout() {
   showToast(shopT('logoutSuccess') || 'Ausgeloggt');
 }
 
+function ensureCustomerDangerActions(){
+  var dd = document.getElementById('userDropdown');
+  if (dd && !document.getElementById('dropdownDeleteAccount')) {
+    var item = document.createElement('div');
+    item.className = 'dropdown-item';
+    item.id = 'dropdownDeleteAccount';
+    item.textContent = '🗑️ ' + (shopT('deleteAccountBtn') || 'Account löschen');
+    dd.appendChild(item);
+  }
+  var drawerBody = document.querySelector('#shopDrawer .drawer-body');
+  if (drawerBody && !document.getElementById('drawerAccountActions')) {
+    var wrap = document.createElement('div');
+    wrap.id = 'drawerAccountActions';
+    wrap.style.marginTop = '18px';
+    wrap.style.paddingTop = '18px';
+    wrap.style.borderTop = '1px solid rgba(255,255,255,.08)';
+
+    var logoutBtn = document.createElement('button');
+    logoutBtn.id = 'drawerLogoutBtn';
+    logoutBtn.className = 'drawer-action';
+    logoutBtn.style.width = '100%';
+    logoutBtn.style.marginBottom = '10px';
+
+    var deleteBtn = document.createElement('button');
+    deleteBtn.id = 'drawerDeleteAccountBtn';
+    deleteBtn.className = 'drawer-action';
+    deleteBtn.style.width = '100%';
+    deleteBtn.style.borderColor = 'rgba(255,255,255,.08)';
+
+    wrap.appendChild(logoutBtn);
+    wrap.appendChild(deleteBtn);
+    drawerBody.appendChild(wrap);
+  }
+
+  var ddDelete = document.getElementById('dropdownDeleteAccount');
+  if (ddDelete && !ddDelete.dataset.bound) {
+    ddDelete.dataset.bound = '1';
+    ddDelete.addEventListener('click', doDeleteCustomerAccount);
+  }
+  var ddLogout = document.getElementById('dropdownLogout');
+  if (ddLogout && !ddLogout.dataset.boundLogout) {
+    ddLogout.dataset.boundLogout = '1';
+    ddLogout.addEventListener('click', function(){ doLogout(); });
+  }
+  var drawerLogout = document.getElementById('drawerLogoutBtn');
+  if (drawerLogout && !drawerLogout.dataset.bound) {
+    drawerLogout.dataset.bound = '1';
+    drawerLogout.addEventListener('click', function(){ closeShopDrawer(); doLogout(); });
+  }
+  var drawerDelete = document.getElementById('drawerDeleteAccountBtn');
+  if (drawerDelete && !drawerDelete.dataset.bound) {
+    drawerDelete.dataset.bound = '1';
+    drawerDelete.addEventListener('click', function(){ closeShopDrawer(); doDeleteCustomerAccount(); });
+  }
+}
+
+async function doDeleteCustomerAccount() {
+  const s = sessionGet();
+  if (!s) { openModal('loginModal'); return; }
+  var dd = document.getElementById('userDropdown');
+  if (dd) dd.classList.remove('show');
+  var sure = window.confirm(shopT('deleteAccountConfirm') || 'Möchtest du deinen Account wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden.');
+  if (!sure) return;
+  var password = window.prompt(shopT('deleteAccountPasswordPrompt') || 'Bitte gib zur Bestätigung dein Passwort ein:');
+  if (password === null) return;
+  password = String(password || '').trim();
+  if (!password) { showToast(shopT('deleteAccountPasswordRequired') || 'Bitte Passwort eingeben', true); return; }
+  try {
+    const r = await api({ action: 'deleteCustomerAccount', token: s.token, current_password: password });
+    if (r && r.success) {
+      sessionClear();
+      try { closeShopDrawer(); } catch(e) {}
+      showView('deals');
+      showToast(shopT('deleteAccountSuccess') || 'Account gelöscht');
+    } else {
+      showToast(translateShopRuntimeMessage((r && r.error) || (shopT('genericErrorDot') || 'Fehler.')), true);
+    }
+  } catch (e) {
+    showToast(shopT('networkErrorDot') || 'Verbindungsfehler.', true);
+  }
+}
+
 // =============================================
 // VIEW SWITCHING
 // =============================================
@@ -1329,6 +1411,7 @@ document.addEventListener('DOMContentLoaded', () => {
   var savedLang = localStorage.getItem('barsclusive_lang') || 'de';
   setShopLang(savedLang);
 
+  ensureCustomerDangerActions();
   const changePwBtn = document.getElementById('dropdownChangePw');
   if (changePwBtn) changePwBtn.addEventListener('click', openChangePwModal);
 
@@ -2050,6 +2133,7 @@ Object.assign(SHOP_TRANSLATIONS.de, {
   locationUnavailable:'Standort nicht verfügbar', dealsSortedByDistance:'📍 Deals werden nach Nähe sortiert',
   addedToCartSuffix:'zum Warenkorb hinzugefügt', processing:'⏳ Wird verarbeitet...',
   loadError:'Fehler', registrationSuccess:'✅ Registrierung erfolgreich!', loginSuccess:'✅ Eingeloggt!', logoutSuccess:'Ausgeloggt',
+  deleteAccountBtn:'Account löschen', deleteAccountConfirm:'Möchtest du deinen Account wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden.', deleteAccountPasswordPrompt:'Bitte gib zur Bestätigung dein Passwort ein:', deleteAccountPasswordRequired:'Bitte Passwort eingeben', deleteAccountSuccess:'Account gelöscht',
   linkGenericPrefix:'Link:', nameEmailRequired:'Name und Email sind Pflichtfelder', buyConsentError:'Bitte AGB & Datenschutz akzeptieren',
   allFieldsRequired:'Alle Felder ausfüllen.', newPasswordMinErr:'Neues Passwort mind. 8 Zeichen.', passwordMismatchDot:'Passwörter stimmen nicht überein.', genericErrorDot:'Fehler.', networkErrorDot:'Verbindungsfehler.'
 });
@@ -2062,6 +2146,7 @@ Object.assign(SHOP_TRANSLATIONS.en, {
   refundConfirm:'Request refund?\nThe voucher will become invalid.', refundRequestedSuccess:'✅ Refund requested',
   locationUnavailable:'Location not available', dealsSortedByDistance:'📍 Deals are now sorted by distance',
   addedToCartSuffix:'added to cart', loadError:'Error', registrationSuccess:'✅ Registration successful!', loginSuccess:'✅ Logged in!', logoutSuccess:'Logged out',
+  deleteAccountBtn:'Delete account', deleteAccountConfirm:'Do you really want to delete your account? This step cannot be undone.', deleteAccountPasswordPrompt:'Please enter your password to confirm:', deleteAccountPasswordRequired:'Please enter your password', deleteAccountSuccess:'Account deleted',
   linkGenericPrefix:'Link:', buyConsentError:'Please accept terms and privacy', allFieldsRequired:'Please fill in all fields.',
   newPasswordMinErr:'New password must be at least 8 characters.', passwordMismatchDot:'Passwords do not match.', genericErrorDot:'Error.', networkErrorDot:'Connection error.'
 });
@@ -2074,6 +2159,7 @@ Object.assign(SHOP_TRANSLATIONS.it, {
   refundConfirm:'Richiedere il rimborso?\nIl voucher diventerà non valido.', refundRequestedSuccess:'✅ Rimborso richiesto',
   locationUnavailable:'Posizione non disponibile', dealsSortedByDistance:'📍 I deal sono ora ordinati per distanza',
   addedToCartSuffix:'aggiunto al carrello', loadError:'Errore', registrationSuccess:'✅ Registrazione riuscita!', loginSuccess:'✅ Accesso effettuato!', logoutSuccess:'Disconnesso',
+  deleteAccountBtn:'Elimina account', deleteAccountConfirm:'Vuoi davvero eliminare il tuo account? Questa azione non può essere annullata.', deleteAccountPasswordPrompt:'Inserisci la tua password per confermare:', deleteAccountPasswordRequired:'Inserisci la password', deleteAccountSuccess:'Account eliminato',
   linkGenericPrefix:'Link:', buyConsentError:'Accetta condizioni e privacy', allFieldsRequired:'Compila tutti i campi.',
   newPasswordMinErr:'La nuova password deve avere almeno 8 caratteri.', passwordMismatchDot:'Le password non coincidono.', genericErrorDot:'Errore.', networkErrorDot:'Errore di connessione.'
 });
@@ -2086,6 +2172,7 @@ Object.assign(SHOP_TRANSLATIONS.fr, {
   refundConfirm:'Demander un remboursement ?\nLe bon deviendra invalide.', refundRequestedSuccess:'✅ Remboursement demandé',
   locationUnavailable:'Position non disponible', dealsSortedByDistance:'📍 Les deals sont maintenant triés par distance',
   addedToCartSuffix:'ajouté au panier', loadError:'Erreur', registrationSuccess:'✅ Inscription réussie !', loginSuccess:'✅ Connecté !', logoutSuccess:'Déconnecté',
+  deleteAccountBtn:'Supprimer le compte', deleteAccountConfirm:'Voulez-vous vraiment supprimer votre compte ? Cette action est irréversible.', deleteAccountPasswordPrompt:'Veuillez saisir votre mot de passe pour confirmer :', deleteAccountPasswordRequired:'Veuillez saisir votre mot de passe', deleteAccountSuccess:'Compte supprimé',
   linkGenericPrefix:'Lien :', buyConsentError:'Veuillez accepter les CGV et la confidentialité', allFieldsRequired:'Veuillez remplir tous les champs.',
   newPasswordMinErr:'Le nouveau mot de passe doit contenir au moins 8 caractères.', passwordMismatchDot:'Les mots de passe ne correspondent pas.', genericErrorDot:'Erreur.', networkErrorDot:'Erreur de connexion.'
 });
@@ -2750,17 +2837,26 @@ try {
   window.updateCustomDateLabel = updateCustomDateLabel;
 
   function updateShopUserUi(){
+    ensureCustomerDangerActions();
     var s = sessionGet();
     var userBtn = document.getElementById('userBtn');
     var btnOrders = document.getElementById('btnOrders');
     var btnFavorites = document.getElementById('btnFavorites');
     var ddLogout = document.getElementById('dropdownLogout');
     var ddPw = document.getElementById('dropdownChangePw');
+    var ddDelete = document.getElementById('dropdownDeleteAccount');
+    var drawerLogout = document.getElementById('drawerLogoutBtn');
+    var drawerDelete = document.getElementById('drawerDeleteAccountBtn');
+    var drawerWrap = document.getElementById('drawerAccountActions');
     if (userBtn) userBtn.textContent = s ? ('👤 ' + escHtml(s.name || '')) : ('👤 ' + st('loginBtn'));
     if (btnOrders) btnOrders.textContent = '📦 ' + st('orders');
     if (btnFavorites) btnFavorites.textContent = '❤️ ' + st('favoritesNav');
     if (ddLogout) ddLogout.textContent = st('logoutBtn');
     if (ddPw) ddPw.textContent = '🔑 ' + st('changePw');
+    if (ddDelete) ddDelete.textContent = '🗑️ ' + (st('deleteAccountBtn') || 'Account löschen');
+    if (drawerLogout) drawerLogout.textContent = '↩️ ' + (st('logoutBtn') || 'Ausloggen');
+    if (drawerDelete) drawerDelete.textContent = '🗑️ ' + (st('deleteAccountBtn') || 'Account löschen');
+    if (drawerWrap) drawerWrap.style.display = s ? '' : 'none';
     var noAcc = document.getElementById('loginNoAccountText'); if (noAcc) noAcc.textContent = st('noAccountYet') || noAcc.textContent;
     var regLink = document.getElementById('linkToRegister'); if (regLink) regLink.textContent = st('registrieren') || regLink.textContent;
   }
@@ -3388,11 +3484,7 @@ try {
     Object.assign(SHOP_TRANSLATIONS.fr, { headerLogin:'Connexion', headerRegister:'Inscription', discoverDeals:'🍸 Découvrir les deals' });
   } catch(e) {}
 
-  function openShopHeaderAuth(target, event){
-    if (event) {
-      if (typeof event.preventDefault === 'function') event.preventDefault();
-      if (typeof event.stopPropagation === 'function') event.stopPropagation();
-    }
+  function openShopHeaderAuth(target){
     if (target === 'register') {
       if (typeof openModal === 'function') openModal('registerModal');
       if (typeof closeModal === 'function') closeModal('loginModal');
@@ -3400,18 +3492,7 @@ try {
       if (typeof openModal === 'function') openModal('loginModal');
       if (typeof closeModal === 'function') closeModal('registerModal');
     }
-    return false;
   }
-  window.openShopHeaderAuth = openShopHeaderAuth;
-  window.handleShopUserButton = function(event){
-    if (event) {
-      if (typeof event.preventDefault === 'function') event.preventDefault();
-      if (typeof event.stopPropagation === 'function') event.stopPropagation();
-      if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
-    }
-    if (typeof onUserButtonClick === 'function') onUserButtonClick();
-    return false;
-  };
 
   function syncShopEntryHeader(){
     var logged = !!(typeof sessionGet === 'function' && sessionGet());
@@ -3451,15 +3532,6 @@ try {
     if (section) section.style.display = '';
     var footer = document.querySelector('.footer');
     if (footer) footer.style.display = '';
-    var headerDealsBtn = document.getElementById('headerDealsBtn');
-    if (headerDealsBtn) headerDealsBtn.style.display = 'none';
-    var topAuth = document.getElementById('shopTopAuth');
-    if (topAuth) topAuth.style.display = 'none';
-    var noLoginHint = document.getElementById('shopNoLoginHint');
-    if (noLoginHint) noLoginHint.style.display = 'none';
-    if (typeof showView === 'function') {
-      try { showView('deals'); } catch(e) {}
-    }
     if (scrollToDiscovery) {
       var target = document.getElementById('shopFocusArea') || document.getElementById('shopViewToggle') || section;
       if (target) {
@@ -3468,7 +3540,6 @@ try {
       }
     }
   }
-  window.unlockShopEntry = unlockShopEntry;
 
   var _prevShowViewEntryPatch = typeof showView === 'function' ? showView : null;
   if (_prevShowViewEntryPatch) {
@@ -3508,58 +3579,134 @@ try {
 })();
 
 
-// ===== FINAL MOBILE HEADER + GEO MESSAGE PATCH =====
+// ===== LOGIN FAST PATH + CLEAN POST-LOGIN STATE PATCH =====
 (function(){
-  try {
-    Object.assign(SHOP_TRANSLATIONS.de, {
-      locationPermissionRequired:'Standortzugriff blockiert. Bitte aktiviere den Standort in Safari oder in den Einstellungen.',
-      locationTimeout:'Standort konnte nicht rechtzeitig ermittelt werden. Bitte versuche es erneut.'
-    });
-    Object.assign(SHOP_TRANSLATIONS.en, {
-      locationPermissionRequired:'Location access is blocked. Please allow location in Safari or in your settings.',
-      locationTimeout:'Your location could not be determined in time. Please try again.'
-    });
-    Object.assign(SHOP_TRANSLATIONS.it, {
-      locationPermissionRequired:"L'accesso alla posizione è bloccato. Attiva la posizione in Safari o nelle impostazioni.",
-      locationTimeout:'Non è stato possibile determinare la posizione in tempo. Riprova.'
-    });
-    Object.assign(SHOP_TRANSLATIONS.fr, {
-      locationPermissionRequired:"L'accès à la localisation est bloqué. Autorise la localisation dans Safari ou dans les réglages.",
-      locationTimeout:"La position n'a pas pu être déterminée à temps. Réessaie."
-    });
-  } catch(e) {}
+  function hideLoggedOutEntryUi(){
+    var topAuth = document.getElementById('shopTopAuth');
+    var noLoginHint = document.getElementById('shopNoLoginHint');
+    var headerDealsBtn = document.getElementById('headerDealsBtn');
+    var hero = document.querySelector('.hero');
+    var discovery = document.getElementById('shopDiscoverySection');
+    var footer = document.querySelector('.footer');
+    document.body.classList.remove('shop-entry-locked');
+    document.body.classList.add('shop-user-logged-in');
+    document.body.classList.remove('shop-user-logged-out');
+    if (topAuth) topAuth.style.display = 'none';
+    if (noLoginHint) noLoginHint.style.display = 'none';
+    if (headerDealsBtn) headerDealsBtn.style.display = 'none';
+    if (hero) hero.style.display = 'none';
+    if (discovery) discovery.style.display = '';
+    if (footer) footer.style.display = '';
+  }
 
-  requestGeoPermission = function() {
-    if (!navigator.geolocation) {
-      showToast(shopT('locationUnavailable') || 'Standort nicht verfügbar', true);
-      if (typeof dismissGeoBanner === 'function') dismissGeoBanner();
-      return;
+  function restoreLoggedOutEntryUi(){
+    var topAuth = document.getElementById('shopTopAuth');
+    var noLoginHint = document.getElementById('shopNoLoginHint');
+    var headerDealsBtn = document.getElementById('headerDealsBtn');
+    var hero = document.querySelector('.hero');
+    document.body.classList.add('shop-entry-locked');
+    document.body.classList.remove('shop-user-logged-in');
+    document.body.classList.add('shop-user-logged-out');
+    if (topAuth) topAuth.style.display = '';
+    if (noLoginHint) noLoginHint.style.display = '';
+    if (headerDealsBtn) headerDealsBtn.style.display = '';
+    if (hero) hero.style.display = '';
+  }
+
+  function goDirectlyToDealsAfterLogin(){
+    hideLoggedOutEntryUi();
+    try { closeModal('loginModal'); } catch(e) {}
+    try { closeModal('registerModal'); } catch(e) {}
+    try { closeShopDrawer(); } catch(e) {}
+    try { toggleMapView(false); } catch(e) {}
+    try {
+      var dealsView = document.getElementById('dealsView');
+      var ordersView = document.getElementById('ordersView');
+      var favView = document.getElementById('favoritesView');
+      if (dealsView) dealsView.style.display = 'block';
+      if (ordersView) ordersView.style.display = 'none';
+      if (favView) favView.style.display = 'none';
+      var btnDeals = document.getElementById('btnDeals');
+      var btnOrders = document.getElementById('btnOrders');
+      var btnFav = document.getElementById('btnFavorites');
+      if (btnDeals) btnDeals.classList.add('active');
+      if (btnOrders) btnOrders.classList.remove('active');
+      if (btnFav) btnFav.classList.remove('active');
+    } catch(e) {}
+    try { if (typeof renderDeals === 'function') renderDeals(); } catch(e) {}
+    try { history.replaceState({ view:'deals' }, '', '#deals'); } catch(e) {}
+    requestAnimationFrame(function(){
+      var target = document.getElementById('shopFocusArea') || document.getElementById('dealsView');
+      if (target) {
+        var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  }
+
+  window.unlockShopEntry = function(scrollToDiscovery){
+    hideLoggedOutEntryUi();
+    if (scrollToDiscovery) {
+      requestAnimationFrame(function(){
+        var target = document.getElementById('shopFocusArea') || document.getElementById('shopDiscoverySection');
+        if (target) {
+          var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      });
     }
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        _userLat = pos.coords.latitude;
-        _userLng = pos.coords.longitude;
-        _locationState = {
-          label: shopT('geoCurrentLocation') || 'Aktueller Standort',
-          lat: _userLat,
-          lng: _userLng,
-          source: 'geo',
-          textFilter: ''
-        };
-        saveLocationState();
-        updateLocationUi();
-        if (typeof dismissGeoBanner === 'function') dismissGeoBanner();
-        showToast(shopT('dealsSortedByDistance') || '📍 Deals werden nach Nähe sortiert');
-        sortDealsByDistance();
-      },
-      function(err) {
-        if (typeof dismissGeoBanner === 'function') dismissGeoBanner();
-        var msg = shopT('locationUnavailable') || 'Standort nicht verfügbar';
-        if (err && err.code === 1) msg = shopT('locationPermissionRequired') || msg;
-        else if (err && err.code === 3) msg = shopT('locationTimeout') || msg;
-        showToast(msg, true);
-      },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
-    );
   };
+
+  if (typeof syncShopEntryHeader === 'function') {
+    var _prevSyncShopEntryHeaderFast = syncShopEntryHeader;
+    syncShopEntryHeader = function(){
+      _prevSyncShopEntryHeaderFast();
+      if (sessionGet()) hideLoggedOutEntryUi();
+    };
+  }
+
+  if (typeof sessionSet === 'function') {
+    var _prevSessionSetFast = sessionSet;
+    sessionSet = function(){
+      var result = _prevSessionSetFast.apply(this, arguments);
+      hideLoggedOutEntryUi();
+      return result;
+    };
+  }
+
+  if (typeof sessionClear === 'function') {
+    var _prevSessionClearFast = sessionClear;
+    sessionClear = function(){
+      var result = _prevSessionClearFast.apply(this, arguments);
+      restoreLoggedOutEntryUi();
+      return result;
+    };
+  }
+
+  if (typeof doLogin === 'function') {
+    var _prevDoLoginFast = doLogin;
+    doLogin = async function(){
+      var hadSession = !!sessionGet();
+      var result = await _prevDoLoginFast.apply(this, arguments);
+      if (!hadSession && sessionGet()) goDirectlyToDealsAfterLogin();
+      return result;
+    };
+  }
+
+  if (typeof doRegister === 'function') {
+    var _prevDoRegisterFast = doRegister;
+    doRegister = async function(){
+      var hadSession = !!sessionGet();
+      var result = await _prevDoRegisterFast.apply(this, arguments);
+      if (!hadSession && sessionGet()) goDirectlyToDealsAfterLogin();
+      return result;
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    if (sessionGet()) hideLoggedOutEntryUi();
+  });
+  window.addEventListener('load', function(){
+    if (sessionGet()) hideLoggedOutEntryUi();
+  });
 })();
