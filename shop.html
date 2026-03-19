@@ -1022,6 +1022,30 @@
       .hero-how-link{font-size:12.5px}
     }
   </style>
+
+<style id="shop-mobile-layout-repair">
+@media(max-width:768px){
+  .header{padding:12px !important}
+  .nav{display:flex !important;flex-direction:column !important;align-items:stretch !important;gap:10px !important}
+  .logo.shop-header-logo,.logo{display:flex !important;align-self:flex-start !important}
+  .logo img,.shop-header-logo img{height:52px !important;width:auto !important;max-width:none !important}
+  .nav-links{display:flex !important;flex-wrap:wrap !important;align-items:center !important;gap:10px !important;width:100% !important}
+  .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{order:1;display:flex !important;gap:8px !important;flex-wrap:nowrap !important;overflow-x:auto !important;max-width:100% !important}
+  .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
+  .nav-links > div[style*="display:flex;align-items:center;gap:8px"] .nav-link{flex:0 0 auto;min-width:52px !important;min-height:52px !important;padding:0 12px !important;border-radius:16px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important}
+  .header-deals-btn{order:2;margin-left:auto !important;min-height:48px !important;border-radius:16px !important}
+  .search-wrap{order:3;flex:1 0 100% !important;max-width:none !important;width:100% !important;display:block !important}
+  .search-input{min-height:50px !important;height:50px !important;padding-left:40px !important;font-size:15px !important}
+  .search-icon{left:14px !important}
+  #cartOpenBtn{order:4;flex:0 0 auto;min-width:56px !important;min-height:56px !important;border-radius:18px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important}
+  .user-menu{order:5;flex:1 1 auto;min-width:0 !important}
+  #userBtn{width:100% !important;min-height:56px !important;border-radius:18px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;padding:0 16px !important}
+  #shopMenuBtn{order:6;flex:0 0 auto;min-width:56px !important;min-height:56px !important;border-radius:18px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important;margin-left:auto !important}
+  body.shop-entry-locked .shop-top-auth{padding:8px 12px 6px !important;gap:10px !important}
+  body.shop-entry-locked .shop-top-auth-btn{min-height:50px !important;border-radius:16px !important}
+}
+</style>
+
 </head>
 <body class="shop-page shop-entry-locked">
 
@@ -1030,7 +1054,7 @@
 <!-- NAVIGATION -->
 <div class="header">
   <div class="nav">
-    <a class="logo shop-header-logo" href="shop.html"><img src="logo.png?v=20260319-1" alt="BarSclusive" style="height:40px"></a>
+    <a class="logo shop-header-logo" href="shop.html"><img src="logo.png" alt="BarSclusive" style="height:40px"></a>
     <div class="nav-links">
       <div class="search-wrap">
         <span class="search-icon">🔍</span>
@@ -1095,7 +1119,7 @@
 <div class="hero">
   <div class="hero-shell">
     <div class="hero-brand">
-      <img src="logo.png?v=20260319-1" alt="BarSclusive" class="hero-logo">
+      <img src="logo.png" alt="BarSclusive" class="hero-logo">
     </div>
     <div class="hero-copy">
       <h1 data-shop-i18n="heroTitle">Die besten Bar-Deals deiner Stadt</h1>
