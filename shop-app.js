@@ -3553,3 +3553,152 @@ try {
     if (dealParam) ensureShopDiscoveryVisible();
   });
 })();
+
+
+// ===== DEAL FLOW STABILITY PATCH =====
+(function(){
+  var _shopReturnState = { scrollY: 0, dealId: '', active: false };
+
+  function ensureDealsStayVisible(){
+    try {
+      if (document.body) document.body.classList.remove('shop-entry-locked');
+      var section = document.getElementById('shopDiscoverySection');
+      if (section) section.style.display = '';
+      var footer = document.querySelector('.footer');
+      if (footer) footer.style.display = '';
+      var dealsView = document.getElementById('dealsView');
+      var ordersView = document.getElementById('ordersView');
+      var favoritesView = document.getElementById('favoritesView');
+      if (dealsView && ordersView) {
+        dealsView.style.display = 'block';
+        ordersView.style.display = 'none';
+        if (favoritesView) favoritesView.style.display = 'none';
+      }
+      var btnDeals = document.getElementById('btnDeals');
+      var btnOrders = document.getElementById('btnOrders');
+      var btnFavorites = document.getElementById('btnFavorites');
+      if (btnDeals) btnDeals.classList.add('active');
+      if (btnOrders) btnOrders.classList.remove('active');
+      if (btnFavorites) btnFavorites.classList.remove('active');
+    } catch(e) {}
+  }
+
+  function rememberDealContext(deal){
+    try {
+      _shopReturnState.scrollY = window.scrollY || window.pageYOffset || 0;
+      _shopReturnState.dealId = deal && deal.id ? String(deal.id) : _shopReturnState.dealId || '';
+      _shopReturnState.active = true;
+    } catch(e) {}
+  }
+
+  function findDealCard(){
+    try {
+      if (!_shopReturnState.dealId) return null;
+      return document.querySelector('.deal-card[data-deal-id="' + CSS.escape(String(_shopReturnState.dealId)) + '"]');
+    } catch(e) {
+      return document.querySelector('.deal-card[data-deal-id="' + String(_shopReturnState.dealId).replace(/"/g,'\"') + '"]');
+    }
+  }
+
+  function restoreDealContext(){
+    if (!_shopReturnState.active) return;
+    ensureDealsStayVisible();
+    var y = Number(_shopReturnState.scrollY || 0);
+    requestAnimationFrame(function(){
+      window.scrollTo(0, y);
+      var card = findDealCard();
+      if (card) {
+        var rect = card.getBoundingClientRect();
+        if (rect.bottom < 80 || rect.top > (window.innerHeight || document.documentElement.clientHeight || 900) - 80) {
+          card.scrollIntoView({ block: 'center', inline: 'nearest' });
+        }
+      }
+    });
+  }
+
+  var _origBuildDealCard = typeof buildDealCard === 'function' ? buildDealCard : null;
+  if (_origBuildDealCard) {
+    buildDealCard = function(deal){
+      var card = _origBuildDealCard.apply(this, arguments);
+      try {
+        if (card && deal && deal.id != null) card.dataset.dealId = String(deal.id);
+      } catch(e) {}
+      return card;
+    };
+  }
+
+  var _origOpenDealDetail2 = typeof openDealDetail === 'function' ? openDealDetail : null;
+  if (_origOpenDealDetail2) {
+    openDealDetail = function(deal){
+      rememberDealContext(deal);
+      ensureDealsStayVisible();
+      return _origOpenDealDetail2.apply(this, arguments);
+    };
+  }
+
+  var _origOpenBuyModal2 = typeof openBuyModal === 'function' ? openBuyModal : null;
+  if (_origOpenBuyModal2) {
+    openBuyModal = function(deal){
+      if (deal) rememberDealContext(deal);
+      ensureDealsStayVisible();
+      return _origOpenBuyModal2.apply(this, arguments);
+    };
+  }
+
+  var _origAddToCart2 = typeof addToCart === 'function' ? addToCart : null;
+  if (_origAddToCart2) {
+    addToCart = function(deal){
+      if (deal) rememberDealContext(deal);
+      ensureDealsStayVisible();
+      var result = _origAddToCart2.apply(this, arguments);
+      setTimeout(restoreDealContext, 0);
+      return result;
+    };
+  }
+
+  var _origCloseDealDetail2 = typeof closeDealDetail === 'function' ? closeDealDetail : null;
+  if (_origCloseDealDetail2) {
+    closeDealDetail = function(){
+      var result = _origCloseDealDetail2.apply(this, arguments);
+      setTimeout(restoreDealContext, 0);
+      return result;
+    };
+  }
+
+  var _origCloseModal2 = typeof closeModal === 'function' ? closeModal : null;
+  if (_origCloseModal2) {
+    closeModal = function(id){
+      var result = _origCloseModal2.apply(this, arguments);
+      if (id === 'buyModal') setTimeout(restoreDealContext, 0);
+      return result;
+    };
+  }
+
+  var _origDoLogin2 = typeof doLogin === 'function' ? doLogin : null;
+  if (_origDoLogin2) {
+    doLogin = async function(){
+      var result = await _origDoLogin2.apply(this, arguments);
+      try {
+        if (typeof sessionGet === 'function' && sessionGet()) {
+          ensureDealsStayVisible();
+          setTimeout(restoreDealContext, 0);
+        }
+      } catch(e) {}
+      return result;
+    };
+  }
+
+  var _origDoRegister2 = typeof doRegister === 'function' ? doRegister : null;
+  if (_origDoRegister2) {
+    doRegister = async function(){
+      var result = await _origDoRegister2.apply(this, arguments);
+      try {
+        if (typeof sessionGet === 'function' && sessionGet()) {
+          ensureDealsStayVisible();
+          setTimeout(restoreDealContext, 0);
+        }
+      } catch(e) {}
+      return result;
+    };
+  }
+})();
