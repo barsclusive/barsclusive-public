@@ -2655,157 +2655,297 @@ applyProfileToForm = function(b) {
 })();
 
 
-
-// Force entry translations to refresh once the DOM is ready and after late UI patches
-function refreshEntryTranslationsNow() {
-  try { applyTranslations(); } catch (e) {}
-  try {
-    var savedLang = localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
-    if (savedLang && savedLang !== currentLang) currentLang = savedLang;
-    applyTranslations();
-  } catch (e) {}
-}
-
-document.addEventListener('DOMContentLoaded', function(){
-  refreshEntryTranslationsNow();
-  setTimeout(refreshEntryTranslationsNow, 0);
-  setTimeout(refreshEntryTranslationsNow, 120);
-});
-
-
-
-// ===== STABLE AUTH + ENTRY TRANSLATION PATCH =====
+// ===== BAR PORTAL REPAIR PATCH 2026-03-19 =====
 (function(){
   try {
     Object.assign(TRANSLATIONS.de, {
-      barEntryHeadline:'Deine Bar auf BarSclusive',
-      barEntrySub:'Mehr Sichtbarkeit, neue Gäste und keine laufenden Fixkosten.',
-      benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',
-      benefitGuestsSub:'Setze gezielte Anreize, wenn du zusätzliche Frequenz brauchst.',
-      benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',
-      benefitOnlySalesSub:'Provisionen fallen nur bei verkauften beziehungsweise eingelösten Gutscheinen an.',
-      benefitCustomTitle:'Mehr Sichtbarkeit für deine Bar',
-      benefitCustomSub:'BarSclusive bringt dein Angebot genau dort ins Blickfeld, wo Gäste suchen.'
+      redeemPlaceholder:'ABCD-EFGH-JKLM',
+      redeemFormatHint:'Format: ABCD-EFGH-JKLM. Bindestriche werden automatisch gesetzt.',
+      redeemLoading:'⏳ Wird geprüft…',
+      redeemChecking:'Gutschein wird geprüft…',
+      redeemInvalid:'Bitte einen vollständigen Gutschein-Code eingeben.',
+      redeemResultTitle:'Eingelöster Gutschein',
+      noPayout:'Keine Auszahlung'
     });
     Object.assign(TRANSLATIONS.en, {
-      barEntryHeadline:'Your bar on BarSclusive',
-      barEntrySub:'More visibility, new guests and no ongoing fixed costs.',
-      benefitGuestsTitle:'New guests in the times you want',
-      benefitGuestsSub:'Create targeted incentives when you need additional footfall.',
-      benefitOnlySalesTitle:'You only pay for real sales',
-      benefitOnlySalesSub:'Commissions only apply to vouchers that are sold or redeemed.',
-      benefitCustomTitle:'More visibility for your bar',
-      benefitCustomSub:'BarSclusive puts your offer right where guests are searching.'
+      redeemPlaceholder:'ABCD-EFGH-JKLM',
+      redeemFormatHint:'Format: ABCD-EFGH-JKLM. Hyphens are inserted automatically.',
+      redeemLoading:'⏳ Checking…',
+      redeemChecking:'Checking voucher…',
+      redeemInvalid:'Please enter a complete voucher code.',
+      redeemResultTitle:'Redeemed voucher',
+      noPayout:'No payout'
     });
     Object.assign(TRANSLATIONS.it, {
-      barEntryHeadline:'Il tuo bar su BarSclusive',
-      barEntrySub:'Più visibilità, nuovi ospiti e nessun costo fisso ricorrente.',
-      benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci',
-      benefitGuestsSub:'Crea incentivi mirati quando hai bisogno di più frequenza.',
-      benefitOnlySalesTitle:'Paghi solo per vendite reali',
-      benefitOnlySalesSub:'Le commissioni si applicano solo ai voucher venduti o riscattati.',
-      benefitCustomTitle:'Più visibilità per il tuo bar',
-      benefitCustomSub:'BarSclusive porta la tua offerta proprio dove gli ospiti stanno cercando.'
+      redeemPlaceholder:'ABCD-EFGH-JKLM',
+      redeemFormatHint:'Formato: ABCD-EFGH-JKLM. I trattini vengono inseriti automaticamente.',
+      redeemLoading:'⏳ Verifica in corso…',
+      redeemChecking:'Verifica voucher in corso…',
+      redeemInvalid:'Inserisci un codice voucher completo.',
+      redeemResultTitle:'Voucher riscattato',
+      noPayout:'Nessun pagamento'
     });
     Object.assign(TRANSLATIONS.fr, {
-      barEntryHeadline:'Votre bar sur BarSclusive',
-      barEntrySub:'Plus de visibilité, de nouveaux clients et aucun coût fixe récurrent.',
-      benefitGuestsTitle:'De nouveaux clients aux moments souhaités',
-      benefitGuestsSub:'Créez des incitations ciblées quand vous avez besoin de plus de fréquentation.',
-      benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes',
-      benefitOnlySalesSub:'Les commissions s’appliquent uniquement aux bons vendus ou utilisés.',
-      benefitCustomTitle:'Plus de visibilité pour votre bar',
-      benefitCustomSub:'BarSclusive met votre offre en avant exactement là où les clients recherchent.'
+      redeemPlaceholder:'ABCD-EFGH-JKLM',
+      redeemFormatHint:'Format : ABCD-EFGH-JKLM. Les tirets sont ajoutés automatiquement.',
+      redeemLoading:'⏳ Vérification…',
+      redeemChecking:'Vérification du bon…',
+      redeemInvalid:'Veuillez saisir un code bon complet.',
+      redeemResultTitle:'Bon utilisé',
+      noPayout:'Aucun paiement'
     });
-  } catch (e) {}
+  } catch(e) {}
 
-  function setBarEntryLocked(locked) {
-    if (!document.body) return;
-    document.body.classList.toggle('bar-entry-locked', !!locked);
+  function voucherCodeRaw(v){ return String(v || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 12); }
+  function formatVoucherCode(v){
+    var raw = voucherCodeRaw(v), parts = [];
+    if (raw.slice(0,4)) parts.push(raw.slice(0,4));
+    if (raw.slice(4,8)) parts.push(raw.slice(4,8));
+    if (raw.slice(8,12)) parts.push(raw.slice(8,12));
+    return parts.join('-');
   }
 
-  function syncBarAuthButtons(active) {
-    var loginBtn = document.getElementById('barHeaderLoginBtn');
-    var registerBtn = document.getElementById('barHeaderRegisterBtn');
-    if (loginBtn) loginBtn.classList.toggle('active', active === 'login');
-    if (registerBtn) registerBtn.classList.toggle('active', active === 'register');
-  }
-
-  function openBarAuthSection(target) {
-    var name = target === 'register' ? 'register' : 'login';
-    setBarEntryLocked(false);
-    var loginScreen = document.getElementById('loginScreen');
-    var dashboard = document.getElementById('barDashboard');
-    if (loginScreen) loginScreen.style.display = 'block';
-    if (dashboard) dashboard.style.display = 'none';
+  function syncHeaderVisibility(){
+    var loggedIn = !!(typeof sessionGet === 'function' && sessionGet());
     var headerAuth = document.getElementById('barHeaderAuth');
-    if (headerAuth) headerAuth.style.display = 'flex';
     var logoutBtn = document.getElementById('btnLogout');
-    if (logoutBtn && !(typeof sessionGet === 'function' && sessionGet())) logoutBtn.style.display = 'none';
+    if (headerAuth) headerAuth.style.display = loggedIn ? 'none' : 'flex';
+    if (logoutBtn) logoutBtn.style.display = 'none';
+  }
+
+  function ensureRedeemPanel(){
+    if (document.getElementById('dashRedeem')) return;
+    var dashboard = document.getElementById('barDashboard');
+    var before = document.getElementById('dashSettings');
+    if (!dashboard || !before || !before.parentNode) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'dashRedeem';
+    wrap.className = 'tab-content';
+    wrap.innerHTML = '' +
+      '<div class="redeem-box">' +
+        '<h2>🔑 <span data-i18n="redeemTitle">' + (typeof t === 'function' ? t('redeemTitle') : 'Gutschein einlösen') + '</span></h2>' +
+        '<p style="margin:-8px 0 18px;color:#999;font-size:14px" data-i18n="redeemHint">' + (typeof t === 'function' ? t('redeemHint') : 'Gutschein-Code des Kunden eingeben') + '</p>' +
+        '<div class="form-group" style="text-align:left;margin-bottom:12px">' +
+          '<label class="form-label" for="redeemCode" data-i18n="codeLbl">' + (typeof t === 'function' ? t('codeLbl') : 'Code') + '</label>' +
+          '<input type="text" class="form-input" id="redeemCode" inputmode="latin-prose" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="ABCD-EFGH-JKLM">' +
+          '<small id="redeemFormatHint" style="display:block;margin-top:8px;color:#999;font-size:12px">' + (typeof t === 'function' ? t('redeemFormatHint') : 'Format: ABCD-EFGH-JKLM. Bindestriche werden automatisch gesetzt.') + '</small>' +
+        '</div>' +
+        '<button class="btn-pink" id="btnRedeem" type="button" data-i18n="redeemBtn">' + (typeof t === 'function' ? t('redeemBtn') : 'Einlösen') + '</button>' +
+        '<div class="err-msg" id="redeemErr" aria-live="polite" style="margin-top:14px"></div>' +
+        '<div id="redeemResult" style="display:none;margin-top:16px;padding:16px;border-radius:14px;border:1px solid #3a3a3a;background:rgba(255,255,255,.03);text-align:left">' +
+          '<div style="font-size:12px;color:#999;letter-spacing:.08em;text-transform:uppercase" id="redeemResultLabel">' + (typeof t === 'function' ? t('redeemResultTitle') : 'Eingelöster Gutschein') + '</div>' +
+          '<div id="redeemDeal" style="margin-top:6px;font-size:18px;font-weight:700;color:#fff">—</div>' +
+        '</div>' +
+      '</div>';
+    before.parentNode.insertBefore(wrap, before);
+  }
+
+  function updateRedeemTexts(){
+    var input = document.getElementById('redeemCode'); if (input) input.placeholder = (typeof t === 'function' ? t('redeemPlaceholder') : 'ABCD-EFGH-JKLM');
+    var hint = document.getElementById('redeemFormatHint'); if (hint) hint.textContent = (typeof t === 'function' ? t('redeemFormatHint') : hint.textContent);
+    var resultLabel = document.getElementById('redeemResultLabel'); if (resultLabel) resultLabel.textContent = (typeof t === 'function' ? t('redeemResultTitle') : resultLabel.textContent);
+  }
+
+  function bindRedeemUi(){
+    ensureRedeemPanel();
+    updateRedeemTexts();
+    syncHeaderVisibility();
+    var input = document.getElementById('redeemCode');
+    if (input && !input.dataset.maskBound) {
+      input.dataset.maskBound = '1';
+      input.addEventListener('input', function(){
+        var pos = this.selectionStart || this.value.length;
+        var before = voucherCodeRaw(this.value.slice(0, pos)).length;
+        this.value = formatVoucherCode(this.value);
+        var nextPos = this.value.length;
+        if (before <= 4) nextPos = before;
+        else if (before <= 8) nextPos = before + 1;
+        else nextPos = Math.min(before + 2, this.value.length);
+        try { this.setSelectionRange(nextPos, nextPos); } catch(e) {}
+      });
+      input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); if (typeof doRedeem === 'function') doRedeem(); } });
+      input.addEventListener('blur', function(){ this.value = formatVoucherCode(this.value); });
+    }
+    var btn = document.getElementById('btnRedeem');
+    if (btn && !btn.dataset.boundRedeemClick) {
+      btn.dataset.boundRedeemClick = '1';
+      btn.addEventListener('click', function(){ if (typeof doRedeem === 'function') doRedeem(); });
+    }
+  }
+
+  function unlockBarEntry(target){
+    document.body.classList.remove('bar-entry-locked');
+    if (typeof showAuthScreen === 'function') showAuthScreen(true);
     var loginForm = document.getElementById('loginForm');
     var registerForm = document.getElementById('registerForm');
-    if (loginForm) loginForm.classList.toggle('active', name === 'login');
-    if (registerForm) registerForm.classList.toggle('active', name === 'register');
-    syncBarAuthButtons(name);
-    try { applyTranslations(); } catch (e) {}
-    var targetEl = name === 'register' ? registerForm : loginForm;
+    if (loginForm) loginForm.classList.toggle('active', target !== 'register');
+    if (registerForm) registerForm.classList.toggle('active', target === 'register');
+    var tabs = document.querySelectorAll('[data-auth-tab]');
+    tabs.forEach(function(tab){ tab.classList.toggle('active', tab.dataset.authTab === (target === 'register' ? 'register' : 'login')); });
+    syncHeaderVisibility();
+    var targetEl = target === 'register' ? registerForm : loginForm;
     if (targetEl) {
       var top = Math.max((targetEl.getBoundingClientRect().top + window.scrollY) - 88, 0);
       window.scrollTo({ top: top, behavior: 'smooth' });
     }
   }
 
-  var _stableOrigShowAuthScreen = typeof showAuthScreen === 'function' ? showAuthScreen : null;
-  if (_stableOrigShowAuthScreen) {
-    showAuthScreen = function(show) {
-      _stableOrigShowAuthScreen(show);
-      var logged = !!(typeof sessionGet === 'function' && sessionGet());
-      var headerAuth = document.getElementById('barHeaderAuth');
-      if (show) {
-        if (headerAuth) headerAuth.style.display = 'flex';
-        if (!logged) {
-          setBarEntryLocked(true);
-          syncBarAuthButtons('login');
-        }
-      } else {
-        setBarEntryLocked(false);
-        if (headerAuth) headerAuth.style.display = 'none';
+  function currentBarTab(){
+    var active = document.querySelector('#barDashboard .tab.active');
+    return active && active.dataset ? active.dataset.dashTab : 'overview';
+  }
+  function rerenderCurrentBarTab(){
+    if (!(typeof sessionGet === 'function' && sessionGet())) return;
+    var tab = currentBarTab();
+    try {
+      if (tab === 'overview' && typeof loadBarStats === 'function') loadBarStats(_barStatsPeriod || 'all');
+      else if (tab === 'mydeals' && typeof loadMyDeals === 'function') loadMyDeals();
+      else if (tab === 'settings' && typeof loadProfile === 'function') loadProfile();
+      else if (tab === 'redeem') bindRedeemUi();
+    } catch(e) {}
+  }
+
+  var _oldSetLangRepairBar = typeof setLang === 'function' ? setLang : null;
+  if (_oldSetLangRepairBar) {
+    setLang = function(lang){
+      _oldSetLangRepairBar(lang);
+      bindRedeemUi();
+      syncHeaderVisibility();
+      setTimeout(rerenderCurrentBarTab, 0);
+    };
+  }
+
+  var _oldSessionSetRepairBar = typeof sessionSet === 'function' ? sessionSet : null;
+  if (_oldSessionSetRepairBar) {
+    sessionSet = function(token, barId, barName){
+      _oldSessionSetRepairBar(token, barId, barName);
+      syncHeaderVisibility();
+      bindRedeemUi();
+    };
+  }
+  var _oldSessionClearRepairBar = typeof sessionClear === 'function' ? sessionClear : null;
+  if (_oldSessionClearRepairBar) {
+    sessionClear = function(){ _oldSessionClearRepairBar(); syncHeaderVisibility(); };
+  }
+  var _oldShowAuthRepairBar = typeof showAuthScreen === 'function' ? showAuthScreen : null;
+  if (_oldShowAuthRepairBar) {
+    showAuthScreen = function(show){ _oldShowAuthRepairBar(show); syncHeaderVisibility(); bindRedeemUi(); };
+  }
+
+  function payoutLabelForVoucher(v){
+    if (String(v.status || '').toLowerCase() === 'refunded') return (typeof t === 'function' ? t('noPayout') : 'Keine Auszahlung');
+    return String(v.payout_status || '').toLowerCase() === 'paid' ? t('payoutPaid') : t('payoutPending');
+  }
+  applyVoucherFilters_ = function(vouchers){
+    var f = getCurrentVoucherFilters_();
+    return (vouchers || []).filter(function(v){
+      var baseDate = v.order_created_at || v.created_at || '';
+      var d = baseDate ? new Date(baseDate) : null;
+      if (f.from && d && d < new Date(f.from + 'T00:00:00')) return false;
+      if (f.to && d && d > new Date(f.to + 'T23:59:59')) return false;
+      var status = String(v.status || '').toLowerCase();
+      if (f.status === 'open') { if (!(status === 'issued' || status === 'sent' || status === 'created' || status === 'pending')) return false; }
+      else if (f.status !== 'all' && status !== f.status) return false;
+      if (f.payout !== 'all') {
+        if (status === 'refunded') return false;
+        if (String(v.payout_status || '').toLowerCase() !== f.payout) return false;
       }
-      try { applyTranslations(); } catch (e) {}
-    };
-  }
-
-  var _stableOrigSetLang = typeof setLang === 'function' ? setLang : null;
-  if (_stableOrigSetLang) {
-    setLang = function(lang) {
-      _stableOrigSetLang(lang);
-      try { applyTranslations(); } catch (e) {}
-      var loginForm = document.getElementById('loginForm');
-      var registerForm = document.getElementById('registerForm');
-      syncBarAuthButtons(registerForm && registerForm.classList.contains('active') ? 'register' : 'login');
-    };
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    [
-      ['btnBarEntryLogin', 'login'],
-      ['btnBarEntryRegister', 'register'],
-      ['barHeaderLoginBtn', 'login'],
-      ['barHeaderRegisterBtn', 'register']
-    ].forEach(function(pair) {
-      var el = document.getElementById(pair[0]);
-      if (!el) return;
-      el.addEventListener('click', function(ev) {
-        ev.preventDefault();
-        openBarAuthSection(pair[1]);
-      });
+      return true;
     });
+  };
+  renderVoucherPanel_ = function(targetId, vouchers){
+    var root = document.getElementById(targetId); if (!root) return;
+    vouchers = vouchers || [];
+    var f = getCurrentVoucherFilters_();
+    var filtered = applyVoucherFilters_(vouchers);
+    var rows = filtered.map(function(v){
+      return '<tr class="click-row" data-voucher-id="' + esc(String(v.id || '')) + '">' +
+        '<td>' + esc(fmtDate_(v.order_created_at || v.created_at)) + '</td>' +
+        '<td style="font-family:monospace">' + esc(String(v.code_display || v.code || '–')) + '</td>' +
+        '<td>' + esc(String(v.deal_title || '')) + '</td>' +
+        '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
+        '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
+        '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
+        '<td>' + esc(trStatus_(v.status)) + '</td>' +
+        '<td>' + esc(payoutLabelForVoucher(v)) + '</td>' +
+      '</tr>';
+    }).join('');
+    root.innerHTML = '' +
+      '<div class="filter-panel">' +
+        '<div style="font-size:15px;font-weight:700;margin-bottom:12px">' + t('voucherFilters') + '</div>' +
+        '<div class="filter-inline">' +
+          '<div><label class="form-label">' + t('fromLbl') + '</label><input type="date" class="form-input" id="voucherFilterFrom" value="' + esc(f.from) + '"></div>' +
+          '<div><label class="form-label">' + t('toLbl') + '</label><input type="date" class="form-input" id="voucherFilterTo" value="' + esc(f.to) + '"></div>' +
+          '<div><label class="form-label">' + t('statusLbl') + '</label><select class="form-input" id="voucherFilterStatus"><option value="all">' + t('allStatuses') + '</option><option value="open">' + t('openLbl') + '</option><option value="redeemed">' + t('redeemed') + '</option><option value="refunded">' + t('refundedLbl') + '</option></select></div>' +
+          '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('alle') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option></select></div>' +
+          '<div><button class="btn-pink" id="voucherApplyBtn" style="width:auto;padding:12px 18px">' + t('filterApply') + '</button></div>' +
+          '<div><button class="btn-ghost" id="voucherResetBtn" style="width:auto;padding:12px 18px;margin-top:0">' + t('filterReset') + '</button></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="money-grid">' +
+        '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){ return a + (Number(v.price_paid) || 0); }, 0).toFixed(2) + '</div></div>' +
+        '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){ return a + (Number(v.platform_fee) || 0); }, 0).toFixed(2) + '</div></div>' +
+        '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){ return a + (Number(v.bar_payout) || 0); }, 0).toFixed(2) + '</div></div>' +
+      '</div>' +
+      '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
+      '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
+      (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
+      '</tbody></table></div>';
+    var sEl = document.getElementById('voucherFilterStatus'); if (sEl) sEl.value = (f.status === 'issued' || f.status === 'sent') ? 'open' : f.status;
+    var pEl = document.getElementById('voucherFilterPayout'); if (pEl) pEl.value = f.payout;
+    var applyBtn = document.getElementById('voucherApplyBtn'); if (applyBtn) applyBtn.onclick = function(){ renderVoucherPanel_(targetId, vouchers); };
+    var resetBtn = document.getElementById('voucherResetBtn'); if (resetBtn) resetBtn.onclick = function(){ ['voucherFilterFrom','voucherFilterTo'].forEach(function(id){ var el = document.getElementById(id); if (el) el.value=''; }); var a = document.getElementById('voucherFilterStatus'); if (a) a.value='all'; var b = document.getElementById('voucherFilterPayout'); if (b) b.value='all'; renderVoucherPanel_(targetId, vouchers); };
+    Array.prototype.forEach.call(root.querySelectorAll('tr.click-row'), function(row){
+      row.addEventListener('click', function(){ var id = this.getAttribute('data-voucher-id'); var found = (vouchers || []).find(function(v){ return String(v.id) === String(id); }); if (found && typeof openVoucherDetail === 'function') openVoucherDetail(found); });
+    });
+  };
 
-    setTimeout(function() {
-      if (!(typeof sessionGet === 'function' && sessionGet())) {
-        try { applyTranslations(); } catch (e) {}
-        syncBarAuthButtons('login');
+  doRedeem = async function(){
+    var s = sessionGet(); if (!s) { doLogout(); return; }
+    bindRedeemUi();
+    var input = document.getElementById('redeemCode');
+    var btn = document.getElementById('btnRedeem');
+    var err = document.getElementById('redeemErr');
+    var result = document.getElementById('redeemResult');
+    var deal = document.getElementById('redeemDeal');
+    var code = formatVoucherCode(input ? input.value : '');
+    if (input) input.value = code;
+    if (err) err.textContent = '';
+    if (result) result.style.display = 'none';
+    if (voucherCodeRaw(code).length !== 12) {
+      if (err) err.textContent = (typeof t === 'function' ? t('redeemInvalid') : 'Bitte einen vollständigen Gutschein-Code eingeben.');
+      if (input) input.focus();
+      return;
+    }
+    var defaultText = btn ? (btn.dataset.defaultText || btn.textContent) : '';
+    if (btn) { btn.dataset.defaultText = defaultText || (typeof t === 'function' ? t('redeemBtn') : 'Einlösen'); btn.disabled = true; btn.textContent = (typeof t === 'function' ? t('redeemLoading') : '⏳ Wird geprüft…'); }
+    if (result && deal) { deal.textContent = (typeof t === 'function' ? t('redeemChecking') : 'Gutschein wird geprüft…'); result.style.display = 'block'; }
+    try {
+      var r = await api({ action:'redeemVoucher', token:s.token, code:code });
+      if (r.success) {
+        if (deal) deal.textContent = r.deal_title || code;
+        if (result) result.style.display = 'block';
+        if (input) input.value = '';
+        showToast((typeof t === 'function' ? t('redeemSuccess') : '✅ Gutschein eingelöst!'));
+        _dataCache.vouchers = null; _barStatsVouchers = null;
+        try { if (typeof loadBarStats === 'function' && currentBarTab() === 'overview') loadBarStats(_barStatsPeriod || 'all'); } catch(e) {}
+      } else {
+        if (result) result.style.display = 'none';
+        if (err) err.textContent = translateBarRuntimeMessage(r.error || 'Ungültiger Gutschein.');
       }
-    }, 0);
+    } catch(e) {
+      if (result) result.style.display = 'none';
+      if (err) err.textContent = (typeof t === 'function' ? t('networkError') : 'Verbindungsfehler');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = btn.dataset.defaultText || (typeof t === 'function' ? t('redeemBtn') : 'Einlösen'); }
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    bindRedeemUi();
+    syncHeaderVisibility();
+    ['barHeaderLoginBtn','btnBarEntryLogin'].forEach(function(id){ var el = document.getElementById(id); if (el) el.addEventListener('click', function(ev){ ev.preventDefault(); unlockBarEntry('login'); }); });
+    ['barHeaderRegisterBtn','btnBarEntryRegister'].forEach(function(id){ var el = document.getElementById(id); if (el) el.addEventListener('click', function(ev){ ev.preventDefault(); unlockBarEntry('register'); }); });
+    if (sessionGet()) document.body.classList.remove('bar-entry-locked');
   });
 })();
