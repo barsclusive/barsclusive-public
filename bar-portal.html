@@ -251,13 +251,28 @@
       .entry-cta-wrap{max-width:none;padding:0 4px}
     }
   </style>
+
+<style id="bar-mobile-layout-repair">
+@media(max-width:768px){
+  .header{display:flex !important;flex-direction:column !important;align-items:stretch !important;gap:10px !important;padding:12px !important}
+  .logo{display:flex !important;align-items:center !important;gap:8px !important;align-self:flex-start !important;min-width:0 !important}
+  .logo img{height:52px !important;width:auto !important;max-width:none !important}
+  .header-right{display:flex !important;flex-wrap:wrap !important;align-items:center !important;gap:10px !important;width:100% !important}
+  .header-right .lang-btn{flex:0 0 auto;min-width:56px !important;min-height:52px !important;border-radius:16px !important}
+  #barHeaderAuth{order:2;display:flex;gap:10px;width:100%}
+  #barHeaderAuth .header-auth-btn{flex:1 1 0;min-height:52px !important;border-radius:16px !important}
+  #btnLogout{display:none !important}
+  #barMenuBtn{margin-left:auto !important;min-width:56px !important;min-height:52px !important;border-radius:16px !important}
+}
+</style>
+
 </head>
 <body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
 
 <div class="header">
   <div class="logo" style="display:flex;align-items:center;gap:8px">
-    <img src="logo.png?v=20260319-1" alt="BarSclusive" style="height:60px">
+    <img src="logo.png" alt="BarSclusive" style="height:60px">
     <span id="barPortalTitle" data-i18n="portalTitle">Bar-Portal</span>
   </div>
   <div class="header-right">
@@ -298,7 +313,7 @@
   <div class="container auth-shell">
 
     <div class="bar-entry-hero" id="barEntryHero">
-      <img src="logo.png?v=20260319-1" alt="BarSclusive" class="bar-entry-logo">
+      <img src="logo.png" alt="BarSclusive" class="bar-entry-logo">
       <h1 class="bar-entry-headline" data-i18n="barEntryHeadline">Deine Bar auf BarSclusive</h1>
       <p class="bar-entry-sub" data-i18n="barEntrySub">Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.</p>
     </div>
@@ -871,6 +886,6 @@
   </p>
 </div>
 
-<script src="bar-app.js?v=20260319-3"></script>
+<script src="bar-app.js?v=20260318-2"></script>
 </body>
 </html>
