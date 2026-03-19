@@ -2381,9 +2381,11 @@ try {
         sessionSet(r.token, r.customer.name, r.customer.email, 'customer', uiLang);
         closeModal('loginModal');
         document.getElementById('loginPassword').value = '';
+        if (typeof goDirectlyToDealsAfterLogin === 'function') { try { goDirectlyToDealsAfterLogin(); } catch(e) {} }
+        else if (typeof unlockShopEntry === 'function') { try { unlockShopEntry(false); } catch(e) {} }
         showToast('✅ ' + (st('loginSuccess') || 'Eingeloggt!'));
-        Promise.resolve().then(loadFavorites).catch(function(){});
-        if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') Promise.resolve().then(loadOrders).catch(function(){});
+        setTimeout(function(){ Promise.resolve().then(loadFavorites).catch(function(){}); }, 120);
+        if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') setTimeout(function(){ Promise.resolve().then(loadOrders).catch(function(){}); }, 140);
       } else {
         showToast(r.error || (st('invalidCredentials') || 'Ungültige Zugangsdaten'), true);
         document.getElementById('loginPassword').value = '';
@@ -2413,6 +2415,8 @@ try {
         closeModal('registerModal');
         document.getElementById('regPassword').value = '';
         document.getElementById('regPasswordConfirm').value = '';
+        if (typeof goDirectlyToDealsAfterLogin === 'function') { try { goDirectlyToDealsAfterLogin(); } catch(e) {} }
+        else if (typeof unlockShopEntry === 'function') { try { unlockShopEntry(false); } catch(e) {} }
         showToast('✅ ' + (st('registerSuccess') || 'Registrierung erfolgreich!'));
       } else {
         showToast(r.error || (st('genericErrorDot') || 'Fehler'), true);
@@ -3708,5 +3712,42 @@ try {
   });
   window.addEventListener('load', function(){
     if (sessionGet()) hideLoggedOutEntryUi();
+  });
+})();
+
+
+// ===== FINAL CUSTOMER LOGIN UX PATCH =====
+(function(){
+  function immediateDealsState_(){
+    try {
+      if (typeof goDirectlyToDealsAfterLogin === 'function') {
+        goDirectlyToDealsAfterLogin();
+        return;
+      }
+    } catch(e) {}
+    try {
+      if (typeof unlockShopEntry === 'function') unlockShopEntry(false);
+    } catch(e) {}
+    try {
+      var topAuth = document.getElementById('shopTopAuth');
+      var noHint = document.getElementById('shopNoLoginHint');
+      var headerDealsBtn = document.getElementById('headerDealsBtn');
+      var hero = document.querySelector('.hero');
+      if (topAuth) topAuth.style.display = 'none';
+      if (noHint) noHint.style.display = 'none';
+      if (headerDealsBtn) headerDealsBtn.style.display = 'none';
+      if (hero) hero.style.display = 'none';
+      document.body.classList.remove('shop-entry-locked');
+      document.body.classList.add('shop-user-logged-in');
+      document.body.classList.remove('shop-user-logged-out');
+    } catch(e) {}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    if (typeof sessionGet === 'function' && sessionGet()) immediateDealsState_();
+  });
+
+  window.addEventListener('pageshow', function(){
+    if (typeof sessionGet === 'function' && sessionGet()) immediateDealsState_();
   });
 })();
