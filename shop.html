@@ -1023,369 +1023,34 @@
     }
   </style>
 
-  <style id="shop-mobile-unlocked-layout-fix">
+  <style id="logo-visibility-fix">
+    .logo img,
+    .shop-header-logo img,
+    .hero-logo,
+    .bar-entry-logo{
+      background:linear-gradient(180deg, rgba(246,242,234,.96) 0%, rgba(233,226,214,.93) 100%);
+      border-radius:16px;
+      box-shadow:0 12px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.72);
+      padding:8px 12px;
+      box-sizing:content-box;
+    }
+    .header .logo img,
+    .shop-header-logo img{
+      border-radius:12px;
+      padding:6px 10px;
+    }
+    .hero-logo,
+    .bar-entry-logo{
+      padding:14px 18px;
+      border-radius:22px;
+    }
     @media(max-width:768px){
-      body:not(.shop-entry-locked) .header{padding:12px !important}
-      body:not(.shop-entry-locked) .nav{display:grid !important;grid-template-columns:64px minmax(0,1fr) !important;align-items:start !important;gap:12px !important}
-      body:not(.shop-entry-locked) .shop-header-logo{display:flex !important;align-items:flex-start !important;justify-content:flex-start !important}
-      body:not(.shop-entry-locked) .shop-header-logo img{height:52px !important;width:auto !important}
-      body:not(.shop-entry-locked) .nav-links{
-        width:100% !important;
-        display:grid !important;
-        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-        grid-template-areas:
-          "lang lang lang lang"
-          "search search search search"
-          "cart user user menu" !important;
-        gap:8px !important;
-        align-items:center !important;
-      }
-      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
-        grid-area:lang !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:center !important;
-        gap:8px !important;
-        margin:0 !important;
-        overflow-x:auto !important;
-        padding-bottom:2px !important;
-      }
-      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
-      body:not(.shop-entry-locked) .search-wrap{grid-area:search !important;order:initial !important;max-width:none !important;min-width:0 !important;width:100% !important;margin:0 !important}
-      body:not(.shop-entry-locked) .search-input{height:44px !important}
-      body:not(.shop-entry-locked) #cartOpenBtn{grid-area:cart !important;width:100% !important;justify-content:center !important}
-      body:not(.shop-entry-locked) .user-menu{grid-area:user !important;min-width:0 !important}
-      body:not(.shop-entry-locked) .user-button{width:100% !important;display:flex !important;align-items:center !important;justify-content:center !important;min-width:0 !important;overflow:hidden !important;text-overflow:ellipsis !important}
-      body:not(.shop-entry-locked) #shopMenuBtn{grid-area:menu !important;width:100% !important;justify-content:center !important;margin-left:0 !important}
-      body:not(.shop-entry-locked) #btnDeals,
-      body:not(.shop-entry-locked) #headerDealsBtn{display:none !important}
-    }
-    @media(max-width:480px){
-      body:not(.shop-entry-locked) .nav{grid-template-columns:54px minmax(0,1fr) !important;gap:10px !important}
-      body:not(.shop-entry-locked) .shop-header-logo img{height:46px !important}
-      body:not(.shop-entry-locked) .nav-links{grid-template-columns:repeat(4,minmax(0,1fr)) !important}
-      body:not(.shop-entry-locked) .user-button,body:not(.shop-entry-locked) .cart-btn,body:not(.shop-entry-locked) .menu-btn{min-height:42px !important;padding:8px 10px !important}
+      .hero-logo,
+      .bar-entry-logo{padding:10px 14px;border-radius:18px}
+      .header .logo img,
+      .shop-header-logo img{padding:5px 8px}
     }
   </style>
-
-
-  <style id="shop-mobile-unlocked-header-final-fix">
-    @media(max-width:768px){
-      body:not(.shop-entry-locked) .header{padding:12px !important}
-      body:not(.shop-entry-locked) .nav{
-        display:flex !important;
-        flex-direction:column !important;
-        align-items:stretch !important;
-        gap:10px !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo{
-        display:flex !important;
-        align-items:center !important;
-        justify-content:flex-start !important;
-        width:100% !important;
-        margin:0 !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo img{
-        height:48px !important;
-        width:auto !important;
-      }
-      body:not(.shop-entry-locked) .nav-links{
-        width:100% !important;
-        display:grid !important;
-        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-        grid-template-areas:
-          "lang lang lang lang"
-          "search search search search"
-          "cart user user menu" !important;
-        gap:8px !important;
-        align-items:center !important;
-      }
-      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
-        grid-area:lang !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:center !important;
-        gap:8px !important;
-        margin:0 !important;
-        width:100% !important;
-        overflow-x:auto !important;
-        padding-bottom:2px !important;
-      }
-      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
-      body:not(.shop-entry-locked) .search-wrap{
-        grid-area:search !important;
-        max-width:none !important;
-        min-width:0 !important;
-        width:100% !important;
-        margin:0 !important;
-      }
-      body:not(.shop-entry-locked) .search-input{height:44px !important}
-      body:not(.shop-entry-locked) #btnDeals,
-      body:not(.shop-entry-locked) #headerDealsBtn,
-      body:not(.shop-entry-locked) .shop-top-auth,
-      body:not(.shop-entry-locked) .shop-no-login-hint,
-      body:not(.shop-entry-locked) .hero{display:none !important}
-      body:not(.shop-entry-locked) #cartOpenBtn{
-        grid-area:cart !important;
-        width:100% !important;
-        justify-content:center !important;
-      }
-      body:not(.shop-entry-locked) .user-menu{
-        grid-area:user !important;
-        min-width:0 !important;
-        width:100% !important;
-      }
-      body:not(.shop-entry-locked) .user-button{
-        width:100% !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:center !important;
-        min-width:0 !important;
-        min-height:42px !important;
-        overflow:hidden !important;
-        text-overflow:ellipsis !important;
-      }
-      body:not(.shop-entry-locked) #shopMenuBtn{
-        grid-area:menu !important;
-        width:100% !important;
-        justify-content:center !important;
-        margin-left:0 !important;
-      }
-    }
-    @media(max-width:480px){
-      body:not(.shop-entry-locked) .header{padding:10px !important}
-      body:not(.shop-entry-locked) .shop-header-logo img{height:44px !important}
-      body:not(.shop-entry-locked) .nav-links{gap:7px !important}
-      body:not(.shop-entry-locked) .user-button,
-      body:not(.shop-entry-locked) .cart-btn,
-      body:not(.shop-entry-locked) .menu-btn{min-height:42px !important;padding:8px 10px !important}
-    }
-  </style>
-
-
-  <style id="shop-mobile-unlocked-header-rowfix-v4">
-    @media(max-width:768px){
-      body:not(.shop-entry-locked) .header{padding:12px !important}
-      body:not(.shop-entry-locked) .nav{
-        display:grid !important;
-        grid-template-columns:64px repeat(3,minmax(0,1fr)) !important;
-        grid-template-areas:
-          "logo lang lang lang"
-          "search search search search"
-          "cart user user menu" !important;
-        align-items:center !important;
-        gap:10px !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo{
-        grid-area:logo !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:flex-start !important;
-        width:auto !important;
-        margin:0 !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo img{
-        height:48px !important;
-        width:auto !important;
-      }
-      body:not(.shop-entry-locked) .nav-links{
-        display:contents !important;
-        width:auto !important;
-      }
-      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
-        grid-area:lang !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:flex-end !important;
-        gap:8px !important;
-        margin:0 !important;
-        overflow-x:auto !important;
-        padding:0 !important;
-        min-width:0 !important;
-      }
-      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
-      body:not(.shop-entry-locked) .search-wrap{
-        grid-area:search !important;
-        max-width:none !important;
-        min-width:0 !important;
-        width:100% !important;
-        margin:0 !important;
-      }
-      body:not(.shop-entry-locked) .search-input{height:44px !important}
-      body:not(.shop-entry-locked) #cartOpenBtn{
-        grid-area:cart !important;
-        width:100% !important;
-        justify-content:center !important;
-      }
-      body:not(.shop-entry-locked) .user-menu{
-        grid-area:user !important;
-        min-width:0 !important;
-        width:100% !important;
-      }
-      body:not(.shop-entry-locked) .user-button{
-        width:100% !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:center !important;
-        min-width:0 !important;
-        min-height:42px !important;
-        overflow:hidden !important;
-        text-overflow:ellipsis !important;
-      }
-      body:not(.shop-entry-locked) #shopMenuBtn{
-        grid-area:menu !important;
-        width:100% !important;
-        justify-content:center !important;
-        margin-left:0 !important;
-      }
-      body:not(.shop-entry-locked) #btnDeals,
-      body:not(.shop-entry-locked) #headerDealsBtn,
-      body:not(.shop-entry-locked) .shop-top-auth,
-      body:not(.shop-entry-locked) .shop-no-login-hint,
-      body:not(.shop-entry-locked) .hero{display:none !important}
-    }
-    @media(max-width:480px){
-      body:not(.shop-entry-locked) .header{padding:10px !important}
-      body:not(.shop-entry-locked) .nav{
-        grid-template-columns:56px repeat(3,minmax(0,1fr)) !important;
-        gap:8px !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo img{height:44px !important}
-      body:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
-        justify-content:space-between !important;
-        gap:6px !important;
-      }
-      body:not(.shop-entry-locked) .user-button,
-      body:not(.shop-entry-locked) .cart-btn,
-      body:not(.shop-entry-locked) .menu-btn{min-height:42px !important;padding:8px 10px !important}
-    }
-  </style>
-
-
-  <style id="shop-mobile-unlocked-header-v5">
-    @media (max-width: 768px){
-      body:not(.shop-entry-locked) .header{padding:10px 12px !important}
-      body:not(.shop-entry-locked) .nav{
-        display:grid !important;
-        grid-template-columns:92px minmax(0,1fr) minmax(0,1fr) 64px !important;
-        grid-template-areas:
-          "logo lang lang lang"
-          "search search search search"
-          "cart user user menu" !important;
-        align-items:center !important;
-        column-gap:8px !important;
-        row-gap:10px !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo{
-        grid-area:logo !important;
-        width:92px !important;
-        min-width:92px !important;
-        max-width:92px !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:flex-start !important;
-        overflow:hidden !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo img{
-        display:block !important;
-        width:100% !important;
-        max-width:100% !important;
-        height:auto !important;
-        max-height:48px !important;
-        object-fit:contain !important;
-      }
-      body:not(.shop-entry-locked) .nav-links{
-        display:contents !important;
-        width:auto !important;
-      }
-      body:not(.shop-entry-locked) #shopLangWrap{
-        grid-area:lang !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:flex-end !important;
-        gap:6px !important;
-        min-width:0 !important;
-        width:100% !important;
-        margin:0 !important;
-        overflow:hidden !important;
-        flex-wrap:nowrap !important;
-      }
-      body:not(.shop-entry-locked) .shop-lang-btn{
-        flex:0 0 auto !important;
-        min-width:42px !important;
-        min-height:38px !important;
-        padding:6px 8px !important;
-        border-radius:16px !important;
-        font-size:11px !important;
-        line-height:1 !important;
-      }
-      body:not(.shop-entry-locked) .search-wrap{
-        grid-area:search !important;
-        width:100% !important;
-        min-width:0 !important;
-        max-width:none !important;
-        margin:0 !important;
-      }
-      body:not(.shop-entry-locked) .search-input{height:44px !important}
-      body:not(.shop-entry-locked) #cartOpenBtn{
-        grid-area:cart !important;
-        width:100% !important;
-        min-width:0 !important;
-        justify-content:center !important;
-      }
-      body:not(.shop-entry-locked) .user-menu{
-        grid-area:user !important;
-        width:100% !important;
-        min-width:0 !important;
-      }
-      body:not(.shop-entry-locked) .user-button{
-        width:100% !important;
-        min-width:0 !important;
-        min-height:42px !important;
-        display:flex !important;
-        align-items:center !important;
-        justify-content:center !important;
-        overflow:hidden !important;
-        text-overflow:ellipsis !important;
-        white-space:nowrap !important;
-      }
-      body:not(.shop-entry-locked) #shopMenuBtn{
-        grid-area:menu !important;
-        width:100% !important;
-        min-width:0 !important;
-        justify-content:center !important;
-        margin-left:0 !important;
-      }
-      body:not(.shop-entry-locked) #btnDeals,
-      body:not(.shop-entry-locked) #headerDealsBtn,
-      body:not(.shop-entry-locked) .shop-top-auth,
-      body:not(.shop-entry-locked) .shop-no-login-hint,
-      body:not(.shop-entry-locked) .hero{display:none !important}
-    }
-
-    @media (max-width: 430px){
-      body:not(.shop-entry-locked) .nav{
-        grid-template-columns:84px minmax(0,1fr) minmax(0,1fr) 58px !important;
-        column-gap:6px !important;
-        row-gap:8px !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo{
-        width:84px !important;
-        min-width:84px !important;
-        max-width:84px !important;
-      }
-      body:not(.shop-entry-locked) .shop-header-logo img{max-height:42px !important}
-      body:not(.shop-entry-locked) #shopLangWrap{gap:5px !important}
-      body:not(.shop-entry-locked) .shop-lang-btn{
-        min-width:38px !important;
-        min-height:36px !important;
-        padding:5px 6px !important;
-        font-size:10.5px !important;
-        border-radius:14px !important;
-      }
-    }
-  </style>
-
 </head>
 <body class="shop-page shop-entry-locked">
 
@@ -1403,7 +1068,7 @@
       <button class="nav-link active" id="btnDeals">🏠 Deals</button>
       <button class="nav-link" id="btnFavorites" style="display:none">❤️ Favoriten</button>
       <button class="nav-link" id="btnOrders" style="display:none">📦 Bestellungen</button>
-      <div id="shopLangWrap" class="shop-lang-wrap" style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
         <button class="nav-link shop-lang-btn active" id="shopLangDE" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #FF3366;border-radius:6px;color:#fff">DE</button>
         <button class="nav-link shop-lang-btn" id="shopLangEN" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">EN</button>
         <button class="nav-link shop-lang-btn" id="shopLangIT" style="font-size:12px;font-weight:700;padding:5px 10px;border:1px solid #333;border-radius:6px;color:#888">IT</button>
@@ -1411,22 +1076,22 @@
       </div>
       <button class="cart-btn" id="cartOpenBtn">🛒 <span id="cartBadge" class="cart-badge">0</span></button>
       <div class="user-menu">
-        <button class="user-button" id="userBtn" type="button" onclick="return window.handleShopUserButton ? window.handleShopUserButton(event) : false;">👤 Login</button>
+        <button class="user-button" id="userBtn">👤 Login</button>
         <div class="user-dropdown" id="userDropdown">
           <div class="dropdown-item" id="dropdownChangePw">🔑 Passwort ändern</div>
           <div class="dropdown-item" id="dropdownLogout">Ausloggen</div>
         </div>
       </div>
-      <button class="nav-link header-deals-btn" id="headerDealsBtn" type="button" data-shop-i18n="discoverDealsShort">🍸 Jetzt Deals entdecken</button>
-      <button class="menu-btn" id="shopMenuBtn" type="button" aria-label="Menü öffnen">☰</button>
+      <button class="nav-link header-deals-btn" id="headerDealsBtn" data-shop-i18n="discoverDealsShort">🍸 Jetzt Deals entdecken</button>
+      <button class="menu-btn" id="shopMenuBtn" aria-label="Menü öffnen">☰</button>
     </div>
   </div>
 
 </div>
 
 <div class="shop-top-auth" id="shopTopAuth">
-  <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin" onclick="return window.openShopHeaderAuth ? window.openShopHeaderAuth('login', event) : false;">Einloggen</button>
-  <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister" onclick="return window.openShopHeaderAuth ? window.openShopHeaderAuth('register', event) : false;">Registrieren</button>
+  <button class="shop-top-auth-btn" id="shopHeaderLoginBtn" data-shop-auth-target="login" type="button" data-shop-i18n="headerLogin">Einloggen</button>
+  <button class="shop-top-auth-btn shop-top-auth-primary" id="shopHeaderRegisterBtn" data-shop-auth-target="register" type="button" data-shop-i18n="headerRegister">Registrieren</button>
 </div>
 <div class="shop-no-login-hint" id="shopNoLoginHint" data-shop-i18n="noLoginHint">Auch ohne Konto möglich – stöbere einfach drauflos.</div>
 
