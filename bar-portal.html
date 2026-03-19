@@ -250,18 +250,36 @@
       .bar-entry-sub{font-size:14px}
       .entry-cta-wrap{max-width:none;padding:0 4px}
     }
-  
-    body.bar-authenticated #barHeaderAuth,
-    body.bar-authenticated #btnLogout{display:none !important}
-    body.bar-authenticated #barMenuBtn{display:inline-flex !important}
-    .drawer-action{width:100%;text-align:left;cursor:pointer;font:inherit}
-    @media(max-width:768px){
-      body.bar-authenticated .header{padding:12px 14px !important}
-      body.bar-authenticated .header-right{width:100% !important;display:grid !important;grid-template-columns:repeat(5,minmax(0,1fr)) !important;gap:8px !important;align-items:center !important}
-      body.bar-authenticated .header-right .lang-btn{padding:10px 0 !important}
-      body.bar-authenticated #barMenuBtn{grid-column:5 !important;width:100% !important;justify-content:center !important}
+  </style>
+
+  <style id="logo-visibility-fix">
+    .logo img,
+    .shop-header-logo img,
+    .hero-logo,
+    .bar-entry-logo{
+      background:linear-gradient(180deg, rgba(246,242,234,.96) 0%, rgba(233,226,214,.93) 100%);
+      border-radius:16px;
+      box-shadow:0 12px 30px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.72);
+      padding:8px 12px;
+      box-sizing:content-box;
     }
-</style>
+    .header .logo img,
+    .shop-header-logo img{
+      border-radius:12px;
+      padding:6px 10px;
+    }
+    .hero-logo,
+    .bar-entry-logo{
+      padding:14px 18px;
+      border-radius:22px;
+    }
+    @media(max-width:768px){
+      .hero-logo,
+      .bar-entry-logo{padding:10px 14px;border-radius:18px}
+      .header .logo img,
+      .shop-header-logo img{padding:5px 8px}
+    }
+  </style>
 </head>
 <body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
@@ -299,7 +317,6 @@
     <a class="drawer-link" href="impressum.html">📄 <span data-i18n="legalNotice">Impressum</span></a>
     <a class="drawer-link" href="datenschutz-bars.html">🔒 <span data-i18n="privacy">Datenschutz</span></a>
     <a class="drawer-link" href="agb-bars.html">🧾 <span data-i18n="termsBars">AGB Bars</span></a>
-    <button class="drawer-link drawer-action btn-logout" id="barDrawerLogout" type="button" style="display:none">↩️ <span data-i18n="logout">Ausloggen</span></button>
     <div class="drawer-note" data-i18n="menuNote">Wichtige Infos schnell erreichbar, auch wenn weiter unten viele Inhalte sichtbar sind.</div>
   </div>
 </div>
@@ -632,26 +649,6 @@
     </div>
 
     <!-- VOUCHERS -->
-
-    <!-- REDEEM -->
-    <div id="dashRedeem" class="tab-content">
-      <div class="redeem-box">
-        <h2>🔑 <span data-i18n="redeemTitle">Gutschein einlösen</span></h2>
-        <p style="color:#999;font-size:14px;line-height:1.5;margin-bottom:18px" data-i18n="redeemHint">Gutschein-Code des Kunden eingeben</p>
-        <div class="err-msg" id="redeemErr" aria-live="polite"></div>
-        <div class="form-group" style="text-align:left;margin-bottom:16px">
-          <label class="form-label" for="redeemCode" data-i18n="codeLbl">Code</label>
-          <input type="text" class="form-input" id="redeemCode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" placeholder="ABC123">
-        </div>
-        <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
-        <div id="redeemResult" style="display:none;margin-top:18px">
-          <div class="code-display">
-            <div class="code-title" data-i18n="dealLbl">Deal</div>
-            <div class="code-val" id="redeemDeal" style="font-size:20px;letter-spacing:0"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- SETTINGS -->
     <div id="dashSettings" class="tab-content">
