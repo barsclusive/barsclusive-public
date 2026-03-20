@@ -1022,108 +1022,6 @@
       .hero-how-link{font-size:12.5px}
     }
   </style>
-
-<style id="shop-mobile-layout-repair">
-@media(max-width:768px){
-  .header{padding:12px !important}
-  .nav{display:flex !important;flex-direction:column !important;align-items:stretch !important;gap:10px !important}
-  .logo.shop-header-logo,.logo{display:flex !important;align-self:flex-start !important}
-  .logo img,.shop-header-logo img{height:52px !important;width:auto !important;max-width:none !important}
-  .nav-links{display:flex !important;flex-wrap:wrap !important;align-items:center !important;gap:10px !important;width:100% !important}
-  .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{order:1;display:flex !important;gap:8px !important;flex-wrap:nowrap !important;overflow-x:auto !important;max-width:100% !important}
-  .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
-  .nav-links > div[style*="display:flex;align-items:center;gap:8px"] .nav-link{flex:0 0 auto;min-width:52px !important;min-height:52px !important;padding:0 12px !important;border-radius:16px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important}
-  .header-deals-btn{order:2;margin-left:auto !important;min-height:48px !important;border-radius:16px !important}
-  .search-wrap{order:3;flex:1 0 100% !important;max-width:none !important;width:100% !important;display:block !important}
-  .search-input{min-height:50px !important;height:50px !important;padding-left:40px !important;font-size:15px !important}
-  .search-icon{left:14px !important}
-  #cartOpenBtn{order:4;flex:0 0 auto;min-width:56px !important;min-height:56px !important;border-radius:18px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important}
-  .user-menu{order:5;flex:1 1 auto;min-width:0 !important}
-  #userBtn{width:100% !important;min-height:56px !important;border-radius:18px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;padding:0 16px !important}
-  #shopMenuBtn{order:6;flex:0 0 auto;min-width:56px !important;min-height:56px !important;border-radius:18px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important;margin-left:auto !important}
-  body.shop-entry-locked .shop-top-auth{padding:8px 12px 6px !important;gap:10px !important}
-  body.shop-entry-locked .shop-top-auth-btn{min-height:50px !important;border-radius:16px !important}
-}
-</style>
-
-
-<style id="shop-runtime-layout-hotfix-20260320">
-  .shop-mobile-search-slot{display:none}
-  @media(max-width:768px){
-    body.shop-entry-locked .header{padding:12px 12px 8px !important}
-    body.shop-entry-locked .nav{
-      display:grid !important;
-      grid-template-columns:auto 1fr !important;
-      align-items:start !important;
-      gap:12px !important;
-    }
-    body.shop-entry-locked .logo{
-      display:flex !important;
-      align-items:flex-start !important;
-      margin:0 !important;
-    }
-    body.shop-entry-locked .logo img{height:64px !important;width:auto !important}
-    body.shop-entry-locked .nav-links{
-      display:flex !important;
-      flex-wrap:wrap !important;
-      justify-content:flex-end !important;
-      align-items:center !important;
-      gap:8px !important;
-      width:100% !important;
-      margin:0 !important;
-    }
-    body.shop-entry-locked .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
-      display:flex !important;
-      flex-wrap:nowrap !important;
-      gap:8px !important;
-      align-items:center !important;
-      margin-right:0 !important;
-      order:1 !important;
-    }
-    body.shop-entry-locked .nav-links > div[style*="display:flex;align-items:center;gap:8px"] .nav-link{
-      min-width:48px !important;height:48px !important;min-height:48px !important;
-      border-radius:16px !important;padding:0 12px !important;
-      display:inline-flex !important;align-items:center !important;justify-content:center !important;
-    }
-    body.shop-entry-locked .search-wrap{display:none !important}
-    body.shop-entry-locked #cartOpenBtn{
-      display:inline-flex !important;order:2 !important;width:48px !important;min-width:48px !important;
-      height:48px !important;min-height:48px !important;padding:0 !important;border-radius:16px !important;
-      align-items:center !important;justify-content:center !important;
-    }
-    body.shop-entry-locked .user-menu{display:none !important}
-    body.shop-entry-locked #shopMenuBtn{
-      display:inline-flex !important;order:3 !important;width:48px !important;min-width:48px !important;
-      height:48px !important;min-height:48px !important;padding:0 !important;border-radius:16px !important;
-      margin-left:0 !important;align-items:center !important;justify-content:center !important;
-    }
-    body.shop-entry-locked .shop-top-auth{
-      display:grid !important;grid-template-columns:1fr 1fr !important;gap:10px !important;
-      padding:8px 12px 0 !important;background:transparent !important;backdrop-filter:none !important;
-    }
-    body.shop-entry-locked .shop-top-auth-btn{
-      min-height:48px !important;border-radius:16px !important;padding:0 14px !important;font-size:14px !important;
-    }
-    body.shop-entry-locked .shop-no-login-hint{display:none !important}
-    body.shop-entry-locked .header-deals-btn{
-      display:flex !important;width:calc(100% - 24px) !important;margin:10px 12px 0 !important;
-      min-height:48px !important;border-radius:16px !important;justify-content:center !important;
-      padding:0 16px !important;order:99 !important;
-    }
-
-    body:not(.shop-entry-locked) .search-wrap{display:none !important}
-    body:not(.shop-entry-locked) .shop-mobile-search-slot{display:block !important;margin:0 0 12px !important}
-    body:not(.shop-entry-locked) .shop-mobile-search-slot .search-wrap{
-      display:block !important;width:100% !important;max-width:none !important;min-width:0 !important;
-    }
-    body:not(.shop-entry-locked) .shop-mobile-search-slot .search-input{
-      width:100% !important;height:48px !important;min-height:48px !important;font-size:15px !important;
-      padding-left:40px !important;border-radius:18px !important;
-    }
-    body:not(.shop-entry-locked) .shop-mobile-search-slot .search-icon{left:14px !important}
-  }
-</style>
-
 </head>
 <body class="shop-page shop-entry-locked">
 
@@ -1260,7 +1158,6 @@
 
 <!-- MAIN -->
 <div class="container">
-  <div id="shopMobileSearchSlot" class="shop-mobile-search-slot"></div>
   <div style="display:flex;gap:10px;margin-bottom:16px" id="shopViewToggle">
     <button id="viewGrid" data-shop-i18n="viewDeals" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🏠 Deals</button>
     <button id="viewMap" data-shop-i18n="viewMap" style="background:#2a2a2a;color:#ccc;border:1px solid #3a3a3a;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🗺️ Karte</button>
