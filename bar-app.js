@@ -710,20 +710,20 @@ function ensureBarFilterBar() {
     btn.className = 'bar-stats-filter-btn';
     btn.dataset.period = f[0];
     btn.textContent = f[1][currentLang] || f[1].de;
-    btn.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+    btn.style.cssText = 'background:#F5F0E8;color:#1E1B15;border:1px solid #CCC0AA;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600';
     btn.addEventListener('click', function() { _barStatsPeriod = f[0]; highlightBarFilterBtn(f[0]); renderBarStats(f[0]); });
     wrap.appendChild(btn);
   });
   var fromInp = document.createElement('input'); fromInp.type='date'; fromInp.id='barSfFrom';
-  fromInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
+  fromInp.style.cssText = 'background:#FAF6F0;color:#1E1B15;border:1px solid #CCC0AA;padding:4px 8px;border-radius:8px;font-size:12px';
   wrap.appendChild(fromInp);
   var span = document.createElement('span'); span.textContent='–'; span.style.cssText='color:#666;font-size:12px';
   wrap.appendChild(span);
   var toInp = document.createElement('input'); toInp.type='date'; toInp.id='barSfTo';
-  toInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
+  toInp.style.cssText = 'background:#FAF6F0;color:#1E1B15;border:1px solid #CCC0AA;padding:4px 8px;border-radius:8px;font-size:12px';
   wrap.appendChild(toInp);
   var applyBtn = document.createElement('button'); applyBtn.textContent='OK';
-  applyBtn.style.cssText = 'background:#FF3366;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
+  applyBtn.style.cssText = 'background:linear-gradient(180deg,#C98A4B,#A86A2A);color:#fffdf8;border:none;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600';
   applyBtn.addEventListener('click', function() {
     var f = document.getElementById('barSfFrom'), tt = document.getElementById('barSfTo');
     if (!f || !f.value) { showToast(currentLang === 'de' ? 'Bitte Von-Datum wählen' : currentLang === 'en' ? 'Please choose a from date' : currentLang === 'it' ? 'Seleziona una data iniziale' : 'Veuillez choisir une date de début', true); return; }
@@ -740,8 +740,8 @@ function ensureBarFilterBar() {
 
 function highlightBarFilterBtn(period) {
   document.querySelectorAll('.bar-stats-filter-btn').forEach(function(b) {
-    if (b.dataset.period === period) { b.style.background='#FF3366'; b.style.color='#fff'; b.style.borderColor='#FF3366'; }
-    else { b.style.background='#222'; b.style.color='#ccc'; b.style.borderColor='#333'; }
+    if (b.dataset.period === period) { b.style.background='linear-gradient(180deg,#C98A4B,#A86A2A)'; b.style.color='#fffdf8'; b.style.borderColor='#A86A2A'; }
+    else { b.style.background='#F5F0E8'; b.style.color='#1E1B15'; b.style.borderColor='#CCC0AA'; }
   });
 }
 
@@ -767,7 +767,7 @@ async function loadBarStats(period) {
   }
 
   var grid = document.getElementById('statsGrid');
-  grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
+  grid.innerHTML = '<div style="color:#6B5D50;padding:20px">Laden...</div>';
 
   if (_dataCache.statsLoading) return;
   _dataCache.statsLoading = true;
@@ -863,7 +863,7 @@ async function loadMyDeals() {
   if (_dataCache.deals) { renderMyDeals(_dataCache.deals); }
   else {
     var el = document.getElementById('dealList');
-    el.innerHTML = '<div class="empty" style="padding:20px;color:#999">Laden...</div>';
+    el.innerHTML = '<div class="empty" style="padding:20px;color:#6B5D50">Laden...</div>';
   }
   // Refresh in background
   if (_dataCache.dealsLoading) return;
@@ -918,7 +918,7 @@ function renderMyDeals(deals) {
     btnEdit.addEventListener('click', function() { openEditModal(d); });
 
     var btnDel = document.createElement('button');
-    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#2a2a2a;color:#ef4444;border:1px solid #ef4444;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
+    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#FAF6F0;color:#B04B35;border:1px solid #B04B35;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
     btnDel.textContent = t('deleteDealBtn') || 'Löschen';
     (function(dealId) { btnDel.addEventListener('click', function() { deleteDeal(dealId); }); })(d.id);
 
@@ -1765,7 +1765,7 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
       '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
     '</div>' +
-    '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
+    '<div style="color:#6B5D50;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
@@ -1806,7 +1806,7 @@ function openVoucherDetail(v) {
       '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="font-size:14px;font-weight:700;margin-bottom:8px">' + escHtml(v.deal_title || '') + '</div>' +
-    '<div style="color:#999;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
+    '<div style="color:#6B5D50;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
     '<div class="timeline-list">' + timeline.map(function(it){ return '<div class="timeline-item"><div class="timeline-dot"></div><div><div class="timeline-title">' + escHtml(it.title) + '</div><div class="timeline-meta">' + escHtml(fmtDateTime_(it.when)) + (it.meta ? ' · ' + escHtml(it.meta) : '') + '</div></div></div>'; }).join('') + '</div>';
   modal.classList.add('active');
 }
@@ -2655,297 +2655,160 @@ applyProfileToForm = function(b) {
 })();
 
 
-// ===== BAR PORTAL REPAIR PATCH 2026-03-19 =====
+
+/* ===== RUNTIME HOTFIX 2026-03-20: bar portal live lang + redeem + header ===== */
 (function(){
-  try {
-    Object.assign(TRANSLATIONS.de, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Format: ABCD-EFGH-JKLM. Bindestriche werden automatisch gesetzt.',
-      redeemLoading:'⏳ Wird geprüft…',
-      redeemChecking:'Gutschein wird geprüft…',
-      redeemInvalid:'Bitte einen vollständigen Gutschein-Code eingeben.',
-      redeemResultTitle:'Eingelöster Gutschein',
-      noPayout:'Keine Auszahlung'
-    });
-    Object.assign(TRANSLATIONS.en, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Format: ABCD-EFGH-JKLM. Hyphens are inserted automatically.',
-      redeemLoading:'⏳ Checking…',
-      redeemChecking:'Checking voucher…',
-      redeemInvalid:'Please enter a complete voucher code.',
-      redeemResultTitle:'Redeemed voucher',
-      noPayout:'No payout'
-    });
-    Object.assign(TRANSLATIONS.it, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Formato: ABCD-EFGH-JKLM. I trattini vengono inseriti automaticamente.',
-      redeemLoading:'⏳ Verifica in corso…',
-      redeemChecking:'Verifica voucher in corso…',
-      redeemInvalid:'Inserisci un codice voucher completo.',
-      redeemResultTitle:'Voucher riscattato',
-      noPayout:'Nessun pagamento'
-    });
-    Object.assign(TRANSLATIONS.fr, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Format : ABCD-EFGH-JKLM. Les tirets sont ajoutés automatiquement.',
-      redeemLoading:'⏳ Vérification…',
-      redeemChecking:'Vérification du bon…',
-      redeemInvalid:'Veuillez saisir un code bon complet.',
-      redeemResultTitle:'Bon utilisé',
-      noPayout:'Aucun paiement'
-    });
-  } catch(e) {}
+  var _activeDashTabName = 'overview';
 
-  function voucherCodeRaw(v){ return String(v || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 12); }
-  function formatVoucherCode(v){
-    var raw = voucherCodeRaw(v), parts = [];
-    if (raw.slice(0,4)) parts.push(raw.slice(0,4));
-    if (raw.slice(4,8)) parts.push(raw.slice(4,8));
-    if (raw.slice(8,12)) parts.push(raw.slice(8,12));
-    return parts.join('-');
+  if (typeof switchDashTab === 'function') {
+    var _origSwitchDashTabHotfix = switchDashTab;
+    switchDashTab = function(name, btn){
+      _activeDashTabName = name || _activeDashTabName || 'overview';
+      return _origSwitchDashTabHotfix.apply(this, arguments);
+    };
   }
 
-  function syncHeaderVisibility(){
-    var loggedIn = !!(typeof sessionGet === 'function' && sessionGet());
-    var headerAuth = document.getElementById('barHeaderAuth');
-    var logoutBtn = document.getElementById('btnLogout');
-    if (headerAuth) headerAuth.style.display = loggedIn ? 'none' : 'flex';
-    if (logoutBtn) logoutBtn.style.display = 'none';
+  function formatVoucherCodeInput(value){
+    return String(value || '')
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 12)
+      .replace(/(.{4})/g, '$1-')
+      .replace(/-$/, '');
   }
 
-  function ensureRedeemPanel(){
-    if (document.getElementById('dashRedeem')) return;
-    var dashboard = document.getElementById('barDashboard');
-    var before = document.getElementById('dashSettings');
-    if (!dashboard || !before || !before.parentNode) return;
-    var wrap = document.createElement('div');
-    wrap.id = 'dashRedeem';
-    wrap.className = 'tab-content';
-    wrap.innerHTML = '' +
-      '<div class="redeem-box">' +
-        '<h2>🔑 <span data-i18n="redeemTitle">' + (typeof t === 'function' ? t('redeemTitle') : 'Gutschein einlösen') + '</span></h2>' +
-        '<p style="margin:-8px 0 18px;color:#999;font-size:14px" data-i18n="redeemHint">' + (typeof t === 'function' ? t('redeemHint') : 'Gutschein-Code des Kunden eingeben') + '</p>' +
-        '<div class="form-group" style="text-align:left;margin-bottom:12px">' +
-          '<label class="form-label" for="redeemCode" data-i18n="codeLbl">' + (typeof t === 'function' ? t('codeLbl') : 'Code') + '</label>' +
-          '<input type="text" class="form-input" id="redeemCode" inputmode="latin-prose" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="ABCD-EFGH-JKLM">' +
-          '<small id="redeemFormatHint" style="display:block;margin-top:8px;color:#999;font-size:12px">' + (typeof t === 'function' ? t('redeemFormatHint') : 'Format: ABCD-EFGH-JKLM. Bindestriche werden automatisch gesetzt.') + '</small>' +
-        '</div>' +
-        '<button class="btn-pink" id="btnRedeem" type="button" data-i18n="redeemBtn">' + (typeof t === 'function' ? t('redeemBtn') : 'Einlösen') + '</button>' +
-        '<div class="err-msg" id="redeemErr" aria-live="polite" style="margin-top:14px"></div>' +
-        '<div id="redeemResult" style="display:none;margin-top:16px;padding:16px;border-radius:14px;border:1px solid #3a3a3a;background:rgba(255,255,255,.03);text-align:left">' +
-          '<div style="font-size:12px;color:#999;letter-spacing:.08em;text-transform:uppercase" id="redeemResultLabel">' + (typeof t === 'function' ? t('redeemResultTitle') : 'Eingelöster Gutschein') + '</div>' +
-          '<div id="redeemDeal" style="margin-top:6px;font-size:18px;font-weight:700;color:#fff">—</div>' +
-        '</div>' +
-      '</div>';
-    before.parentNode.insertBefore(wrap, before);
+  function refreshCurrentBarSection(){
+    try {
+      var s = sessionGet && sessionGet();
+      if (!s) return;
+      switch(_activeDashTabName){
+        case 'overview':
+          if (typeof loadBarStats === 'function') loadBarStats();
+          break;
+        case 'mydeals':
+          if (typeof loadMyDeals === 'function') loadMyDeals();
+          break;
+        case 'settings':
+          if (typeof loadProfile === 'function') loadProfile();
+          break;
+        case 'redeem':
+          var redeemTitle = document.querySelector('[data-i18n="redeemTitle"]');
+          if (redeemTitle) redeemTitle.textContent = t('redeemTitle');
+          var redeemBtn = document.getElementById('btnRedeem');
+          if (redeemBtn && !redeemBtn.disabled) redeemBtn.textContent = t('redeemBtn');
+          break;
+      }
+      var voucherFilterStatus = document.getElementById('voucherFilterStatus');
+      if (voucherFilterStatus) {
+        var current = voucherFilterStatus.value;
+        voucherFilterStatus.innerHTML = ''
+          + '<option value="all">' + t('allStatuses') + '</option>'
+          + '<option value="issued">' + t('openLbl') + '</option>'
+          + '<option value="redeemed">' + t('redeemed') + '</option>'
+          + '<option value="refunded">' + t('refundedLbl') + '</option>';
+        voucherFilterStatus.value = current === 'sent' ? 'issued' : current;
+      }
+    } catch(e){}
   }
 
-  function updateRedeemTexts(){
-    var input = document.getElementById('redeemCode'); if (input) input.placeholder = (typeof t === 'function' ? t('redeemPlaceholder') : 'ABCD-EFGH-JKLM');
-    var hint = document.getElementById('redeemFormatHint'); if (hint) hint.textContent = (typeof t === 'function' ? t('redeemFormatHint') : hint.textContent);
-    var resultLabel = document.getElementById('redeemResultLabel'); if (resultLabel) resultLabel.textContent = (typeof t === 'function' ? t('redeemResultTitle') : resultLabel.textContent);
+  if (typeof setLang === 'function') {
+    var _origSetLangHotfix = setLang;
+    setLang = function(lang){
+      var r = _origSetLangHotfix.apply(this, arguments);
+      refreshCurrentBarSection();
+      return r;
+    };
   }
 
-  function bindRedeemUi(){
-    ensureRedeemPanel();
-    updateRedeemTexts();
-    syncHeaderVisibility();
+  function bindRedeemUiHotfix(){
     var input = document.getElementById('redeemCode');
-    if (input && !input.dataset.maskBound) {
-      input.dataset.maskBound = '1';
+    var btn = document.getElementById('btnRedeem');
+    if (input && !input._redeemFormatBound) {
       input.addEventListener('input', function(){
         var pos = this.selectionStart || this.value.length;
-        var before = voucherCodeRaw(this.value.slice(0, pos)).length;
-        this.value = formatVoucherCode(this.value);
-        var nextPos = this.value.length;
-        if (before <= 4) nextPos = before;
-        else if (before <= 8) nextPos = before + 1;
-        else nextPos = Math.min(before + 2, this.value.length);
-        try { this.setSelectionRange(nextPos, nextPos); } catch(e) {}
+        var oldLen = this.value.length;
+        this.value = formatVoucherCodeInput(this.value);
+        var newLen = this.value.length;
+        try { this.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(e){}
       });
-      input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); if (typeof doRedeem === 'function') doRedeem(); } });
-      input.addEventListener('blur', function(){ this.value = formatVoucherCode(this.value); });
+      input.addEventListener('keydown', function(e){
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (typeof doRedeem === 'function') doRedeem();
+        }
+      });
+      input._redeemFormatBound = true;
     }
-    var btn = document.getElementById('btnRedeem');
-    if (btn && !btn.dataset.boundRedeemClick) {
-      btn.dataset.boundRedeemClick = '1';
-      btn.addEventListener('click', function(){ if (typeof doRedeem === 'function') doRedeem(); });
-    }
-  }
-
-  function unlockBarEntry(target){
-    document.body.classList.remove('bar-entry-locked');
-    if (typeof showAuthScreen === 'function') showAuthScreen(true);
-    var loginForm = document.getElementById('loginForm');
-    var registerForm = document.getElementById('registerForm');
-    if (loginForm) loginForm.classList.toggle('active', target !== 'register');
-    if (registerForm) registerForm.classList.toggle('active', target === 'register');
-    var tabs = document.querySelectorAll('[data-auth-tab]');
-    tabs.forEach(function(tab){ tab.classList.toggle('active', tab.dataset.authTab === (target === 'register' ? 'register' : 'login')); });
-    syncHeaderVisibility();
-    var targetEl = target === 'register' ? registerForm : loginForm;
-    if (targetEl) {
-      var top = Math.max((targetEl.getBoundingClientRect().top + window.scrollY) - 88, 0);
-      window.scrollTo({ top: top, behavior: 'smooth' });
+    if (btn && !btn._redeemClickBound) {
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        if (typeof doRedeem === 'function') doRedeem();
+      });
+      btn._redeemClickBound = true;
     }
   }
 
-  function currentBarTab(){
-    var active = document.querySelector('#barDashboard .tab.active');
-    return active && active.dataset ? active.dataset.dashTab : 'overview';
-  }
-  function rerenderCurrentBarTab(){
-    if (!(typeof sessionGet === 'function' && sessionGet())) return;
-    var tab = currentBarTab();
-    try {
-      if (tab === 'overview' && typeof loadBarStats === 'function') loadBarStats(_barStatsPeriod || 'all');
-      else if (tab === 'mydeals' && typeof loadMyDeals === 'function') loadMyDeals();
-      else if (tab === 'settings' && typeof loadProfile === 'function') loadProfile();
-      else if (tab === 'redeem') bindRedeemUi();
-    } catch(e) {}
-  }
-
-  var _oldSetLangRepairBar = typeof setLang === 'function' ? setLang : null;
-  if (_oldSetLangRepairBar) {
-    setLang = function(lang){
-      _oldSetLangRepairBar(lang);
-      bindRedeemUi();
-      syncHeaderVisibility();
-      setTimeout(rerenderCurrentBarTab, 0);
+  if (typeof doRedeem === 'function') {
+    var _origDoRedeemHotfix = doRedeem;
+    doRedeem = async function(){
+      var btn = document.getElementById('btnRedeem');
+      var input = document.getElementById('redeemCode');
+      if (input) input.value = formatVoucherCodeInput(input.value);
+      var oldText = btn ? btn.textContent : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = (typeof t === 'function' ? t('processing') : '⏳ Wird verarbeitet...');
+      }
+      try {
+        return await _origDoRedeemHotfix.apply(this, arguments);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = (typeof t === 'function' ? t('redeemBtn') : 'Einlösen');
+        }
+        refreshCurrentBarSection();
+      }
     };
   }
 
-  var _oldSessionSetRepairBar = typeof sessionSet === 'function' ? sessionSet : null;
-  if (_oldSessionSetRepairBar) {
-    sessionSet = function(token, barId, barName){
-      _oldSessionSetRepairBar(token, barId, barName);
-      syncHeaderVisibility();
-      bindRedeemUi();
+  function hideTopAuthAfterLogin(){
+    try {
+      var logged = !!(sessionGet && sessionGet());
+      var auth = document.getElementById('barHeaderAuth');
+      var logout = document.getElementById('btnLogout');
+      if (auth) auth.style.display = logged ? 'none' : '';
+      if (logout) logout.style.display = logged ? 'none' : 'none';
+      document.body.classList.toggle('bar-user-logged-in', logged);
+      document.body.classList.toggle('bar-user-logged-out', !logged);
+    } catch(e){}
+  }
+
+  if (typeof sessionSet === 'function') {
+    var _origBarSessionSetHotfix = sessionSet;
+    sessionSet = function(){
+      var r = _origBarSessionSetHotfix.apply(this, arguments);
+      hideTopAuthAfterLogin();
+      return r;
     };
   }
-  var _oldSessionClearRepairBar = typeof sessionClear === 'function' ? sessionClear : null;
-  if (_oldSessionClearRepairBar) {
-    sessionClear = function(){ _oldSessionClearRepairBar(); syncHeaderVisibility(); };
+  if (typeof sessionClear === 'function') {
+    var _origBarSessionClearHotfix = sessionClear;
+    sessionClear = function(){
+      var r = _origBarSessionClearHotfix.apply(this, arguments);
+      hideTopAuthAfterLogin();
+      return r;
+    };
   }
-  var _oldShowAuthRepairBar = typeof showAuthScreen === 'function' ? showAuthScreen : null;
-  if (_oldShowAuthRepairBar) {
-    showAuthScreen = function(show){ _oldShowAuthRepairBar(show); syncHeaderVisibility(); bindRedeemUi(); };
-  }
-
-  function payoutLabelForVoucher(v){
-    if (String(v.status || '').toLowerCase() === 'refunded') return (typeof t === 'function' ? t('noPayout') : 'Keine Auszahlung');
-    return String(v.payout_status || '').toLowerCase() === 'paid' ? t('payoutPaid') : t('payoutPending');
-  }
-  applyVoucherFilters_ = function(vouchers){
-    var f = getCurrentVoucherFilters_();
-    return (vouchers || []).filter(function(v){
-      var baseDate = v.order_created_at || v.created_at || '';
-      var d = baseDate ? new Date(baseDate) : null;
-      if (f.from && d && d < new Date(f.from + 'T00:00:00')) return false;
-      if (f.to && d && d > new Date(f.to + 'T23:59:59')) return false;
-      var status = String(v.status || '').toLowerCase();
-      if (f.status === 'open') { if (!(status === 'issued' || status === 'sent' || status === 'created' || status === 'pending')) return false; }
-      else if (f.status !== 'all' && status !== f.status) return false;
-      if (f.payout !== 'all') {
-        if (status === 'refunded') return false;
-        if (String(v.payout_status || '').toLowerCase() !== f.payout) return false;
-      }
-      return true;
-    });
-  };
-  renderVoucherPanel_ = function(targetId, vouchers){
-    var root = document.getElementById(targetId); if (!root) return;
-    vouchers = vouchers || [];
-    var f = getCurrentVoucherFilters_();
-    var filtered = applyVoucherFilters_(vouchers);
-    var rows = filtered.map(function(v){
-      return '<tr class="click-row" data-voucher-id="' + esc(String(v.id || '')) + '">' +
-        '<td>' + esc(fmtDate_(v.order_created_at || v.created_at)) + '</td>' +
-        '<td style="font-family:monospace">' + esc(String(v.code_display || v.code || '–')) + '</td>' +
-        '<td>' + esc(String(v.deal_title || '')) + '</td>' +
-        '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
-        '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
-        '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
-        '<td>' + esc(trStatus_(v.status)) + '</td>' +
-        '<td>' + esc(payoutLabelForVoucher(v)) + '</td>' +
-      '</tr>';
-    }).join('');
-    root.innerHTML = '' +
-      '<div class="filter-panel">' +
-        '<div style="font-size:15px;font-weight:700;margin-bottom:12px">' + t('voucherFilters') + '</div>' +
-        '<div class="filter-inline">' +
-          '<div><label class="form-label">' + t('fromLbl') + '</label><input type="date" class="form-input" id="voucherFilterFrom" value="' + esc(f.from) + '"></div>' +
-          '<div><label class="form-label">' + t('toLbl') + '</label><input type="date" class="form-input" id="voucherFilterTo" value="' + esc(f.to) + '"></div>' +
-          '<div><label class="form-label">' + t('statusLbl') + '</label><select class="form-input" id="voucherFilterStatus"><option value="all">' + t('allStatuses') + '</option><option value="open">' + t('openLbl') + '</option><option value="redeemed">' + t('redeemed') + '</option><option value="refunded">' + t('refundedLbl') + '</option></select></div>' +
-          '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('alle') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option></select></div>' +
-          '<div><button class="btn-pink" id="voucherApplyBtn" style="width:auto;padding:12px 18px">' + t('filterApply') + '</button></div>' +
-          '<div><button class="btn-ghost" id="voucherResetBtn" style="width:auto;padding:12px 18px;margin-top:0">' + t('filterReset') + '</button></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="money-grid">' +
-        '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){ return a + (Number(v.price_paid) || 0); }, 0).toFixed(2) + '</div></div>' +
-        '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){ return a + (Number(v.platform_fee) || 0); }, 0).toFixed(2) + '</div></div>' +
-        '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){ return a + (Number(v.bar_payout) || 0); }, 0).toFixed(2) + '</div></div>' +
-      '</div>' +
-      '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
-      '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
-      (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
-      '</tbody></table></div>';
-    var sEl = document.getElementById('voucherFilterStatus'); if (sEl) sEl.value = (f.status === 'issued' || f.status === 'sent') ? 'open' : f.status;
-    var pEl = document.getElementById('voucherFilterPayout'); if (pEl) pEl.value = f.payout;
-    var applyBtn = document.getElementById('voucherApplyBtn'); if (applyBtn) applyBtn.onclick = function(){ renderVoucherPanel_(targetId, vouchers); };
-    var resetBtn = document.getElementById('voucherResetBtn'); if (resetBtn) resetBtn.onclick = function(){ ['voucherFilterFrom','voucherFilterTo'].forEach(function(id){ var el = document.getElementById(id); if (el) el.value=''; }); var a = document.getElementById('voucherFilterStatus'); if (a) a.value='all'; var b = document.getElementById('voucherFilterPayout'); if (b) b.value='all'; renderVoucherPanel_(targetId, vouchers); };
-    Array.prototype.forEach.call(root.querySelectorAll('tr.click-row'), function(row){
-      row.addEventListener('click', function(){ var id = this.getAttribute('data-voucher-id'); var found = (vouchers || []).find(function(v){ return String(v.id) === String(id); }); if (found && typeof openVoucherDetail === 'function') openVoucherDetail(found); });
-    });
-  };
-
-  doRedeem = async function(){
-    var s = sessionGet(); if (!s) { doLogout(); return; }
-    bindRedeemUi();
-    var input = document.getElementById('redeemCode');
-    var btn = document.getElementById('btnRedeem');
-    var err = document.getElementById('redeemErr');
-    var result = document.getElementById('redeemResult');
-    var deal = document.getElementById('redeemDeal');
-    var code = formatVoucherCode(input ? input.value : '');
-    if (input) input.value = code;
-    if (err) err.textContent = '';
-    if (result) result.style.display = 'none';
-    if (voucherCodeRaw(code).length !== 12) {
-      if (err) err.textContent = (typeof t === 'function' ? t('redeemInvalid') : 'Bitte einen vollständigen Gutschein-Code eingeben.');
-      if (input) input.focus();
-      return;
-    }
-    var defaultText = btn ? (btn.dataset.defaultText || btn.textContent) : '';
-    if (btn) { btn.dataset.defaultText = defaultText || (typeof t === 'function' ? t('redeemBtn') : 'Einlösen'); btn.disabled = true; btn.textContent = (typeof t === 'function' ? t('redeemLoading') : '⏳ Wird geprüft…'); }
-    if (result && deal) { deal.textContent = (typeof t === 'function' ? t('redeemChecking') : 'Gutschein wird geprüft…'); result.style.display = 'block'; }
-    try {
-      var r = await api({ action:'redeemVoucher', token:s.token, code:code });
-      if (r.success) {
-        if (deal) deal.textContent = r.deal_title || code;
-        if (result) result.style.display = 'block';
-        if (input) input.value = '';
-        showToast((typeof t === 'function' ? t('redeemSuccess') : '✅ Gutschein eingelöst!'));
-        _dataCache.vouchers = null; _barStatsVouchers = null;
-        try { if (typeof loadBarStats === 'function' && currentBarTab() === 'overview') loadBarStats(_barStatsPeriod || 'all'); } catch(e) {}
-      } else {
-        if (result) result.style.display = 'none';
-        if (err) err.textContent = translateBarRuntimeMessage(r.error || 'Ungültiger Gutschein.');
-      }
-    } catch(e) {
-      if (result) result.style.display = 'none';
-      if (err) err.textContent = (typeof t === 'function' ? t('networkError') : 'Verbindungsfehler');
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = btn.dataset.defaultText || (typeof t === 'function' ? t('redeemBtn') : 'Einlösen'); }
-    }
-  };
 
   document.addEventListener('DOMContentLoaded', function(){
-    bindRedeemUi();
-    syncHeaderVisibility();
-    ['barHeaderLoginBtn','btnBarEntryLogin'].forEach(function(id){ var el = document.getElementById(id); if (el) el.addEventListener('click', function(ev){ ev.preventDefault(); unlockBarEntry('login'); }); });
-    ['barHeaderRegisterBtn','btnBarEntryRegister'].forEach(function(id){ var el = document.getElementById(id); if (el) el.addEventListener('click', function(ev){ ev.preventDefault(); unlockBarEntry('register'); }); });
-    if (sessionGet()) document.body.classList.remove('bar-entry-locked');
+    bindRedeemUiHotfix();
+    hideTopAuthAfterLogin();
+    refreshCurrentBarSection();
+  });
+  window.addEventListener('load', function(){
+    bindRedeemUiHotfix();
+    hideTopAuthAfterLogin();
+    refreshCurrentBarSection();
   });
 })();
+
