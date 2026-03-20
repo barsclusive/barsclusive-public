@@ -522,7 +522,7 @@ function buildDealCard(deal) {
     var tsLabels = {morning:'\u{1F305} Morgen', midday:'\u2600\uFE0F Mittag', evening:'\u{1F319} Abend'};
     deal.time_slots.forEach(function(slot) {
       var sp = document.createElement('span');
-      sp.style.cssText = 'background:#2a2a2a;padding:3px 8px;border-radius:8px;font-size:11px;color:#ccc';
+      sp.style.cssText = 'background:#F5F0E8;padding:3px 8px;border-radius:8px;font-size:11px;color:#4A4238;border:1px solid #CCC0AA';
       sp.textContent = tsLabels[slot] || slot;
       tsContainer.appendChild(sp);
     });
@@ -556,7 +556,7 @@ function buildDealCard(deal) {
   priceBtn.append(btn, pNew);
   if (isPauschal) {
     var infoLine = document.createElement('span');
-    infoLine.style.cssText = 'font-size:12px;color:#999';
+    infoLine.style.cssText = 'font-size:12px;color:#6B5D50';
     infoLine.textContent = deal.discount_percent + '% ab ' + deal.min_order + ' CHF';
     priceBtn.appendChild(infoLine);
   } else if (deal.original_price > deal.deal_price) {
@@ -581,7 +581,7 @@ function openBuyModal(deal) {
   strong.textContent = deal.bar_name;
   const br = document.createElement('br');
   const price = document.createElement('span');
-  price.style.cssText = 'color:#FF3366;font-size:18px;font-weight:700';
+  price.style.cssText = 'color:#A86A2A;font-size:18px;font-weight:700';
   price.textContent = Number(deal.deal_price).toFixed(2) + ' CHF';
   info.append(strong, br, price);
 
@@ -692,7 +692,7 @@ function buildOrderCard(o) {
       var box = document.createElement('div');
       box.className = 'voucher-box';
       var label = document.createElement('div');
-      label.style.cssText = 'font-size:12px;color:#999;margin-bottom:6px';
+      label.style.cssText = 'font-size:12px;color:#6B5D50;margin-bottom:6px';
       label.textContent = shopT('gutscheinCode') || 'Gutschein-Code:';
       var codeEl = document.createElement('div');
       codeEl.className = 'voucher-code';
@@ -707,7 +707,7 @@ function buildOrderCard(o) {
       var viewLink = document.createElement('a');
       viewLink.href = vUrl;
       viewLink.target = '_blank';
-      viewLink.style.cssText = 'padding:7px 14px;border-radius:18px;background:#FF3366;color:#fff;font-size:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px';
+      viewLink.style.cssText = 'padding:7px 14px;border-radius:18px;background:linear-gradient(180deg,#C98A4B,#A86A2A);color:#fffdf8;border:1px solid #A86A2A;font-size:12px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px';
       viewLink.textContent = '🎫 ' + (shopT('gutscheinAnzeigen') || 'Anzeigen');
       actions.appendChild(viewLink);
 
@@ -1228,9 +1228,9 @@ function setShopLang(lang) {
   _shopLang = lang;
   localStorage.setItem('barsclusive_lang', lang);
   document.documentElement.lang = lang;
-  document.querySelectorAll('.shop-lang-btn').forEach(function(b) { b.classList.remove('active'); b.style.borderColor = '#333'; b.style.color = '#888'; });
+  document.querySelectorAll('.shop-lang-btn').forEach(function(b) { b.classList.remove('active'); b.style.borderColor = '#CCC0AA'; b.style.color = '#6B5D50'; });
   var activeBtn = document.getElementById('shopLang' + lang.toUpperCase());
-  if (activeBtn) { activeBtn.classList.add('active'); activeBtn.style.borderColor = '#FF3366'; activeBtn.style.color = '#fff'; }
+  if (activeBtn) { activeBtn.classList.add('active'); activeBtn.style.borderColor = '#6A5945'; activeBtn.style.color = '#F2ECE2'; }
   applyShopTranslations();
 }
 
@@ -1483,16 +1483,16 @@ function openDealDetail(deal) {
   
   // Info section
   var info = '';
-  if (deal.bar_address) info += '<div><span style="color:#999">' + escHtml(shopLang === 'en' ? 'Address' : shopLang === 'it' ? 'Indirizzo' : shopLang === 'fr' ? 'Adresse' : 'Adresse') + '</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
+  if (deal.bar_address) info += '<div><span style="color:#6B5D50">' + escHtml(shopLang === 'en' ? 'Address' : shopLang === 'it' ? 'Indirizzo' : shopLang === 'fr' ? 'Adresse' : 'Adresse') + '</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
   if (isPauschal) {
-    if (deal.discount_percent) info += '<div><span style="color:#999">Rabatt</span><span style="color:#FF3366;font-weight:700">' + deal.discount_percent + '%</span></div>';
-    if (deal.min_order) info += '<div><span style="color:#999">Mindestbestellung</span><span>' + deal.min_order + ' CHF</span></div>';
-    info += '<div><span style="color:#999">Typ</span><span>Pauschalgutschein</span></div>';
+    if (deal.discount_percent) info += '<div><span style="color:#6B5D50">Rabatt</span><span style="color:#A86A2A;font-weight:700">' + deal.discount_percent + '%</span></div>';
+    if (deal.min_order) info += '<div><span style="color:#6B5D50">Mindestbestellung</span><span>' + deal.min_order + ' CHF</span></div>';
+    info += '<div><span style="color:#6B5D50">Typ</span><span>Pauschalgutschein</span></div>';
   }
   var weekdays = deal.valid_weekdays || [];
-  if (weekdays.length) info += '<div><span style="color:#999">Wochentage</span><span>' + weekdays.join(', ') + '</span></div>';
-  if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">Zeit</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
-  if (deal.max_quantity > 0) info += '<div><span style="color:#999">Verfügbar</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
+  if (weekdays.length) info += '<div><span style="color:#6B5D50">Wochentage</span><span>' + weekdays.join(', ') + '</span></div>';
+  if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#6B5D50">Zeit</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
+  if (deal.max_quantity > 0) info += '<div><span style="color:#6B5D50">Verfügbar</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
   document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">Keine weiteren Details</div>';
   
   // Share buttons
@@ -1523,7 +1523,7 @@ function openDealDetail(deal) {
   if (!ddCartBtn) {
     ddCartBtn = document.createElement('button');
     ddCartBtn.id = 'ddCartBtn';
-    ddCartBtn.style.cssText = 'width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
+    ddCartBtn.style.cssText = 'width:100%;background:#F5F0E8;border:1px solid #CCC0AA;color:#1E1B15;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
     document.getElementById('ddBuyBtn').after(ddCartBtn);
   }
   ddCartBtn.textContent = '🛒 ' + (shopT('cartAddTitle') || 'In den Warenkorb');
@@ -1719,19 +1719,19 @@ function renderCartPanel() {
     row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;gap:12px';
     var info = document.createElement('div');
     info.style.flex = '1';
-    info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title) + '</div><div style="font-size:12px;color:#999">' + escHtml(c.bar_name) + '</div>';
+    info.innerHTML = '<div style="font-weight:600;font-size:14px">' + escHtml(c.title) + '</div><div style="font-size:12px;color:#6B5D50">' + escHtml(c.bar_name) + '</div>';
     var controls = document.createElement('div');
     controls.style.cssText = 'display:flex;align-items:center;gap:8px';
     var btnMinus = document.createElement('button');
     btnMinus.textContent = '-';
-    btnMinus.style.cssText = 'background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
+    btnMinus.style.cssText = 'background:#6E7458;color:#F2ECE2;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
     btnMinus.addEventListener('click', function() { changeCartQty(c.deal_id, -1); });
     var qtySpan = document.createElement('span');
     qtySpan.style.cssText = 'min-width:20px;text-align:center';
     qtySpan.textContent = c.quantity;
     var btnPlus = document.createElement('button');
     btnPlus.textContent = '+';
-    btnPlus.style.cssText = 'background:#333;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
+    btnPlus.style.cssText = 'background:#6E7458;color:#F2ECE2;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px';
     btnPlus.addEventListener('click', function() { changeCartQty(c.deal_id, 1); });
     var priceSpan = document.createElement('span');
     priceSpan.style.cssText = 'min-width:72px;text-align:right;font-weight:700';
@@ -1746,24 +1746,24 @@ function renderCartPanel() {
   });
 
   var totalDiv = document.createElement('div');
-  totalDiv.style.cssText = 'padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #FF3366;margin-top:8px';
+  totalDiv.style.cssText = 'padding:16px 0;font-size:18px;font-weight:700;text-align:right;border-top:2px solid #A86A2A;margin-top:8px';
   totalDiv.textContent = (shopT('total') || 'Total') + ': ' + getCartTotal().toFixed(2) + ' CHF';
   body.appendChild(totalDiv);
 
   var buyerWrap = document.createElement('div');
-  buyerWrap.style.cssText = 'margin-top:14px;padding:14px;background:#171717;border:1px solid #2a2a2a;border-radius:12px';
+  buyerWrap.style.cssText = 'margin-top:14px;padding:14px;background:#F5F0E8;border:1px solid #CCC0AA;border-radius:12px';
   buyerWrap.innerHTML = ''
     + '<div style="font-size:13px;font-weight:700;margin-bottom:12px">' + (shopT('checkoutTitle') || 'Checkout') + '</div>'
     + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerName">' + (shopT('nameLbl') || 'Name') + '</label><input type="text" class="form-input" id="cartBuyerName" value="' + escHtml(defaultName) + '" autocomplete="name"></div>'
     + '<div class="form-group" style="margin-bottom:10px"><label class="form-label" for="cartBuyerEmail">' + (shopT('emailLbl') || 'Email') + '</label><input type="email" class="form-input" id="cartBuyerEmail" value="' + escHtml(defaultEmail) + '" autocomplete="email"></div>'
-    + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>' + (shopT('acceptTermsCart') || 'Ich akzeptiere die') + ' <a href="agb.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fAGB') || 'AGB') + '</a> ' + (shopLang === 'en' ? 'and' : shopLang === 'it' ? 'e' : shopLang === 'fr' ? 'et' : 'und') + ' <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#FF3366">' + (shopT('fDatenschutz') || 'Datenschutz') + '</a>.</span></label>';
+    + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#ccc"><input type="checkbox" id="cartConsent"><span>' + (shopT('acceptTermsCart') || 'Ich akzeptiere die') + ' <a href="agb.html" target="_blank" rel="noopener" style="color:#A86A2A">' + (shopT('fAGB') || 'AGB') + '</a> ' + (shopLang === 'en' ? 'and' : shopLang === 'it' ? 'e' : shopLang === 'fr' ? 'et' : 'und') + ' <a href="datenschutz.html" target="_blank" rel="noopener" style="color:#A86A2A">' + (shopT('fDatenschutz') || 'Datenschutz') + '</a>.</span></label>';
   body.appendChild(buyerWrap);
 
   var checkBtn = document.createElement('button');
   checkBtn.id = 'cartCheckoutBtn';
   checkBtn.textContent = _cartCheckoutBusy ? (shopT('processing') || '⏳ Wird verarbeitet...') : (shopT('jetztBezahlen') || 'Jetzt bezahlen');
   checkBtn.disabled = _cartCheckoutBusy;
-  checkBtn.style.cssText = 'width:100%;background:#FF3366;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px';
+  checkBtn.style.cssText = 'width:100%;background:linear-gradient(180deg,#C98A4B,#A86A2A);color:#fffdf8;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px';
   checkBtn.addEventListener('click', checkoutCart);
   body.appendChild(checkBtn);
 }
@@ -1986,15 +1986,15 @@ function toggleMapView(showMap) {
   if (showMap) {
     if (mapWrap) mapWrap.style.display = 'block';
     if (dealsView) dealsView.style.display = 'none';
-    if (btnMap) { btnMap.style.background = '#FF3366'; btnMap.style.color = '#fff'; btnMap.style.borderColor = '#FF3366'; }
-    if (btnGrid) { btnGrid.style.background = '#2a2a2a'; btnGrid.style.color = '#ccc'; btnGrid.style.borderColor = '#3a3a3a'; }
+    if (btnMap) { btnMap.style.background = 'linear-gradient(180deg,#C98A4B,#A86A2A)'; btnMap.style.color = '#fffdf8'; btnMap.style.borderColor = '#A86A2A'; }
+    if (btnGrid) { btnGrid.style.background = '#F5F0E8'; btnGrid.style.color = '#4A4238'; btnGrid.style.borderColor = '#CCC0AA'; }
     initShopMap();
     setTimeout(function() { if (_shopMap) _shopMap.invalidateSize(); updateShopMapMarkers(); }, 120);
   } else {
     if (mapWrap) mapWrap.style.display = 'none';
     if (dealsView) dealsView.style.display = 'block';
-    if (btnGrid) { btnGrid.style.background = '#FF3366'; btnGrid.style.color = '#fff'; btnGrid.style.borderColor = '#FF3366'; }
-    if (btnMap) { btnMap.style.background = '#2a2a2a'; btnMap.style.color = '#ccc'; btnMap.style.borderColor = '#3a3a3a'; }
+    if (btnGrid) { btnGrid.style.background = 'linear-gradient(180deg,#C98A4B,#A86A2A)'; btnGrid.style.color = '#fffdf8'; btnGrid.style.borderColor = '#A86A2A'; }
+    if (btnMap) { btnMap.style.background = '#F5F0E8'; btnMap.style.color = '#4A4238'; btnMap.style.borderColor = '#CCC0AA'; }
   }
 }
 
@@ -2376,16 +2376,16 @@ try {
       origWrap.style.display = 'none';
     }
     var info = '';
-    if (deal.bar_address) info += '<div><span style="color:#999">' + escHtml(st('addressLabel')) + '</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
+    if (deal.bar_address) info += '<div><span style="color:#6B5D50">' + escHtml(st('addressLabel')) + '</span><span>' + escHtml(deal.bar_address) + ', ' + escHtml(deal.bar_zip || '') + ' ' + escHtml(deal.bar_city || '') + '</span></div>';
     if (isPauschal) {
-      if (deal.discount_percent) info += '<div><span style="color:#999">' + escHtml(st('discountLabel')) + '</span><span style="color:#FF3366;font-weight:700">' + deal.discount_percent + '%</span></div>';
-      if (deal.min_order) info += '<div><span style="color:#999">' + escHtml(st('minimumOrderLabel')) + '</span><span>' + deal.min_order + ' CHF</span></div>';
-      info += '<div><span style="color:#999">' + escHtml(st('typeLabel')) + '</span><span>' + escHtml(st('flatVoucherType')) + '</span></div>';
+      if (deal.discount_percent) info += '<div><span style="color:#6B5D50">' + escHtml(st('discountLabel')) + '</span><span style="color:#A86A2A;font-weight:700">' + deal.discount_percent + '%</span></div>';
+      if (deal.min_order) info += '<div><span style="color:#6B5D50">' + escHtml(st('minimumOrderLabel')) + '</span><span>' + deal.min_order + ' CHF</span></div>';
+      info += '<div><span style="color:#6B5D50">' + escHtml(st('typeLabel')) + '</span><span>' + escHtml(st('flatVoucherType')) + '</span></div>';
     }
     var weekdays = deal.valid_weekdays || [];
-    if (weekdays.length) info += '<div><span style="color:#999">' + escHtml(st('weekdaysLabel')) + '</span><span>' + weekdays.join(', ') + '</span></div>';
-    if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#999">' + escHtml(st('timeLabel')) + '</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
-    if (deal.max_quantity > 0) info += '<div><span style="color:#999">' + escHtml(st('availableLabel')) + '</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
+    if (weekdays.length) info += '<div><span style="color:#6B5D50">' + escHtml(st('weekdaysLabel')) + '</span><span>' + weekdays.join(', ') + '</span></div>';
+    if (deal.valid_from_time && deal.valid_to_time) info += '<div><span style="color:#6B5D50">' + escHtml(st('timeLabel')) + '</span><span>' + deal.valid_from_time + ' - ' + deal.valid_to_time + '</span></div>';
+    if (deal.max_quantity > 0) info += '<div><span style="color:#6B5D50">' + escHtml(st('availableLabel')) + '</span><span>' + Math.max(0, deal.max_quantity - (deal.sold_count||0)) + ' / ' + deal.max_quantity + '</span></div>';
     document.getElementById('ddInfo').innerHTML = info || '<div style="color:#666">' + escHtml(st('detailsNone')) + '</div>';
     var shareUrl = window.location.origin + window.location.pathname + '?deal=' + deal.id;
     var shareText = deal.title + ' bei ' + deal.bar_name + ' - nur ' + Number(deal.deal_price).toFixed(2) + ' CHF!';
@@ -2397,7 +2397,7 @@ try {
     var ddCartBtn = document.getElementById('ddCartBtn');
     if (!ddCartBtn) {
       ddCartBtn = document.createElement('button'); ddCartBtn.id = 'ddCartBtn';
-      ddCartBtn.style.cssText = 'width:100%;background:#2a2a2a;border:1px solid #3a3a3a;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
+      ddCartBtn.style.cssText = 'width:100%;background:#F5F0E8;border:1px solid #CCC0AA;color:#1E1B15;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px';
       document.getElementById('ddBuyBtn').after(ddCartBtn);
     }
     ddCartBtn.textContent = '🛒 ' + (shopT('cartAddTitle') || 'In den Warenkorb');
@@ -3099,14 +3099,14 @@ try {
     document.documentElement.lang = lang;
     document.querySelectorAll('.shop-lang-btn').forEach(function(btn){
       btn.classList.remove('active');
-      btn.style.borderColor = '#333';
+      btn.style.borderColor = '#CCC0AA';
       btn.style.color = '#888';
     });
     var activeBtn = document.getElementById('shopLang' + lang.toUpperCase());
     if (activeBtn) {
       activeBtn.classList.add('active');
-      activeBtn.style.borderColor = '#FF3366';
-      activeBtn.style.color = '#fff';
+      activeBtn.style.borderColor = '#6A5945';
+      activeBtn.style.color = '#F2ECE2';
     }
     applyShopTranslations();
     if (previous !== lang) {
@@ -3483,204 +3483,185 @@ try {
 })();
 
 
-// ===== RUNTIME REPAIR PATCH 2026-03-19 =====
-(function(){
-  try {
-    Object.assign(SHOP_TRANSLATIONS.de, {
-      locationUnavailable:'Standortzugriff blockiert. Bitte aktiviere den Standort im Browser oder in den Einstellungen.',
-      dealsSortedByDistance:'📍 Deals werden nach Distanz sortiert'
-    });
-    Object.assign(SHOP_TRANSLATIONS.en, {
-      locationUnavailable:'Location access blocked. Please enable location in your browser or in settings.',
-      dealsSortedByDistance:'📍 Deals are now sorted by distance'
-    });
-    Object.assign(SHOP_TRANSLATIONS.it, {
-      locationUnavailable:'Accesso alla posizione bloccato. Attiva la posizione nel browser o nelle impostazioni.',
-      dealsSortedByDistance:'📍 I deal sono ora ordinati per distanza'
-    });
-    Object.assign(SHOP_TRANSLATIONS.fr, {
-      locationUnavailable:'Accès à la position bloqué. Veuillez activer la localisation dans le navigateur ou dans les réglages.',
-      dealsSortedByDistance:'📍 Les deals sont maintenant triés par distance'
-    });
-  } catch(e) {}
 
-  function langNow(){
-    try { return String(_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || document.documentElement.lang || 'de').toLowerCase(); } catch(e) { return 'de'; }
+/* ===== RUNTIME HOTFIX 2026-03-20: mobile header + address-distance + faster unlock ===== */
+(function(){
+  function patchTranslations(){
+    if (typeof SHOP_TRANSLATIONS !== 'object') return;
+    var hints = {
+      de:'Standortzugriff blockiert. Bitte aktiviere den Standort im Browser oder in den Einstellungen.',
+      en:'Location access blocked. Please enable location in your browser or settings.',
+      it:'Accesso alla posizione bloccato. Attiva la posizione nel browser o nelle impostazioni.',
+      fr:'Accès à la position bloqué. Active la localisation dans le navigateur ou dans les paramètres.'
+    };
+    ['de','en','it','fr'].forEach(function(lang){
+      if (!SHOP_TRANSLATIONS[lang]) return;
+      SHOP_TRANSLATIONS[lang].locationUnavailable = hints[lang];
+    });
   }
 
-  function unlockShopDiscovery(scrollToDeals){
+  function hasTypedCoordinates(){
+    return !!(_locationState && _locationState.source === 'search' && isValidCoord(Number(_locationState.lat)) && isValidCoord(Number(_locationState.lng)));
+  }
+
+  function immediateUnlockShop(){
     try {
       document.body.classList.remove('shop-entry-locked');
       document.body.classList.add('shop-user-logged-in');
       document.body.classList.remove('shop-user-logged-out');
-      var discovery = document.getElementById('shopDiscoverySection'); if (discovery) discovery.style.display = '';
-      var footer = document.querySelector('.footer'); if (footer) footer.style.display = '';
-      var topAuth = document.getElementById('shopTopAuth'); if (topAuth) topAuth.style.display = 'none';
-      var hint = document.getElementById('shopNoLoginHint'); if (hint) hint.style.display = 'none';
-      if (typeof showView === 'function') showView('deals');
-      if (scrollToDeals) {
-        var target = document.getElementById('shopFocusArea') || document.getElementById('shopViewToggle') || discovery;
-        if (target) {
-          var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
-          window.scrollTo({ top: top, behavior: 'smooth' });
-        }
-      }
-    } catch(e) {}
-  }
-  window.unlockShopDiscovery = unlockShopDiscovery;
-
-  function syncShopRuntimeState(){
-    var logged = !!(typeof sessionGet === 'function' && sessionGet());
-    document.body.classList.toggle('shop-user-logged-in', logged);
-    document.body.classList.toggle('shop-user-logged-out', !logged);
-    if (logged) unlockShopDiscovery(false);
-    var userBtn = document.getElementById('userBtn');
-    if (userBtn && !logged) userBtn.textContent = '👤 ' + ((typeof shopT === 'function' && shopT('loginBtn')) || 'Login / Registrieren');
+      var section = document.getElementById('shopDiscoverySection');
+      if (section) section.style.display = '';
+      var footer = document.querySelector('.footer');
+      if (footer) footer.style.display = '';
+      var auth = document.getElementById('shopTopAuth');
+      if (auth) auth.style.display = 'none';
+      var hint = document.getElementById('shopNoLoginHint');
+      if (hint) hint.style.display = 'none';
+    } catch(e){}
+    try { ensureMobileSearchPlacement(); } catch(e){}
   }
 
-  function refreshShopDynamicLanguage(){
-    try {
-      if (typeof applyShopTranslations === 'function') applyShopTranslations();
-      if (typeof renderDeals === 'function') renderDeals();
-      if (typeof renderCart === 'function') renderCart();
-      var modal = document.getElementById('dealDetailModal');
-      if (typeof _detailDeal !== 'undefined' && _detailDeal && modal && modal.classList.contains('active') && typeof openDealDetail === 'function') {
-        openDealDetail(_detailDeal);
-      }
-    } catch(e) {}
-  }
-
-  var _oldSetShopLangRepair = typeof setShopLang === 'function' ? setShopLang : null;
-  if (_oldSetShopLangRepair) {
-    setShopLang = function(lang){
-      _oldSetShopLangRepair(lang);
-      syncShopRuntimeState();
-      refreshShopDynamicLanguage();
+  if (typeof sessionSet === 'function') {
+    var _origSessionSetHotfix = sessionSet;
+    sessionSet = function(){
+      var r = _origSessionSetHotfix.apply(this, arguments);
+      immediateUnlockShop();
+      return r;
     };
   }
 
-  doLogin = async function() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    if (!email || !password) { showToast((typeof shopT === 'function' && shopT('emailPasswordRequired')) || 'Bitte Email und Passwort eingeben', true); return; }
-    var btn = document.getElementById('btnLoginSubmit');
-    var defaultLabel = (typeof shopT === 'function' && shopT('loginSubmitBtn')) || 'Einloggen';
-    if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
-    try {
-      const r = await api({ action: 'customerLogin', email, password });
-      if (r.success) {
-        var uiLang = (r.customer && r.customer.lang) || langNow();
-        sessionSet(r.token, r.customer.name, r.customer.email, 'customer', uiLang);
-        closeModal('loginModal');
-        document.getElementById('loginPassword').value = '';
-        unlockShopDiscovery(false);
-        syncShopRuntimeState();
-        showToast('✅ ' + (((typeof shopT === 'function' && shopT('loginSuccess')) || 'Eingeloggt!').replace(/^✅\s*/, '')));
-        setTimeout(function(){ try { if (typeof loadFavorites === 'function') loadFavorites(); } catch(e) {} }, 0);
-        setTimeout(function(){ try { if (typeof loadOrders === 'function' && document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') loadOrders(); } catch(e) {} }, 0);
-      } else {
-        showToast(r.error || ((typeof shopT === 'function' && shopT('invalidCredentials')) || 'Ungültige Zugangsdaten'), true);
-        document.getElementById('loginPassword').value = '';
-      }
-    } catch (e) {
-      showToast((typeof shopT === 'function' && shopT('networkError')) || 'Verbindungsfehler', true);
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = defaultLabel; }
+  if (typeof sessionClear === 'function') {
+    var _origSessionClearHotfix = sessionClear;
+    sessionClear = function(){
+      var r = _origSessionClearHotfix.apply(this, arguments);
+      try {
+        document.body.classList.add('shop-entry-locked','shop-user-logged-out');
+        document.body.classList.remove('shop-user-logged-in');
+      } catch(e){}
+      try { ensureMobileSearchPlacement(); } catch(e){}
+      return r;
+    };
+  }
+
+  if (typeof applySelectedLocation === 'function') {
+    var _origApplySelectedLocationHotfix = applySelectedLocation;
+    applySelectedLocation = function(place){
+      _locationState = {
+        label: place.label || place.shortLabel || '',
+        lat: Number(place.lat),
+        lng: Number(place.lng),
+        source: 'search',
+        textFilter: (place.textFilter || '').toLowerCase()
+      };
+      _userLat = Number(place.lat);
+      _userLng = Number(place.lng);
+      filters.city = '';
+      saveLocationState();
+      updateLocationUi();
+      sortDealsByDistance();
+    };
+  }
+
+  if (typeof getVisibleDeals === 'function') {
+    var _origGetVisibleDealsHotfix = getVisibleDeals;
+    getVisibleDeals = function(){
+      attachDistances();
+      var visible = allDeals.filter(function(d) {
+        if (filters.cat !== 'all' && !(d.categories || []).includes(filters.cat)) return false;
+        if (!matchDate(d)) return false;
+        if (!matchTime(d)) return false;
+        if (filters.search) {
+          var hay = ((d.title||'') + ' ' + (d.bar_name||'') + ' ' + (d.bar_city||'') + ' ' + (d.description||'')).toLowerCase();
+          if (!hay.includes(filters.search)) return false;
+        }
+        var shouldUseTextLocationFilter = !!filters.city && !hasTypedCoordinates();
+        if (shouldUseTextLocationFilter) {
+          var q = String(filters.city).toLowerCase();
+          var haystack = ((d.bar_city||'') + ' ' + (d.bar_zip||'') + ' ' + (d.bar_address||'')).toLowerCase();
+          if (/^\d+$/.test(q)) {
+            var prefix = q.length >= 2 ? q.substring(0, 2) : q;
+            if (!(String(d.bar_zip||'').startsWith(prefix))) return false;
+          } else if (!haystack.includes(q)) {
+            return false;
+          }
+        }
+        return true;
+      });
+      var hasCoords = isValidCoord(Number(_userLat)) && isValidCoord(Number(_userLng));
+      visible.sort(function(a,b) {
+        if (hasCoords) {
+          var da = typeof a._dist === 'number' ? a._dist : 9999;
+          var db = typeof b._dist === 'number' ? b._dist : 9999;
+          if (da !== db) return da - db;
+        }
+        var dA = a.original_price > 0 ? (1 - a.deal_price/a.original_price) : 0;
+        var dB = b.original_price > 0 ? (1 - b.deal_price/b.original_price) : 0;
+        return dB - dA;
+      });
+      return visible;
+    };
+  }
+
+  var _searchOriginalParent = null;
+  var _searchOriginalNext = null;
+
+  function ensureMobileSearchPlacement(){
+    if (typeof window === 'undefined') return;
+    var searchWrap = document.querySelector('.search-wrap');
+    var slot = document.getElementById('shopMobileSearchSlot');
+    var navLinks = document.querySelector('.nav-links');
+    if (!searchWrap || !slot || !navLinks) return;
+    if (!_searchOriginalParent) {
+      _searchOriginalParent = navLinks;
+      _searchOriginalNext = searchWrap.nextSibling;
     }
-  };
+    var mobile = window.innerWidth <= 768;
+    var locked = document.body.classList.contains('shop-entry-locked');
+    if (mobile && !locked) {
+      if (searchWrap.parentNode !== slot) slot.appendChild(searchWrap);
+    } else {
+      if (searchWrap.parentNode !== _searchOriginalParent) {
+        if (_searchOriginalNext && _searchOriginalNext.parentNode === _searchOriginalParent) _searchOriginalParent.insertBefore(searchWrap, _searchOriginalNext);
+        else _searchOriginalParent.insertBefore(searchWrap, _searchOriginalParent.firstChild);
+      }
+    }
+  }
 
-  doRegister = async function() {
-    const name = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
-    const passConfirm = document.getElementById('regPasswordConfirm') ? document.getElementById('regPasswordConfirm').value : password;
-    const consent = document.getElementById('regConsent').checked;
-    const lang = (document.getElementById('regLangSelect') || {}).value || langNow();
-    if (!name || !email || !password) { showToast((typeof shopT === 'function' && shopT('allFieldsRequired')) || 'Alle Felder ausfüllen', true); return; }
-    if (password.length < 8) { showToast((typeof shopT === 'function' && shopT('passwordMin8')) || 'Passwort mind. 8 Zeichen', true); return; }
-    if (password !== passConfirm) { showToast((typeof shopT === 'function' && shopT('passwordMismatch')) || 'Passwörter stimmen nicht überein', true); return; }
-    if (!consent) { showToast((typeof shopT === 'function' && shopT('acceptTermsPrivacy')) || 'Bitte AGB & Datenschutz akzeptieren', true); return; }
-    var btn = document.getElementById('btnRegisterSubmit');
-    var defaultLabel = (typeof shopT === 'function' && shopT('registerSubmitBtn')) || 'Registrieren';
-    if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
+  function patchLocationButtonMessages(){
     try {
-      const r = await api({ action: 'customerRegister', name, email, password, lang });
-      if (r.success) {
-        sessionSet(r.token, name, email, 'customer', (r.customer && r.customer.lang) || lang);
-        closeModal('registerModal');
-        document.getElementById('regPassword').value = '';
-        if (document.getElementById('regPasswordConfirm')) document.getElementById('regPasswordConfirm').value = '';
-        unlockShopDiscovery(false);
-        syncShopRuntimeState();
-        showToast('✅ ' + (((typeof shopT === 'function' && shopT('registerSuccess')) || 'Registrierung erfolgreich!').replace(/^✅\s*/, '')));
-      } else {
-        showToast(r.error || ((typeof shopT === 'function' && shopT('genericErrorDot')) || 'Fehler'), true);
-      }
-    } catch (e) { showToast((typeof shopT === 'function' && shopT('networkError')) || 'Verbindungsfehler', true); }
-    finally { if (btn) { btn.disabled = false; btn.textContent = defaultLabel; } }
-  };
+      var msg = (typeof shopT === 'function' && shopT('locationUnavailable')) || 'Standortzugriff blockiert. Bitte aktiviere den Standort im Browser oder in den Einstellungen.';
+      if (!navigator.geolocation) return;
+    } catch(e){}
+  }
 
-  var _oldCloseModalRepair = typeof closeModal === 'function' ? closeModal : null;
-  if (_oldCloseModalRepair) {
-    closeModal = function(id){
-      var reopenDeal = (id === 'buyModal' && typeof _detailDeal !== 'undefined' && _detailDeal);
-      var result = _oldCloseModalRepair.apply(this, arguments);
-      if (id === 'buyModal') {
-        unlockShopDiscovery(false);
-        if (reopenDeal && typeof openDealDetail === 'function') {
-          setTimeout(function(){ try { openDealDetail(reopenDeal); } catch(e) {} }, 40);
-        }
-      }
-      return result;
+  if (typeof setShopLang === 'function') {
+    var _origSetShopLangHotfix = setShopLang;
+    setShopLang = function(lang){
+      var r = _origSetShopLangHotfix.apply(this, arguments);
+      patchTranslations();
+      ensureMobileSearchPlacement();
+      return r;
     };
   }
 
-  var _oldAddToCartRepair = typeof addToCart === 'function' ? addToCart : null;
-  if (_oldAddToCartRepair) {
-    addToCart = function(deal){
-      unlockShopDiscovery(false);
-      return _oldAddToCartRepair.apply(this, arguments);
-    };
+  function bindMutationWatcher(){
+    var body = document.body;
+    if (!body || body._shopLayoutObserver) return;
+    var mo = new MutationObserver(function(){ ensureMobileSearchPlacement(); });
+    mo.observe(body, { attributes:true, attributeFilter:['class'] });
+    body._shopLayoutObserver = mo;
   }
-
-  var _oldOpenBuyModalRepair = typeof openBuyModal === 'function' ? openBuyModal : null;
-  if (_oldOpenBuyModalRepair) {
-    openBuyModal = function(deal){
-      unlockShopDiscovery(false);
-      return _oldOpenBuyModalRepair.apply(this, arguments);
-    };
-  }
-
-  requestGeoPermission = function(){
-    var deniedText = (typeof shopT === 'function' && shopT('locationUnavailable')) || 'Standortzugriff blockiert. Bitte aktiviere den Standort im Browser oder in den Einstellungen.';
-    if (!navigator.geolocation) { showToast(deniedText, true); dismissGeoBanner(); return; }
-    navigator.geolocation.getCurrentPosition(
-      function(pos){
-        _userLat = pos.coords.latitude;
-        _userLng = pos.coords.longitude;
-        _locationState = { label: (typeof shopT === 'function' && shopT('geoCurrentLocation')) || 'Aktueller Standort', lat:_userLat, lng:_userLng, source:'geo', textFilter:'' };
-        saveLocationState();
-        updateLocationUi();
-        dismissGeoBanner();
-        showToast((typeof shopT === 'function' && shopT('dealsSortedByDistance')) || '📍 Deals werden nach Distanz sortiert');
-        if (typeof sortDealsByDistance === 'function') sortDealsByDistance(); else renderDeals();
-      },
-      function(){ dismissGeoBanner(); showToast(deniedText, true); },
-      { enableHighAccuracy:false, timeout:10000 }
-    );
-  };
 
   document.addEventListener('DOMContentLoaded', function(){
-    syncShopRuntimeState();
-    var btnGeo = document.getElementById('btnUseMyLocation');
-    if (btnGeo && !btnGeo.dataset.repairBound) {
-      btnGeo.dataset.repairBound = '1';
-      btnGeo.addEventListener('click', function(ev){
-        var value = (document.getElementById('locationInput') || {}).value || '';
-        if (!value.trim() && typeof requestGeoPermission === 'function') {
-          ev.preventDefault();
-        }
-      }, true);
-    }
+    patchTranslations();
+    ensureMobileSearchPlacement();
+    bindMutationWatcher();
+    window.addEventListener('resize', ensureMobileSearchPlacement, { passive:true });
+  });
+  window.addEventListener('load', function(){
+    patchTranslations();
+    ensureMobileSearchPlacement();
+    if (sessionGet && sessionGet()) immediateUnlockShop();
   });
 })();
+
