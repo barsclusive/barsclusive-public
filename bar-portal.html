@@ -266,6 +266,50 @@
 }
 </style>
 
+
+<style id="bar-runtime-layout-hotfix-20260320">
+  @media(max-width:768px){
+    body.bar-entry-locked .header{
+      display:grid !important;
+      grid-template-columns:auto 1fr auto !important;
+      grid-template-areas:
+        "logo lang menu"
+        "auth auth auth" !important;
+      align-items:center !important;
+      gap:10px !important;
+    }
+    body.bar-entry-locked .logo{grid-area:logo !important;display:flex !important}
+    body.bar-entry-locked .logo img{height:48px !important;width:auto !important}
+    body.bar-entry-locked .header-right{
+      grid-area:lang !important;
+      width:100% !important;
+      display:flex !important;
+      flex-wrap:nowrap !important;
+      justify-content:flex-end !important;
+      gap:8px !important;
+      overflow:visible !important;
+    }
+    body.bar-entry-locked .header-auth-actions{
+      grid-area:auth !important;
+      width:100% !important;
+      display:grid !important;
+      grid-template-columns:1fr 1fr !important;
+      gap:10px !important;
+      margin:0 !important;
+    }
+    body.bar-entry-locked .header-auth-btn{
+      min-height:46px !important;border-radius:16px !important;padding:0 14px !important;
+    }
+    body.bar-entry-locked #btnLogout{display:none !important}
+    body.bar-entry-locked #barMenuBtn{
+      grid-area:menu !important;
+      justify-self:end !important;
+      width:48px !important;min-width:48px !important;height:48px !important;min-height:48px !important;
+      padding:0 !important;border-radius:16px !important;
+    }
+  }
+</style>
+
 </head>
 <body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
