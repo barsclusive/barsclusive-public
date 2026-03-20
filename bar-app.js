@@ -51,7 +51,36 @@ de: {
   locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
   zipReq:'PLZ *',
   mwstNumberLabel:'MWST-Nummer',
-  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
+  portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)',
+  barEntryHeadline:'Mehr Gäste für deine Bar',
+  barEntrySub:'Erstelle Deals, gewinne neue Gäste und bezahle nur bei Verkäufen.',
+  benefitFreeTitle:'Kostenlose Registrierung',
+  benefitFreeSub:'Ohne Einrichtungsgebühr.',
+  benefitNoRunningTitle:'Keine laufenden Fixkosten',
+  benefitNoRunningSub:'Kein Monatsabo und keine wiederkehrenden Grundgebühren.',
+  benefitGuestsTitle:'Neue Gäste erreichen',
+  benefitGuestsSub:'Deine Bar wird dort sichtbar, wo Gäste aktiv nach Angeboten suchen.',
+  benefitOnlySalesTitle:'Zahlen nur bei Verkäufen',
+  benefitOnlySalesSub:'Kosten fallen nur an, wenn tatsächlich Gutscheine verkauft werden.',
+  benefitReachTitle:'Mehr Sichtbarkeit für deine Bar',
+  benefitReachSub:'BarSclusive bringt dein Angebot genau dort ins Blickfeld, wo Gäste suchen.',
+  benefitCustomTitle:'Deals flexibel gestalten',
+  benefitCustomSub:'Preis, Menge, Uhrzeit und Gültigkeit bestimmst du selbst.',
+  correspondenceLang:'Korrespondenzsprache',
+  correspondenceHint:'Diese Sprache verwenden wir für E-Mails und Hinweise an deine Bar.',
+  entryHowItWorks:"Weitere Details unter So funktioniert's",
+  estimateLabel:'Auszahlungs-Schätzung',
+  estimateHint:'Geschätzter Betrag pro Einlösung für Fixpreis-Deals.',
+  langGerman:'Deutsch',
+  langEnglish:'English',
+  langItalian:'Italiano',
+  langFrench:'Français',
+  menuTitle:'Schnellzugriff',
+  menuNote:'Wichtige Bereiche wie Shop, Rechtliches und Kontakt findest du hier gesammelt.',
+  pauschalHint:'💡 Kunden zahlen 2.50 CHF. Du erhältst keine Auszahlung — der Rabatt wird direkt bei dir eingelöst.',
+  previewBadgeDeal:'Deal',
+  previewBadgeActive:'Aktiv',
+  previewLabel:'So sehen Kund:innen deinen Deal'
 },
 en: {
   logout:'Logout', login:'Login', register:'Register',
@@ -97,7 +126,36 @@ en: {
   locationHelp:'Taken from the selected address and can be fine-tuned on the map.',
   zipReq:'ZIP *',
   mwstNumberLabel:'VAT number',
-  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)'
+  portalTitle:'Bar Portal', forgotPw:'Forgot password?', resetInfo1:'Enter your email address. We will send you a 6-digit code.', resetInfo2:'Enter the 6-digit code from your email and choose a new password.', sendCode:'Send code', backBtn:'Back', code6:'Code (6 digits)',
+  barEntryHeadline:'Bring more guests to your bar',
+  barEntrySub:'Create deals, attract new guests and only pay when vouchers are sold.',
+  benefitFreeTitle:'Free registration',
+  benefitFreeSub:'No setup fee.',
+  benefitNoRunningTitle:'No ongoing fixed costs',
+  benefitNoRunningSub:'No monthly plan and no recurring base fees.',
+  benefitGuestsTitle:'Reach new guests',
+  benefitGuestsSub:'Your bar appears where guests actively search for offers.',
+  benefitOnlySalesTitle:'Pay only for sales',
+  benefitOnlySalesSub:'Costs only arise when vouchers are actually sold.',
+  benefitReachTitle:'More visibility for your bar',
+  benefitReachSub:'BarSclusive puts your offer where guests are already looking.',
+  benefitCustomTitle:'Create deals flexibly',
+  benefitCustomSub:'You decide the price, quantity, time and validity.',
+  correspondenceLang:'Correspondence language',
+  correspondenceHint:'We use this language for emails and notices sent to your bar.',
+  entryHowItWorks:'More details under How it works',
+  estimateLabel:'Payout estimate',
+  estimateHint:'Estimated amount per redemption for fixed-price deals.',
+  langGerman:'Deutsch',
+  langEnglish:'English',
+  langItalian:'Italiano',
+  langFrench:'Français',
+  menuTitle:'Quick access',
+  menuNote:'Important areas such as shop, legal pages and contact are collected here.',
+  pauschalHint:'💡 Customers pay CHF 2.50. You receive no payout — the discount is redeemed directly at your bar.',
+  previewBadgeDeal:'Deal',
+  previewBadgeActive:'Active',
+  previewLabel:'This is how customers see your deal'
 },
 it: {
   logout:'Esci', login:'Login', register:'Registrati',
@@ -143,7 +201,36 @@ it: {
   locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.',
   zipReq:'CAP *',
   mwstNumberLabel:'Numero IVA',
-  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)'
+  portalTitle:'Portale Bar', forgotPw:'Password dimenticata?', resetInfo1:'Inserisci la tua email. Ti invieremo un codice di 6 cifre.', resetInfo2:'Inserisci il codice di 6 cifre ricevuto via email e scegli una nuova password.', sendCode:'Invia codice', backBtn:'Indietro', code6:'Codice (6 cifre)',
+  barEntryHeadline:'Più ospiti per il tuo bar',
+  barEntrySub:'Crea deal, attira nuovi ospiti e paga solo quando vengono venduti voucher.',
+  benefitFreeTitle:'Registrazione gratuita',
+  benefitFreeSub:'Senza costi di attivazione.',
+  benefitNoRunningTitle:'Nessun costo fisso ricorrente',
+  benefitNoRunningSub:'Nessun abbonamento mensile e nessun costo base ricorrente.',
+  benefitGuestsTitle:'Raggiungi nuovi ospiti',
+  benefitGuestsSub:'Il tuo bar appare dove gli ospiti cercano attivamente offerte.',
+  benefitOnlySalesTitle:'Paghi solo sulle vendite',
+  benefitOnlySalesSub:'I costi nascono solo quando i voucher vengono davvero venduti.',
+  benefitReachTitle:'Più visibilità per il tuo bar',
+  benefitReachSub:'BarSclusive mette la tua offerta proprio dove gli ospiti stanno cercando.',
+  benefitCustomTitle:'Configura i deal in modo flessibile',
+  benefitCustomSub:'Prezzo, quantità, orario e validità li decidi tu.',
+  correspondenceLang:'Lingua di corrispondenza',
+  correspondenceHint:'Usiamo questa lingua per email e comunicazioni inviate al tuo bar.',
+  entryHowItWorks:'Maggiori dettagli in Come funziona',
+  estimateLabel:'Stima del pagamento',
+  estimateHint:'Importo stimato per riscatto per i deal a prezzo fisso.',
+  langGerman:'Deutsch',
+  langEnglish:'English',
+  langItalian:'Italiano',
+  langFrench:'Français',
+  menuTitle:'Accesso rapido',
+  menuNote:'Qui trovi raccolte le aree importanti come shop, pagine legali e contatto.',
+  pauschalHint:'💡 I clienti pagano CHF 2.50. Non ricevi alcun pagamento — lo sconto viene riscattato direttamente nel tuo bar.',
+  previewBadgeDeal:'Deal',
+  previewBadgeActive:'Attivo',
+  previewLabel:'Così i clienti vedono il tuo deal'
 },
 fr: {
   logout:'Déconnexion', login:'Connexion', register:'Inscription',
@@ -189,7 +276,36 @@ fr: {
   locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.',
   zipReq:'NPA *',
   mwstNumberLabel:'Numéro TVA',
-  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)'
+  portalTitle:'Portail Bar', forgotPw:'Mot de passe oublié ?', resetInfo1:'Saisissez votre adresse email. Nous vous enverrons un code à 6 chiffres.', resetInfo2:'Saisissez le code à 6 chiffres reçu par email puis choisissez un nouveau mot de passe.', sendCode:'Envoyer le code', backBtn:'Retour', code6:'Code (6 chiffres)',
+  barEntryHeadline:'Plus de clients pour votre bar',
+  barEntrySub:'Créez des deals, attirez de nouveaux clients et ne payez qu’en cas de vente.',
+  benefitFreeTitle:'Inscription gratuite',
+  benefitFreeSub:'Sans frais de mise en place.',
+  benefitNoRunningTitle:'Aucun coût fixe récurrent',
+  benefitNoRunningSub:'Aucun abonnement mensuel et aucun frais de base récurrent.',
+  benefitGuestsTitle:'Touchez de nouveaux clients',
+  benefitGuestsSub:'Votre bar apparaît là où les clients recherchent activement des offres.',
+  benefitOnlySalesTitle:'Payez uniquement sur les ventes',
+  benefitOnlySalesSub:'Des coûts ne naissent que lorsque des bons sont réellement vendus.',
+  benefitReachTitle:'Plus de visibilité pour votre bar',
+  benefitReachSub:'BarSclusive place votre offre exactement là où les clients cherchent.',
+  benefitCustomTitle:'Créez vos deals librement',
+  benefitCustomSub:'Vous décidez vous-même du prix, de la quantité, de l’horaire et de la validité.',
+  correspondenceLang:'Langue de correspondance',
+  correspondenceHint:'Nous utilisons cette langue pour les e-mails et messages envoyés à votre bar.',
+  entryHowItWorks:'Plus de détails sous Comment ça marche',
+  estimateLabel:'Estimation du paiement',
+  estimateHint:'Montant estimé par utilisation pour les deals à prix fixe.',
+  langGerman:'Deutsch',
+  langEnglish:'English',
+  langItalian:'Italiano',
+  langFrench:'Français',
+  menuTitle:'Accès rapide',
+  menuNote:'Vous trouverez ici les zones importantes comme le shop, les pages légales et le contact.',
+  pauschalHint:'💡 Les clients paient CHF 2.50. Vous ne recevez aucun paiement — la remise est utilisée directement dans votre bar.',
+  previewBadgeDeal:'Deal',
+  previewBadgeActive:'Actif',
+  previewLabel:'Voici comment les clients voient votre deal'
 }
 };
 
@@ -2653,3 +2769,22 @@ applyProfileToForm = function(b) {
     if (headerAuth && typeof sessionGet === 'function' && sessionGet()) headerAuth.style.display = 'none';
   });
 })();
+
+
+
+// Force entry translations to refresh once the DOM is ready and after late UI patches
+function refreshEntryTranslationsNow() {
+  try { applyTranslations(); } catch (e) {}
+  try {
+    var savedLang = localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
+    if (savedLang && savedLang !== currentLang) currentLang = savedLang;
+    applyTranslations();
+  } catch (e) {}
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  refreshEntryTranslationsNow();
+  setTimeout(refreshEntryTranslationsNow, 0);
+  setTimeout(refreshEntryTranslationsNow, 120);
+});
+
