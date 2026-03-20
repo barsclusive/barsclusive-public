@@ -710,20 +710,20 @@ function ensureBarFilterBar() {
     btn.className = 'bar-stats-filter-btn';
     btn.dataset.period = f[0];
     btn.textContent = f[1][currentLang] || f[1].de;
-    btn.style.cssText = 'background:#F5F0E8;color:#1E1B15;border:1px solid #CCC0AA;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600';
+    btn.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
     btn.addEventListener('click', function() { _barStatsPeriod = f[0]; highlightBarFilterBtn(f[0]); renderBarStats(f[0]); });
     wrap.appendChild(btn);
   });
   var fromInp = document.createElement('input'); fromInp.type='date'; fromInp.id='barSfFrom';
-  fromInp.style.cssText = 'background:#FAF6F0;color:#1E1B15;border:1px solid #CCC0AA;padding:4px 8px;border-radius:8px;font-size:12px';
+  fromInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
   wrap.appendChild(fromInp);
   var span = document.createElement('span'); span.textContent='–'; span.style.cssText='color:#666;font-size:12px';
   wrap.appendChild(span);
   var toInp = document.createElement('input'); toInp.type='date'; toInp.id='barSfTo';
-  toInp.style.cssText = 'background:#FAF6F0;color:#1E1B15;border:1px solid #CCC0AA;padding:4px 8px;border-radius:8px;font-size:12px';
+  toInp.style.cssText = 'background:#222;color:#ccc;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px';
   wrap.appendChild(toInp);
   var applyBtn = document.createElement('button'); applyBtn.textContent='OK';
-  applyBtn.style.cssText = 'background:linear-gradient(180deg,#C98A4B,#A86A2A);color:#fffdf8;border:none;padding:5px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600';
+  applyBtn.style.cssText = 'background:#FF3366;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600';
   applyBtn.addEventListener('click', function() {
     var f = document.getElementById('barSfFrom'), tt = document.getElementById('barSfTo');
     if (!f || !f.value) { showToast(currentLang === 'de' ? 'Bitte Von-Datum wählen' : currentLang === 'en' ? 'Please choose a from date' : currentLang === 'it' ? 'Seleziona una data iniziale' : 'Veuillez choisir une date de début', true); return; }
@@ -740,8 +740,8 @@ function ensureBarFilterBar() {
 
 function highlightBarFilterBtn(period) {
   document.querySelectorAll('.bar-stats-filter-btn').forEach(function(b) {
-    if (b.dataset.period === period) { b.style.background='linear-gradient(180deg,#C98A4B,#A86A2A)'; b.style.color='#fffdf8'; b.style.borderColor='#A86A2A'; }
-    else { b.style.background='#F5F0E8'; b.style.color='#1E1B15'; b.style.borderColor='#CCC0AA'; }
+    if (b.dataset.period === period) { b.style.background='#FF3366'; b.style.color='#fff'; b.style.borderColor='#FF3366'; }
+    else { b.style.background='#222'; b.style.color='#ccc'; b.style.borderColor='#333'; }
   });
 }
 
@@ -767,7 +767,7 @@ async function loadBarStats(period) {
   }
 
   var grid = document.getElementById('statsGrid');
-  grid.innerHTML = '<div style="color:#6B5D50;padding:20px">Laden...</div>';
+  grid.innerHTML = '<div style="color:#999;padding:20px">Laden...</div>';
 
   if (_dataCache.statsLoading) return;
   _dataCache.statsLoading = true;
@@ -863,7 +863,7 @@ async function loadMyDeals() {
   if (_dataCache.deals) { renderMyDeals(_dataCache.deals); }
   else {
     var el = document.getElementById('dealList');
-    el.innerHTML = '<div class="empty" style="padding:20px;color:#6B5D50">Laden...</div>';
+    el.innerHTML = '<div class="empty" style="padding:20px;color:#999">Laden...</div>';
   }
   // Refresh in background
   if (_dataCache.dealsLoading) return;
@@ -918,7 +918,7 @@ function renderMyDeals(deals) {
     btnEdit.addEventListener('click', function() { openEditModal(d); });
 
     var btnDel = document.createElement('button');
-    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#FAF6F0;color:#B04B35;border:1px solid #B04B35;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
+    btnDel.className = 'btn-sm'; btnDel.style.cssText = 'background:#2a2a2a;color:#ef4444;border:1px solid #ef4444;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px';
     btnDel.textContent = t('deleteDealBtn') || 'Löschen';
     (function(dealId) { btnDel.addEventListener('click', function() { deleteDeal(dealId); }); })(d.id);
 
@@ -1765,7 +1765,7 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
       '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
     '</div>' +
-    '<div style="color:#6B5D50;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
+    '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
@@ -1806,7 +1806,7 @@ function openVoucherDetail(v) {
       '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="font-size:14px;font-weight:700;margin-bottom:8px">' + escHtml(v.deal_title || '') + '</div>' +
-    '<div style="color:#6B5D50;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
+    '<div style="color:#999;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
     '<div class="timeline-list">' + timeline.map(function(it){ return '<div class="timeline-item"><div class="timeline-dot"></div><div><div class="timeline-title">' + escHtml(it.title) + '</div><div class="timeline-meta">' + escHtml(fmtDateTime_(it.when)) + (it.meta ? ' · ' + escHtml(it.meta) : '') + '</div></div></div>'; }).join('') + '</div>';
   modal.classList.add('active');
 }
@@ -2653,162 +2653,3 @@ applyProfileToForm = function(b) {
     if (headerAuth && typeof sessionGet === 'function' && sessionGet()) headerAuth.style.display = 'none';
   });
 })();
-
-
-
-/* ===== RUNTIME HOTFIX 2026-03-20: bar portal live lang + redeem + header ===== */
-(function(){
-  var _activeDashTabName = 'overview';
-
-  if (typeof switchDashTab === 'function') {
-    var _origSwitchDashTabHotfix = switchDashTab;
-    switchDashTab = function(name, btn){
-      _activeDashTabName = name || _activeDashTabName || 'overview';
-      return _origSwitchDashTabHotfix.apply(this, arguments);
-    };
-  }
-
-  function formatVoucherCodeInput(value){
-    return String(value || '')
-      .toUpperCase()
-      .replace(/[^A-Z0-9]/g, '')
-      .slice(0, 12)
-      .replace(/(.{4})/g, '$1-')
-      .replace(/-$/, '');
-  }
-
-  function refreshCurrentBarSection(){
-    try {
-      var s = sessionGet && sessionGet();
-      if (!s) return;
-      switch(_activeDashTabName){
-        case 'overview':
-          if (typeof loadBarStats === 'function') loadBarStats();
-          break;
-        case 'mydeals':
-          if (typeof loadMyDeals === 'function') loadMyDeals();
-          break;
-        case 'settings':
-          if (typeof loadProfile === 'function') loadProfile();
-          break;
-        case 'redeem':
-          var redeemTitle = document.querySelector('[data-i18n="redeemTitle"]');
-          if (redeemTitle) redeemTitle.textContent = t('redeemTitle');
-          var redeemBtn = document.getElementById('btnRedeem');
-          if (redeemBtn && !redeemBtn.disabled) redeemBtn.textContent = t('redeemBtn');
-          break;
-      }
-      var voucherFilterStatus = document.getElementById('voucherFilterStatus');
-      if (voucherFilterStatus) {
-        var current = voucherFilterStatus.value;
-        voucherFilterStatus.innerHTML = ''
-          + '<option value="all">' + t('allStatuses') + '</option>'
-          + '<option value="issued">' + t('openLbl') + '</option>'
-          + '<option value="redeemed">' + t('redeemed') + '</option>'
-          + '<option value="refunded">' + t('refundedLbl') + '</option>';
-        voucherFilterStatus.value = current === 'sent' ? 'issued' : current;
-      }
-    } catch(e){}
-  }
-
-  if (typeof setLang === 'function') {
-    var _origSetLangHotfix = setLang;
-    setLang = function(lang){
-      var r = _origSetLangHotfix.apply(this, arguments);
-      refreshCurrentBarSection();
-      return r;
-    };
-  }
-
-  function bindRedeemUiHotfix(){
-    var input = document.getElementById('redeemCode');
-    var btn = document.getElementById('btnRedeem');
-    if (input && !input._redeemFormatBound) {
-      input.addEventListener('input', function(){
-        var pos = this.selectionStart || this.value.length;
-        var oldLen = this.value.length;
-        this.value = formatVoucherCodeInput(this.value);
-        var newLen = this.value.length;
-        try { this.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(e){}
-      });
-      input.addEventListener('keydown', function(e){
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          if (typeof doRedeem === 'function') doRedeem();
-        }
-      });
-      input._redeemFormatBound = true;
-    }
-    if (btn && !btn._redeemClickBound) {
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        if (typeof doRedeem === 'function') doRedeem();
-      });
-      btn._redeemClickBound = true;
-    }
-  }
-
-  if (typeof doRedeem === 'function') {
-    var _origDoRedeemHotfix = doRedeem;
-    doRedeem = async function(){
-      var btn = document.getElementById('btnRedeem');
-      var input = document.getElementById('redeemCode');
-      if (input) input.value = formatVoucherCodeInput(input.value);
-      var oldText = btn ? btn.textContent : '';
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = (typeof t === 'function' ? t('processing') : '⏳ Wird verarbeitet...');
-      }
-      try {
-        return await _origDoRedeemHotfix.apply(this, arguments);
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = (typeof t === 'function' ? t('redeemBtn') : 'Einlösen');
-        }
-        refreshCurrentBarSection();
-      }
-    };
-  }
-
-  function hideTopAuthAfterLogin(){
-    try {
-      var logged = !!(sessionGet && sessionGet());
-      var auth = document.getElementById('barHeaderAuth');
-      var logout = document.getElementById('btnLogout');
-      if (auth) auth.style.display = logged ? 'none' : '';
-      if (logout) logout.style.display = logged ? 'none' : 'none';
-      document.body.classList.toggle('bar-user-logged-in', logged);
-      document.body.classList.toggle('bar-user-logged-out', !logged);
-    } catch(e){}
-  }
-
-  if (typeof sessionSet === 'function') {
-    var _origBarSessionSetHotfix = sessionSet;
-    sessionSet = function(){
-      var r = _origBarSessionSetHotfix.apply(this, arguments);
-      hideTopAuthAfterLogin();
-      return r;
-    };
-  }
-  if (typeof sessionClear === 'function') {
-    var _origBarSessionClearHotfix = sessionClear;
-    sessionClear = function(){
-      var r = _origBarSessionClearHotfix.apply(this, arguments);
-      hideTopAuthAfterLogin();
-      return r;
-    };
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    bindRedeemUiHotfix();
-    hideTopAuthAfterLogin();
-    refreshCurrentBarSection();
-  });
-  window.addEventListener('load', function(){
-    bindRedeemUiHotfix();
-    hideTopAuthAfterLogin();
-    refreshCurrentBarSection();
-  });
-})();
-
