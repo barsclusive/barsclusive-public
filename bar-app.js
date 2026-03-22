@@ -570,13 +570,30 @@ function esc(s) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
+function setI18nElementText(el, value) {
+  if (!el) return;
+  var safeValue = String(value == null ? '' : value);
+  if (!el.dataset.i18nFallback) el.dataset.i18nFallback = (el.textContent || '').trim();
+  if (el.children && el.children.length) {
+    var textNode = null;
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var node = el.childNodes[i];
+      if (node.nodeType === 3) { textNode = node; break; }
+    }
+    if (textNode) textNode.textContent = safeValue;
+    else el.insertBefore(document.createTextNode(safeValue), el.firstChild || null);
+    return;
+  }
+  el.textContent = safeValue;
+}
+
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (!key) return;
-    if (!el.dataset.i18nFallback) el.dataset.i18nFallback = (el.textContent || '').trim();
     var translated = t(key);
-    el.textContent = (translated && translated !== key) ? translated : (el.dataset.i18nFallback || translated || '');
+    var fallback = el.dataset.i18nFallback || (el.textContent || '').trim();
+    setI18nElementText(el, (translated && translated !== key) ? translated : (fallback || translated || ''));
   });
   document.title = 'BarSclusive – ' + t('portalTitle');
   // Translate placeholders
@@ -2708,7 +2725,7 @@ applyProfileToForm = function(b) {
     _origSetLangMerge(lang);
     document.querySelectorAll('.benefit-title,.benefit-sub,.drawer-note,[data-i18n]').forEach(function(el){
       var key = el.getAttribute('data-i18n');
-      if (key && TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) el.textContent = TRANSLATIONS[currentLang][key];
+      if (key && TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) setI18nElementText(el, TRANSLATIONS[currentLang][key]);
     });
   };
 
@@ -2875,7 +2892,7 @@ document.addEventListener('DOMContentLoaded', function(){
         var el = document.getElementById(pair[0]);
         if (!el) return;
         var translated = t(pair[1]);
-        if (translated) el.textContent = translated;
+        if (translated) setI18nElementText(el, translated);
       });
     } catch (e) {}
   }
@@ -2887,8 +2904,13 @@ document.addEventListener('DOMContentLoaded', function(){
       if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
     }
     try {
-      if (typeof unlockBarEntry === 'function') unlockBarEntry(target || 'login');
-      else if (typeof focusBarAuth === 'function') focusBarAuth(target || 'login');
+      var mode = target || 'login';
+      if (typeof unlockBarEntry === 'function') unlockBarEntry(mode);
+      else if (typeof focusBarAuth === 'function') focusBarAuth(mode);
+      var loginForm = document.getElementById('loginForm');
+      var registerForm = document.getElementById('registerForm');
+      if (loginForm) loginForm.classList.toggle('active', mode === 'login');
+      if (registerForm) registerForm.classList.toggle('active', mode === 'register');
       repairBarEntryTranslations();
     } catch (e) {}
     return false;
