@@ -573,7 +573,10 @@ function esc(s) {
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
-    if (key) el.textContent = t(key);
+    if (!key) return;
+    if (!el.dataset.i18nFallback) el.dataset.i18nFallback = (el.textContent || '').trim();
+    var translated = t(key);
+    el.textContent = (translated && translated !== key) ? translated : (el.dataset.i18nFallback || translated || '');
   });
   document.title = 'BarSclusive – ' + t('portalTitle');
   // Translate placeholders
@@ -2745,6 +2748,7 @@ applyProfileToForm = function(b) {
       window.scrollTo({ top: top, behavior: 'smooth' });
     }
   }
+  window.focusBarAuth = focusBarAuth;
 
   var _prevShowAuthScreenPatch = typeof showAuthScreen === 'function' ? showAuthScreen : null;
   if (_prevShowAuthScreenPatch) {
@@ -2852,5 +2856,51 @@ document.addEventListener('DOMContentLoaded', function(){
       new MutationObserver(function(){ refreshEntryTranslationsNow(); }).observe(observerTarget, { childList:true, subtree:true });
     }
     refreshEntryTranslationsNow();
+  });
+})();
+
+
+(function(){
+  function repairBarEntryTranslations(){
+    try {
+      applyTranslations();
+      var pairs = [
+        ['barHeaderLoginBtn', 'login'],
+        ['barHeaderRegisterBtn', 'register'],
+        ['btnBarEntryLogin', 'login'],
+        ['btnBarEntryRegister', 'registerBtn'],
+        ['barPortalTitle', 'portalTitle']
+      ];
+      pairs.forEach(function(pair){
+        var el = document.getElementById(pair[0]);
+        if (!el) return;
+        var translated = t(pair[1]);
+        if (translated) el.textContent = translated;
+      });
+    } catch (e) {}
+  }
+
+  window.handleBarAuthButton = function(target, event){
+    if (event) {
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      if (typeof event.stopPropagation === 'function') event.stopPropagation();
+      if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+    }
+    try {
+      if (typeof unlockBarEntry === 'function') unlockBarEntry(target || 'login');
+      else if (typeof focusBarAuth === 'function') focusBarAuth(target || 'login');
+      repairBarEntryTranslations();
+    } catch (e) {}
+    return false;
+  };
+
+  var _prevSetLangBarHardFix = setLang;
+  setLang = function(lang) {
+    _prevSetLangBarHardFix(lang);
+    repairBarEntryTranslations();
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    repairBarEntryTranslations();
   });
 })();
