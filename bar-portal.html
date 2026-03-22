@@ -262,6 +262,22 @@
       body.bar-authenticated #barMenuBtn{grid-column:5 !important;width:100% !important;justify-content:center !important}
     }
 </style>
+
+<style id="bar-portal-mobile-fix">
+  body.bar-entry-locked #barHeaderAuth{display:none !important;}
+  @media(max-width:768px){
+    .header{padding:10px 12px !important;}
+    .header{display:flex;flex-direction:column;gap:10px;align-items:stretch;}
+    .logo{display:flex;align-items:center;gap:8px;justify-content:flex-start;}
+    .logo img{height:48px !important;width:auto;}
+    #barPortalTitle{display:none !important;}
+    .header-right{display:grid !important;grid-template-columns:1fr auto;grid-template-areas:"lang menu";gap:10px;align-items:center;width:100%;}
+    .header-lang-row{grid-area:lang;display:grid !important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;}
+    .header-lang-row .lang-btn{min-width:0 !important;width:100% !important;padding:10px 0 !important;font-size:14px !important;border-radius:14px !important;}
+    #barMenuBtn{grid-area:menu;min-width:52px !important;width:52px !important;height:52px !important;padding:0 !important;border-radius:16px !important;justify-self:end;display:inline-flex !important;align-items:center !important;justify-content:center !important;margin:0 !important;}
+    #loginScreen{padding-top:18px !important;}
+  }
+</style>
 </head>
 <body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
@@ -277,10 +293,6 @@
       <button class="lang-btn" id="langEN">EN</button>
       <button class="lang-btn" id="langIT">IT</button>
       <button class="lang-btn" id="langFR">FR</button>
-    </div>
-    <div class="header-auth-actions" id="barHeaderAuth">
-      <button class="header-auth-btn active" id="barHeaderLoginBtn" type="button" data-i18n="login">Login</button>
-      <button class="header-auth-btn" id="barHeaderRegisterBtn" type="button" data-i18n="register">Registrieren</button>
     </div>
     <button class="btn-logout" id="btnLogout" style="display:none" data-i18n="logout">Ausloggen</button>
     <button class="menu-btn" id="barMenuBtn" aria-label="Menü öffnen">☰</button>
