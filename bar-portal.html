@@ -250,22 +250,18 @@
       .bar-entry-sub{font-size:14px}
       .entry-cta-wrap{max-width:none;padding:0 4px}
     }
-  </style>
-
-<style id="bar-mobile-header-fix-final">
-  .header-lang-row{display:flex;align-items:center;gap:8px}
-  @media(max-width:768px){
-    body.bar-entry-locked .header{padding:10px 12px !important}
-    body.bar-entry-locked .header-right{display:grid !important;grid-template-columns:minmax(0,1fr) auto !important;grid-template-areas:"lang menu" "auth auth" !important;gap:8px !important;align-items:center !important;width:100% !important}
-    body.bar-entry-locked .header-lang-row{grid-area:lang !important;display:flex !important;gap:6px !important;min-width:0 !important}
-    body.bar-entry-locked .header-lang-row .lang-btn{min-width:34px !important;height:36px !important;min-height:36px !important;padding:0 8px !important;border-radius:12px !important;font-size:11px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important}
-    body.bar-entry-locked .header-auth-actions{grid-area:auth !important;display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important;margin-left:0 !important;width:100% !important}
-    body.bar-entry-locked .header-auth-btn{min-height:40px !important;padding:0 10px !important;font-size:13px !important;border-radius:12px !important;width:100% !important}
-    body.bar-entry-locked #barMenuBtn{grid-area:menu !important;justify-self:end !important;width:40px !important;min-width:40px !important;height:36px !important;min-height:36px !important;padding:0 !important;border-radius:12px !important}
-    body.bar-entry-locked #btnLogout{grid-column:1 / -1 !important}
-  }
+  
+    body.bar-authenticated #barHeaderAuth,
+    body.bar-authenticated #btnLogout{display:none !important}
+    body.bar-authenticated #barMenuBtn{display:inline-flex !important}
+    .drawer-action{width:100%;text-align:left;cursor:pointer;font:inherit}
+    @media(max-width:768px){
+      body.bar-authenticated .header{padding:12px 14px !important}
+      body.bar-authenticated .header-right{width:100% !important;display:grid !important;grid-template-columns:repeat(5,minmax(0,1fr)) !important;gap:8px !important;align-items:center !important}
+      body.bar-authenticated .header-right .lang-btn{padding:10px 0 !important}
+      body.bar-authenticated #barMenuBtn{grid-column:5 !important;width:100% !important;justify-content:center !important}
+    }
 </style>
-
 </head>
 <body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
@@ -305,6 +301,7 @@
     <a class="drawer-link" href="impressum.html">📄 <span data-i18n="legalNotice">Impressum</span></a>
     <a class="drawer-link" href="datenschutz-bars.html">🔒 <span data-i18n="privacy">Datenschutz</span></a>
     <a class="drawer-link" href="agb-bars.html">🧾 <span data-i18n="termsBars">AGB Bars</span></a>
+    <button class="drawer-link drawer-action btn-logout" id="barDrawerLogout" type="button" style="display:none">↩️ <span data-i18n="logout">Ausloggen</span></button>
     <div class="drawer-note" data-i18n="menuNote">Wichtige Infos schnell erreichbar, auch wenn weiter unten viele Inhalte sichtbar sind.</div>
   </div>
 </div>
@@ -637,6 +634,26 @@
     </div>
 
     <!-- VOUCHERS -->
+
+    <!-- REDEEM -->
+    <div id="dashRedeem" class="tab-content">
+      <div class="redeem-box">
+        <h2>🔑 <span data-i18n="redeemTitle">Gutschein einlösen</span></h2>
+        <p style="color:#999;font-size:14px;line-height:1.5;margin-bottom:18px" data-i18n="redeemHint">Gutschein-Code des Kunden eingeben</p>
+        <div class="err-msg" id="redeemErr" aria-live="polite"></div>
+        <div class="form-group" style="text-align:left;margin-bottom:16px">
+          <label class="form-label" for="redeemCode" data-i18n="codeLbl">Code</label>
+          <input type="text" class="form-input" id="redeemCode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" placeholder="ABC123">
+        </div>
+        <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
+        <div id="redeemResult" style="display:none;margin-top:18px">
+          <div class="code-display">
+            <div class="code-title" data-i18n="dealLbl">Deal</div>
+            <div class="code-val" id="redeemDeal" style="font-size:20px;letter-spacing:0"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- SETTINGS -->
     <div id="dashSettings" class="tab-content">
