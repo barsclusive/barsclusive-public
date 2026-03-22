@@ -3447,6 +3447,9 @@ try {
 (function(){
   function unlockShopEntry(scrollToDiscovery){
     document.body.classList.remove('shop-entry-locked');
+    var logged = !!(typeof sessionGet === 'function' && sessionGet());
+    document.body.classList.toggle('shop-user-logged-in', logged);
+    document.body.classList.toggle('shop-user-logged-out', !logged);
     var section = document.getElementById('shopDiscoverySection');
     if (section) section.style.display = '';
     var footer = document.querySelector('.footer');
@@ -3454,7 +3457,7 @@ try {
     var headerDealsBtn = document.getElementById('headerDealsBtn');
     if (headerDealsBtn) headerDealsBtn.style.display = 'none';
     var topAuth = document.getElementById('shopTopAuth');
-    if (topAuth) topAuth.style.display = 'none';
+    if (topAuth) topAuth.style.display = logged ? 'none' : '';
     var noLoginHint = document.getElementById('shopNoLoginHint');
     if (noLoginHint) noLoginHint.style.display = 'none';
     if (typeof showView === 'function') {
