@@ -2655,106 +2655,20 @@ applyProfileToForm = function(b) {
 })();
 
 
-// ===== BAR ENTRY TRANSLATION HOTFIX =====
-(function(){
+
+// Force entry translations to refresh once the DOM is ready and after late UI patches
+function refreshEntryTranslationsNow() {
+  try { applyTranslations(); } catch (e) {}
   try {
-    Object.assign(TRANSLATIONS.de, {
-      barEntryHeadline:'Deine Bar auf BarSclusive',
-      barEntrySub:'Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.',
-      benefitFreeTitle:'Kostenlose Registrierung',
-      benefitFreeSub:'Ohne Einrichtungsgebühr. Einfach loslegen.',
-      benefitNoRunningTitle:'Keine laufenden Fixkosten',
-      benefitNoRunningSub:'Kein Monatsabo und keine wiederkehrenden Kosten.',
-      benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',
-      benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.',
-      benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',
-      benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.',
-      benefitReachTitle:'Mehr Sichtbarkeit für deine Bar, ohne Werbekosten',
-      benefitReachSub:'BarSclusive bringt neue Gäste direkt zu dir.',
-      benefitCustomTitle:'Komplett personalisierbar',
-      benefitCustomSub:'Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.',
-      entryHowItWorks:"Weitere Details unter So funktioniert's"
-    });
-    Object.assign(TRANSLATIONS.en, {
-      barEntryHeadline:'Your bar on BarSclusive',
-      barEntrySub:'More guests, more visibility – without fixed costs and without risk.',
-      benefitFreeTitle:'Free registration',
-      benefitFreeSub:'No setup fee. Get started right away.',
-      benefitNoRunningTitle:'No ongoing fixed costs',
-      benefitNoRunningSub:'No monthly subscription and no recurring costs.',
-      benefitGuestsTitle:'New guests in your preferred time slots',
-      benefitGuestsSub:'Reach people exactly when you need them.',
-      benefitOnlySalesTitle:'You only pay for real sales',
-      benefitOnlySalesSub:'Commission only applies to vouchers that are actually sold.',
-      benefitReachTitle:'More visibility for your bar, without ad spend',
-      benefitReachSub:'BarSclusive brings new guests directly to you.',
-      benefitCustomTitle:'Fully customizable',
-      benefitCustomSub:'Product, time frame and conditions – you stay in control.',
-      entryHowItWorks:'More details under How it works'
-    });
-    Object.assign(TRANSLATIONS.it, {
-      barEntryHeadline:'Il tuo bar su BarSclusive',
-      barEntrySub:'Più ospiti, più visibilità – senza costi fissi e senza rischi.',
-      benefitFreeTitle:'Registrazione gratuita',
-      benefitFreeSub:'Senza costi di attivazione. Parti subito.',
-      benefitNoRunningTitle:'Nessun costo fisso ricorrente',
-      benefitNoRunningSub:'Nessun abbonamento mensile e nessun costo ricorrente.',
-      benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci',
-      benefitGuestsSub:'Raggiungi le persone proprio quando ne hai bisogno.',
-      benefitOnlySalesTitle:'Paghi solo per vendite reali',
-      benefitOnlySalesSub:'La commissione si applica solo ai voucher effettivamente venduti.',
-      benefitReachTitle:'Più visibilità per il tuo bar, senza costi pubblicitari',
-      benefitReachSub:'BarSclusive porta nuovi ospiti direttamente da te.',
-      benefitCustomTitle:'Completamente personalizzabile',
-      benefitCustomSub:'Prodotto, periodo e condizioni – decidi tutto tu.',
-      entryHowItWorks:'Maggiori dettagli in Come funziona'
-    });
-    Object.assign(TRANSLATIONS.fr, {
-      barEntryHeadline:'Votre bar sur BarSclusive',
-      barEntrySub:'Plus de clients, plus de visibilité – sans coûts fixes et sans risque.',
-      benefitFreeTitle:'Inscription gratuite',
-      benefitFreeSub:'Sans frais de mise en place. Commencez tout de suite.',
-      benefitNoRunningTitle:'Pas de coûts fixes récurrents',
-      benefitNoRunningSub:'Aucun abonnement mensuel et aucun coût récurrent.',
-      benefitGuestsTitle:'De nouveaux clients aux moments que vous choisissez',
-      benefitGuestsSub:'Touchez les bonnes personnes exactement quand vous en avez besoin.',
-      benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes',
-      benefitOnlySalesSub:'La commission s’applique uniquement aux bons réellement vendus.',
-      benefitReachTitle:'Plus de visibilité pour votre bar, sans frais publicitaires',
-      benefitReachSub:'BarSclusive vous apporte directement de nouveaux clients.',
-      benefitCustomTitle:'Entièrement personnalisable',
-      benefitCustomSub:'Produit, période et conditions – vous gardez le contrôle.',
-      entryHowItWorks:'Plus de détails dans Comment ça marche'
-    });
-  } catch(e) {}
+    var savedLang = localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
+    if (savedLang && savedLang !== currentLang) currentLang = savedLang;
+    applyTranslations();
+  } catch (e) {}
+}
 
-  document.addEventListener('DOMContentLoaded', function(){
-    try {
-      if (typeof setLang === 'function') setLang(currentLang || 'de');
-    } catch(e) {}
-  });
-})();
+document.addEventListener('DOMContentLoaded', function(){
+  refreshEntryTranslationsNow();
+  setTimeout(refreshEntryTranslationsNow, 0);
+  setTimeout(refreshEntryTranslationsNow, 120);
+});
 
-
-// ===== FINAL BAR PORTAL ENTRY FIX =====
-(function(){
-  function ensureBarEntryTexts(){
-    try{
-      var sets = {
-        de:{barEntryHeadline:'Deine Bar auf BarSclusive',barEntrySub:'Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.',benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.',benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.',benefitCustomTitle:'Komplett personalisierbar',benefitCustomSub:'Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.'},
-        en:{barEntryHeadline:'Your bar on BarSclusive',barEntrySub:'More guests, more visibility – with no fixed costs and no risk.',benefitGuestsTitle:'New guests at the times you want',benefitGuestsSub:'Reach people exactly when you need them.',benefitOnlySalesTitle:'You only pay for real sales',benefitOnlySalesSub:'A commission only applies to vouchers that are actually sold.',benefitCustomTitle:'Fully customisable',benefitCustomSub:'Product, time window and conditions – you decide everything yourself.'},
-        it:{barEntryHeadline:'Il tuo bar su BarSclusive',barEntrySub:'Più ospiti, più visibilità – senza costi fissi e senza rischi.',benefitGuestsTitle:'Nuovi ospiti negli orari che preferisci',benefitGuestsSub:'Raggiungi le persone proprio quando ne hai bisogno.',benefitOnlySalesTitle:'Paghi solo per vendite reali',benefitOnlySalesSub:'La commissione si applica solo ai voucher realmente venduti.',benefitCustomTitle:'Completamente personalizzabile',benefitCustomSub:'Prodotto, periodo e condizioni: decidi tutto tu.'},
-        fr:{barEntryHeadline:'Votre bar sur BarSclusive',barEntrySub:'Plus de clients, plus de visibilité – sans coûts fixes et sans risque.',benefitGuestsTitle:'De nouveaux clients aux moments souhaités',benefitGuestsSub:'Touchez les bonnes personnes exactement quand vous en avez besoin.',benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes',benefitOnlySalesSub:'Une commission n’est due que sur les bons réellement vendus.',benefitCustomTitle:'Entièrement personnalisable',benefitCustomSub:'Produit, période et conditions – vous décidez de tout vous-même.'}
-      };
-      Object.keys(sets).forEach(function(k){ if (window.I18N && I18N[k]) Object.assign(I18N[k], sets[k]); });
-      if (typeof applyTranslations === 'function') applyTranslations();
-    }catch(e){}
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    ensureBarEntryTexts();
-    var loginBtn = document.getElementById('barHeaderLoginBtn');
-    var regBtn = document.getElementById('barHeaderRegisterBtn');
-    if (loginBtn) loginBtn.addEventListener('click', function(e){ e.preventDefault(); if (typeof focusBarAuth === 'function') focusBarAuth('login'); }, true);
-    if (regBtn) regBtn.addEventListener('click', function(e){ e.preventDefault(); if (typeof focusBarAuth === 'function') focusBarAuth('register'); }, true);
-  });
-})();
