@@ -1022,6 +1022,91 @@
       .hero-how-link{font-size:12.5px}
     }
   </style>
+
+  <style id="shop-mobile-discovery-fix">
+    @media(max-width:768px){
+      body:not(.shop-entry-locked).shop-user-logged-out .header{padding:10px 12px 8px !important}
+      body:not(.shop-entry-locked).shop-user-logged-out .nav{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto auto !important;
+        grid-template-areas:
+          "lang cart menu"
+          "search search search" !important;
+        align-items:center !important;
+        gap:10px 8px !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .shop-header-logo{display:none !important}
+      body:not(.shop-entry-locked).shop-user-logged-out .nav-links{
+        display:contents !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang !important;
+        display:flex !important;
+        gap:6px !important;
+        align-items:center !important;
+        min-width:0 !important;
+        overflow-x:auto !important;
+        padding-bottom:2px !important;
+        scrollbar-width:none;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
+      body:not(.shop-entry-locked).shop-user-logged-out .shop-lang-btn{
+        min-width:40px !important;
+        padding:7px 8px !important;
+        font-size:11px !important;
+        line-height:1 !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out #cartOpenBtn{
+        grid-area:cart !important;
+        justify-self:center !important;
+        min-width:46px !important;
+        width:46px !important;
+        height:46px !important;
+        padding:0 !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out #shopMenuBtn{
+        grid-area:menu !important;
+        justify-self:end !important;
+        width:46px !important;
+        min-width:46px !important;
+        height:46px !important;
+        padding:0 !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .user-menu,
+      body:not(.shop-entry-locked).shop-user-logged-out #btnDeals,
+      body:not(.shop-entry-locked).shop-user-logged-out #btnFavorites,
+      body:not(.shop-entry-locked).shop-user-logged-out #btnOrders,
+      body:not(.shop-entry-locked).shop-user-logged-out .header-deals-btn{display:none !important}
+      body:not(.shop-entry-locked).shop-user-logged-out .search-wrap{
+        grid-area:search !important;
+        display:block !important;
+        width:100% !important;
+        max-width:none !important;
+        min-width:0 !important;
+        margin:0 !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .search-input{
+        height:46px !important;
+        min-height:46px !important;
+        font-size:15px !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .shop-top-auth{
+        display:flex !important;
+        padding:8px 12px 6px !important;
+        gap:8px !important;
+        background:transparent !important;
+        backdrop-filter:none !important;
+        border-bottom:none !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .shop-top-auth-btn{
+        min-height:42px !important;
+        border-radius:14px !important;
+      }
+      body:not(.shop-entry-locked).shop-user-logged-out .shop-no-login-hint{display:none !important}
+      body:not(.shop-entry-locked) #shopDiscoverySection .filter-wrap{padding-top:8px !important}
+    }
+  </style>
+
 </head>
 <body class="shop-page shop-entry-locked">
 
