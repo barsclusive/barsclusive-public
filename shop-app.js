@@ -90,7 +90,7 @@ function restoreLocationState() {
     if (!parsed) return;
     _locationState = Object.assign(_locationState, parsed);
     if (parsed.label && document.getElementById('locationInput')) document.getElementById('locationInput').value = parsed.label;
-    filters.city = parsed.textFilter || '';
+    filters.city = (parsed && !isValidCoord(Number(parsed.lat)) && !isValidCoord(Number(parsed.lng))) ? (parsed.textFilter || '') : '';
     if (isValidCoord(Number(parsed.lat)) && isValidCoord(Number(parsed.lng))) {
       _userLat = Number(parsed.lat);
       _userLng = Number(parsed.lng);
@@ -161,7 +161,7 @@ function applySelectedLocation(place) {
   };
   _userLat = Number(place.lat);
   _userLng = Number(place.lng);
-  filters.city = _locationState.textFilter;
+  filters.city = '';
   saveLocationState();
   updateLocationUi();
   sortDealsByDistance();
@@ -170,20 +170,20 @@ async function applyLocation() {
   var input = document.getElementById('locationInput');
   var val = (input && input.value || '').trim();
   if (!val) { clearLocation(); return; }
-  var results = await geocodeLocationQuery(val);
+
+  var queries = [val];
+  if (!/schweiz|switzerland|svizzera|suisse/i.test(val)) queries.push(val + ', Schweiz');
+  var results = [];
+  for (var i = 0; i < queries.length && !results.length; i++) {
+    results = await geocodeLocationQuery(queries[i]);
+  }
+
   if (results.length) {
     applySelectedLocation(mapLocationResult(results[0]));
-  } else {
-    filters.city = val.toLowerCase();
-    _locationState.label = val;
-    _locationState.textFilter = val.toLowerCase();
-    _locationState.source = 'text';
-    _locationState.lat = null; _locationState.lng = null;
-    _userLat = null; _userLng = null;
-    saveLocationState();
-    updateLocationUi();
-    renderDeals();
+    return;
   }
+
+  showToast((typeof shopT === 'function' && shopT('locationSearchFallback')) || 'Adresse konnte nicht als Standort aufgelöst werden.', true);
 }
 function clearLocation() {
   filters.city = '';
@@ -2697,7 +2697,7 @@ try {
     Object.assign(SHOP_TRANSLATIONS.de, {
       menuTitle:'Mehr entdecken', menuNote:'Alles Wichtige schnell erreichbar, ohne bis zum Seitenende zu scrollen.',
       customDateBtn:'📅 Eigenes Datum wählen', customDateLabel:'Eigenes Datum',
-      myLocationBtn:'Nach Distanz sortieren', geoCurrentLocation:'Aktueller Standort',
+      myLocationBtn:'Nach Distanz sortieren', geoCurrentLocation:'Aktueller Standort', locationSearchFallback:'Adresse konnte nicht als Standort aufgelöst werden.',
       favoritesNav:'Favoriten', noAccountYet:'Noch kein Konto?',
       statusPending:'Ausstehend', statusBought:'Gekauft', statusRedeemed:'Eingelöst',
       timeSlotMorning:'🌅 Morgen', timeSlotMidday:'☀️ Mittag', timeSlotEvening:'🌙 Abend', weekdaysLabel:'Wochentage',
@@ -2706,7 +2706,7 @@ try {
     Object.assign(SHOP_TRANSLATIONS.en, {
       menuTitle:'Explore more', menuNote:'Quick access to the important pages without endless scrolling.',
       customDateBtn:'📅 Choose your own date', customDateLabel:'Custom date',
-      myLocationBtn:'Sort by distance', geoCurrentLocation:'Current location',
+      myLocationBtn:'Sort by distance', geoCurrentLocation:'Current location', locationSearchFallback:'Address could not be resolved as a location.',
       favoritesNav:'Favorites', noAccountYet:'No account yet?',
       statusPending:'Pending', statusBought:'Purchased', statusRedeemed:'Redeemed',
       timeSlotMorning:'🌅 Morning', timeSlotMidday:'☀️ Midday', timeSlotEvening:'🌙 Evening', weekdaysLabel:'Weekdays',
@@ -2715,7 +2715,7 @@ try {
     Object.assign(SHOP_TRANSLATIONS.it, {
       menuTitle:'Scopri di più', menuNote:'Tutto importante a portata di mano, senza scorrere fino in fondo.',
       customDateBtn:'📅 Scegli una data', customDateLabel:'Data personalizzata',
-      myLocationBtn:'Ordina per distanza', geoCurrentLocation:'Posizione attuale',
+      myLocationBtn:'Ordina per distanza', geoCurrentLocation:'Posizione attuale', locationSearchFallback:'Indirizzo non trovato con precisione – continuo con la ricerca testuale.',
       favoritesNav:'Preferiti', noAccountYet:'Non hai ancora un account?',
       statusPending:'In attesa', statusBought:'Acquistato', statusRedeemed:'Riscattato',
       timeSlotMorning:'🌅 Mattina', timeSlotMidday:'☀️ Pranzo', timeSlotEvening:'🌙 Sera', weekdaysLabel:'Giorni',
@@ -2724,7 +2724,7 @@ try {
     Object.assign(SHOP_TRANSLATIONS.fr, {
       menuTitle:'Découvrir plus', menuNote:'Toutes les pages importantes rapidement accessibles, sans devoir scroller jusqu’en bas.',
       customDateBtn:'📅 Choisir une date', customDateLabel:'Date personnalisée',
-      myLocationBtn:'Trier par distance', geoCurrentLocation:'Position actuelle',
+      myLocationBtn:'Trier par distance', geoCurrentLocation:'Position actuelle', locationSearchFallback:'L\'adresse n\'a pas pu être résolue comme position.',
       favoritesNav:'Favoris', noAccountYet:'Pas encore de compte ?',
       statusPending:'En attente', statusBought:'Acheté', statusRedeemed:'Utilisé',
       timeSlotMorning:'🌅 Matin', timeSlotMidday:'☀️ Midi', timeSlotEvening:'🌙 Soir', weekdaysLabel:'Jours',
@@ -3466,7 +3466,8 @@ try {
     if (scrollToDiscovery) {
       var target = document.getElementById('shopFocusArea') || document.getElementById('shopViewToggle') || section;
       if (target) {
-        var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+        var mobileLoggedOut = window.innerWidth <= 768 && document.body.classList.contains('shop-user-logged-out');
+        var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - (mobileLoggedOut ? 120 : 88), 0);
         window.scrollTo({ top: top, behavior: 'smooth' });
       }
     }
