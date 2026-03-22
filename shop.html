@@ -1033,8 +1033,7 @@
         display:grid !important;
         grid-template-columns:minmax(0,1fr) auto auto !important;
         grid-template-areas:
-          "lang cart menu"
-          "search search search" !important;
+          "lang cart menu" !important;
         align-items:center !important;
         gap:8px 8px !important;
       }
@@ -1079,14 +1078,7 @@
       body:not(.shop-entry-locked).shop-user-logged-out #btnFavorites,
       body:not(.shop-entry-locked).shop-user-logged-out #btnOrders,
       body:not(.shop-entry-locked).shop-user-logged-out .header-deals-btn{display:none !important}
-      body:not(.shop-entry-locked).shop-user-logged-out .search-wrap{
-        grid-area:search !important;
-        display:block !important;
-        width:100% !important;
-        max-width:none !important;
-        min-width:0 !important;
-        margin:0 !important;
-      }
+      body:not(.shop-entry-locked).shop-user-logged-out .search-wrap{display:none !important}
       body:not(.shop-entry-locked).shop-user-logged-out .search-input{
         height:44px !important;
         min-height:44px !important;
