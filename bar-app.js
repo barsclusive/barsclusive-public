@@ -2788,3 +2788,69 @@ document.addEventListener('DOMContentLoaded', function(){
   setTimeout(refreshEntryTranslationsNow, 120);
 });
 
+
+
+// ===== MOBILE AUTH + ENTRY TRANSLATION FIX =====
+(function(){
+  function unlockBarEntry(target){
+    document.body.classList.remove('bar-entry-locked');
+    var loginScreen = document.getElementById('loginScreen');
+    if (loginScreen) loginScreen.style.display = 'block';
+    var dashboard = document.getElementById('barDashboard');
+    if (dashboard && !(typeof sessionGet === 'function' && sessionGet())) dashboard.style.display = 'none';
+    var headerAuth = document.getElementById('barHeaderAuth');
+    if (headerAuth && !(typeof sessionGet === 'function' && sessionGet())) headerAuth.style.display = 'flex';
+    if (typeof focusBarAuth === 'function') {
+      focusBarAuth(target || 'login');
+      return;
+    }
+    var loginForm = document.getElementById('loginForm');
+    var registerForm = document.getElementById('registerForm');
+    if (loginForm) loginForm.classList.toggle('active', (target || 'login') === 'login');
+    if (registerForm) registerForm.classList.toggle('active', (target || 'login') === 'register');
+  }
+  window.unlockBarEntry = unlockBarEntry;
+
+  var _prevShowAuthScreenMobileFix = typeof showAuthScreen === 'function' ? showAuthScreen : null;
+  if (_prevShowAuthScreenMobileFix) {
+    showAuthScreen = function(show){
+      _prevShowAuthScreenMobileFix(show);
+      document.body.classList.toggle('bar-entry-locked', !!show && !(typeof sessionGet === 'function' && sessionGet()));
+      refreshEntryTranslationsNow();
+    };
+  }
+
+  var _prevFocusBarAuth = typeof focusBarAuth === 'function' ? focusBarAuth : null;
+  if (_prevFocusBarAuth) {
+    focusBarAuth = function(name){
+      document.body.classList.remove('bar-entry-locked');
+      _prevFocusBarAuth(name);
+      refreshEntryTranslationsNow();
+    };
+    window.focusBarAuth = focusBarAuth;
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    ['btnBarEntryLogin','barHeaderLoginBtn'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', function(ev){
+        ev.preventDefault();
+        unlockBarEntry('login');
+      }, true);
+    });
+    ['btnBarEntryRegister','barHeaderRegisterBtn'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', function(ev){
+        ev.preventDefault();
+        unlockBarEntry('register');
+      }, true);
+    });
+    var observerTarget = document.getElementById('loginScreen');
+    if (observerTarget && 'MutationObserver' in window) {
+      new MutationObserver(function(){ refreshEntryTranslationsNow(); }).observe(observerTarget, { childList:true, subtree:true });
+    }
+    refreshEntryTranslationsNow();
+  });
+})();
