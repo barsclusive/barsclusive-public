@@ -243,41 +243,14 @@
     body.bar-entry-locked #langEN,
     body.bar-entry-locked #langIT,
     body.bar-entry-locked #langFR{margin-right:0}
-    body.bar-entry-locked .header-auth-actions{margin-left:auto}
+    
     @media(max-width:768px){
       .bar-entry-logo{height:96px}
       .bar-entry-hero{padding:6px 0 18px}
       .bar-entry-sub{font-size:14px}
       .entry-cta-wrap{max-width:none;padding:0 4px}
     }
-  
-    body.bar-authenticated #barHeaderAuth,
-    body.bar-authenticated #btnLogout{display:none !important}
-    body.bar-authenticated #barMenuBtn{display:inline-flex !important}
-    .drawer-action{width:100%;text-align:left;cursor:pointer;font:inherit}
-    @media(max-width:768px){
-      body.bar-authenticated .header{padding:12px 14px !important}
-      body.bar-authenticated .header-right{width:100% !important;display:grid !important;grid-template-columns:repeat(5,minmax(0,1fr)) !important;gap:8px !important;align-items:center !important}
-      body.bar-authenticated .header-right .lang-btn{padding:10px 0 !important}
-      body.bar-authenticated #barMenuBtn{grid-column:5 !important;width:100% !important;justify-content:center !important}
-    }
-</style>
-
-<style id="bar-portal-mobile-fix">
-  body.bar-entry-locked #barHeaderAuth{display:none !important;}
-  @media(max-width:768px){
-    .header{padding:10px 12px !important;}
-    .header{display:flex;flex-direction:column;gap:10px;align-items:stretch;}
-    .logo{display:flex;align-items:center;gap:8px;justify-content:flex-start;}
-    .logo img{height:48px !important;width:auto;}
-    #barPortalTitle{display:none !important;}
-    .header-right{display:grid !important;grid-template-columns:1fr auto;grid-template-areas:"lang menu";gap:10px;align-items:center;width:100%;}
-    .header-lang-row{grid-area:lang;display:grid !important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;}
-    .header-lang-row .lang-btn{min-width:0 !important;width:100% !important;padding:10px 0 !important;font-size:14px !important;border-radius:14px !important;}
-    #barMenuBtn{grid-area:menu;min-width:52px !important;width:52px !important;height:52px !important;padding:0 !important;border-radius:16px !important;justify-self:end;display:inline-flex !important;align-items:center !important;justify-content:center !important;margin:0 !important;}
-    #loginScreen{padding-top:18px !important;}
-  }
-</style>
+  </style>
 </head>
 <body class="bar-portal-page bar-entry-locked">
 <div id="toast" class="toast" role="alert"></div>
@@ -288,13 +261,11 @@
     <span id="barPortalTitle" data-i18n="portalTitle">Bar-Portal</span>
   </div>
   <div class="header-right">
-    <div class="header-lang-row">
-      <button class="lang-btn active" id="langDE">DE</button>
-      <button class="lang-btn" id="langEN">EN</button>
-      <button class="lang-btn" id="langIT">IT</button>
-      <button class="lang-btn" id="langFR">FR</button>
-    </div>
-    <button class="btn-logout" id="btnLogout" style="display:none" data-i18n="logout">Ausloggen</button>
+    <button class="lang-btn active" id="langDE">DE</button>
+    <button class="lang-btn" id="langEN">EN</button>
+    <button class="lang-btn" id="langIT">IT</button>
+    <button class="lang-btn" id="langFR">FR</button>
+<button class="btn-logout" id="btnLogout" style="display:none" data-i18n="logout">Ausloggen</button>
     <button class="menu-btn" id="barMenuBtn" aria-label="Menü öffnen">☰</button>
   </div>
 
@@ -313,7 +284,6 @@
     <a class="drawer-link" href="impressum.html">📄 <span data-i18n="legalNotice">Impressum</span></a>
     <a class="drawer-link" href="datenschutz-bars.html">🔒 <span data-i18n="privacy">Datenschutz</span></a>
     <a class="drawer-link" href="agb-bars.html">🧾 <span data-i18n="termsBars">AGB Bars</span></a>
-    <button class="drawer-link drawer-action btn-logout" id="barDrawerLogout" type="button" style="display:none">↩️ <span data-i18n="logout">Ausloggen</span></button>
     <div class="drawer-note" data-i18n="menuNote">Wichtige Infos schnell erreichbar, auch wenn weiter unten viele Inhalte sichtbar sind.</div>
   </div>
 </div>
@@ -646,26 +616,6 @@
     </div>
 
     <!-- VOUCHERS -->
-
-    <!-- REDEEM -->
-    <div id="dashRedeem" class="tab-content">
-      <div class="redeem-box">
-        <h2>🔑 <span data-i18n="redeemTitle">Gutschein einlösen</span></h2>
-        <p style="color:#999;font-size:14px;line-height:1.5;margin-bottom:18px" data-i18n="redeemHint">Gutschein-Code des Kunden eingeben</p>
-        <div class="err-msg" id="redeemErr" aria-live="polite"></div>
-        <div class="form-group" style="text-align:left;margin-bottom:16px">
-          <label class="form-label" for="redeemCode" data-i18n="codeLbl">Code</label>
-          <input type="text" class="form-input" id="redeemCode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" placeholder="ABC123">
-        </div>
-        <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
-        <div id="redeemResult" style="display:none;margin-top:18px">
-          <div class="code-display">
-            <div class="code-title" data-i18n="dealLbl">Deal</div>
-            <div class="code-val" id="redeemDeal" style="font-size:20px;letter-spacing:0"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- SETTINGS -->
     <div id="dashSettings" class="tab-content">
