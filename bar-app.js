@@ -1801,7 +1801,7 @@ function renderVoucherPanel_(targetId, vouchers) {
         '<div><label class="form-label">' + t('fromLbl') + '</label><input type="date" class="form-input" id="voucherFilterFrom" value="' + escHtml(f.from) + '"></div>' +
         '<div><label class="form-label">' + t('toLbl') + '</label><input type="date" class="form-input" id="voucherFilterTo" value="' + escHtml(f.to) + '"></div>' +
         '<div><label class="form-label">' + t('statusLbl') + '</label><select class="form-input" id="voucherFilterStatus"><option value="all">' + t('allStatuses') + '</option><option value="issued">' + t('openLbl') + '</option><option value="sent">' + t('openLbl') + '</option><option value="redeemed">' + t('redeemed') + '</option><option value="refunded">' + t('refundedLbl') + '</option></select></div>' +
-        '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('allLbl') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option><option value="none">' + t('payoutNone') + '</option></select></div>' +
+        '<div><label class="form-label">' + (t('payoutStatusLbl') || t('paidLbl')) + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('allLbl') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option><option value="none">' + t('payoutNone') + '</option></select></div>' +
         '<div><button class="btn-pink" id="voucherApplyBtn" style="width:auto;padding:12px 18px">' + t('filterApply') + '</button></div>' +
         '<div><button class="btn-ghost" id="voucherResetBtn" style="width:auto;padding:12px 18px;margin-top:0">' + t('filterReset') + '</button></div>' +
       '</div>' +
@@ -1812,7 +1812,7 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + sums.payout.toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
-    '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
+    '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + (t('payoutStatusLbl') || t('paidLbl')) + '</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
   var sEl = document.getElementById('voucherFilterStatus'); if (sEl) sEl.value = f.status;
@@ -2788,4 +2788,106 @@ applyProfileToForm = function(b) {
       benefitCustomSub:'Produit, période et conditions: vous décidez de tout vous-même.'
     });
   } catch(e) {}
+})();
+
+
+// ===== VOUCHER PAYOUT CLARITY + REDEEM CODE FORMAT PATCH =====
+(function(){
+  try {
+    Object.assign(TRANSLATIONS.de, {
+      payoutStatusLbl:'Auszahlung',
+      redeemCodePlaceholder:'ABC-123',
+      redeemCodeFormatHint:'Format wie auf dem Gutschein, z. B. ABC-123'
+    });
+    Object.assign(TRANSLATIONS.en, {
+      payoutStatusLbl:'Payout',
+      redeemCodePlaceholder:'ABC-123',
+      redeemCodeFormatHint:'Use the format shown on the voucher, e.g. ABC-123'
+    });
+    Object.assign(TRANSLATIONS.it, {
+      payoutStatusLbl:'Pagamento bar',
+      redeemCodePlaceholder:'ABC-123',
+      redeemCodeFormatHint:'Usa il formato indicato sul voucher, per esempio ABC-123'
+    });
+    Object.assign(TRANSLATIONS.fr, {
+      payoutStatusLbl:'Versement bar',
+      redeemCodePlaceholder:'ABC-123',
+      redeemCodeFormatHint:'Utilise le format indiqué sur le bon, par ex. ABC-123'
+    });
+  } catch(e) {}
+
+  function normalizeRedeemCodeInput_(value) {
+    var raw = String(value || '').toUpperCase().replace(/[^A-Z0-9-]/g, '');
+    raw = raw.replace(/-+/g, '-').replace(/^-|-$/g, '');
+    if (!raw) return '';
+    if (raw.indexOf('-') >= 0) return raw;
+    if (raw.length > 3) return raw.slice(0, 3) + '-' + raw.slice(3);
+    return raw;
+  }
+  window.normalizeRedeemCodeInput_ = normalizeRedeemCodeInput_;
+
+  function attachRedeemCodeFormat_() {
+    var input = document.getElementById('redeemCode');
+    if (!input || input.dataset.hyphenBound === '1') return;
+    input.dataset.hyphenBound = '1';
+    var applyFormat = function() {
+      var formatted = normalizeRedeemCodeInput_(input.value);
+      if (formatted !== input.value) input.value = formatted;
+    };
+    input.addEventListener('input', applyFormat);
+    input.addEventListener('blur', applyFormat);
+    input.setAttribute('placeholder', (typeof t === 'function' && t('redeemCodePlaceholder')) || 'ABC-123');
+  }
+
+  var _prevSetLangRedeemPatch = typeof setLang === 'function' ? setLang : null;
+  if (_prevSetLangRedeemPatch) {
+    setLang = function(lang) {
+      _prevSetLangRedeemPatch(lang);
+      var input = document.getElementById('redeemCode');
+      if (input) input.setAttribute('placeholder', (typeof t === 'function' && t('redeemCodePlaceholder')) || 'ABC-123');
+      var hint = document.getElementById('redeemCodeFormatHint');
+      if (hint && typeof t === 'function') hint.textContent = t('redeemCodeFormatHint') || '';
+    };
+  }
+
+  var _prevDoRedeemHotfix = typeof doRedeem === 'function' ? doRedeem : null;
+  if (_prevDoRedeemHotfix) {
+    doRedeem = async function() {
+      var s = sessionGet(); if (!s) { doLogout(); return; }
+      var input = document.getElementById('redeemCode');
+      var code = normalizeRedeemCodeInput_(input ? input.value : '');
+      var err = document.getElementById('redeemErr');
+      var result = document.getElementById('redeemResult');
+      if (err) err.textContent = '';
+      if (result) result.style.display = 'none';
+      if (input) input.value = code;
+      if (!code) { if (err) err.textContent = t('codeRequired'); return; }
+      try {
+        var r = await api({ action: 'redeemVoucher', token: s.token, code: code });
+        if ((!r || !r.success) && code.indexOf('-') >= 0) {
+          r = await api({ action: 'redeemVoucher', token: s.token, code: code.replace(/-/g, '') });
+        }
+        if ((!r || !r.success) && code.indexOf('-') === -1 && code.length > 3) {
+          r = await api({ action: 'redeemVoucher', token: s.token, code: normalizeRedeemCodeInput_(code) });
+        }
+        if (r && r.success) {
+          document.getElementById('redeemDeal').textContent = r.deal_title || code;
+          if (result) result.style.display = 'block';
+          if (input) input.value = '';
+          showToast(t('redeemSuccess'));
+          _dataCache.vouchers = null; _barStatsVouchers = null;
+        } else {
+          if (err) err.textContent = translateBarRuntimeMessage((r && r.error) || 'Ungültiger Gutschein.');
+        }
+      } catch(e) {
+        if (err) err.textContent = t('networkError');
+      }
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    attachRedeemCodeFormat_();
+    var hint = document.getElementById('redeemCodeFormatHint');
+    if (hint && typeof t === 'function') hint.textContent = t('redeemCodeFormatHint') || '';
+  });
 })();
