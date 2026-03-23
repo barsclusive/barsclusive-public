@@ -51,20 +51,6 @@ de: {
   locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.',
   zipReq:'PLZ *',
   mwstNumberLabel:'MWST-Nummer',
-  barEntryHeadline:'Deine Bar auf BarSclusive',
-  barEntrySub:'Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.',
-  benefitFreeTitle:'Kostenlose Registrierung',
-  benefitFreeSub:'Ohne Einrichtungsgebühr. Einfach loslegen.',
-  benefitNoRunningTitle:'Keine laufenden Fixkosten',
-  benefitNoRunningSub:'Kein Monatsabo und keine wiederkehrenden Kosten.',
-  benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',
-  benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.',
-  benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',
-  benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.',
-  benefitReachTitle:'Mehr Sichtbarkeit für deine Bar, ohne Werbekosten',
-  benefitReachSub:'BarSclusive bringt neue Gäste direkt zu dir.',
-  benefitCustomTitle:'Komplett personalisierbar',
-  benefitCustomSub:'Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.',
   portalTitle:'Bar-Portal', forgotPw:'Passwort vergessen?', resetInfo1:'Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.', resetInfo2:'Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.', sendCode:'Code senden', backBtn:'Zurück', code6:'Code (6-stellig)'
 },
 en: {
@@ -494,18 +480,6 @@ function applyTranslations() {
   });
 }
 
-function rerenderLocalizedViews_() {
-  if (_dataCache && _dataCache.deals && document.getElementById('dealList')) renderMyDeals(_dataCache.deals);
-  if (_dataCache && _dataCache.vouchers && document.getElementById('vouchersPanel')) renderMyVouchers(_dataCache.vouchers);
-  if ((_barStatsVouchers || (_dataCache && _dataCache.vouchers)) && document.getElementById('statsGrid')) {
-    if (!_barStatsVouchers && _dataCache && _dataCache.vouchers) _barStatsVouchers = _dataCache.vouchers;
-    renderBarStats(_barStatsPeriod || 'all');
-  }
-  if (window._barStatsDetailState && Array.isArray(window._barStatsDetailState.vouchers) && window._barStatsDetailState.filterKey) {
-    showBarStatDetail(getBarStatLabel_(window._barStatsDetailState.filterKey), window._barStatsDetailState.filterKey, window._barStatsDetailState.vouchers);
-  }
-}
-
 function setLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
@@ -516,7 +490,6 @@ function setLang(lang) {
   var activeBtn = document.getElementById('lang' + lang.toUpperCase());
   if (activeBtn) activeBtn.classList.add('active');
   applyTranslations();
-  rerenderLocalizedViews_();
 }
 
 // ── SESSION (in-memory + localStorage fallback) ──────────────────────────
@@ -840,11 +813,11 @@ function renderBarStats(period) {
   var cardsDiv = document.createElement('div');
   cardsDiv.className = 'stats-grid';
   [
-    [getBarStatLabel_('sold'), sold, '#fff', 'sold'],
-    [getBarStatLabel_('redeemed'), redeemed, '#22c55e', 'redeemed'],
-    [getBarStatLabel_('not_redeemed'), notRedeemed, '#f59e0b', 'not_redeemed'],
-    [getBarStatLabel_('pending_payout'), pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
-    [getBarStatLabel_('paid_out'), paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
+    [t('soldCount') || 'Verkauft', sold, '#fff', 'sold'],
+    [t('redeemed') || 'Eingelöst', redeemed, '#22c55e', 'redeemed'],
+    [t('notRedeemed') || 'Nicht eingelöst', notRedeemed, '#f59e0b', 'not_redeemed'],
+    [t('pendingPayout') || 'Gutschrift offen', pending.toFixed(2) + ' CHF', '#ef4444', 'pending_payout'],
+    [t('paidOut') || 'Ausgezahlt', paid.toFixed(2) + ' CHF', '#3b82f6', 'paid_out'],
     [t('activeDeals') || 'Aktive Deals', _barStatsDeals, '#fff', null],
   ].forEach(function(s) {
     var card = document.createElement('div'); card.className = 'stat-card';
@@ -868,16 +841,15 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   else if (filterKey === 'paid_out') items = filteredVouchers.filter(function(v) { return v.payout_status === 'paid'; });
   else { detailEl.innerHTML = ''; return; }
 
-  window._barStatsDetailState = { filterKey: filterKey, vouchers: filteredVouchers || [] };
-  if (!items.length) { detailEl.innerHTML = '<div style="color:#666;text-align:center;padding:20px">' + escHtml(t('noDataPeriod')) + '</div>'; return; }
-  var html = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div>';
-  html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + escHtml(t('boughtAtLbl')) + '</th><th>' + escHtml(t('codeLbl')) + '</th><th>' + escHtml(t('dealLbl')) + '</th><th>' + escHtml(t('priceLbl')) + '</th><th>' + escHtml(t('statusLbl')) + '</th><th>' + escHtml(t('paidLbl')) + '</th></tr></thead><tbody>';
+  if (!items.length) { detailEl.innerHTML = '<div style="color:#666;text-align:center;padding:20px">Keine Daten für diesen Zeitraum</div>'; return; }
+  var html = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + label + ' (' + items.length + ')</div>';
+  html += '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>Datum</th><th>Code</th><th>Deal</th><th>Preis</th><th>Status</th><th>Auszahl.</th></tr></thead><tbody>';
   items.forEach(function(v) {
     var sc = v.status === 'redeemed' ? '#22c55e' : v.status === 'refunded' ? '#ef4444' : '#f59e0b';
-    var st = trStatus_(v.status);
-    var pt = trPayoutForVoucher_(v);
-    var pc = pt === t('payoutPaid') ? '#3b82f6' : pt === t('noPayout') ? '#9ca3af' : '#ef4444';
-    html += '<tr><td style="font-size:11px">' + escHtml(fmtDate_(v.created_at)) + '</td><td style="font-family:monospace">' + escHtml((v.code_display || v.code) || '-') + '</td><td>' + escHtml(v.deal_title || '-') + '</td><td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + escHtml(st) + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + escHtml(pt) + '</span></td></tr>';
+    var st = v.status === 'redeemed' ? 'Eingelöst' : v.status === 'refunded' ? 'Erstattet' : 'Offen';
+    var pc = v.payout_status === 'paid' ? '#3b82f6' : '#ef4444';
+    var pt = v.payout_status === 'paid' ? 'Bezahlt' : 'Ausstehend';
+    html += '<tr><td style="font-size:11px">' + (v.created_at ? new Date(v.created_at).toLocaleDateString('de-CH') : '-') + '</td><td style="font-family:monospace">' + ((v.code_display || v.code) || '-') + '</td><td>' + (v.deal_title || '-') + '</td><td style="text-align:right">' + Number(v.price_paid || 0).toFixed(2) + '</td><td><span style="color:' + sc + ';font-weight:600">' + st + '</span></td><td><span style="color:' + pc + ';font-weight:600">' + pt + '</span></td></tr>';
   });
   html += '</tbody></table></div>';
   detailEl.innerHTML = html;
@@ -1708,16 +1680,16 @@ function escHtml(v) {
 // =============================================
 (function(){
   Object.assign(TRANSLATIONS.de, {
-    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', allLbl:'Alle', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', noPayout:'Keine Auszahlung', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
+    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
   });
   Object.assign(TRANSLATIONS.en, {
-    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', allLbl:'All', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', noPayout:'No payout', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
+    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
   });
   Object.assign(TRANSLATIONS.it, {
-    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', allLbl:'Tutti', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', noPayout:'Nessun pagamento', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
+    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
   });
   Object.assign(TRANSLATIONS.fr, {
-    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', allLbl:'Tous', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', noPayout:'Aucun versement', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
+    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
   });
 })();
 
@@ -1729,20 +1701,6 @@ function trStatus_(status) {
 }
 function trPayout_(status) {
   return String(status || '').toLowerCase() === 'paid' ? t('payoutPaid') : t('payoutPending');
-}
-function trPayoutForVoucher_(voucher) {
-  var status = String((voucher && voucher.status) || '').toLowerCase();
-  var payout = String((voucher && voucher.payout_status) || '').toLowerCase();
-  if (status === 'refunded') return t('noPayout');
-  return payout === 'paid' ? t('payoutPaid') : t('payoutPending');
-}
-function getBarStatLabel_(filterKey) {
-  if (filterKey === 'sold') return t('soldCount') || 'Verkauft';
-  if (filterKey === 'redeemed') return t('redeemed') || 'Eingelöst';
-  if (filterKey === 'not_redeemed') return t('notRedeemed') || 'Nicht eingelöst';
-  if (filterKey === 'pending_payout') return t('pendingPayout') || 'Ausstehend';
-  if (filterKey === 'paid_out') return t('paidOut') || 'Netto erhalten';
-  return '';
 }
 function fmtDate_(v) {
   if (!v) return '–';
@@ -1767,15 +1725,8 @@ function applyVoucherFilters_(vouchers) {
     var d = baseDate ? new Date(baseDate) : null;
     if (f.from && d && d < new Date(f.from + 'T00:00:00')) return false;
     if (f.to && d && d > new Date(f.to + 'T23:59:59')) return false;
-    var voucherStatus = String(v.status || '').toLowerCase();
-    if (f.status === 'open') {
-      if (['issued', 'sent', 'open'].indexOf(voucherStatus) === -1) return false;
-    } else if (f.status !== 'all' && voucherStatus !== f.status) return false;
-    var payoutStatus = String(v.payout_status || '').toLowerCase();
-    if (f.payout !== 'all') {
-      if (voucherStatus === 'refunded') return false;
-      if (payoutStatus !== f.payout) return false;
-    }
+    if (f.status !== 'all' && String(v.status || '') !== f.status) return false;
+    if (f.payout !== 'all' && String(v.payout_status || '') !== f.payout) return false;
     return true;
   });
 }
@@ -1794,7 +1745,7 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
       '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
-      '<td>' + escHtml(trPayoutForVoucher_(v)) + '</td>' +
+      '<td>' + escHtml(trPayout_(v.payout_status)) + '</td>' +
       '</tr>';
   }).join('');
   root.innerHTML = '' +
@@ -1803,8 +1754,8 @@ function renderVoucherPanel_(targetId, vouchers) {
       '<div class="filter-inline">' +
         '<div><label class="form-label">' + t('fromLbl') + '</label><input type="date" class="form-input" id="voucherFilterFrom" value="' + escHtml(f.from) + '"></div>' +
         '<div><label class="form-label">' + t('toLbl') + '</label><input type="date" class="form-input" id="voucherFilterTo" value="' + escHtml(f.to) + '"></div>' +
-        '<div><label class="form-label">' + t('statusLbl') + '</label><select class="form-input" id="voucherFilterStatus"><option value="all">' + t('allStatuses') + '</option><option value="open">' + t('openLbl') + '</option><option value="redeemed">' + t('statusRedeemed') + '</option><option value="refunded">' + t('refundedLbl') + '</option></select></div>' +
-        '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('allLbl') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option></select></div>' +
+        '<div><label class="form-label">' + t('statusLbl') + '</label><select class="form-input" id="voucherFilterStatus"><option value="all">' + t('allStatuses') + '</option><option value="issued">' + t('openLbl') + '</option><option value="sent">' + t('openLbl') + '</option><option value="redeemed">' + t('redeemed') + '</option><option value="refunded">' + t('refundedLbl') + '</option></select></div>' +
+        '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('alle') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option></select></div>' +
         '<div><button class="btn-pink" id="voucherApplyBtn" style="width:auto;padding:12px 18px">' + t('filterApply') + '</button></div>' +
         '<div><button class="btn-ghost" id="voucherResetBtn" style="width:auto;padding:12px 18px;margin-top:0">' + t('filterReset') + '</button></div>' +
       '</div>' +
@@ -1818,7 +1769,7 @@ function renderVoucherPanel_(targetId, vouchers) {
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
-  var sEl = document.getElementById('voucherFilterStatus'); if (sEl) sEl.value = (['issued','sent','open'].indexOf(String(f.status||'').toLowerCase()) !== -1 ? 'open' : f.status);
+  var sEl = document.getElementById('voucherFilterStatus'); if (sEl) sEl.value = f.status;
   var pEl = document.getElementById('voucherFilterPayout'); if (pEl) pEl.value = f.payout;
   var applyBtn = document.getElementById('voucherApplyBtn'); if (applyBtn) applyBtn.onclick = function(){ renderVoucherPanel_(targetId, vouchers); };
   var resetBtn = document.getElementById('voucherResetBtn'); if (resetBtn) resetBtn.onclick = function(){
@@ -1845,7 +1796,7 @@ function openVoucherDetail(v) {
   timeline.push({ title: t('createdAtLbl'), when: v.order_created_at || v.created_at, meta: v.deal_title || '' });
   if (v.paid_at) timeline.push({ title: t('paidAtLbl'), when: v.paid_at, meta: t('paidLbl') });
   if (v.redeemed_at) timeline.push({ title: t('redeemedAtLbl'), when: v.redeemed_at, meta: t('statusRedeemed') });
-  if (v.refund_requested_at) timeline.push({ title: t('refundRequested'), when: v.refund_requested_at, meta: t('refundRequested') || '' });
+  if (v.refund_requested_at) timeline.push({ title: t('refundReq'), when: v.refund_requested_at, meta: t('refundRequested') || '' });
   if (v.refunded_at) timeline.push({ title: t('refundedLbl'), when: v.refunded_at, meta: t('statusRefunded') });
   if (v.payout_paid_at) timeline.push({ title: t('paidOut') || t('paidLbl'), when: v.payout_paid_at, meta: t('payoutPaid') });
   body.innerHTML = '' +
@@ -2704,313 +2655,32 @@ applyProfileToForm = function(b) {
 })();
 
 
-// ===== REDEEM UX + HEADER CLEANUP PATCH =====
+// ===== BAR ENTRY CLICK + TRANSLATION HOTFIX =====
 (function(){
-  try {
-    Object.assign(TRANSLATIONS.de, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Format: ABCD-EFGH-JKLM. Bindestriche werden automatisch gesetzt.',
-      redeemLoading:'⏳ Wird geprüft…',
-      redeemChecking:'Gutschein wird geprüft…',
-      redeemInvalid:'Bitte einen vollständigen Gutschein-Code eingeben.',
-      redeemResultTitle:'Eingelöster Gutschein',
-      redeemEmptyTitle:'Noch kein Gutschein eingelöst',
-      logoutDrawer:'Ausloggen'
-    });
-    Object.assign(TRANSLATIONS.en, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Format: ABCD-EFGH-JKLM. Hyphens are inserted automatically.',
-      redeemLoading:'⏳ Checking…',
-      redeemChecking:'Checking voucher…',
-      redeemInvalid:'Please enter a complete voucher code.',
-      redeemResultTitle:'Redeemed voucher',
-      redeemEmptyTitle:'No voucher redeemed yet',
-      logoutDrawer:'Logout'
-    });
-    Object.assign(TRANSLATIONS.it, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Formato: ABCD-EFGH-JKLM. I trattini vengono inseriti automaticamente.',
-      redeemLoading:'⏳ Verifica in corso…',
-      redeemChecking:'Verifica voucher in corso…',
-      redeemInvalid:'Inserisci un codice voucher completo.',
-      redeemResultTitle:'Voucher riscattato',
-      redeemEmptyTitle:'Nessun voucher riscattato',
-      logoutDrawer:'Esci'
-    });
-    Object.assign(TRANSLATIONS.fr, {
-      redeemPlaceholder:'ABCD-EFGH-JKLM',
-      redeemFormatHint:'Format : ABCD-EFGH-JKLM. Les tirets sont ajoutés automatiquement.',
-      redeemLoading:'⏳ Vérification…',
-      redeemChecking:'Vérification du bon…',
-      redeemInvalid:'Veuillez saisir un code bon complet.',
-      redeemResultTitle:'Bon utilisé',
-      redeemEmptyTitle:'Aucun bon utilisé',
-      logoutDrawer:'Déconnexion'
-    });
-  } catch(e) {}
-
-  function voucherCodeRaw(v) {
-    return String(v || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 12);
+  function activateEntryAuth(which){
+    var loginForm=document.getElementById('loginForm');
+    var registerForm=document.getElementById('registerForm');
+    if (!loginForm || !registerForm) return false;
+    document.body.classList.add('bar-entry-locked');
+    loginForm.classList.toggle('active', which !== 'register');
+    registerForm.classList.toggle('active', which === 'register');
+    if (typeof applyTranslations === 'function') { try { applyTranslations(); } catch(e){} }
+    var target = which === 'register' ? registerForm : loginForm;
+    var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 84, 0);
+    window.scrollTo({ top: top, behavior: 'smooth' });
+    return false;
   }
-
-  function formatVoucherCode(v) {
-    var raw = voucherCodeRaw(v);
-    var parts = [];
-    if (raw.slice(0, 4)) parts.push(raw.slice(0, 4));
-    if (raw.slice(4, 8)) parts.push(raw.slice(4, 8));
-    if (raw.slice(8, 12)) parts.push(raw.slice(8, 12));
-    return parts.join('-');
-  }
-
-  function ensureRedeemPanel() {
-    if (document.getElementById('dashRedeem')) return;
-    var anchor = document.getElementById('dashMydeals') || document.getElementById('dashSettings');
-    if (!anchor || !anchor.parentNode) return;
-    var wrap = document.createElement('div');
-    wrap.id = 'dashRedeem';
-    wrap.className = 'tab-content';
-    wrap.innerHTML = '' +
-      '<div class="redeem-box">' +
-        '<h2>🔑 <span data-i18n="redeemTitle">' + (typeof t === 'function' ? t('redeemTitle') : 'Gutschein einlösen') + '</span></h2>' +
-        '<p style="margin:-8px 0 18px;color:#8a7758;font-size:14px" data-i18n="redeemHint">' + (typeof t === 'function' ? t('redeemHint') : 'Gutschein-Code des Kunden eingeben') + '</p>' +
-        '<div class="form-group" style="text-align:left;margin-bottom:12px">' +
-          '<label class="form-label" for="redeemCode" data-i18n="codeLbl">' + (typeof t === 'function' ? t('codeLbl') : 'Code') + '</label>' +
-          '<input type="text" class="form-input" id="redeemCode" inputmode="latin-prose" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="ABCD-EFGH-JKLM">' +
-          '<small id="redeemFormatHint" style="display:block;margin-top:8px;color:#8a7758;font-size:12px">' + (typeof t === 'function' ? t('redeemFormatHint') : 'Format: ABCD-EFGH-JKLM. Bindestriche werden automatisch gesetzt.') + '</small>' +
-        '</div>' +
-        '<button class="btn-pink" id="btnRedeem" type="button" data-i18n="redeemBtn">' + (typeof t === 'function' ? t('redeemBtn') : 'Einlösen') + '</button>' +
-        '<div class="err-msg" id="redeemErr" aria-live="polite" style="margin-top:14px"></div>' +
-        '<div id="redeemResult" style="display:none;margin-top:16px;padding:16px;border-radius:14px;border:1px solid #98875e;background:rgba(255,255,255,.32);text-align:left">' +
-          '<div style="font-size:12px;color:#8a7758;letter-spacing:.08em;text-transform:uppercase" id="redeemResultLabel">' + (typeof t === 'function' ? t('redeemResultTitle') : 'Eingelöster Gutschein') + '</div>' +
-          '<div id="redeemDeal" style="margin-top:6px;font-size:18px;font-weight:700;color:#2f2617">—</div>' +
-        '</div>' +
-      '</div>';
-    anchor.parentNode.insertBefore(wrap, document.getElementById('dashSettings'));
-  }
-
-  function ensureDrawerLogout() {
-    var body = document.querySelector('#barDrawer .drawer-body');
-    if (!body || document.getElementById('barDrawerLogout')) return;
-    var btn = document.createElement('button');
-    btn.id = 'barDrawerLogout';
-    btn.type = 'button';
-    btn.className = 'drawer-link';
-    btn.style.width = '100%';
-    btn.style.textAlign = 'left';
-    btn.style.background = 'transparent';
-    btn.style.border = 'none';
-    btn.style.cursor = 'pointer';
-    btn.innerHTML = '↩️ <span data-i18n="logoutDrawer">' + (typeof t === 'function' ? t('logoutDrawer') : 'Ausloggen') + '</span>';
-    body.appendChild(btn);
-    btn.addEventListener('click', function(){ if (typeof closeBarDrawer === 'function') closeBarDrawer(); if (typeof doLogout === 'function') doLogout(); });
-  }
-
-  function syncHeaderVisibility() {
-    var loggedIn = !!(typeof sessionGet === 'function' && sessionGet());
-    var headerAuth = document.getElementById('barHeaderAuth');
-    var logoutBtn = document.getElementById('btnLogout');
-    if (headerAuth) headerAuth.style.display = loggedIn ? 'none' : 'flex';
-    if (logoutBtn) logoutBtn.style.display = 'none';
-  }
-
-  function updateRedeemTexts() {
-    var input = document.getElementById('redeemCode');
-    if (input) input.placeholder = (typeof t === 'function' ? t('redeemPlaceholder') : 'ABCD-EFGH-JKLM');
-    var hint = document.getElementById('redeemFormatHint');
-    if (hint) hint.textContent = (typeof t === 'function' ? t('redeemFormatHint') : hint.textContent);
-    var resultLabel = document.getElementById('redeemResultLabel');
-    if (resultLabel) resultLabel.textContent = (typeof t === 'function' ? t('redeemResultTitle') : resultLabel.textContent);
-    var drawerLogout = document.querySelector('#barDrawerLogout [data-i18n="logoutDrawer"]');
-    if (drawerLogout) drawerLogout.textContent = (typeof t === 'function' ? t('logoutDrawer') : drawerLogout.textContent);
-  }
-
-  function bindRedeemUi() {
-    ensureRedeemPanel();
-    ensureDrawerLogout();
-    syncHeaderVisibility();
-    updateRedeemTexts();
-    var input = document.getElementById('redeemCode');
-    if (input && !input.dataset.maskBound) {
-      input.dataset.maskBound = '1';
-      input.addEventListener('input', function() {
-        var pos = this.selectionStart || this.value.length;
-        var digitsBefore = voucherCodeRaw(this.value.slice(0, pos)).length;
-        this.value = formatVoucherCode(this.value);
-        var nextPos = this.value.length;
-        if (digitsBefore <= 4) nextPos = digitsBefore;
-        else if (digitsBefore <= 8) nextPos = digitsBefore + 1;
-        else nextPos = Math.min(digitsBefore + 2, this.value.length);
-        try { this.setSelectionRange(nextPos, nextPos); } catch(e) {}
-      });
-      input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); if (typeof doRedeem === 'function') doRedeem(); }
-      });
-      input.addEventListener('blur', function() { this.value = formatVoucherCode(this.value); });
-    }
-    var btn = document.getElementById('btnRedeem');
-    if (btn && !btn.dataset.boundRedeemClick) {
-      btn.dataset.boundRedeemClick = '1';
-      btn.addEventListener('click', function(){ if (typeof doRedeem === 'function') doRedeem(); });
-    }
-  }
-
-  var _origSetLangRedeemPatch = typeof setLang === 'function' ? setLang : null;
-  if (_origSetLangRedeemPatch) {
-    setLang = function(lang) {
-      _origSetLangRedeemPatch(lang);
-      bindRedeemUi();
-    };
-  }
-
-  var _origShowAuthRedeemPatch = typeof showAuthScreen === 'function' ? showAuthScreen : null;
-  if (_origShowAuthRedeemPatch) {
-    showAuthScreen = function(show) {
-      _origShowAuthRedeemPatch(show);
-      syncHeaderVisibility();
-      bindRedeemUi();
-    };
-  }
-
-  var _origSessionSetRedeemPatch = typeof sessionSet === 'function' ? sessionSet : null;
-  if (_origSessionSetRedeemPatch) {
-    sessionSet = function(token, barId, barName) {
-      _origSessionSetRedeemPatch(token, barId, barName);
-      syncHeaderVisibility();
-      bindRedeemUi();
-    };
-  }
-
-  var _origSessionClearRedeemPatch = typeof sessionClear === 'function' ? sessionClear : null;
-  if (_origSessionClearRedeemPatch) {
-    sessionClear = function() {
-      _origSessionClearRedeemPatch();
-      syncHeaderVisibility();
-    };
-  }
-
-  doRedeem = async function() {
-    var s = sessionGet(); if (!s) { doLogout(); return; }
-    bindRedeemUi();
-    var input = document.getElementById('redeemCode');
-    var btn = document.getElementById('btnRedeem');
-    var err = document.getElementById('redeemErr');
-    var result = document.getElementById('redeemResult');
-    var deal = document.getElementById('redeemDeal');
-    var code = formatVoucherCode(input ? input.value : '');
-    if (input) input.value = code;
-    if (err) err.textContent = '';
-    if (result) result.style.display = 'none';
-    if (!voucherCodeRaw(code) || voucherCodeRaw(code).length !== 12) {
-      if (err) err.textContent = typeof t === 'function' ? t('redeemInvalid') : 'Bitte einen vollständigen Gutschein-Code eingeben.';
-      if (input) input.focus();
-      return;
-    }
-    var prevText = btn ? (btn.dataset.defaultText || btn.textContent) : '';
-    if (btn) {
-      btn.dataset.defaultText = prevText || (typeof t === 'function' ? t('redeemBtn') : 'Einlösen');
-      btn.disabled = true;
-      btn.textContent = typeof t === 'function' ? t('redeemLoading') : '⏳ Wird geprüft…';
-    }
-    if (result && deal) {
-      deal.textContent = typeof t === 'function' ? t('redeemChecking') : 'Gutschein wird geprüft…';
-      result.style.display = 'block';
-    }
-    try {
-      var r = await api({ action: 'redeemVoucher', token: s.token, code: code });
-      if (r.success) {
-        if (deal) deal.textContent = r.deal_title || code;
-        if (result) result.style.display = 'block';
-        if (input) input.value = '';
-        showToast(typeof t === 'function' ? t('redeemSuccess') : '✅ Gutschein eingelöst!');
-        _dataCache.vouchers = null;
-        _barStatsVouchers = null;
-        if (typeof prefetchAllData === 'function') prefetchAllData();
-        if (typeof loadBarStats === 'function') loadBarStats();
-      } else {
-        if (result) result.style.display = 'none';
-        if (err) err.textContent = translateBarRuntimeMessage(r.error || 'Ungültiger Gutschein.');
-      }
-    } catch(e) {
-      if (result) result.style.display = 'none';
-      if (err) err.textContent = typeof t === 'function' ? t('networkError') : 'Verbindungsfehler.';
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = btn.dataset.defaultText || (typeof t === 'function' ? t('redeemBtn') : 'Einlösen');
-      }
-    }
+  window.focusBarEntryAuth = function(which, ev){
+    if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+    return activateEntryAuth(which || 'login');
   };
-
-  document.addEventListener('DOMContentLoaded', function() {
-    bindRedeemUi();
-    syncHeaderVisibility();
-    var current = document.querySelector('#barDashboard .tab.active');
-    if (current && current.dataset && current.dataset.dashTab === 'redeem') {
-      var input = document.getElementById('redeemCode');
-      if (input) setTimeout(function(){ input.focus(); }, 60);
-    }
-  });
-})();
-
-
-// ===== LIVE I18N RERENDER (NO RELOAD) =====
-(function(){
-  function rerenderActiveDashboard(){
-    try { if (typeof applyTranslations === 'function') applyTranslations(); } catch(e) {}
-    try { if (typeof rerenderLocalizedViews_ === 'function') rerenderLocalizedViews_(); } catch(e) {}
-    try {
-      if (typeof sessionGet === 'function' && sessionGet()) {
-        var activeTab = document.querySelector('#barDashboard .tab.active');
-        var tabName = activeTab ? activeTab.getAttribute('data-dash-tab') : 'overview';
-        if (tabName === 'overview' && typeof loadBarStats === 'function') loadBarStats(_barStatsPeriod || 'all');
-        else if (tabName === 'mydeals' && typeof loadMyDeals === 'function') loadMyDeals();
-        else if (tabName === 'settings' && typeof loadProfile === 'function') loadProfile();
-        else if (tabName === 'redeem') {
-          try { if (typeof bindRedeemUi === 'function') bindRedeemUi(); } catch(e) {}
-        }
-      }
-    } catch(e) {}
-  }
-
-  var _origSetLangLiveI18n = setLang;
-  setLang = function(lang){
-    _origSetLangLiveI18n(lang);
-    rerenderActiveDashboard();
-  };
-
   document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(rerenderActiveDashboard, 0);
-  });
-})();
-
-
-// ===== BAR ENTRY BUTTON + TRANSLATION SAFETY FIX =====
-(function(){
-  function renderEntryTexts(){
-    var keys = ['barEntryHeadline','barEntrySub','benefitFreeTitle','benefitFreeSub','benefitNoRunningTitle','benefitNoRunningSub','benefitGuestsTitle','benefitGuestsSub','benefitOnlySalesTitle','benefitOnlySalesSub','benefitReachTitle','benefitReachSub','benefitCustomTitle','benefitCustomSub','entryHowItWorks'];
-    keys.forEach(function(key){
-      document.querySelectorAll('[data-i18n="'+key+'"]').forEach(function(el){
-        if (typeof t === 'function') el.textContent = t(key);
-      });
+    [['btnBarEntryLogin','login'],['btnBarEntryRegister','register']].forEach(function(pair){
+      var el = document.getElementById(pair[0]);
+      if (!el) return;
+      el.addEventListener('click', function(ev){
+        ev.preventDefault(); ev.stopPropagation(); activateEntryAuth(pair[1]);
+      }, true);
     });
-  }
-  function switchEntryAuth(which){
-    try{
-      var loginForm = document.getElementById('loginForm');
-      var registerForm = document.getElementById('registerForm');
-      if (loginForm) loginForm.classList.toggle('active', which === 'login');
-      if (registerForm) registerForm.classList.toggle('active', which === 'register');
-      var top = Math.max(((which === 'register' ? registerForm : loginForm).getBoundingClientRect().top + window.scrollY) - 84, 0);
-      window.scrollTo({top: top, behavior: 'smooth'});
-    }catch(e){}
-  }
-  function bindEntryAuth(){
-    var a = document.getElementById('btnBarEntryLogin');
-    var b = document.getElementById('btnBarEntryRegister');
-    if (a && !a.dataset.boundEntry){ a.dataset.boundEntry='1'; a.addEventListener('click', function(ev){ ev.preventDefault(); switchEntryAuth('login'); }); }
-    if (b && !b.dataset.boundEntry){ b.dataset.boundEntry='1'; b.addEventListener('click', function(ev){ ev.preventDefault(); switchEntryAuth('register'); }); }
-  }
-  var _oldSetLangSafe = setLang;
-  setLang = function(lang){ _oldSetLangSafe(lang); renderEntryTexts(); bindEntryAuth(); };
-  document.addEventListener('DOMContentLoaded', function(){ renderEntryTexts(); bindEntryAuth(); setTimeout(renderEntryTexts,0); setTimeout(renderEntryTexts,80); });
+  });
 })();
