@@ -616,6 +616,21 @@
     </div>
 
     <!-- VOUCHERS -->
+    <div id="dashRedeem" class="tab-content">
+      <div class="redeem-box">
+        <h2>🔑 <span data-i18n="redeemTitle">Gutschein einlösen</span></h2>
+        <p style="color:#999;font-size:14px;margin-bottom:18px" data-i18n="redeemHint">Gutschein-Code des Kunden eingeben</p>
+        <div class="err-msg" id="redeemErr" aria-live="polite"></div>
+        <div class="form-group" style="margin-bottom:14px">
+          <input type="text" class="form-input" id="redeemCode" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC123">
+        </div>
+        <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
+        <div id="redeemResult" style="display:none;margin-top:18px;background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:16px">
+          <div style="color:#22c55e;font-weight:700;margin-bottom:8px" data-i18n="redeemSuccess">✅ Gutschein eingelöst!</div>
+          <div style="color:#ccc"><span id="redeemDeal"></span></div>
+        </div>
+      </div>
+    </div>
 
     <!-- SETTINGS -->
     <div id="dashSettings" class="tab-content">
@@ -867,6 +882,6 @@
   </p>
 </div>
 
-<script src="bar-app.js?v=20260318-2"></script>
+<script src="bar-app.js?v=20260323-3"></script>
 </body>
 </html>
