@@ -2620,6 +2620,7 @@ applyProfileToForm = function(b) {
   function focusBarAuth(name){
     var loginForm = document.getElementById('loginForm');
     var registerForm = document.getElementById('registerForm');
+    document.body.classList.remove('bar-entry-locked');
     if (loginForm) loginForm.classList.toggle('active', name === 'login');
     if (registerForm) registerForm.classList.toggle('active', name === 'register');
     syncBarHeaderAuthState(name);
@@ -2661,7 +2662,7 @@ applyProfileToForm = function(b) {
     var loginForm=document.getElementById('loginForm');
     var registerForm=document.getElementById('registerForm');
     if (!loginForm || !registerForm) return false;
-    document.body.classList.add('bar-entry-locked');
+    document.body.classList.remove('bar-entry-locked');
     loginForm.classList.toggle('active', which !== 'register');
     registerForm.classList.toggle('active', which === 'register');
     if (typeof applyTranslations === 'function') { try { applyTranslations(); } catch(e){} }
@@ -2683,4 +2684,51 @@ applyProfileToForm = function(b) {
       }, true);
     });
   });
+})();
+
+
+// ===== ENTRY TRANSLATION KEY HOTFIX =====
+(function(){
+  try {
+    Object.assign(TRANSLATIONS.de, {
+      barEntryHeadline:'Deine Bar auf BarSclusive',
+      barEntrySub:'Mehr Gäste, mehr Sichtbarkeit – ohne Fixkosten und ohne Risiko.',
+      benefitGuestsTitle:'Neue Gäste in deinen gewünschten Zeiten',
+      benefitGuestsSub:'Erreiche Leute genau dann, wenn du sie brauchst.',
+      benefitOnlySalesTitle:'Du zahlst nur bei echten Verkäufen',
+      benefitOnlySalesSub:'Nur verkaufte Gutscheine beinhalten eine Provision.',
+      benefitCustomTitle:'Komplett personalisierbar',
+      benefitCustomSub:'Produkt, Zeitraum und Konditionen – du bestimmst alles selbst.'
+    });
+    Object.assign(TRANSLATIONS.en, {
+      barEntryHeadline:'Your bar on BarSclusive',
+      barEntrySub:'More guests, more visibility – without fixed costs and without risk.',
+      benefitGuestsTitle:'New guests in your preferred time slots',
+      benefitGuestsSub:'Reach people exactly when you need them.',
+      benefitOnlySalesTitle:'You only pay for real sales',
+      benefitOnlySalesSub:'A commission only applies to vouchers that are actually sold.',
+      benefitCustomTitle:'Fully customizable',
+      benefitCustomSub:'Product, time period and conditions – you decide everything yourself.'
+    });
+    Object.assign(TRANSLATIONS.it, {
+      barEntryHeadline:'Il tuo bar su BarSclusive',
+      barEntrySub:'Più ospiti, più visibilità, senza costi fissi e senza rischio.',
+      benefitGuestsTitle:'Nuovi ospiti negli orari che desideri',
+      benefitGuestsSub:'Raggiungi le persone proprio quando ne hai bisogno.',
+      benefitOnlySalesTitle:'Paghi solo per vendite reali',
+      benefitOnlySalesSub:'La commissione si applica solo ai voucher effettivamente venduti.',
+      benefitCustomTitle:'Completamente personalizzabile',
+      benefitCustomSub:'Prodotto, periodo e condizioni: decidi tutto tu.'
+    });
+    Object.assign(TRANSLATIONS.fr, {
+      barEntryHeadline:'Votre bar sur BarSclusive',
+      barEntrySub:'Plus de clients, plus de visibilité, sans coûts fixes et sans risque.',
+      benefitGuestsTitle:'De nouveaux clients aux horaires que vous souhaitez',
+      benefitGuestsSub:'Touchez les bonnes personnes exactement quand vous en avez besoin.',
+      benefitOnlySalesTitle:'Vous ne payez que pour de vraies ventes',
+      benefitOnlySalesSub:'Une commission s’applique uniquement aux bons effectivement vendus.',
+      benefitCustomTitle:'Entièrement personnalisable',
+      benefitCustomSub:'Produit, période et conditions: vous décidez de tout vous-même.'
+    });
+  } catch(e) {}
 })();
