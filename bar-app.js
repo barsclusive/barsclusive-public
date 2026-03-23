@@ -1276,9 +1276,31 @@ function switchDashTab(name, btn) {
 }
 
 // ── API / TOAST ───────────────────────────────────────────────────────────
+var API_TIMEOUT_MS = 15000;
 async function api(body) {
-  var r = await fetch(BACKEND_URL, { method: 'POST', body: JSON.stringify(body) });
-  return r.json();
+  var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  var timeoutId = controller ? setTimeout(function() {
+    try { controller.abort(); } catch(e) {}
+  }, API_TIMEOUT_MS) : null;
+  try {
+    var r = await fetch(BACKEND_URL, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      cache: 'no-store',
+      signal: controller ? controller.signal : undefined
+    });
+    var data = await r.json();
+    return data;
+  } catch (e) {
+    if (e && (e.name === 'AbortError' || /aborted|timeout/i.test(String(e.message || '')))) {
+      var timeoutErr = new Error('Request timeout');
+      timeoutErr.code = 'REQUEST_TIMEOUT';
+      throw timeoutErr;
+    }
+    throw e;
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 }
 
 var _toastTimer = null;
@@ -1680,16 +1702,16 @@ function escHtml(v) {
 // =============================================
 (function(){
   Object.assign(TRANSLATIONS.de, {
-    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
+    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', allLbl:'Alle', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', payoutNone:'Keine Auszahlung', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
   });
   Object.assign(TRANSLATIONS.en, {
-    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
+    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', allLbl:'All', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', payoutNone:'No payment', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
   });
   Object.assign(TRANSLATIONS.it, {
-    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
+    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', allLbl:'Tutti', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', payoutNone:'Nessun pagamento', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
   });
   Object.assign(TRANSLATIONS.fr, {
-    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
+    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', allLbl:'Tous', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', payoutNone:'Aucun paiement', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
   });
 })();
 
@@ -1699,7 +1721,23 @@ function trStatus_(status) {
   if (s === 'refunded') return t('statusRefunded');
   return t('statusIssued');
 }
-function trPayout_(status) {
+function isRefundedVoucher_(v) {
+  return String((v && v.status) || '').toLowerCase() === 'refunded';
+}
+function getVoucherMoney_(v) {
+  if (isRefundedVoucher_(v)) return { price: 0, fee: 0, payout: 0 };
+  return {
+    price: Number((v && v.price_paid) || 0),
+    fee: Number((v && v.platform_fee) || 0),
+    payout: Number((v && v.bar_payout) || 0)
+  };
+}
+function getVoucherPayoutFilterValue_(v) {
+  if (isRefundedVoucher_(v)) return 'none';
+  return String((v && v.payout_status) || '').toLowerCase() === 'paid' ? 'paid' : 'pending';
+}
+function trPayout_(status, v) {
+  if (isRefundedVoucher_(v)) return t('payoutNone');
   return String(status || '').toLowerCase() === 'paid' ? t('payoutPaid') : t('payoutPending');
 }
 function fmtDate_(v) {
@@ -1726,7 +1764,7 @@ function applyVoucherFilters_(vouchers) {
     if (f.from && d && d < new Date(f.from + 'T00:00:00')) return false;
     if (f.to && d && d > new Date(f.to + 'T23:59:59')) return false;
     if (f.status !== 'all' && String(v.status || '') !== f.status) return false;
-    if (f.payout !== 'all' && String(v.payout_status || '') !== f.payout) return false;
+    if (f.payout !== 'all' && getVoucherPayoutFilterValue_(v) !== f.payout) return false;
     return true;
   });
 }
@@ -1736,16 +1774,24 @@ function renderVoucherPanel_(targetId, vouchers) {
   vouchers = vouchers || [];
   var f = getCurrentVoucherFilters_();
   var filtered = applyVoucherFilters_(vouchers);
+  var sums = filtered.reduce(function(acc, v) {
+    var money = getVoucherMoney_(v);
+    acc.price += money.price;
+    acc.fee += money.fee;
+    acc.payout += money.payout;
+    return acc;
+  }, { price: 0, fee: 0, payout: 0 });
   var rows = filtered.map(function(v) {
+    var money = getVoucherMoney_(v);
     return '<tr class="click-row" data-voucher-id="' + escHtml(String(v.id || '')) + '">' +
       '<td>' + escHtml(fmtDate_(v.order_created_at || v.created_at)) + '</td>' +
       '<td style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</td>' +
       '<td>' + escHtml(String(v.deal_title || '')) + '</td>' +
-      '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right">CHF ' + money.price.toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#ef4444">CHF ' + money.fee.toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#22c55e">CHF ' + money.payout.toFixed(2) + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
-      '<td>' + escHtml(trPayout_(v.payout_status)) + '</td>' +
+      '<td>' + escHtml(trPayout_(v.payout_status, v)) + '</td>' +
       '</tr>';
   }).join('');
   root.innerHTML = '' +
@@ -1755,15 +1801,15 @@ function renderVoucherPanel_(targetId, vouchers) {
         '<div><label class="form-label">' + t('fromLbl') + '</label><input type="date" class="form-input" id="voucherFilterFrom" value="' + escHtml(f.from) + '"></div>' +
         '<div><label class="form-label">' + t('toLbl') + '</label><input type="date" class="form-input" id="voucherFilterTo" value="' + escHtml(f.to) + '"></div>' +
         '<div><label class="form-label">' + t('statusLbl') + '</label><select class="form-input" id="voucherFilterStatus"><option value="all">' + t('allStatuses') + '</option><option value="issued">' + t('openLbl') + '</option><option value="sent">' + t('openLbl') + '</option><option value="redeemed">' + t('redeemed') + '</option><option value="refunded">' + t('refundedLbl') + '</option></select></div>' +
-        '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('alle') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option></select></div>' +
+        '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('allLbl') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option><option value="none">' + t('payoutNone') + '</option></select></div>' +
         '<div><button class="btn-pink" id="voucherApplyBtn" style="width:auto;padding:12px 18px">' + t('filterApply') + '</button></div>' +
         '<div><button class="btn-ghost" id="voucherResetBtn" style="width:auto;padding:12px 18px;margin-top:0">' + t('filterReset') + '</button></div>' +
       '</div>' +
     '</div>' +
     '<div class="money-grid">' +
-      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.price_paid)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + sums.price.toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + sums.fee.toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + sums.payout.toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
     '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
@@ -1798,12 +1844,13 @@ function openVoucherDetail(v) {
   if (v.redeemed_at) timeline.push({ title: t('redeemedAtLbl'), when: v.redeemed_at, meta: t('statusRedeemed') });
   if (v.refund_requested_at) timeline.push({ title: t('refundReq'), when: v.refund_requested_at, meta: t('refundRequested') || '' });
   if (v.refunded_at) timeline.push({ title: t('refundedLbl'), when: v.refunded_at, meta: t('statusRefunded') });
-  if (v.payout_paid_at) timeline.push({ title: t('paidOut') || t('paidLbl'), when: v.payout_paid_at, meta: t('payoutPaid') });
+  if (v.payout_paid_at && !isRefundedVoucher_(v)) timeline.push({ title: t('paidOut') || t('paidLbl'), when: v.payout_paid_at, meta: t('payoutPaid') });
+  var money = getVoucherMoney_(v);
   body.innerHTML = '' +
     '<div class="money-grid">' +
-      '<div class="money-card"><div class="money-label">' + t('priceLbl') + '</div><div class="money-value">CHF ' + Number(v.price_paid||0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + Number(v.platform_fee||0).toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('priceLbl') + '</div><div class="money-value">CHF ' + money.price.toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + money.fee.toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + money.payout.toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="font-size:14px;font-weight:700;margin-bottom:8px">' + escHtml(v.deal_title || '') + '</div>' +
     '<div style="color:#999;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
@@ -1833,11 +1880,11 @@ function renderBarStats(period) {
   var sold = vouchers.length;
   var redeemed = vouchers.filter(function(v){ return v.status === 'redeemed'; }).length;
   var notRedeemed = vouchers.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; }).length;
-  var gross = vouchers.reduce(function(a,v){ return a + (Number(v.price_paid)||0); }, 0);
-  var fees = vouchers.reduce(function(a,v){ return a + (Number(v.platform_fee)||0); }, 0);
-  var net = vouchers.reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
-  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
-  var paid = vouchers.filter(function(v){ return v.payout_status === 'paid'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var gross = vouchers.reduce(function(a,v){ return a + getVoucherMoney_(v).price; }, 0);
+  var fees = vouchers.reduce(function(a,v){ return a + getVoucherMoney_(v).fee; }, 0);
+  var net = vouchers.reduce(function(a,v){ return a + getVoucherMoney_(v).payout; }, 0);
+  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'pending'; }).reduce(function(a,v){ return a + getVoucherMoney_(v).payout; }, 0);
+  var paid = vouchers.filter(function(v){ return !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'paid'; }).reduce(function(a,v){ return a + getVoucherMoney_(v).payout; }, 0);
 
   var grid = document.getElementById('statsGrid'); if (!grid) return;
   grid.innerHTML = '';
@@ -1868,8 +1915,8 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   var items = filteredVouchers || [];
   if (filterKey === 'redeemed') items = items.filter(function(v){ return v.status === 'redeemed'; });
   else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
-  else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
-  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
+  else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'pending'; });
+  else if (filterKey === 'paid_out') items = items.filter(function(v){ return !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'paid'; });
   detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
   renderVoucherPanel_('overviewVoucherPanel', items);
 }
@@ -2289,12 +2336,12 @@ applyProfileToForm = function(b) {
     var email = document.getElementById('loginEmail').value.trim();
     var pass  = document.getElementById('loginPassword').value;
     var err   = document.getElementById('loginErr');
+    var btn   = document.getElementById('btnBarLogin');
     err.textContent = '';
     if (!email || !pass) { err.textContent = currentLang === 'de' ? 'Bitte alle Felder ausfüllen.' : currentLang === 'en' ? 'Please fill in all fields.' : currentLang === 'it' ? 'Compila tutti i campi.' : 'Veuillez remplir tous les champs.'; return; }
     try {
-      document.getElementById('btnBarLogin').disabled = true; document.getElementById('btnBarLogin').textContent = '⏳...';
+      if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
       var r = await api({ action: 'barLogin', email, password: pass });
-      document.getElementById('btnBarLogin').disabled = false; document.getElementById('btnBarLogin').textContent = t('loginBtn') || 'Einloggen';
       if (r.success) {
         var uiLang = (r.bar && r.bar.lang) || localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
         sessionSet(r.token, r.bar.id, r.bar.name, uiLang);
@@ -2307,7 +2354,13 @@ applyProfileToForm = function(b) {
         err.textContent = r.error || (currentLang === 'de' ? 'Ungültige Zugangsdaten.' : currentLang === 'en' ? 'Invalid credentials.' : currentLang === 'it' ? 'Credenziali non valide.' : 'Identifiants invalides.');
         document.getElementById('loginPassword').value = '';
       }
-    } catch (e) { err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.'; }
+    } catch (e) {
+      err.textContent = (e && e.code === 'REQUEST_TIMEOUT')
+        ? (currentLang === 'de' ? 'Zeitüberschreitung beim Login. Bitte erneut versuchen.' : currentLang === 'en' ? 'Login timed out. Please try again.' : currentLang === 'it' ? 'Timeout durante il login. Riprova.' : 'Délai dépassé lors de la connexion. Réessayez.')
+        : (currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = t('loginBtn') || 'Einloggen'; }
+    }
   };
 
   doBarRegister = async function() {
@@ -2350,7 +2403,11 @@ applyProfileToForm = function(b) {
       } else {
         err.textContent = r.error || (currentLang === 'de' ? 'Fehler bei der Registrierung.' : currentLang === 'en' ? 'Registration error.' : currentLang === 'it' ? 'Errore di registrazione.' : 'Erreur d’inscription.');
       }
-    } catch (e) { err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.'; }
+    } catch (e) {
+      err.textContent = (e && e.code === 'REQUEST_TIMEOUT')
+        ? (currentLang === 'de' ? 'Zeitüberschreitung bei der Registrierung. Bitte erneut versuchen.' : currentLang === 'en' ? 'Registration timed out. Please try again.' : currentLang === 'it' ? 'Timeout durante la registrazione. Riprova.' : 'Délai dépassé lors de l’inscription. Réessayez.')
+        : (currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.');
+    }
     finally { if (btn) { btn.disabled = false; btn.textContent = t('registerBtn'); } }
   };
 
