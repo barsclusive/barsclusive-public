@@ -3516,163 +3516,231 @@ try {
 })();
 
 
-// ===== FINAL SHOP LOGIN / DRAWER / SETTINGS PATCH =====
+// =============================================
+// SHOP FIX 2026-03-24 — cleaner mobile header, drawer settings, subviews without filters
+// =============================================
 (function(){
   try {
+    ['de','en','it','fr'].forEach(function(lang){ if (!SHOP_TRANSLATIONS[lang]) SHOP_TRANSLATIONS[lang] = {}; });
     Object.assign(SHOP_TRANSLATIONS.de, {
-      settingsNav:'Einstellungen', settingsLanguageTitle:'Sprache', settingsAccountTitle:'Konto',
-      settingsChangePw:'Passwort ändern', settingsLogout:'Ausloggen', settingsLogin:'Einloggen', settingsRegister:'Registrieren'
+      settingsLabel:'Einstellungen',
+      settingsTitle:'⚙️ Einstellungen',
+      accountLabel:'Konto',
+      languageLabel:'Sprache'
     });
     Object.assign(SHOP_TRANSLATIONS.en, {
-      settingsNav:'Settings', settingsLanguageTitle:'Language', settingsAccountTitle:'Account',
-      settingsChangePw:'Change password', settingsLogout:'Log out', settingsLogin:'Log in', settingsRegister:'Register'
+      settingsLabel:'Settings',
+      settingsTitle:'⚙️ Settings',
+      accountLabel:'Account',
+      languageLabel:'Language'
     });
     Object.assign(SHOP_TRANSLATIONS.it, {
-      settingsNav:'Impostazioni', settingsLanguageTitle:'Lingua', settingsAccountTitle:'Account',
-      settingsChangePw:'Cambia password', settingsLogout:'Esci', settingsLogin:'Accedi', settingsRegister:'Registrati'
+      settingsLabel:'Impostazioni',
+      settingsTitle:'⚙️ Impostazioni',
+      accountLabel:'Account',
+      languageLabel:'Lingua'
     });
     Object.assign(SHOP_TRANSLATIONS.fr, {
-      settingsNav:'Paramètres', settingsLanguageTitle:'Langue', settingsAccountTitle:'Compte',
-      settingsChangePw:'Changer le mot de passe', settingsLogout:'Déconnexion', settingsLogin:'Connexion', settingsRegister:'Inscription'
+      settingsLabel:'Paramètres',
+      settingsTitle:'⚙️ Paramètres',
+      accountLabel:'Compte',
+      languageLabel:'Langue'
     });
   } catch(e) {}
 
-  function currentShopLang(){
-    try { return localStorage.getItem('barsclusive_lang') || document.documentElement.lang || 'de'; } catch(e) { return document.documentElement.lang || 'de'; }
-  }
+  function setStyleDisplay(el, value){ if (el) el.style.display = value; }
 
-  function syncSettingsLangButtons(){
-    var lang = currentShopLang();
-    ['settingsLangDE','settingsLangEN','settingsLangIT','settingsLangFR'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (!el) return;
-      el.classList.toggle('active', (el.getAttribute('data-lang') || '').toLowerCase() === String(lang).toLowerCase());
-    });
-  }
-
-  function hardSyncShopUi(){
-    var s = (typeof sessionGet === 'function') ? sessionGet() : null;
-    var logged = !!s;
+  function syncDrawerAndHeaderState(){
+    var logged = !!(typeof sessionGet === 'function' && sessionGet());
     document.body.classList.toggle('shop-user-logged-in', logged);
     document.body.classList.toggle('shop-user-logged-out', !logged);
 
-    var topAuth = document.getElementById('shopTopAuth');
-    if (topAuth) topAuth.style.display = logged ? 'none' : '';
-    var noLoginHint = document.getElementById('shopNoLoginHint');
-    if (noLoginHint) noLoginHint.style.display = logged ? 'none' : '';
+    setStyleDisplay(document.getElementById('btnFavorites'), logged ? 'block' : 'none');
+    setStyleDisplay(document.getElementById('btnOrders'), logged ? 'block' : 'none');
+    setStyleDisplay(document.getElementById('drawerFavoritesBtn'), logged ? 'flex' : 'none');
+    setStyleDisplay(document.getElementById('drawerOrdersBtn'), logged ? 'flex' : 'none');
+    setStyleDisplay(document.getElementById('drawerSettingsBtn'), logged ? 'flex' : 'none');
+    setStyleDisplay(document.getElementById('drawerLogoutBtn'), logged ? 'flex' : 'none');
 
-    var userBtn = document.getElementById('userBtn');
-    if (userBtn) userBtn.textContent = logged ? ('👤 ' + (s.name || 'Profil')) : ('👤 ' + ((typeof shopT === 'function' && shopT('loginBtn')) || 'Login / Registrieren'));
-
-    ['btnFavorites','btnOrders'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) el.style.display = logged ? '' : 'none';
-    });
-
-    var dropdown = document.getElementById('userDropdown');
-    if (dropdown && !logged) dropdown.classList.remove('show');
-
-    var settingsAccount = document.getElementById('shopSettingsAccountActions');
-    if (settingsAccount) settingsAccount.style.display = logged ? '' : 'none';
-    var settingsGuest = document.getElementById('shopSettingsGuestActions');
-    if (settingsGuest) settingsGuest.style.display = logged ? 'none' : '';
-
-    syncSettingsLangButtons();
+    var accountName = document.getElementById('settingsAccountName');
+    if (accountName) {
+      var s = sessionGet();
+      accountName.textContent = s ? ('👤 ' + String(s.name || '')) : '👤';
+    }
   }
-  window.__shopHardSyncUi = hardSyncShopUi;
 
-  function openSettingsModal(ev){
-    if (ev) {
-      if (typeof ev.preventDefault === 'function') ev.preventDefault();
-      if (typeof ev.stopPropagation === 'function') ev.stopPropagation();
+  function applySubviewChrome(view){
+    var dealsMode = view === 'deals';
+    var discovery = document.getElementById('shopDiscoverySection');
+    var toggle = document.getElementById('shopViewToggle');
+    var mapWrap = document.getElementById('shopMapWrap');
+    if (discovery) discovery.style.display = dealsMode ? '' : 'none';
+    if (toggle) toggle.style.display = dealsMode ? 'flex' : 'none';
+    if (!dealsMode && mapWrap) mapWrap.style.display = 'none';
+    var viewGrid = document.getElementById('viewGrid');
+    var viewMap = document.getElementById('viewMap');
+    if (!dealsMode && viewGrid && viewMap) {
+      viewGrid.style.background = '#FF3366';
+      viewGrid.style.color = '#fff';
+      viewGrid.style.border = 'none';
+      viewMap.style.background = '#2a2a2a';
+      viewMap.style.color = '#ccc';
+      viewMap.style.border = '1px solid #3a3a3a';
+    }
+    document.body.classList.toggle('shop-view-deals', dealsMode);
+    document.body.classList.toggle('shop-view-subpage', !dealsMode);
+  }
+
+  if (typeof showView === 'function') {
+    var _prevShowViewFix = showView;
+    showView = function(view){
+      _prevShowViewFix(view);
+      applySubviewChrome(view);
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) { window.scrollTo(0, 0); }
+    };
+  }
+
+  function syncSettingsModalUi(){
+    var lang = String((_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || 'de')).toLowerCase();
+    ['DE','EN','IT','FR'].forEach(function(code){
+      var btn = document.getElementById('settingsLang' + code);
+      if (btn) btn.classList.toggle('active', code.toLowerCase() === lang);
+    });
+    var accountName = document.getElementById('settingsAccountName');
+    var s = sessionGet();
+    if (accountName) accountName.textContent = s ? ('👤 ' + String(s.name || '')) : '👤';
+  }
+
+  function openAccountSettingsModal(){
+    var s = sessionGet();
+    if (!s) {
+      if (typeof openModal === 'function') openModal('loginModal');
+      return;
     }
     if (typeof closeShopDrawer === 'function') closeShopDrawer();
-    hardSyncShopUi();
-    if (typeof openModal === 'function') openModal('shopSettingsModal');
-    return false;
+    var modal = document.getElementById('accountSettingsModal');
+    if (modal) modal.classList.add('active');
+    syncSettingsModalUi();
   }
 
-  var _origShowViewFinal = (typeof showView === 'function') ? showView : null;
-  if (_origShowViewFinal && !_origShowViewFinal.__settings_final_patch__) {
-    var wrappedShowView = function(view){
-      var logged = !!((typeof sessionGet === 'function') && sessionGet());
-      if ((view === 'favorites' || view === 'orders') && !logged) {
-        if (typeof closeShopDrawer === 'function') closeShopDrawer();
-        if (typeof openModal === 'function') openModal('loginModal');
-        hardSyncShopUi();
-        return;
-      }
-      var result = _origShowViewFinal.apply(this, arguments);
-      setTimeout(hardSyncShopUi, 0);
-      return result;
-    };
-    wrappedShowView.__settings_final_patch__ = true;
-    showView = wrappedShowView;
+  function closeAccountSettingsModal(){
+    var modal = document.getElementById('accountSettingsModal');
+    if (modal) modal.classList.remove('active');
   }
 
-  if (typeof doLogin === 'function') {
-    var _origDoLoginFinal = doLogin;
-    doLogin = async function(){
-      var result = await _origDoLoginFinal.apply(this, arguments);
-      setTimeout(hardSyncShopUi, 0);
-      return result;
+  window.openAccountSettingsModal = openAccountSettingsModal;
+  window.closeAccountSettingsModal = closeAccountSettingsModal;
+
+  if (typeof updateShopUserUi === 'function') {
+    var _prevUpdateShopUserUiFix = updateShopUserUi;
+    updateShopUserUi = function(){
+      _prevUpdateShopUserUiFix();
+      syncDrawerAndHeaderState();
+      syncSettingsModalUi();
     };
   }
-  if (typeof doRegister === 'function') {
-    var _origDoRegisterFinal = doRegister;
-    doRegister = async function(){
-      var result = await _origDoRegisterFinal.apply(this, arguments);
-      setTimeout(hardSyncShopUi, 0);
-      return result;
+
+  if (typeof applyShopTranslations === 'function') {
+    var _prevApplyTranslationsFix = applyShopTranslations;
+    applyShopTranslations = function(){
+      _prevApplyTranslationsFix();
+      var drawerSettings = document.querySelector('#drawerSettingsBtn span');
+      if (drawerSettings && typeof st === 'function') drawerSettings.textContent = st('settingsLabel');
+      var closeSettings = document.querySelector('#accountSettingsModal [data-shop-i18n="settingsTitle"]');
+      if (closeSettings && typeof st === 'function') closeSettings.textContent = st('settingsTitle');
+      syncDrawerAndHeaderState();
+      syncSettingsModalUi();
     };
   }
-  if (typeof doLogout === 'function') {
-    var _origDoLogoutFinal = doLogout;
-    doLogout = async function(){
-      var result = await _origDoLogoutFinal.apply(this, arguments);
-      setTimeout(hardSyncShopUi, 0);
-      return result;
-    };
-  }
+
+  var _prevSessionSetFix = sessionSet;
+  sessionSet = function(token, name, email, role){
+    _prevSessionSetFix(token, name, email, role);
+    syncDrawerAndHeaderState();
+    applySubviewChrome('deals');
+    if (typeof closeModal === 'function') {
+      closeModal('loginModal');
+      closeModal('registerModal');
+    }
+  };
+
+  var _prevSessionClearFix = sessionClear;
+  sessionClear = function(){
+    _prevSessionClearFix();
+    syncDrawerAndHeaderState();
+    applySubviewChrome('deals');
+    closeAccountSettingsModal();
+  };
 
   document.addEventListener('DOMContentLoaded', function(){
-    var drawerSettings = document.getElementById('drawerSettingsBtn');
-    if (drawerSettings) drawerSettings.addEventListener('click', openSettingsModal);
+    syncDrawerAndHeaderState();
+    applySubviewChrome('deals');
 
-    var settingsChangePw = document.getElementById('shopSettingsChangePw');
-    if (settingsChangePw) settingsChangePw.addEventListener('click', function(){
-      closeModal('shopSettingsModal');
+    var drawerFav = document.getElementById('drawerFavoritesBtn');
+    if (drawerFav) drawerFav.addEventListener('click', function(ev){
+      var s = sessionGet();
+      if (!s) {
+        ev.preventDefault();
+        if (typeof closeShopDrawer === 'function') closeShopDrawer();
+        if (typeof openModal === 'function') openModal('loginModal');
+      }
+    }, true);
+
+    var drawerOrders = document.getElementById('drawerOrdersBtn');
+    if (drawerOrders) drawerOrders.addEventListener('click', function(ev){
+      var s = sessionGet();
+      if (!s) {
+        ev.preventDefault();
+        if (typeof closeShopDrawer === 'function') closeShopDrawer();
+        if (typeof openModal === 'function') openModal('loginModal');
+      }
+    }, true);
+
+    var drawerSettings = document.getElementById('drawerSettingsBtn');
+    if (drawerSettings) drawerSettings.addEventListener('click', function(ev){
+      ev.preventDefault();
+      openAccountSettingsModal();
+    });
+
+    var drawerLogout = document.getElementById('drawerLogoutBtn');
+    if (drawerLogout) drawerLogout.addEventListener('click', function(ev){
+      ev.preventDefault();
+      if (typeof closeShopDrawer === 'function') closeShopDrawer();
+      if (typeof doLogout === 'function') doLogout();
+    });
+
+    var closeSettingsBtn = document.getElementById('btnCloseAccountSettings');
+    if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeAccountSettingsModal);
+
+    var settingsModal = document.getElementById('accountSettingsModal');
+    if (settingsModal) settingsModal.addEventListener('click', function(e){ if (e.target === this) closeAccountSettingsModal(); });
+
+    var changePwSettings = document.getElementById('btnOpenChangePwFromSettings');
+    if (changePwSettings) changePwSettings.addEventListener('click', function(){
+      closeAccountSettingsModal();
       if (typeof openChangePwModal === 'function') openChangePwModal();
     });
 
-    var settingsLogout = document.getElementById('shopSettingsLogout');
-    if (settingsLogout) settingsLogout.addEventListener('click', function(){
-      closeModal('shopSettingsModal');
-      doLogout();
+    var logoutSettings = document.getElementById('btnLogoutFromSettings');
+    if (logoutSettings) logoutSettings.addEventListener('click', function(){
+      closeAccountSettingsModal();
+      if (typeof doLogout === 'function') doLogout();
     });
 
-    var settingsLogin = document.getElementById('shopSettingsLogin');
-    if (settingsLogin) settingsLogin.addEventListener('click', function(){
-      closeModal('shopSettingsModal');
-      if (typeof openModal === 'function') openModal('loginModal');
-    });
-
-    var settingsRegister = document.getElementById('shopSettingsRegister');
-    if (settingsRegister) settingsRegister.addEventListener('click', function(){
-      closeModal('shopSettingsModal');
-      if (typeof openModal === 'function') openModal('registerModal');
-    });
-
-    ['settingsLangDE','settingsLangEN','settingsLangIT','settingsLangFR'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('click', function(){
-        var lang = this.getAttribute('data-lang') || 'de';
+    ['de','en','it','fr'].forEach(function(lang){
+      var btn = document.getElementById('settingsLang' + lang.toUpperCase());
+      if (!btn) return;
+      btn.addEventListener('click', function(){
         if (typeof setShopLang === 'function') setShopLang(lang);
-        hardSyncShopUi();
+        syncSettingsModalUi();
       });
     });
 
-    hardSyncShopUi();
+    var favBtn = document.getElementById('btnFavorites');
+    if (favBtn) favBtn.addEventListener('click', function(){ applySubviewChrome('favorites'); }, true);
+    var ordersBtn = document.getElementById('btnOrders');
+    if (ordersBtn) ordersBtn.addEventListener('click', function(){ applySubviewChrome('orders'); }, true);
+    var dealsBtn = document.getElementById('btnDeals');
+    if (dealsBtn) dealsBtn.addEventListener('click', function(){ applySubviewChrome('deals'); }, true);
   });
 })();
