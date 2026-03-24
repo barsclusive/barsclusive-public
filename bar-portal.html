@@ -342,7 +342,7 @@
           <label class="form-label" for="loginPassword" data-i18n="password">Passwort</label>
           <input type="password" class="form-input" id="loginPassword" autocomplete="current-password">
         </div>
-        <button class="btn-pink" id="btnBarLogin" data-i18n="loginBtn">Einloggen</button>
+        <button class="btn-pink" id="btnBarLogin" type="button" data-i18n="loginBtn">Einloggen</button>
         <p style="margin-top:16px;text-align:center;color:#999;font-size:14px">
           <span class="text-link" id="linkBarForgotPassword" data-i18n="forgotPw">Passwort vergessen?</span>
         </p>
@@ -436,7 +436,7 @@
           <input type="checkbox" id="regConsent">
           <label for="regConsent"><span data-i18n="acceptTerms">Ich akzeptiere die</span> <a href="agb-bars.html" target="_blank" rel="noopener" style="color:#FF3366" data-i18n="termsBars">AGB Bars</a> &amp; <a href="datenschutz-bars.html" target="_blank" rel="noopener" style="color:#FF3366" data-i18n="privacy">Datenschutz</a></label>
         </div>
-        <button class="btn-pink" id="btnBarRegister" data-i18n="registerBtn">Registrieren</button>
+        <button class="btn-pink" id="btnBarRegister" type="button" data-i18n="registerBtn">Registrieren</button>
         <p style="margin-top:16px;font-size:13px;color:#999;text-align:center" data-i18n="pendingNote">
           Nach der Registrierung wird dein Account von BarSclusive freigeschaltet.
         </p>
@@ -493,7 +493,7 @@
         <div class="form-group">
           <label class="form-label">Bild (optional)</label>
           <input type="file" class="form-input" id="dealImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
-          <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 2 MB</small>
+          <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 5 MB</small>
           <div id="imagePreview" style="margin-top:8px;display:none"><img id="imagePreviewImg" style="max-width:200px;border-radius:8px" alt="Vorschau"></div>
           <input type="hidden" id="dealImageUrl">
         </div>
@@ -606,7 +606,7 @@
           </div>
         </div>
 
-        <button class="btn-pink" id="btnCreateDeal" data-i18n="createDeal">Deal erstellen</button>
+        <button class="btn-pink" id="btnCreateDeal" type="button" data-i18n="createDeal">Deal erstellen</button>
       </div>
     </div>
 
@@ -625,7 +625,7 @@
           <input type="text" class="form-input" id="redeemCode" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC-123">
           <div id="redeemCodeFormatHint" style="color:#999;font-size:12px;margin-top:8px" data-i18n="redeemCodeFormatHint">Format wie auf dem Gutschein, z. B. ABC-123</div>
         </div>
-        <button class="btn-pink" id="btnRedeem" data-i18n="redeemBtn">Einlösen</button>
+        <button class="btn-pink" id="btnRedeem" type="button" data-i18n="redeemBtn">Einlösen</button>
         <div id="redeemResult" style="display:none;margin-top:18px;background:#111;border:1px solid #2a2a2a;border-radius:12px;padding:16px">
           <div style="color:#22c55e;font-weight:700;margin-bottom:8px" data-i18n="redeemSuccess">✅ Gutschein eingelöst!</div>
           <div style="color:#ccc"><span id="redeemDeal"></span></div>
@@ -712,7 +712,7 @@
           </select>
           <small class="input-help correspondence-help" data-i18n="correspondenceHint">Diese Sprache wird für E-Mails und die Kommunikation mit der Bar verwendet.</small>
         </div>
-        <button class="btn-pink" id="btnSaveProfile" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
+        <button class="btn-pink" id="btnSaveProfile" type="button" data-i18n="saveProfile" style="margin-bottom:24px">Speichern</button>
         <hr style="border:none;border-top:1px solid #333;margin:24px 0">
         <h3 style="font-size:16px;margin-bottom:16px;color:#ccc" data-i18n="changePassword">Passwort ändern</h3>
         <div class="err-msg" id="pwErr" aria-live="polite"></div>
@@ -728,11 +728,11 @@
           <label class="form-label" for="pwConfirm" data-i18n="confirmPassword">Passwort bestätigen</label>
           <input type="password" class="form-input" id="pwConfirm" autocomplete="new-password">
         </div>
-        <button class="btn-pink" id="btnChangePassword" data-i18n="changePasswordBtn">Passwort ändern</button>
+        <button class="btn-pink" id="btnChangePassword" type="button" data-i18n="changePasswordBtn">Passwort ändern</button>
         <hr style="border:none;border-top:1px solid #333;margin:24px 0">
         <h3 style="font-size:16px;margin-bottom:12px;color:#ef4444" data-i18n="deleteAccountTitle">Account löschen</h3>
         <p style="color:#999;font-size:13px;margin-bottom:12px" data-i18n="deleteAccountWarning">Alle Deals werden deaktiviert. Diese Aktion ist endgültig und kann nicht rückgängig gemacht werden.</p>
-        <button id="btnDeleteAccount" style="background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px" data-i18n="deleteAccountBtn">Account endgültig löschen</button>
+        <button id="btnDeleteAccount" type="button" style="background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px" data-i18n="deleteAccountBtn">Account endgültig löschen</button>
       </div>
     </div>
   </div>
@@ -773,6 +773,7 @@
     <div class="form-group">
       <label class="form-label">Bild ändern (optional)</label>
       <input type="file" class="form-input" id="editImageFile" accept="image/jpeg,image/png,image/webp" style="padding:8px">
+      <small style="color:#999;font-size:12px">JPG, PNG oder WebP, max. 5 MB</small>
       <div id="editImagePreview" style="margin-top:8px;display:none"><img id="editImagePreviewImg" style="max-width:200px;border-radius:8px" alt="Aktuelles Bild"></div>
       <input type="hidden" id="editImageUrl">
     </div>
@@ -817,8 +818,8 @@
       <input type="checkbox" id="editActive">
       <label for="editActive" data-i18n="dealActiveLabel">Deal aktiv</label>
     </div>
-    <button class="btn-pink" id="btnSaveEdit" data-i18n="saveLbl">Speichern</button>
-    <button class="btn-ghost" id="btnCancelEdit" data-i18n="cancelLbl">Abbrechen</button>
+    <button class="btn-pink" id="btnSaveEdit" type="button" data-i18n="saveLbl">Speichern</button>
+    <button class="btn-ghost" id="btnCancelEdit" type="button" data-i18n="cancelLbl">Abbrechen</button>
   </div>
 </div>
 
@@ -837,8 +838,8 @@
         <label class="form-label" for="barResetEmail" data-i18n="email">Email</label>
         <input type="email" class="form-input" id="barResetEmail" autocomplete="email">
       </div>
-      <button class="btn-pink" id="btnBarSendResetCode" data-i18n="sendCode">Code senden</button>
-      <button class="btn-ghost" id="btnBarCancelReset1" data-i18n="cancelLbl">Abbrechen</button>
+      <button class="btn-pink" id="btnBarSendResetCode" type="button" data-i18n="sendCode">Code senden</button>
+      <button class="btn-ghost" id="btnBarCancelReset1" type="button" data-i18n="cancelLbl">Abbrechen</button>
     </div>
     
     <!-- Step 2: Code + neues Passwort -->
@@ -852,8 +853,8 @@
         <label class="form-label" for="barResetNewPassword" data-i18n="newPassword">Neues Passwort (mind. 8 Zeichen)</label>
         <input type="password" class="form-input" id="barResetNewPassword" autocomplete="new-password">
       </div>
-      <button class="btn-pink" id="btnBarResetPassword" data-i18n="changePasswordBtn">Passwort ändern</button>
-      <button class="btn-ghost" id="btnBarBackToStep1" data-i18n="backBtn">Zurück</button>
+      <button class="btn-pink" id="btnBarResetPassword" type="button" data-i18n="changePasswordBtn">Passwort ändern</button>
+      <button class="btn-ghost" id="btnBarBackToStep1" type="button" data-i18n="backBtn">Zurück</button>
     </div>
   </div>
 </div>
@@ -883,6 +884,6 @@
   </p>
 </div>
 
-<script src="bar-app.js?v=20260323-3"></script>
+<script src="bar-app.js?v=20260324-1"></script>
 </body>
 </html>
