@@ -1276,31 +1276,9 @@ function switchDashTab(name, btn) {
 }
 
 // ── API / TOAST ───────────────────────────────────────────────────────────
-var API_TIMEOUT_MS = 15000;
 async function api(body) {
-  var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  var timeoutId = controller ? setTimeout(function() {
-    try { controller.abort(); } catch(e) {}
-  }, API_TIMEOUT_MS) : null;
-  try {
-    var r = await fetch(BACKEND_URL, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      cache: 'no-store',
-      signal: controller ? controller.signal : undefined
-    });
-    var data = await r.json();
-    return data;
-  } catch (e) {
-    if (e && (e.name === 'AbortError' || /aborted|timeout/i.test(String(e.message || '')))) {
-      var timeoutErr = new Error('Request timeout');
-      timeoutErr.code = 'REQUEST_TIMEOUT';
-      throw timeoutErr;
-    }
-    throw e;
-  } finally {
-    if (timeoutId) clearTimeout(timeoutId);
-  }
+  var r = await fetch(BACKEND_URL, { method: 'POST', body: JSON.stringify(body) });
+  return r.json();
 }
 
 var _toastTimer = null;
@@ -1702,16 +1680,16 @@ function escHtml(v) {
 // =============================================
 (function(){
   Object.assign(TRANSLATIONS.de, {
-    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', allLbl:'Alle', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', payoutNone:'Keine Auszahlung', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
+    grossSales:'Umsatz', commissionLbl:'Provision', netRevenue:'Netto für die Bar', voucherFilters:'Gutscheinfilter', statusLbl:'Status', allStatuses:'Alle Status', openLbl:'Offen', refundedLbl:'Erstattet', paidAtLbl:'Bezahlt am', boughtAtLbl:'Kaufdatum', detailTitle:'Gutscheindetails', timelineLbl:'Statusverlauf', paidOutNetHint:'Ausgezahlt zeigt den Betrag nach Abzug der Provision.', overviewDetailHint:'Die Datumsangaben beziehen sich auf den jeweiligen Status.', refundRequested:'Rückerstattung angefordert', voucherListTitle:'Gutscheine', filterApply:'Anwenden', filterReset:'Zurücksetzen', paidLbl:'Bezahlt', statusIssued:'Offen', statusRedeemed:'Eingelöst', statusRefunded:'Erstattet', payoutPending:'Ausstehend', payoutPaid:'Bezahlt', createdAtLbl:'Erstellt am', redeemedAtLbl:'Eingelöst am', noDataPeriod:'Keine Daten für diesen Zeitraum', locationHelp:'Wird aus der gewählten Adresse übernommen und kann auf der Karte feinjustiert werden.', profileAddressHelp:'Adresse aus der Vorschlagsliste wählen. Die Koordinaten für Karte und Distanz werden automatisch übernommen.'
   });
   Object.assign(TRANSLATIONS.en, {
-    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', allLbl:'All', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', payoutNone:'No payment', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
+    grossSales:'Gross sales', commissionLbl:'Commission', netRevenue:'Net for the bar', voucherFilters:'Voucher filters', statusLbl:'Status', allStatuses:'All statuses', openLbl:'Open', refundedLbl:'Refunded', paidAtLbl:'Paid at', boughtAtLbl:'Purchase date', detailTitle:'Voucher details', timelineLbl:'Status history', paidOutNetHint:'Paid out shows the amount after commission.', overviewDetailHint:'Dates refer to the respective status.', refundRequested:'Refund requested', voucherListTitle:'Vouchers', filterApply:'Apply', filterReset:'Reset', paidLbl:'Paid', statusIssued:'Open', statusRedeemed:'Redeemed', statusRefunded:'Refunded', payoutPending:'Pending', payoutPaid:'Paid', createdAtLbl:'Created at', redeemedAtLbl:'Redeemed at', noDataPeriod:'No data for this period', locationHelp:'Taken from the selected address and can be fine-tuned on the map.', profileAddressHelp:'Choose the address from the suggestion list. Coordinates for map and distance are filled automatically.'
   });
   Object.assign(TRANSLATIONS.it, {
-    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', allLbl:'Tutti', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', payoutNone:'Nessun pagamento', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
+    grossSales:'Fatturato', commissionLbl:'Commissione', netRevenue:'Netto per il bar', voucherFilters:'Filtri voucher', statusLbl:'Stato', allStatuses:'Tutti gli stati', openLbl:'Aperto', refundedLbl:'Rimborsato', paidAtLbl:'Pagato il', boughtAtLbl:'Data acquisto', detailTitle:'Dettagli voucher', timelineLbl:'Cronologia stati', paidOutNetHint:'Pagato indica l’importo dopo la commissione.', overviewDetailHint:'Le date si riferiscono al relativo stato.', refundRequested:'Rimborso richiesto', voucherListTitle:'Voucher', filterApply:'Applica', filterReset:'Reset', paidLbl:'Pagato', statusIssued:'Aperto', statusRedeemed:'Riscattato', statusRefunded:'Rimborsato', payoutPending:'In sospeso', payoutPaid:'Pagato', createdAtLbl:'Creato il', redeemedAtLbl:'Riscattato il', noDataPeriod:'Nessun dato per questo periodo', locationHelp:'Viene presa dall’indirizzo selezionato e può essere corretta sulla mappa.', profileAddressHelp:'Seleziona l’indirizzo dalla lista dei suggerimenti. Le coordinate per mappa e distanza vengono compilate automaticamente.'
   });
   Object.assign(TRANSLATIONS.fr, {
-    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', allLbl:'Tous', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', payoutNone:'Aucun paiement', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
+    grossSales:'Chiffre d’affaires', commissionLbl:'Commission', netRevenue:'Net pour le bar', voucherFilters:'Filtres bons', statusLbl:'Statut', allStatuses:'Tous les statuts', openLbl:'Ouvert', refundedLbl:'Remboursé', paidAtLbl:'Payé le', boughtAtLbl:'Date d’achat', detailTitle:'Détails du bon', timelineLbl:'Historique des statuts', paidOutNetHint:'Payé affiche le montant après commission.', overviewDetailHint:'Les dates se réfèrent au statut correspondant.', refundRequested:'Remboursement demandé', voucherListTitle:'Bons', filterApply:'Appliquer', filterReset:'Réinitialiser', paidLbl:'Payé', statusIssued:'Ouvert', statusRedeemed:'Utilisé', statusRefunded:'Remboursé', payoutPending:'En attente', payoutPaid:'Payé', createdAtLbl:'Créé le', redeemedAtLbl:'Utilisé le', noDataPeriod:'Aucune donnée pour cette période', locationHelp:'Repris depuis l’adresse choisie et peut être ajusté sur la carte.', profileAddressHelp:'Choisissez l’adresse dans la liste des suggestions. Les coordonnées pour la carte et la distance sont remplies automatiquement.'
   });
 })();
 
@@ -1721,23 +1699,7 @@ function trStatus_(status) {
   if (s === 'refunded') return t('statusRefunded');
   return t('statusIssued');
 }
-function isRefundedVoucher_(v) {
-  return String((v && v.status) || '').toLowerCase() === 'refunded';
-}
-function getVoucherMoney_(v) {
-  if (isRefundedVoucher_(v)) return { price: 0, fee: 0, payout: 0 };
-  return {
-    price: Number((v && v.price_paid) || 0),
-    fee: Number((v && v.platform_fee) || 0),
-    payout: Number((v && v.bar_payout) || 0)
-  };
-}
-function getVoucherPayoutFilterValue_(v) {
-  if (isRefundedVoucher_(v)) return 'none';
-  return String((v && v.payout_status) || '').toLowerCase() === 'paid' ? 'paid' : 'pending';
-}
-function trPayout_(status, v) {
-  if (isRefundedVoucher_(v)) return t('payoutNone');
+function trPayout_(status) {
   return String(status || '').toLowerCase() === 'paid' ? t('payoutPaid') : t('payoutPending');
 }
 function fmtDate_(v) {
@@ -1764,7 +1726,7 @@ function applyVoucherFilters_(vouchers) {
     if (f.from && d && d < new Date(f.from + 'T00:00:00')) return false;
     if (f.to && d && d > new Date(f.to + 'T23:59:59')) return false;
     if (f.status !== 'all' && String(v.status || '') !== f.status) return false;
-    if (f.payout !== 'all' && getVoucherPayoutFilterValue_(v) !== f.payout) return false;
+    if (f.payout !== 'all' && String(v.payout_status || '') !== f.payout) return false;
     return true;
   });
 }
@@ -1774,24 +1736,16 @@ function renderVoucherPanel_(targetId, vouchers) {
   vouchers = vouchers || [];
   var f = getCurrentVoucherFilters_();
   var filtered = applyVoucherFilters_(vouchers);
-  var sums = filtered.reduce(function(acc, v) {
-    var money = getVoucherMoney_(v);
-    acc.price += money.price;
-    acc.fee += money.fee;
-    acc.payout += money.payout;
-    return acc;
-  }, { price: 0, fee: 0, payout: 0 });
   var rows = filtered.map(function(v) {
-    var money = getVoucherMoney_(v);
     return '<tr class="click-row" data-voucher-id="' + escHtml(String(v.id || '')) + '">' +
       '<td>' + escHtml(fmtDate_(v.order_created_at || v.created_at)) + '</td>' +
       '<td style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</td>' +
       '<td>' + escHtml(String(v.deal_title || '')) + '</td>' +
-      '<td style="text-align:right">CHF ' + money.price.toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#ef4444">CHF ' + money.fee.toFixed(2) + '</td>' +
-      '<td style="text-align:right;color:#22c55e">CHF ' + money.payout.toFixed(2) + '</td>' +
+      '<td style="text-align:right">CHF ' + Number(v.price_paid || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#ef4444">CHF ' + Number(v.platform_fee || 0).toFixed(2) + '</td>' +
+      '<td style="text-align:right;color:#22c55e">CHF ' + Number(v.bar_payout || 0).toFixed(2) + '</td>' +
       '<td>' + escHtml(trStatus_(v.status)) + '</td>' +
-      '<td>' + escHtml(trPayout_(v.payout_status, v)) + '</td>' +
+      '<td>' + escHtml(trPayout_(v.payout_status)) + '</td>' +
       '</tr>';
   }).join('');
   root.innerHTML = '' +
@@ -1801,18 +1755,18 @@ function renderVoucherPanel_(targetId, vouchers) {
         '<div><label class="form-label">' + t('fromLbl') + '</label><input type="date" class="form-input" id="voucherFilterFrom" value="' + escHtml(f.from) + '"></div>' +
         '<div><label class="form-label">' + t('toLbl') + '</label><input type="date" class="form-input" id="voucherFilterTo" value="' + escHtml(f.to) + '"></div>' +
         '<div><label class="form-label">' + t('statusLbl') + '</label><select class="form-input" id="voucherFilterStatus"><option value="all">' + t('allStatuses') + '</option><option value="issued">' + t('openLbl') + '</option><option value="sent">' + t('openLbl') + '</option><option value="redeemed">' + t('redeemed') + '</option><option value="refunded">' + t('refundedLbl') + '</option></select></div>' +
-        '<div><label class="form-label">' + (t('payoutStatusLbl') || t('paidLbl')) + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('allLbl') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option><option value="none">' + t('payoutNone') + '</option></select></div>' +
+        '<div><label class="form-label">' + t('paidLbl') + '</label><select class="form-input" id="voucherFilterPayout"><option value="all">' + t('alle') + '</option><option value="pending">' + t('payoutPending') + '</option><option value="paid">' + t('payoutPaid') + '</option></select></div>' +
         '<div><button class="btn-pink" id="voucherApplyBtn" style="width:auto;padding:12px 18px">' + t('filterApply') + '</button></div>' +
         '<div><button class="btn-ghost" id="voucherResetBtn" style="width:auto;padding:12px 18px;margin-top:0">' + t('filterReset') + '</button></div>' +
       '</div>' +
     '</div>' +
     '<div class="money-grid">' +
-      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + sums.price.toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + sums.fee.toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + sums.payout.toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('grossSales') + '</div><div class="money-value">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.price_paid)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.platform_fee)||0);},0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + filtered.reduce(function(a,v){return a + (Number(v.bar_payout)||0);},0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="color:#999;font-size:12px;margin-bottom:10px">' + t('paidOutNetHint') + ' ' + t('overviewDetailHint') + '</div>' +
-    '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + (t('payoutStatusLbl') || t('paidLbl')) + '</th></tr></thead><tbody>' +
+    '<div class="overflow-x"><table class="voucher-table"><thead><tr><th>' + t('boughtAtLbl') + '</th><th>' + t('codeLbl') + '</th><th>' + t('dealLbl') + '</th><th>' + t('priceLbl') + '</th><th>' + t('commissionLbl') + '</th><th>' + t('netRevenue') + '</th><th>' + t('statusLbl') + '</th><th>' + t('paidLbl') + '</th></tr></thead><tbody>' +
       (rows || '<tr><td colspan="8" style="padding:18px;color:#666;text-align:center">' + t('noDataPeriod') + '</td></tr>') +
     '</tbody></table></div>';
   var sEl = document.getElementById('voucherFilterStatus'); if (sEl) sEl.value = f.status;
@@ -1844,13 +1798,12 @@ function openVoucherDetail(v) {
   if (v.redeemed_at) timeline.push({ title: t('redeemedAtLbl'), when: v.redeemed_at, meta: t('statusRedeemed') });
   if (v.refund_requested_at) timeline.push({ title: t('refundReq'), when: v.refund_requested_at, meta: t('refundRequested') || '' });
   if (v.refunded_at) timeline.push({ title: t('refundedLbl'), when: v.refunded_at, meta: t('statusRefunded') });
-  if (v.payout_paid_at && !isRefundedVoucher_(v)) timeline.push({ title: t('paidOut') || t('paidLbl'), when: v.payout_paid_at, meta: t('payoutPaid') });
-  var money = getVoucherMoney_(v);
+  if (v.payout_paid_at) timeline.push({ title: t('paidOut') || t('paidLbl'), when: v.payout_paid_at, meta: t('payoutPaid') });
   body.innerHTML = '' +
     '<div class="money-grid">' +
-      '<div class="money-card"><div class="money-label">' + t('priceLbl') + '</div><div class="money-value">CHF ' + money.price.toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + money.fee.toFixed(2) + '</div></div>' +
-      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + money.payout.toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('priceLbl') + '</div><div class="money-value">CHF ' + Number(v.price_paid||0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('commissionLbl') + '</div><div class="money-value" style="color:#ef4444">CHF ' + Number(v.platform_fee||0).toFixed(2) + '</div></div>' +
+      '<div class="money-card"><div class="money-label">' + t('netRevenue') + '</div><div class="money-value" style="color:#22c55e">CHF ' + Number(v.bar_payout||0).toFixed(2) + '</div></div>' +
     '</div>' +
     '<div style="font-size:14px;font-weight:700;margin-bottom:8px">' + escHtml(v.deal_title || '') + '</div>' +
     '<div style="color:#999;font-size:13px;margin-bottom:14px">' + t('codeLbl') + ': <span style="font-family:monospace">' + escHtml(String(v.code_display || v.code || '–')) + '</span></div>' +
@@ -1880,11 +1833,11 @@ function renderBarStats(period) {
   var sold = vouchers.length;
   var redeemed = vouchers.filter(function(v){ return v.status === 'redeemed'; }).length;
   var notRedeemed = vouchers.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; }).length;
-  var gross = vouchers.reduce(function(a,v){ return a + getVoucherMoney_(v).price; }, 0);
-  var fees = vouchers.reduce(function(a,v){ return a + getVoucherMoney_(v).fee; }, 0);
-  var net = vouchers.reduce(function(a,v){ return a + getVoucherMoney_(v).payout; }, 0);
-  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'pending'; }).reduce(function(a,v){ return a + getVoucherMoney_(v).payout; }, 0);
-  var paid = vouchers.filter(function(v){ return !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'paid'; }).reduce(function(a,v){ return a + getVoucherMoney_(v).payout; }, 0);
+  var gross = vouchers.reduce(function(a,v){ return a + (Number(v.price_paid)||0); }, 0);
+  var fees = vouchers.reduce(function(a,v){ return a + (Number(v.platform_fee)||0); }, 0);
+  var net = vouchers.reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var pending = vouchers.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
+  var paid = vouchers.filter(function(v){ return v.payout_status === 'paid'; }).reduce(function(a,v){ return a + (Number(v.bar_payout)||0); }, 0);
 
   var grid = document.getElementById('statsGrid'); if (!grid) return;
   grid.innerHTML = '';
@@ -1915,8 +1868,8 @@ function showBarStatDetail(label, filterKey, filteredVouchers) {
   var items = filteredVouchers || [];
   if (filterKey === 'redeemed') items = items.filter(function(v){ return v.status === 'redeemed'; });
   else if (filterKey === 'not_redeemed') items = items.filter(function(v){ return v.status !== 'redeemed' && v.status !== 'refunded'; });
-  else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'pending'; });
-  else if (filterKey === 'paid_out') items = items.filter(function(v){ return !isRefundedVoucher_(v) && getVoucherPayoutFilterValue_(v) === 'paid'; });
+  else if (filterKey === 'pending_payout') items = items.filter(function(v){ return v.status === 'redeemed' && v.payout_status === 'pending'; });
+  else if (filterKey === 'paid_out') items = items.filter(function(v){ return v.payout_status === 'paid'; });
   detailEl.innerHTML = '<div style="font-size:16px;font-weight:700;margin:20px 0 12px">' + escHtml(label) + ' (' + items.length + ')</div><div id="overviewVoucherPanel"></div>';
   renderVoucherPanel_('overviewVoucherPanel', items);
 }
@@ -2336,12 +2289,12 @@ applyProfileToForm = function(b) {
     var email = document.getElementById('loginEmail').value.trim();
     var pass  = document.getElementById('loginPassword').value;
     var err   = document.getElementById('loginErr');
-    var btn   = document.getElementById('btnBarLogin');
     err.textContent = '';
     if (!email || !pass) { err.textContent = currentLang === 'de' ? 'Bitte alle Felder ausfüllen.' : currentLang === 'en' ? 'Please fill in all fields.' : currentLang === 'it' ? 'Compila tutti i campi.' : 'Veuillez remplir tous les champs.'; return; }
     try {
-      if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
+      document.getElementById('btnBarLogin').disabled = true; document.getElementById('btnBarLogin').textContent = '⏳...';
       var r = await api({ action: 'barLogin', email, password: pass });
+      document.getElementById('btnBarLogin').disabled = false; document.getElementById('btnBarLogin').textContent = t('loginBtn') || 'Einloggen';
       if (r.success) {
         var uiLang = (r.bar && r.bar.lang) || localStorage.getItem('barsclusive_bar_lang') || currentLang || 'de';
         sessionSet(r.token, r.bar.id, r.bar.name, uiLang);
@@ -2354,13 +2307,7 @@ applyProfileToForm = function(b) {
         err.textContent = r.error || (currentLang === 'de' ? 'Ungültige Zugangsdaten.' : currentLang === 'en' ? 'Invalid credentials.' : currentLang === 'it' ? 'Credenziali non valide.' : 'Identifiants invalides.');
         document.getElementById('loginPassword').value = '';
       }
-    } catch (e) {
-      err.textContent = (e && e.code === 'REQUEST_TIMEOUT')
-        ? (currentLang === 'de' ? 'Zeitüberschreitung beim Login. Bitte erneut versuchen.' : currentLang === 'en' ? 'Login timed out. Please try again.' : currentLang === 'it' ? 'Timeout durante il login. Riprova.' : 'Délai dépassé lors de la connexion. Réessayez.')
-        : (currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.');
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = t('loginBtn') || 'Einloggen'; }
-    }
+    } catch (e) { err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.'; }
   };
 
   doBarRegister = async function() {
@@ -2403,11 +2350,7 @@ applyProfileToForm = function(b) {
       } else {
         err.textContent = r.error || (currentLang === 'de' ? 'Fehler bei der Registrierung.' : currentLang === 'en' ? 'Registration error.' : currentLang === 'it' ? 'Errore di registrazione.' : 'Erreur d’inscription.');
       }
-    } catch (e) {
-      err.textContent = (e && e.code === 'REQUEST_TIMEOUT')
-        ? (currentLang === 'de' ? 'Zeitüberschreitung bei der Registrierung. Bitte erneut versuchen.' : currentLang === 'en' ? 'Registration timed out. Please try again.' : currentLang === 'it' ? 'Timeout durante la registrazione. Riprova.' : 'Délai dépassé lors de l’inscription. Réessayez.')
-        : (currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.');
-    }
+    } catch (e) { err.textContent = currentLang === 'de' ? 'Verbindungsfehler.' : currentLang === 'en' ? 'Connection error.' : currentLang === 'it' ? 'Errore di connessione.' : 'Erreur de connexion.'; }
     finally { if (btn) { btn.disabled = false; btn.textContent = t('registerBtn'); } }
   };
 
@@ -2791,103 +2734,291 @@ applyProfileToForm = function(b) {
 })();
 
 
-// ===== VOUCHER PAYOUT CLARITY + REDEEM CODE FORMAT PATCH =====
+// ===== CREATE DEAL UX + IMAGE PREVIEW + DUPLICATE SUBMIT HOTFIX =====
 (function(){
   try {
     Object.assign(TRANSLATIONS.de, {
-      payoutStatusLbl:'Auszahlung',
-      redeemCodePlaceholder:'ABC-123',
-      redeemCodeFormatHint:'Format wie auf dem Gutschein, z. B. ABC-123'
+      imageTooLarge:'Bild zu gross (max. 8 MB)', imageMax8mb:'JPG, PNG oder WebP, max. 8 MB',
+      createDealUploading:'Bild wird vorbereitet…', createDealSubmitting:'Deal wird erstellt…',
+      createDealBusyHint:'Deal wird bereits erstellt. Bitte kurz warten.',
+      createDealWorking:'Bitte warten. Der Deal wird hochgeladen und erstellt.',
+      createDealSuccessHint:'Deal erfolgreich erstellt.'
     });
     Object.assign(TRANSLATIONS.en, {
-      payoutStatusLbl:'Payout',
-      redeemCodePlaceholder:'ABC-123',
-      redeemCodeFormatHint:'Use the format shown on the voucher, e.g. ABC-123'
+      imageTooLarge:'Image too large (max. 8 MB)', imageMax8mb:'JPG, PNG or WebP, max. 8 MB',
+      createDealUploading:'Preparing image…', createDealSubmitting:'Creating deal…',
+      createDealBusyHint:'Your deal is already being created. Please wait a moment.',
+      createDealWorking:'Please wait. The deal is being uploaded and created.',
+      createDealSuccessHint:'Deal created successfully.'
     });
     Object.assign(TRANSLATIONS.it, {
-      payoutStatusLbl:'Pagamento bar',
-      redeemCodePlaceholder:'ABC-123',
-      redeemCodeFormatHint:'Usa il formato indicato sul voucher, per esempio ABC-123'
+      imageTooLarge:'Immagine troppo grande (max. 8 MB)', imageMax8mb:'JPG, PNG o WebP, max. 8 MB',
+      createDealUploading:'Preparazione immagine…', createDealSubmitting:'Creazione deal…',
+      createDealBusyHint:'Il deal è già in fase di creazione. Attendi un momento.',
+      createDealWorking:'Attendi. Il deal viene caricato e creato.',
+      createDealSuccessHint:'Deal creato con successo.'
     });
     Object.assign(TRANSLATIONS.fr, {
-      payoutStatusLbl:'Versement bar',
-      redeemCodePlaceholder:'ABC-123',
-      redeemCodeFormatHint:'Utilise le format indiqué sur le bon, par ex. ABC-123'
+      imageTooLarge:'Image trop volumineuse (max. 8 Mo)', imageMax8mb:'JPG, PNG ou WebP, max. 8 Mo',
+      createDealUploading:'Préparation de l’image…', createDealSubmitting:'Création du deal…',
+      createDealBusyHint:'Le deal est déjà en cours de création. Veuillez patienter.',
+      createDealWorking:'Veuillez patienter. Le deal est en cours de téléversement et de création.',
+      createDealSuccessHint:'Deal créé avec succès.'
     });
   } catch(e) {}
 
-  function normalizeRedeemCodeInput_(value) {
-    var raw = String(value || '').toUpperCase().replace(/[^A-Z0-9-]/g, '');
-    raw = raw.replace(/-+/g, '-').replace(/^-|-$/g, '');
-    if (!raw) return '';
-    if (raw.indexOf('-') >= 0) return raw;
-    if (raw.length > 3) return raw.slice(0, 3) + '-' + raw.slice(3);
-    return raw;
-  }
-  window.normalizeRedeemCodeInput_ = normalizeRedeemCodeInput_;
+  var CREATE_IMAGE_LIMIT = 8 * 1024 * 1024;
+  var createDealBusy = false;
+  var dealPreviewImageUrl = '';
 
-  function attachRedeemCodeFormat_() {
-    var input = document.getElementById('redeemCode');
-    if (!input || input.dataset.hyphenBound === '1') return;
-    input.dataset.hyphenBound = '1';
-    var applyFormat = function() {
-      var formatted = normalizeRedeemCodeInput_(input.value);
-      if (formatted !== input.value) input.value = formatted;
-    };
-    input.addEventListener('input', applyFormat);
-    input.addEventListener('blur', applyFormat);
-    input.setAttribute('placeholder', (typeof t === 'function' && t('redeemCodePlaceholder')) || 'ABC-123');
+  function revokeDealPreviewUrl(){
+    if (dealPreviewImageUrl && dealPreviewImageUrl.indexOf('blob:') === 0) {
+      try { URL.revokeObjectURL(dealPreviewImageUrl); } catch(e) {}
+    }
+    dealPreviewImageUrl = '';
   }
 
-  var _prevSetLangRedeemPatch = typeof setLang === 'function' ? setLang : null;
-  if (_prevSetLangRedeemPatch) {
-    setLang = function(lang) {
-      _prevSetLangRedeemPatch(lang);
-      var input = document.getElementById('redeemCode');
-      if (input) input.setAttribute('placeholder', (typeof t === 'function' && t('redeemCodePlaceholder')) || 'ABC-123');
-      var hint = document.getElementById('redeemCodeFormatHint');
-      if (hint && typeof t === 'function') hint.textContent = t('redeemCodeFormatHint') || '';
-    };
+  function setDealCreateStatus(msg, isError){
+    var el = document.getElementById('dealCreateStatus');
+    if (!el) return;
+    el.textContent = msg || '';
+    el.style.display = msg ? 'block' : 'none';
+    el.style.color = isError ? '#ff8b8b' : '#9ca3af';
   }
 
-  var _prevDoRedeemHotfix = typeof doRedeem === 'function' ? doRedeem : null;
-  if (_prevDoRedeemHotfix) {
-    doRedeem = async function() {
-      var s = sessionGet(); if (!s) { doLogout(); return; }
-      var input = document.getElementById('redeemCode');
-      var code = normalizeRedeemCodeInput_(input ? input.value : '');
-      var err = document.getElementById('redeemErr');
-      var result = document.getElementById('redeemResult');
-      if (err) err.textContent = '';
-      if (result) result.style.display = 'none';
-      if (input) input.value = code;
-      if (!code) { if (err) err.textContent = t('codeRequired'); return; }
-      try {
-        var r = await api({ action: 'redeemVoucher', token: s.token, code: code });
-        if ((!r || !r.success) && code.indexOf('-') >= 0) {
-          r = await api({ action: 'redeemVoucher', token: s.token, code: code.replace(/-/g, '') });
-        }
-        if ((!r || !r.success) && code.indexOf('-') === -1 && code.length > 3) {
-          r = await api({ action: 'redeemVoucher', token: s.token, code: normalizeRedeemCodeInput_(code) });
-        }
-        if (r && r.success) {
-          document.getElementById('redeemDeal').textContent = r.deal_title || code;
-          if (result) result.style.display = 'block';
-          if (input) input.value = '';
-          showToast(t('redeemSuccess'));
-          _dataCache.vouchers = null; _barStatsVouchers = null;
-        } else {
-          if (err) err.textContent = translateBarRuntimeMessage((r && r.error) || 'Ungültiger Gutschein.');
-        }
-      } catch(e) {
-        if (err) err.textContent = t('networkError');
+  function setCreateDealButtonState(key, fallback, disabled){
+    var btn = document.getElementById('btnCreateDeal');
+    if (!btn) return;
+    btn.disabled = !!disabled;
+    btn.textContent = (typeof t === 'function' && t(key)) || fallback;
+    btn.style.opacity = disabled ? '0.75' : '';
+    btn.style.cursor = disabled ? 'wait' : '';
+    btn.setAttribute('aria-busy', disabled ? 'true' : 'false');
+  }
+
+  function getSelectedDealImageFile(){
+    var input = document.getElementById('dealImageFile');
+    return (input && input.files && input.files[0]) ? input.files[0] : null;
+  }
+
+  function getSelectedWeekdays_(){
+    return Array.from(document.querySelectorAll('.wd-btn.selected')).map(function(b) { return b.textContent; });
+  }
+
+  function resetCreateDealForm_(){
+    ['dealTitle','dealDesc','dealOrigPrice','dealPrice','dealImageUrl','singleDate','timeFrom','timeTo'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    var imgEl = document.getElementById('dealImageFile'); if (imgEl) imgEl.value = '';
+    var pvEl = document.getElementById('imagePreview'); if (pvEl) pvEl.style.display = 'none';
+    var pvImg = document.getElementById('imagePreviewImg'); if (pvImg) pvImg.removeAttribute('src');
+    revokeDealPreviewUrl();
+    document.querySelectorAll('input[name="timeSlot"]').forEach(function(c){ c.checked = false; });
+    var pf = document.getElementById('pauschalFields'); if (pf) pf.style.display = 'none';
+    document.querySelectorAll('input[name="cat"]').forEach(function(c) { c.checked = false; });
+    document.querySelectorAll('.wd-btn').forEach(function(b) { b.classList.remove('selected'); });
+    var qty = document.getElementById('dealQty'); if (qty) qty.value = '0';
+    var active = document.getElementById('dealActive'); if (active) active.checked = true;
+    var recurring = document.getElementById('vTypeRecurring'); if (recurring) recurring.checked = true;
+    var discount = document.getElementById('discountPercent'); if (discount) discount.value = '15';
+    var minOrder = document.getElementById('minOrder'); if (minOrder) minOrder.value = '40';
+    var appliesTo = document.getElementById('appliesTo'); if (appliesTo) appliesTo.value = 'all';
+    if (typeof toggleValidity === 'function') toggleValidity();
+    if (typeof buildDealPreview === 'function') buildDealPreview();
+  }
+
+  buildDealPreview = function(){
+    var title = ((document.getElementById('dealTitle') || {}).value || '').trim() || 'Dein Deal-Titel';
+    var price = parseFloat((document.getElementById('dealPrice') || {}).value || 0) || 0;
+    var orig = parseFloat((document.getElementById('dealOrigPrice') || {}).value || 0) || 0;
+    var imgUrl = dealPreviewImageUrl || ((document.getElementById('dealImageUrl') || {}).value || '');
+    var titleEl = document.getElementById('builderPreviewTitle'); if (titleEl) titleEl.textContent = title;
+    var metaEl = document.getElementById('builderPreviewMeta');
+    if (metaEl) metaEl.textContent = (document.getElementById('barNameDisplay') && document.getElementById('barNameDisplay').textContent.trim()) || 'BarSclusive • Live-Vorschau';
+    var priceEl = document.getElementById('builderPreviewPrice'); if (priceEl) priceEl.textContent = price.toFixed(2) + ' CHF';
+    var oldEl = document.getElementById('builderPreviewOldPrice'); if (oldEl) oldEl.textContent = orig > price ? orig.toFixed(2) + ' CHF' : '';
+    var chipType = document.getElementById('builderPreviewChipType');
+    if (chipType) chipType.textContent = (document.getElementById('catPauschal') && document.getElementById('catPauschal').checked)
+      ? ((typeof t === 'function' && t('catDiscount')) || 'Rabatt')
+      : ((typeof t === 'function' && t('previewBadgeDeal')) || 'Deal');
+    var chipValidity = document.getElementById('builderPreviewChipValidity');
+    if (chipValidity) chipValidity.textContent = (document.getElementById('dealActive') && document.getElementById('dealActive').checked)
+      ? ((typeof t === 'function' && t('previewBadgeActive')) || 'Aktiv')
+      : ((typeof t === 'function' && t('inactive')) || 'Inaktiv');
+    var img = document.getElementById('builderPreviewImage');
+    if (img) {
+      if (imgUrl) { img.src = imgUrl; img.style.display = 'block'; }
+      else { img.removeAttribute('src'); img.style.display = 'none'; }
+    }
+    var estimate = 0;
+    var isDiscount = (document.getElementById('catPauschal') && document.getElementById('catPauschal').checked);
+    if (!isDiscount) estimate = Math.max(0, price * 0.90);
+    var estimateEl = document.getElementById('builderPayoutEstimate'); if (estimateEl) estimateEl.textContent = estimate.toFixed(2) + ' CHF';
+    var copyEl = document.getElementById('builderPayoutCopy');
+    if (copyEl) copyEl.textContent = isDiscount
+      ? (currentLang === 'de' ? 'Für Pauschalrabatte gibt es keine Auszahlung. Der Rabatt wird direkt bei dir eingelöst.'
+        : currentLang === 'en' ? 'Flat discounts do not create a payout. The discount is redeemed directly at your bar.'
+        : currentLang === 'it' ? 'I buoni sconto forfettari non generano payout. Lo sconto viene riscattato direttamente nel tuo bar.'
+        : 'Les réductions forfaitaires ne génèrent aucun versement. La réduction est appliquée directement dans votre bar.')
+      : ((typeof t === 'function' && t('estimateHint')) || copyEl.textContent);
+  };
+
+  async function uploadSelectedCreateDealImage_(s){
+    var file = getSelectedDealImageFile();
+    if (!file) return (document.getElementById('dealImageUrl') || {}).value || '';
+    if (file.size > CREATE_IMAGE_LIMIT) {
+      showToast((typeof t === 'function' && t('imageTooLarge')) || 'Bild zu gross (max. 8 MB)', true);
+      throw new Error('image-too-large');
+    }
+    setCreateDealButtonState('createDealUploading', 'Bild wird vorbereitet…', true);
+    setDealCreateStatus((typeof t === 'function' && t('createDealWorking')) || 'Bitte warten. Der Deal wird hochgeladen und erstellt.', false);
+    var b64 = await fileToBase64(file);
+    var uR = await api({ action: 'uploadImage', token: s.token, image_data: b64, filename: file.name });
+    if (!uR || !uR.success || !uR.url) {
+      showToast(((typeof t === 'function' && t('imageUploadPrefix')) || 'Bild-Upload: ') + ((uR && uR.error) || ((typeof t === 'function' && t('imageUploadFailed')) || 'Fehler')), true);
+      throw new Error('image-upload-failed');
+    }
+    var hidden = document.getElementById('dealImageUrl');
+    if (hidden) hidden.value = uR.url;
+    return uR.url;
+  }
+
+  doCreateDeal = async function() {
+    if (createDealBusy) {
+      showToast((typeof t === 'function' && t('createDealBusyHint')) || 'Deal wird bereits erstellt. Bitte kurz warten.', true);
+      return;
+    }
+
+    var s = sessionGet();
+    if (!s) { doLogout(); return; }
+
+    var title = document.getElementById('dealTitle').value.trim();
+    var origP = parseFloat(document.getElementById('dealOrigPrice').value) || 0;
+    var price = parseFloat(document.getElementById('dealPrice').value);
+    var qty = parseInt(document.getElementById('dealQty').value) || 0;
+    var desc = document.getElementById('dealDesc').value.trim();
+    var active = document.getElementById('dealActive').checked;
+    var fromT = document.getElementById('timeFrom').value;
+    var toT = document.getElementById('timeTo').value;
+    var cats = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(function(c) { return c.value; });
+    var isPauschal = cats.indexOf('pauschalgutscheine') !== -1;
+
+    if (isPauschal) { price = 2.50; }
+    if (!title) { showToast((typeof t === 'function' && t('titleRequired')) || 'Titel ist Pflichtfeld', true); return; }
+    if (isNaN(price)) { showToast((typeof t === 'function' && t('dealPriceRequired')) || 'Deal-Preis ist Pflichtfeld', true); return; }
+    if (isPauschal && (parseInt(document.getElementById('discountPercent').value) || 0) < 15) { showToast((typeof t === 'function' && t('pauschalDiscountMin')) || 'Rabatt mind. 15%', true); return; }
+    if (isPauschal && (parseInt(document.getElementById('minOrder').value) || 0) > 0 && (parseInt(document.getElementById('minOrder').value) || 0) < 40) { showToast((typeof t === 'function' && t('pauschalMinOrder')) || 'Mindestbestellung mind. 40 CHF', true); return; }
+    if (!cats.length) { showToast((typeof t === 'function' && t('chooseOneCategory')) || 'Mind. 1 Kategorie wählen', true); return; }
+
+    var validType = (document.querySelector('input[name="validType"]:checked') || {}).value || 'recurring';
+    var weekdays = getSelectedWeekdays_();
+    var singleDate = document.getElementById('singleDate').value;
+    if (validType === 'single' && !singleDate) { showToast((typeof t === 'function' && t('chooseDate')) || 'Datum wählen', true); return; }
+
+    createDealBusy = true;
+    setCreateDealButtonState('createDealUploading', 'Bild wird vorbereitet…', true);
+    setDealCreateStatus((typeof t === 'function' && t('createDealWorking')) || 'Bitte warten. Der Deal wird hochgeladen und erstellt.', false);
+
+    try {
+      var imageUrl = await uploadSelectedCreateDealImage_(s);
+      setCreateDealButtonState('createDealSubmitting', 'Deal wird erstellt…', true);
+      var r = await api({
+        action: 'createDeal', token: s.token,
+        time_slots: Array.from(document.querySelectorAll('input[name="timeSlot"]:checked')).map(function(c){ return c.value; }),
+        discount_percent: isPauschal ? (parseInt(document.getElementById('discountPercent').value) || 0) : 0,
+        min_order: isPauschal ? (parseInt(document.getElementById('minOrder').value) || 0) : 0,
+        applies_to: isPauschal ? document.getElementById('appliesTo').value : '',
+        bar_id: s.barId, bar_name: s.barName,
+        title: title, description: desc,
+        original_price: origP, deal_price: price,
+        max_quantity: qty, categories: cats,
+        image_url: imageUrl,
+        validity_type: validType, valid_weekdays: weekdays,
+        valid_from_time: fromT, valid_to_time: toT,
+        valid_single_date: singleDate, active: active
+      });
+      if (r && r.success) {
+        showToast('✅ ' + (((typeof t === 'function' && t('createDealSuccessHint')) || 'Deal erfolgreich erstellt.')));
+        setDealCreateStatus('✅ ' + (((typeof t === 'function' && t('createDealSuccessHint')) || 'Deal erfolgreich erstellt.')), false);
+        _dataCache.deals = null; _barStatsVouchers = null; _barStatsDeals = -1;
+        resetCreateDealForm_();
+        Promise.resolve().then(loadMyDeals).catch(function(){});
+        Promise.resolve().then(loadBarStats).catch(function(){});
+        setTimeout(function(){ setDealCreateStatus('', false); }, 2600);
+      } else {
+        setDealCreateStatus('', false);
+        showToast((r && r.error) || ((typeof t === 'function' && t('genericError')) || 'Fehler'), true);
       }
-    };
+    } catch (e) {
+      if (String((e && e.message) || '') !== 'image-too-large' && String((e && e.message) || '') !== 'image-upload-failed') {
+        showToast((typeof t === 'function' && t('networkError')) || 'Verbindungsfehler', true);
+      }
+      setDealCreateStatus('', true);
+    } finally {
+      createDealBusy = false;
+      setCreateDealButtonState('createDeal', (typeof t === 'function' && t('createDeal')) || 'Deal erstellen', false);
+    }
+  };
+
+  function bindFreshCreateDealButton(){
+    var oldBtn = document.getElementById('btnCreateDeal');
+    if (!oldBtn || oldBtn.dataset.hotfixBound === '1') return;
+    var newBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    newBtn.dataset.hotfixBound = '1';
+    newBtn.addEventListener('click', function(e){ e.preventDefault(); doCreateDeal(); });
+  }
+
+  function bindFreshCreateDealImageInput(){
+    var oldInput = document.getElementById('dealImageFile');
+    if (!oldInput || oldInput.dataset.hotfixBound === '1') return;
+    var newInput = oldInput.cloneNode(true);
+    oldInput.parentNode.replaceChild(newInput, oldInput);
+    newInput.dataset.hotfixBound = '1';
+    newInput.addEventListener('change', function(){
+      var preview = document.getElementById('imagePreview');
+      var img = document.getElementById('imagePreviewImg');
+      var hidden = document.getElementById('dealImageUrl');
+      revokeDealPreviewUrl();
+      if (hidden) hidden.value = hidden.value || '';
+      if (this.files && this.files[0]) {
+        var file = this.files[0];
+        if (file.size > CREATE_IMAGE_LIMIT) {
+          showToast((typeof t === 'function' && t('imageTooLarge')) || 'Bild zu gross (max. 8 MB)', true);
+          this.value = '';
+          if (preview) preview.style.display = 'none';
+          if (img) img.removeAttribute('src');
+          buildDealPreview();
+          return;
+        }
+        dealPreviewImageUrl = URL.createObjectURL(file);
+        if (img) { img.src = dealPreviewImageUrl; }
+        if (preview) preview.style.display = 'block';
+      } else {
+        if (preview) preview.style.display = 'none';
+        if (img) img.removeAttribute('src');
+      }
+      buildDealPreview();
+    });
+  }
+
+  function applyDealCreationHotfixUi(){
+    var hint = document.getElementById('dealImageSizeHint');
+    if (hint) hint.textContent = (typeof t === 'function' && t('imageMax8mb')) || 'JPG, PNG oder WebP, max. 8 MB';
+    bindFreshCreateDealButton();
+    bindFreshCreateDealImageInput();
+    buildDealPreview();
   }
 
   document.addEventListener('DOMContentLoaded', function(){
-    attachRedeemCodeFormat_();
-    var hint = document.getElementById('redeemCodeFormatHint');
-    if (hint && typeof t === 'function') hint.textContent = t('redeemCodeFormatHint') || '';
+    applyDealCreationHotfixUi();
+    setTimeout(applyDealCreationHotfixUi, 100);
   });
+
+  var _hotfixLangCreateDeal = setLang;
+  setLang = function(lang){
+    _hotfixLangCreateDeal(lang);
+    applyDealCreationHotfixUi();
+  };
 })();
