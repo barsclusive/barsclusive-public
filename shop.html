@@ -1112,17 +1112,31 @@
   </style>
 
 
-  <style id="shop-settings-enhancements">
-    .drawer-section-title{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8d8d95;margin:2px 2px 0}
-    .settings-modal-grid{display:flex;flex-direction:column;gap:16px}
-    .settings-section{background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px}
-    .settings-section-title{font-size:13px;font-weight:700;color:#f4f4f5;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
-    .settings-lang-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-    .settings-lang-btn{background:#121212;border:1px solid #2f2f35;color:#d4d4d8;padding:12px 10px;border-radius:14px;cursor:pointer;font-size:14px;font-weight:700}
-    .settings-lang-btn.active{border-color:#FF3366;color:#fff;box-shadow:0 10px 24px rgba(255,51,102,.14)}
-    .settings-link-btn{width:100%;margin-top:0 !important;text-align:left;display:flex;align-items:center;justify-content:center}
-    .settings-stack{display:flex;flex-direction:column;gap:10px}
-    @media(max-width:560px){.settings-lang-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  <style id="shop-account-fix-20260324">
+    .settings-lang-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:8px}
+    .settings-lang-btn{appearance:none;border:1px solid #333;background:#16161a;color:#ddd;border-radius:14px;min-height:46px;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s ease}
+    .settings-lang-btn.active{border-color:#FF3366;color:#fff;box-shadow:0 10px 24px rgba(255,51,102,.16)}
+    .settings-account-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:14px;background:#181818;border:1px solid #292929;color:#ddd;font-size:14px;font-weight:600}
+    @media(max-width:768px){
+      body:not(.shop-entry-locked).shop-user-logged-in .header{padding:10px 12px 8px !important;z-index:101 !important}
+      body:not(.shop-entry-locked).shop-user-logged-in .nav{display:grid !important;grid-template-columns:auto minmax(0,1fr) auto auto !important;grid-template-areas:"logo lang cart menu" "search search search search" !important;align-items:center !important;gap:8px !important}
+      body:not(.shop-entry-locked).shop-user-logged-in .shop-header-logo{grid-area:logo !important;display:flex !important}
+      body:not(.shop-entry-locked).shop-user-logged-in .shop-header-logo img{height:34px !important}
+      body:not(.shop-entry-locked).shop-user-logged-in .nav-links{display:contents !important}
+      body:not(.shop-entry-locked).shop-user-logged-in .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{grid-area:lang !important;display:flex !important;gap:6px !important;align-items:center !important;justify-content:flex-end !important;min-width:0 !important;overflow-x:auto !important;scrollbar-width:none}
+      body:not(.shop-entry-locked).shop-user-logged-in .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
+      body:not(.shop-entry-locked).shop-user-logged-in .shop-lang-btn{min-width:38px !important;padding:6px 7px !important;font-size:11px !important;line-height:1 !important;border-radius:10px !important}
+      body:not(.shop-entry-locked).shop-user-logged-in .search-wrap{grid-area:search !important;display:flex !important;width:100% !important;margin-top:6px !important}
+      body:not(.shop-entry-locked).shop-user-logged-in .search-input{height:44px !important;min-height:44px !important;font-size:14px !important}
+      body:not(.shop-entry-locked).shop-user-logged-in #cartOpenBtn{grid-area:cart !important;justify-self:center !important;min-width:44px !important;width:44px !important;height:44px !important;padding:0 !important}
+      body:not(.shop-entry-locked).shop-user-logged-in #shopMenuBtn{grid-area:menu !important;justify-self:end !important;width:44px !important;min-width:44px !important;height:44px !important;padding:0 !important}
+      body:not(.shop-entry-locked).shop-user-logged-in #btnDeals,
+      body:not(.shop-entry-locked).shop-user-logged-in #btnFavorites,
+      body:not(.shop-entry-locked).shop-user-logged-in #btnOrders,
+      body:not(.shop-entry-locked).shop-user-logged-in .user-menu,
+      body:not(.shop-entry-locked).shop-user-logged-in .header-deals-btn{display:none !important}
+      body:not(.shop-entry-locked).shop-user-logged-in #shopDiscoverySection{padding-top:0 !important}
+    }
   </style>
 
 </head>
@@ -1179,7 +1193,8 @@
       <button class="drawer-action" id="drawerDealsBtn">🏠 <span data-shop-i18n="deals">Deals</span></button>
       <button class="drawer-action" id="drawerFavoritesBtn">❤️ <span data-shop-i18n="favoritesNav">Favoriten</span></button>
       <button class="drawer-action" id="drawerOrdersBtn">📦 <span data-shop-i18n="orders">Bestellungen</span></button>
-      <button class="drawer-action" id="drawerSettingsBtn">⚙️ <span data-shop-i18n="settingsNav">Einstellungen</span></button>
+      <button class="drawer-action" id="drawerSettingsBtn" style="display:none">⚙️ <span data-shop-i18n="settingsLabel">Einstellungen</span></button>
+      <button class="drawer-action" id="drawerLogoutBtn" style="display:none">↩️ <span data-shop-i18n="logoutBtn">Ausloggen</span></button>
     </div>
     <div class="drawer-links">
       <a class="drawer-link" href="ueber-uns.html">ℹ️ <span data-shop-i18n="fUeberUns">Über uns</span></a>
@@ -1429,42 +1444,6 @@
   </div>
 </div>
 
-
-<!-- SETTINGS MODAL -->
-<div id="shopSettingsModal" class="modal" role="dialog" aria-modal="true" aria-label="Einstellungen">
-  <div class="modal-box">
-    <div class="modal-title">
-      <span data-shop-i18n="settingsNav">⚙️ Einstellungen</span>
-      <button class="modal-close" data-close-modal="shopSettingsModal">✕</button>
-    </div>
-    <div class="settings-modal-grid">
-      <div class="settings-section">
-        <div class="settings-section-title" data-shop-i18n="settingsLanguageTitle">Sprache</div>
-        <div class="settings-lang-grid">
-          <button type="button" class="settings-lang-btn" id="settingsLangDE" data-lang="de">DE</button>
-          <button type="button" class="settings-lang-btn" id="settingsLangEN" data-lang="en">EN</button>
-          <button type="button" class="settings-lang-btn" id="settingsLangIT" data-lang="it">IT</button>
-          <button type="button" class="settings-lang-btn" id="settingsLangFR" data-lang="fr">FR</button>
-        </div>
-      </div>
-      <div class="settings-section" id="shopSettingsAccountActions">
-        <div class="settings-section-title" data-shop-i18n="settingsAccountTitle">Konto</div>
-        <div class="settings-stack">
-          <button type="button" class="btn-ghost settings-link-btn" id="shopSettingsChangePw" data-shop-i18n="settingsChangePw">🔑 Passwort ändern</button>
-          <button type="button" class="btn-ghost settings-link-btn" id="shopSettingsLogout" data-shop-i18n="settingsLogout">🚪 Ausloggen</button>
-        </div>
-      </div>
-      <div class="settings-section" id="shopSettingsGuestActions" style="display:none">
-        <div class="settings-section-title" data-shop-i18n="settingsAccountTitle">Konto</div>
-        <div class="settings-stack">
-          <button type="button" class="btn-ghost settings-link-btn" id="shopSettingsLogin" data-shop-i18n="settingsLogin">Einloggen</button>
-          <button type="button" class="btn-pink settings-link-btn" id="shopSettingsRegister" data-shop-i18n="settingsRegister">Registrieren</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- CHANGE PASSWORD MODAL -->
 <div id="changePwModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
@@ -1487,6 +1466,31 @@
     </div>
     <button class="btn-pink" id="btnSavePassword" data-shop-i18n="savePw">Speichern</button>
     <button class="btn-ghost" id="btnCancelPwModal" style="margin-top:8px" data-shop-i18n="cancelBtn">Abbrechen</button>
+  </div>
+</div>
+
+<!-- ACCOUNT SETTINGS MODAL -->
+<div id="accountSettingsModal" class="modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <span style="font-size:20px;font-weight:700" data-shop-i18n="settingsTitle">⚙️ Einstellungen</span>
+      <button id="btnCloseAccountSettings" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-shop-i18n="accountLabel">Konto</label>
+      <div class="settings-account-pill" id="settingsAccountName">👤</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-shop-i18n="languageLabel">Sprache</label>
+      <div class="settings-lang-row">
+        <button type="button" class="settings-lang-btn" id="settingsLangDE">DE</button>
+        <button type="button" class="settings-lang-btn" id="settingsLangEN">EN</button>
+        <button type="button" class="settings-lang-btn" id="settingsLangIT">IT</button>
+        <button type="button" class="settings-lang-btn" id="settingsLangFR">FR</button>
+      </div>
+    </div>
+    <button class="btn-ghost" id="btnOpenChangePwFromSettings">🔑 <span data-shop-i18n="changePw">Passwort ändern</span></button>
+    <button class="btn-ghost" id="btnLogoutFromSettings">↩️ <span data-shop-i18n="logoutBtn">Ausloggen</span></button>
   </div>
 </div>
 
@@ -1521,6 +1525,6 @@
   <div id="cartBody"></div>
 </div>
 <div class="cart-overlay" id="cartOverlay"></div>
-<script src="shop-app.js?v=20260324-settingsfix1"></script>
+<script src="shop-app.js?v=20260324-shopfix2"></script>
 </body>
 </html>
