@@ -2982,24 +2982,35 @@ applyProfileToForm = function(b) {
       var hidden = document.getElementById('dealImageUrl');
       revokeDealPreviewUrl();
       if (hidden) hidden.value = hidden.value || '';
-      if (this.files && this.files[0]) {
-        var file = this.files[0];
-        if (file.size > CREATE_IMAGE_LIMIT) {
-          showToast((typeof t === 'function' && t('imageTooLarge')) || 'Bild zu gross (max. 8 MB)', true);
-          this.value = '';
-          if (preview) preview.style.display = 'none';
-          if (img) img.removeAttribute('src');
-          buildDealPreview();
-          return;
-        }
-        dealPreviewImageUrl = URL.createObjectURL(file);
-        if (img) { img.src = dealPreviewImageUrl; }
-        if (preview) preview.style.display = 'block';
-      } else {
+      if (!(this.files && this.files[0])) {
         if (preview) preview.style.display = 'none';
         if (img) img.removeAttribute('src');
+        buildDealPreview();
+        return;
       }
-      buildDealPreview();
+      var file = this.files[0];
+      if (file.size > CREATE_IMAGE_LIMIT) {
+        showToast((typeof t === 'function' && t('imageTooLarge')) || 'Bild zu gross (max. 8 MB)', true);
+        this.value = '';
+        if (preview) preview.style.display = 'none';
+        if (img) img.removeAttribute('src');
+        buildDealPreview();
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        dealPreviewImageUrl = String((ev && ev.target && ev.target.result) || '');
+        if (img && dealPreviewImageUrl) img.src = dealPreviewImageUrl;
+        if (preview) preview.style.display = dealPreviewImageUrl ? 'block' : 'none';
+        buildDealPreview();
+      };
+      reader.onerror = function(){
+        dealPreviewImageUrl = '';
+        if (preview) preview.style.display = 'none';
+        if (img) img.removeAttribute('src');
+        buildDealPreview();
+      };
+      reader.readAsDataURL(file);
     });
   }
 
