@@ -3516,265 +3516,170 @@ try {
 })();
 
 
-// ===== SAFE SHOP MENU + SETTINGS PATCH (minimal, preserves login/buy flow) =====
+// ===== SAFE PATCH 2026-03-25 — keep shop flows intact, only fix mobile layout/subviews/location copy =====
 (function(){
-  try {
-    ['de','en','it','fr'].forEach(function(lang){
-      if (!SHOP_TRANSLATIONS[lang]) SHOP_TRANSLATIONS[lang] = {};
-    });
-    Object.assign(SHOP_TRANSLATIONS.de, {
-      settingsNav:'Einstellungen',
-      settingsTitle:'⚙️ Einstellungen',
-      settingsLanguage:'Sprache',
-      settingsAccount:'Account'
-    });
-    Object.assign(SHOP_TRANSLATIONS.en, {
-      settingsNav:'Settings',
-      settingsTitle:'⚙️ Settings',
-      settingsLanguage:'Language',
-      settingsAccount:'Account'
-    });
-    Object.assign(SHOP_TRANSLATIONS.it, {
-      settingsNav:'Impostazioni',
-      settingsTitle:'⚙️ Impostazioni',
-      settingsLanguage:'Lingua',
-      settingsAccount:'Account'
-    });
-    Object.assign(SHOP_TRANSLATIONS.fr, {
-      settingsNav:'Paramètres',
-      settingsTitle:'⚙️ Paramètres',
-      settingsLanguage:'Langue',
-      settingsAccount:'Compte'
-    });
-  } catch(e) {}
-
-  function safeSession(){
-    try { return typeof sessionGet === 'function' ? sessionGet() : null; } catch(e){ return null; }
+  function shopLangSafe(){
+    try { return String(_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || 'de').toLowerCase(); }
+    catch(e){ return 'de'; }
   }
 
-  function syncSettingsLanguageButtons(){
-    var current = String(_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || 'de').toLowerCase();
-    document.querySelectorAll('[data-settings-lang]').forEach(function(btn){
-      btn.classList.toggle('active', btn.getAttribute('data-settings-lang') === current);
-    });
+  function locationPermissionMessage(){
+    var lang = shopLangSafe();
+    var map = {
+      de: 'Bitte Standortfreigabe in den Einstellungen deines Browsers aktivieren.',
+      en: 'Please enable location access in your browser settings.',
+      it: 'Attiva la posizione nelle impostazioni del browser.',
+      fr: 'Veuillez activer la géolocalisation dans les paramètres du navigateur.'
+    };
+    return map[lang] || map.de;
   }
 
-  function syncShopChrome(){
-    var logged = !!safeSession();
+  function currentShopView(){
+    var orders = document.getElementById('ordersView');
+    var fav = document.getElementById('favoritesView');
+    if (orders && orders.style.display === 'block') return 'orders';
+    if (fav && fav.style.display === 'block') return 'favorites';
+    return 'deals';
+  }
+
+  function syncShopSafeHeader(){
+    var logged = !!(typeof sessionGet === 'function' && sessionGet());
     document.body.classList.toggle('shop-user-logged-in', logged);
     document.body.classList.toggle('shop-user-logged-out', !logged);
-
     var topAuth = document.getElementById('shopTopAuth');
     if (topAuth) topAuth.style.display = logged ? 'none' : '';
-
-    var noLoginHint = document.getElementById('shopNoLoginHint');
-    if (noLoginHint) noLoginHint.style.display = logged ? 'none' : '';
-
-    var userBtn = document.getElementById('userBtn');
-    if (userBtn) {
-      if (logged) {
-        var s = safeSession();
-        userBtn.textContent = '👤 ' + escHtml((s && s.name) || '');
-      } else if (typeof st === 'function') {
-        userBtn.textContent = '👤 ' + (st('loginBtn') || 'Login / Registrieren');
-      }
-    }
-
-    var btnOrders = document.getElementById('btnOrders');
-    if (btnOrders) btnOrders.style.display = logged ? 'inline-flex' : 'none';
-    var btnFavorites = document.getElementById('btnFavorites');
-    if (btnFavorites) btnFavorites.style.display = logged ? 'inline-flex' : 'none';
-
-    var drawerFav = document.getElementById('drawerFavoritesBtn');
-    if (drawerFav) drawerFav.style.display = logged ? 'flex' : 'none';
-    var drawerOrders = document.getElementById('drawerOrdersBtn');
-    if (drawerOrders) drawerOrders.style.display = logged ? 'flex' : 'none';
-    var drawerSettings = document.getElementById('drawerSettingsBtn');
-    if (drawerSettings) drawerSettings.style.display = logged ? 'flex' : 'none';
-
-    syncSettingsLanguageButtons();
+    var hint = document.getElementById('shopNoLoginHint');
+    if (hint) hint.style.display = logged ? 'none' : '';
   }
 
-  var _prevShowViewSafePatch = typeof showView === 'function' ? showView : null;
-  if (_prevShowViewSafePatch) {
+  function applySubviewLayout(view){
+    var subview = view === 'favorites' || view === 'orders';
+    document.body.setAttribute('data-shop-view', view || 'deals');
+    document.body.classList.toggle('shop-is-subview', subview);
+    var filterWrap = document.querySelector('#shopDiscoverySection .filter-wrap');
+    var viewToggle = document.getElementById('shopViewToggle');
+    var mapWrap = document.getElementById('shopMapWrap');
+    if (filterWrap) filterWrap.style.display = subview ? 'none' : '';
+    if (viewToggle) viewToggle.style.display = subview ? 'none' : '';
+    if (mapWrap && subview) mapWrap.style.display = 'none';
+    syncShopSafeHeader();
+  }
+
+  var _safeOrigShowView = typeof showView === 'function' ? showView : null;
+  if (_safeOrigShowView) {
     showView = function(view){
-      var result = _prevShowViewSafePatch.apply(this, arguments);
-      try {
-        document.body.setAttribute('data-shop-view', view || 'deals');
-      } catch(e) {}
-      try {
-        if (typeof closeShopDrawer === 'function') closeShopDrawer();
-      } catch(e) {}
+      applySubviewLayout(view || 'deals');
+      return _safeOrigShowView.apply(this, arguments);
+    };
+  }
+
+  var _safeOrigUpdateUi = typeof updateShopUserUi === 'function' ? updateShopUserUi : null;
+  if (_safeOrigUpdateUi) {
+    updateShopUserUi = function(){
+      _safeOrigUpdateUi.apply(this, arguments);
+      syncShopSafeHeader();
+      applySubviewLayout(currentShopView());
+    };
+  }
+
+  var _safeOrigDoLogin = typeof doLogin === 'function' ? doLogin : null;
+  if (_safeOrigDoLogin) {
+    doLogin = async function(){
+      var result = await _safeOrigDoLogin.apply(this, arguments);
+      syncShopSafeHeader();
+      applySubviewLayout(currentShopView());
       return result;
     };
   }
 
-  function openSettingsModal(){
-    if (!safeSession()) {
-      if (typeof closeShopDrawer === 'function') closeShopDrawer();
-      if (typeof openModal === 'function') openModal('loginModal');
+  var _safeOrigDoLogout = typeof doLogout === 'function' ? doLogout : null;
+  if (_safeOrigDoLogout) {
+    doLogout = async function(){
+      var result = await _safeOrigDoLogout.apply(this, arguments);
+      applySubviewLayout('deals');
+      syncShopSafeHeader();
+      return result;
+    };
+  }
+
+  function fastUnlockShopEntry(scrollToDiscovery){
+    document.body.classList.remove('shop-entry-locked');
+    syncShopSafeHeader();
+    applySubviewLayout('deals');
+    var section = document.getElementById('shopFocusArea') || document.getElementById('shopDiscoverySection');
+    if (scrollToDiscovery && section) {
+      var offset = window.innerWidth <= 768 ? 96 : 84;
+      var top = Math.max((section.getBoundingClientRect().top + window.scrollY) - offset, 0);
+      window.scrollTo(0, top);
+    }
+    if (typeof _safeOrigShowView === 'function') {
+      try { _safeOrigShowView('deals'); } catch(e) {}
+    }
+  }
+  window.unlockShopEntry = fastUnlockShopEntry;
+
+  function requestGeoPermissionSafe(){
+    if (!navigator.geolocation) {
+      if (typeof dismissGeoBanner === 'function') dismissGeoBanner();
+      showToast(locationPermissionMessage(), true);
       return;
     }
-    if (typeof closeShopDrawer === 'function') closeShopDrawer();
-    var modal = document.getElementById('settingsModal');
-    if (modal) modal.classList.add('active');
-    syncSettingsLanguageButtons();
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        _userLat = pos.coords.latitude;
+        _userLng = pos.coords.longitude;
+        _locationState = { label: (shopT('geoCurrentLocation') || 'Aktueller Standort'), lat: _userLat, lng: _userLng, source: 'geo', textFilter: '' };
+        if (typeof persistLocationState === 'function') persistLocationState();
+        if (typeof attachDistances === 'function') attachDistances();
+        if (typeof renderDeals === 'function') renderDeals(allDeals);
+        if (typeof updateLocationStatus === 'function') updateLocationStatus();
+        if (typeof dismissGeoBanner === 'function') dismissGeoBanner();
+        showToast(shopT('dealsSortedByDistance') || '📍 Deals werden nach Nähe sortiert');
+      },
+      function(){
+        if (typeof dismissGeoBanner === 'function') dismissGeoBanner();
+        showToast(locationPermissionMessage(), true);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+    );
   }
 
-  function closeSettingsModal(){
-    var modal = document.getElementById('settingsModal');
-    if (modal) modal.classList.remove('active');
-  }
-
-  function bindSafeMenuPatch(){
-    var drawerSettings = document.getElementById('drawerSettingsBtn');
-    if (drawerSettings && !drawerSettings.dataset.safeBound) {
-      drawerSettings.dataset.safeBound = '1';
-      drawerSettings.addEventListener('click', function(ev){
-        ev.preventDefault();
-        openSettingsModal();
-      });
-    }
-
-    [['btnCloseSettingsModal', closeSettingsModal], ['btnCloseSettingsFooter', closeSettingsModal]].forEach(function(pair){
-      var el = document.getElementById(pair[0]);
-      if (el && !el.dataset.safeBound) {
-        el.dataset.safeBound = '1';
-        el.addEventListener('click', pair[1]);
-      }
-    });
-
-    var settingsPw = document.getElementById('settingsChangePwBtn');
-    if (settingsPw && !settingsPw.dataset.safeBound) {
-      settingsPw.dataset.safeBound = '1';
-      settingsPw.addEventListener('click', function(){
-        closeSettingsModal();
-        if (typeof openChangePwModal === 'function') openChangePwModal();
-      });
-    }
-
-    var settingsLogout = document.getElementById('settingsLogoutBtn');
-    if (settingsLogout && !settingsLogout.dataset.safeBound) {
-      settingsLogout.dataset.safeBound = '1';
-      settingsLogout.addEventListener('click', async function(){
-        closeSettingsModal();
-        if (typeof doLogout === 'function') await doLogout();
-      });
-    }
-
-    document.querySelectorAll('[data-settings-lang]').forEach(function(btn){
-      if (btn.dataset.safeBound) return;
-      btn.dataset.safeBound = '1';
-      btn.addEventListener('click', function(){
-        var lang = this.getAttribute('data-settings-lang') || 'de';
-        if (typeof setShopLang === 'function') setShopLang(lang);
-        syncShopChrome();
-      });
-    });
-
-    var drawerFav = document.getElementById('drawerFavoritesBtn');
-    if (drawerFav && !drawerFav.dataset.safeLoginGuard) {
-      drawerFav.dataset.safeLoginGuard = '1';
-      drawerFav.addEventListener('click', function(ev){
-        if (!safeSession()) {
-          ev.preventDefault();
-          if (typeof closeShopDrawer === 'function') closeShopDrawer();
-          if (typeof openModal === 'function') openModal('loginModal');
-        }
-      }, true);
-    }
-
-    var drawerOrders = document.getElementById('drawerOrdersBtn');
-    if (drawerOrders && !drawerOrders.dataset.safeLoginGuard) {
-      drawerOrders.dataset.safeLoginGuard = '1';
-      drawerOrders.addEventListener('click', function(ev){
-        if (!safeSession()) {
-          ev.preventDefault();
-          if (typeof closeShopDrawer === 'function') closeShopDrawer();
-          if (typeof openModal === 'function') openModal('loginModal');
-        }
-      }, true);
-    }
-  }
-
-  var _prevApplySafePatch = typeof applyShopTranslations === 'function' ? applyShopTranslations : null;
-  if (_prevApplySafePatch) {
-    applyShopTranslations = function(){
-      var result = _prevApplySafePatch.apply(this, arguments);
-      syncShopChrome();
-      return result;
-    };
-  }
-
-  var _prevUpdateShopUserUiSafe = typeof updateShopUserUi === 'function' ? updateShopUserUi : null;
-  if (_prevUpdateShopUserUiSafe) {
-    updateShopUserUi = function(){
-      var result = _prevUpdateShopUserUiSafe.apply(this, arguments);
-      syncShopChrome();
-      return result;
-    };
-  }
-
-  var _prevSessionSetSafe = typeof sessionSet === 'function' ? sessionSet : null;
-  if (_prevSessionSetSafe) {
-    sessionSet = function(){
-      var result = _prevSessionSetSafe.apply(this, arguments);
-      syncShopChrome();
-      return result;
-    };
-  }
-
-  var _prevSessionClearSafe = typeof sessionClear === 'function' ? sessionClear : null;
-  if (_prevSessionClearSafe) {
-    sessionClear = function(){
-      var result = _prevSessionClearSafe.apply(this, arguments);
-      syncShopChrome();
-      closeSettingsModal();
-      return result;
-    };
-  }
-
-  var _prevDoLoginSafe = typeof doLogin === 'function' ? doLogin : null;
-  if (_prevDoLoginSafe) {
-    doLogin = async function(){
-      var result = await _prevDoLoginSafe.apply(this, arguments);
-      syncShopChrome();
-      return result;
-    };
-  }
-
-  var _prevDoRegisterSafe = typeof doRegister === 'function' ? doRegister : null;
-  if (_prevDoRegisterSafe) {
-    doRegister = async function(){
-      var result = await _prevDoRegisterSafe.apply(this, arguments);
-      syncShopChrome();
-      return result;
-    };
-  }
-
-  var _prevDoLogoutSafe = typeof doLogout === 'function' ? doLogout : null;
-  if (_prevDoLogoutSafe) {
-    doLogout = async function(){
-      var result = await _prevDoLogoutSafe.apply(this, arguments);
-      try { document.body.setAttribute('data-shop-view', 'deals'); } catch(e){}
-      syncShopChrome();
-      return result;
-    };
+  function bindSafeClick(id, fn){
+    var el = document.getElementById(id);
+    if (!el || el.dataset.safeBound === '1') return;
+    el.dataset.safeBound = '1';
+    el.addEventListener('click', fn, true);
   }
 
   document.addEventListener('DOMContentLoaded', function(){
-    bindSafeMenuPatch();
-    var currentView = 'deals';
-    try {
-      if (document.getElementById('favoritesView') && document.getElementById('favoritesView').style.display === 'block') currentView = 'favorites';
-      else if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') currentView = 'orders';
-    } catch(e){}
-    document.body.setAttribute('data-shop-view', currentView);
-    syncShopChrome();
-  });
+    syncShopSafeHeader();
+    applySubviewLayout(currentShopView());
 
-  window.addEventListener('load', function(){
-    syncShopChrome();
-    syncSettingsLanguageButtons();
+    bindSafeClick('btnDiscoverDeals', function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      fastUnlockShopEntry(true);
+    });
+    bindSafeClick('headerDealsBtn', function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      fastUnlockShopEntry(true);
+    });
+    bindSafeClick('btnDeals', function(){ applySubviewLayout('deals'); });
+    bindSafeClick('drawerDealsBtn', function(){ applySubviewLayout('deals'); if (typeof closeShopDrawer === 'function') closeShopDrawer(); });
+    bindSafeClick('btnFavorites', function(){ applySubviewLayout('favorites'); });
+    bindSafeClick('drawerFavoritesBtn', function(){ applySubviewLayout('favorites'); if (typeof closeShopDrawer === 'function') closeShopDrawer(); });
+    bindSafeClick('btnOrders', function(){ applySubviewLayout('orders'); });
+    bindSafeClick('drawerOrdersBtn', function(){ applySubviewLayout('orders'); if (typeof closeShopDrawer === 'function') closeShopDrawer(); });
+    bindSafeClick('btnUseMyLocation', function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      requestGeoPermissionSafe();
+    });
+    bindSafeClick('geoPermBtn', function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      requestGeoPermissionSafe();
+    });
   });
 })();
