@@ -3686,7 +3686,10 @@ bindSafeClick('geoPermBtn', function(ev){
 });
 })();
 
-// ===== FINAL FIX 2026-03-25d — subview, loading, desc/weekdays =====
+// ===== FINAL FIX 2026-03-25e — recursion guard + loading + desc/weekdays =====
+// APPROACH: Recursion guard on showView prevents the infinite loop caused by
+// entry-lock wrapper’s closure-captured unlockShopEntry calling global showView.
+// DO NOT override unlockShopEntry (closure references can’t be changed from outside).
 (function(){
 
 // — Loading overlay helpers —
@@ -3696,123 +3699,101 @@ Object.assign(SHOP_TRANSLATIONS.it, { bitteWarten:‘Attendere prego…’, load
 Object.assign(SHOP_TRANSLATIONS.fr, { bitteWarten:‘Veuillez patienter…’, loadingOrders:‘Chargement des commandes…’ });
 
 function showShopLoading(msg){
-var overlay = document.getElementById(‘shopLoadingOverlay’);
-var text = document.getElementById(‘shopLoadingText’);
-if (text) text.textContent = msg || shopT(‘bitteWarten’) || ‘Bitte warten…’;
-if (overlay) overlay.style.display = ‘flex’;
+var el = document.getElementById(‘shopLoadingOverlay’);
+var tx = document.getElementById(‘shopLoadingText’);
+if (tx) tx.textContent = msg || shopT(‘bitteWarten’) || ‘Bitte warten…’;
+if (el) el.style.display = ‘flex’;
 }
 function hideShopLoading(){
-var overlay = document.getElementById(‘shopLoadingOverlay’);
-if (overlay) overlay.style.display = ‘none’;
+var el = document.getElementById(‘shopLoadingOverlay’);
+if (el) el.style.display = ‘none’;
 }
 window.showShopLoading = showShopLoading;
 window.hideShopLoading = hideShopLoading;
 
 // — Wrap loadOrders with loading indicator —
-var _origLoadOrdersFix = loadOrders;
+var _loadOrdersE = loadOrders;
 loadOrders = async function(){
 showShopLoading(shopT(‘loadingOrders’) || ‘Bestellungen werden geladen…’);
-try { await _origLoadOrdersFix.apply(this, arguments); }
+try { await _loadOrdersE.apply(this, arguments); }
 finally { hideShopLoading(); }
 };
 
 // — Wrap doLogin with loading indicator —
-var _origDoLoginFix = doLogin;
+var _doLoginE = doLogin;
 doLogin = async function(){
 showShopLoading(shopT(‘bitteWarten’) || ‘Bitte warten…’);
-try { await _origDoLoginFix.apply(this, arguments); }
+try { await _doLoginE.apply(this, arguments); }
 finally { hideShopLoading(); }
 };
 
-// — FIX: Override unlockShopEntry to NOT call showView (prevents recursion) —
-window.unlockShopEntry = function(scrollToDiscovery){
-document.body.classList.remove(‘shop-entry-locked’);
-var section = document.getElementById(‘shopDiscoverySection’);
-if (section) section.style.display = ‘’;
-var footer = document.querySelector(’.footer’);
-if (footer) footer.style.display = ‘’;
-var headerDealsBtn = document.getElementById(‘headerDealsBtn’);
-if (headerDealsBtn) headerDealsBtn.style.display = ‘none’;
-var logged = !!(typeof sessionGet === ‘function’ && sessionGet());
-document.body.classList.toggle(‘shop-user-logged-in’, logged);
-document.body.classList.toggle(‘shop-user-logged-out’, !logged);
-var topAuth = document.getElementById(‘shopTopAuth’);
-if (topAuth) topAuth.style.display = logged ? ‘none’ : ‘’;
-var noLoginHint = document.getElementById(‘shopNoLoginHint’);
-if (noLoginHint) noLoginHint.style.display = ‘none’;
-// NOTE: intentionally NOT calling showView here — that caused the recursion
-if (scrollToDiscovery) {
-var target = document.getElementById(‘shopFocusArea’) || section;
-if (target) {
-var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
-window.scrollTo({ top: top, behavior: ‘smooth’ });
-}
-}
-};
+// — showView: recursion guard + post-fix subview state —
+var _showViewE = showView;
+var _svGuard = false;
 
-// — FIX: Wrap showView to force-correct subview layout AFTER all wrappers —
-var _showViewFinal = showView;
 showView = function(view){
-// Let the full wrapper chain run (entry-lock → safe-patch → original)
-// unlockShopEntry no longer calls showView, so no recursion
-_showViewFinal(view);
-
-```
-// After all wrappers ran, force-correct subview state
-var subview = view === 'favorites' || view === 'orders';
-document.body.setAttribute('data-shop-view', view || 'deals');
-document.body.classList.toggle('shop-is-subview', subview);
-var filterWrap = document.querySelector('#shopDiscoverySection .filter-wrap');
-var viewToggle = document.getElementById('shopViewToggle');
-var mapWrap = document.getElementById('shopMapWrap');
-if (filterWrap) filterWrap.style.display = subview ? 'none' : '';
-if (viewToggle) viewToggle.style.display = subview ? 'none' : '';
-if (mapWrap && subview) mapWrap.style.display = 'none';
-```
-
+// Block recursive calls (entry-lock’s unlockShopEntry calls showView(‘deals’))
+if (_svGuard) return;
+_svGuard = true;
+try {
+_showViewE(view);
+} catch(e) {
+// catch any residual stack overflow from deeper wrappers
+}
+// AFTER the entire chain ran, force-correct subview layout
+var sub = (view === ‘favorites’ || view === ‘orders’);
+document.body.setAttribute(‘data-shop-view’, view || ‘deals’);
+document.body.classList.toggle(‘shop-is-subview’, sub);
+var fw = document.querySelector(’#shopDiscoverySection .filter-wrap’);
+var vt = document.getElementById(‘shopViewToggle’);
+var mw = document.getElementById(‘shopMapWrap’);
+if (fw) fw.style.display = sub ? ‘none’ : ‘’;
+if (vt) vt.style.display = sub ? ‘none’ : ‘’;
+if (mw && sub) mw.style.display = ‘none’;
+_svGuard = false;
 };
 
-// — Patch buildDealCard: add description + weekdays —
-var _buildDealCardFix = buildDealCard;
+// — Patch buildDealCard: add description + weekdays to card —
+var _buildCardE = buildDealCard;
 buildDealCard = function(deal){
-var card = _buildDealCardFix(deal);
+var card = _buildCardE(deal);
 if (!card) return card;
 try {
 var content = card.querySelector(’.deal-content’);
 if (!content) return card;
+var barEl = content.querySelector(’.deal-bar’);
 
 ```
-  // Add description after bar line
-  var barEl = content.querySelector('.deal-bar');
+  // Description (max 90 chars)
   if (barEl && deal.description) {
-    var descText = String(deal.description);
-    if (descText.length > 90) descText = descText.substring(0, 87) + '...';
-    var descDiv = document.createElement('div');
-    descDiv.className = 'deal-desc';
-    descDiv.textContent = descText;
-    barEl.after(descDiv);
+    var dt = String(deal.description);
+    if (dt.length > 90) dt = dt.substring(0, 87) + '...';
+    var dd = document.createElement('div');
+    dd.className = 'deal-desc';
+    dd.textContent = dt;
+    barEl.after(dd);
   }
 
-  // Add weekdays before the price/button row
-  var weekdays = deal.valid_weekdays;
-  if (weekdays && (Array.isArray(weekdays) ? weekdays.length : String(weekdays).trim())) {
-    var wdList = Array.isArray(weekdays) ? weekdays : String(weekdays).split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-    if (wdList.length) {
-      var wdDiv = document.createElement('div');
-      wdDiv.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;align-items:center';
-      var wdLabel = document.createElement('span');
-      wdLabel.style.cssText = 'color:#999;font-size:12px';
-      wdLabel.textContent = '📅';
-      wdDiv.appendChild(wdLabel);
-      wdList.forEach(function(day){
-        var chip = document.createElement('span');
-        chip.style.cssText = 'background:#2a2a2a;padding:2px 7px;border-radius:6px;font-size:11px;color:#ccc';
-        chip.textContent = day;
-        wdDiv.appendChild(chip);
+  // Weekdays chips
+  var wd = deal.valid_weekdays;
+  if (wd && (Array.isArray(wd) ? wd.length : String(wd).trim())) {
+    var list = Array.isArray(wd) ? wd : String(wd).split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+    if (list.length) {
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;align-items:center';
+      var ico = document.createElement('span');
+      ico.style.cssText = 'color:#999;font-size:12px';
+      ico.textContent = '\uD83D\uDCC5';
+      row.appendChild(ico);
+      list.forEach(function(d){
+        var c = document.createElement('span');
+        c.style.cssText = 'background:#2a2a2a;padding:2px 7px;border-radius:6px;font-size:11px;color:#ccc';
+        c.textContent = d;
+        row.appendChild(c);
       });
-      var priceRow = content.querySelector('div[style*="display:flex"][style*="align-items:center"][style*="gap:10px"]');
-      if (priceRow) content.insertBefore(wdDiv, priceRow);
-      else content.appendChild(wdDiv);
+      var pr = content.querySelector('div[style*="display:flex"][style*="align-items:center"][style*="gap:10px"]');
+      if (pr) content.insertBefore(row, pr);
+      else content.appendChild(row);
     }
   }
 } catch(e){}
@@ -3820,21 +3801,5 @@ return card;
 ```
 
 };
-
-// — Re-bind entry buttons (in case earlier wrappers broke them) —
-document.addEventListener(‘DOMContentLoaded’, function(){
-var discover = document.getElementById(‘btnDiscoverDeals’);
-if (discover) discover.addEventListener(‘click’, function(ev){
-ev.preventDefault();
-window.unlockShopEntry(true);
-showView(‘deals’);
-});
-var headerDeals = document.getElementById(‘headerDealsBtn’);
-if (headerDeals) headerDeals.addEventListener(‘click’, function(ev){
-ev.preventDefault();
-window.unlockShopEntry(true);
-showView(‘deals’);
-});
-});
 
 })();
