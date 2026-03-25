@@ -1112,27 +1112,28 @@
   </style>
 
 
-  <style id="shop-settings-safe-patch">
-    body[data-shop-view="favorites"] #shopViewToggle,
-    body[data-shop-view="orders"] #shopViewToggle,
-    body[data-shop-view="favorites"] #shopMapWrap,
-    body[data-shop-view="orders"] #shopMapWrap,
-    body[data-shop-view="favorites"] #geoBanner,
-    body[data-shop-view="orders"] #geoBanner{display:none !important}
-    .drawer-divider{height:1px;background:rgba(255,255,255,.08);margin:2px 0}
-    .settings-grid{display:grid;gap:16px}
-    .settings-block{background:#171717;border:1px solid #2a2a2a;border-radius:14px;padding:14px}
-    .settings-block-title{font-size:13px;font-weight:700;color:#d4d4da;margin-bottom:12px;text-transform:uppercase;letter-spacing:.04em}
-    .settings-lang-row{display:flex;gap:8px;flex-wrap:wrap}
-    .settings-lang-btn{appearance:none;border:1px solid #333;background:#111;color:#d9d9df;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer}
-    .settings-lang-btn.active{border-color:#FF3366;background:#1d1015;color:#fff;box-shadow:0 10px 24px rgba(255,51,102,.14)}
-    .settings-action-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#171717;color:#fff;border:1px solid #2a2a2a;padding:12px 14px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer}
-    .settings-action-btn:hover{background:#202020}
-    .settings-action-btn.settings-danger{border-color:rgba(239,68,68,.38);color:#fff;background:#221214}
-    .settings-action-btn.settings-danger:hover{background:#2a1418}
+  <style id="shop-final-safe-fixes">
+    body.shop-is-subview #shopDiscoverySection .filter-wrap,
+    body.shop-is-subview #shopViewToggle,
+    body.shop-is-subview #shopMapWrap{display:none !important}
+
     @media(max-width:768px){
-      .settings-lang-row{display:grid;grid-template-columns:1fr 1fr}
-      .settings-lang-btn{width:100%}
+      body.shop-user-logged-in .header{padding:12px 12px 10px !important}
+      body.shop-user-logged-in .nav{display:grid !important;grid-template-columns:auto minmax(0,1fr) !important;align-items:start !important;gap:12px !important}
+      body.shop-user-logged-in .shop-header-logo img{height:54px !important}
+      body.shop-user-logged-in .nav-links{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:10px !important;align-items:center !important;width:100% !important}
+      body.shop-user-logged-in .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{grid-column:1 / -1 !important;display:flex !important;gap:8px !important;overflow-x:auto !important;padding-bottom:2px !important}
+      body.shop-user-logged-in .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
+      body.shop-user-logged-in .search-wrap{grid-column:1 / -1 !important;max-width:none !important}
+      body.shop-user-logged-in .search-input{min-height:48px !important;font-size:16px !important}
+      body.shop-user-logged-in #btnDeals,
+      body.shop-user-logged-in #btnFavorites,
+      body.shop-user-logged-in #btnOrders,
+      body.shop-user-logged-in .header-deals-btn{display:none !important}
+      body.shop-user-logged-in #cartOpenBtn,
+      body.shop-user-logged-in .user-menu,
+      body.shop-user-logged-in #shopMenuBtn{width:100% !important;justify-content:center !important}
+      body.shop-user-logged-in .user-button{width:100% !important;justify-content:center !important}
     }
   </style>
 
@@ -1190,7 +1191,6 @@
       <button class="drawer-action" id="drawerDealsBtn">🏠 <span data-shop-i18n="deals">Deals</span></button>
       <button class="drawer-action" id="drawerFavoritesBtn">❤️ <span data-shop-i18n="favoritesNav">Favoriten</span></button>
       <button class="drawer-action" id="drawerOrdersBtn">📦 <span data-shop-i18n="orders">Bestellungen</span></button>
-      <button class="drawer-action" id="drawerSettingsBtn" style="display:none">⚙️ <span data-shop-i18n="settingsNav">Einstellungen</span></button>
     </div>
     <div class="drawer-links">
       <a class="drawer-link" href="ueber-uns.html">ℹ️ <span data-shop-i18n="fUeberUns">Über uns</span></a>
@@ -1440,34 +1440,6 @@
   </div>
 </div>
 
-
-<!-- SETTINGS MODAL -->
-<div id="settingsModal" class="modal" role="dialog" aria-modal="true">
-  <div class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <span style="font-size:20px;font-weight:700" id="settingsModalTitle" data-shop-i18n="settingsTitle">⚙️ Einstellungen</span>
-      <button id="btnCloseSettingsModal" style="background:none;border:none;color:#aaa;font-size:22px;cursor:pointer">✕</button>
-    </div>
-    <div class="settings-grid">
-      <div class="settings-block">
-        <div class="settings-block-title" data-shop-i18n="settingsLanguage">Sprache</div>
-        <div class="settings-lang-row">
-          <button class="settings-lang-btn" type="button" data-settings-lang="de">DE</button>
-          <button class="settings-lang-btn" type="button" data-settings-lang="en">EN</button>
-          <button class="settings-lang-btn" type="button" data-settings-lang="it">IT</button>
-          <button class="settings-lang-btn" type="button" data-settings-lang="fr">FR</button>
-        </div>
-      </div>
-      <div class="settings-block">
-        <div class="settings-block-title" data-shop-i18n="settingsAccount">Account</div>
-        <button class="settings-action-btn" id="settingsChangePwBtn" type="button">🔑 <span data-shop-i18n="changePw">Passwort ändern</span></button>
-        <button class="settings-action-btn settings-danger" id="settingsLogoutBtn" type="button" style="margin-top:10px">🚪 <span data-shop-i18n="logoutBtn">Ausloggen</span></button>
-      </div>
-    </div>
-    <button class="btn-ghost" id="btnCloseSettingsFooter" style="margin-top:18px" data-shop-i18n="cancelBtn">Abbrechen</button>
-  </div>
-</div>
-
 <!-- CHANGE PASSWORD MODAL -->
 <div id="changePwModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
@@ -1524,6 +1496,6 @@
   <div id="cartBody"></div>
 </div>
 <div class="cart-overlay" id="cartOverlay"></div>
-<script src="shop-app.js?v=20260324-safe1"></script>
+<script src="shop-app.js?v=20260325-safe3"></script>
 </body>
 </html>
