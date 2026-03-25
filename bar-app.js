@@ -3033,3 +3033,63 @@ applyProfileToForm = function(b) {
     applyDealCreationHotfixUi();
   };
 })();
+
+
+// ===== FINAL MINIMAL PATCH 2026-03-25c — bar login button shows Bitte warten =====
+(function(){
+  function getBarLoginWaitText(){
+    var lang = String((typeof currentLang !== 'undefined' && currentLang) || 'de').toLowerCase();
+    if (lang === 'en') return 'Please wait...';
+    if (lang === 'it') return 'Attendere prego...';
+    if (lang === 'fr') return 'Veuillez patienter...';
+    return 'Bitte warten...';
+  }
+
+  doBarLogin = async function(){
+    var email = document.getElementById('loginEmail').value.trim();
+    var pass = document.getElementById('loginPassword').value;
+    var err = document.getElementById('loginErr');
+    var btn = document.getElementById('btnBarLogin');
+    err.textContent = '';
+
+    if (!email || !pass) {
+      err.textContent = (typeof t === 'function' && t('fillAllFields')) || 'Bitte alle Felder ausfüllen.';
+      return;
+    }
+
+    try {
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = getBarLoginWaitText();
+      }
+
+      var r = await api({ action: 'barLogin', email: email, password: pass });
+
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = (typeof t === 'function' && t('loginBtn')) || 'Einloggen';
+      }
+
+      if (r.success) {
+        var uiLang = (r.bar && r.bar.lang) || (function(){ try { return localStorage.getItem('barsclusive_bar_lang'); } catch(e) { return ''; } })() || currentLang || 'de';
+        sessionSet(r.token, r.bar.id, r.bar.name, uiLang);
+        document.getElementById('loginPassword').value = '';
+        showAuthScreen(false);
+        clearDataCache();
+        prefetchAllData();
+        loadBarStats();
+      } else {
+        err.textContent = (typeof translateBarRuntimeMessage === 'function')
+          ? translateBarRuntimeMessage(r.error || 'Ungültige Zugangsdaten.')
+          : (r.error || 'Ungültige Zugangsdaten.');
+        document.getElementById('loginPassword').value = '';
+      }
+    } catch (e) {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = (typeof t === 'function' && t('loginBtn')) || 'Einloggen';
+      }
+      err.textContent = (typeof t === 'function' && t('networkError')) || 'Verbindungsfehler.';
+    }
+  };
+})();
