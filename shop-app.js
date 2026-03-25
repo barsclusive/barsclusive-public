@@ -3763,110 +3763,73 @@ try {
 })();
 
 
-// ===== FINAL MICRO FIXES 2026-03-25c — login waiting text, mobile header, cleaner cards =====
+// ===== FINAL MINIMAL PATCH 2026-03-25c — hide top auth after customer login reliably =====
 (function(){
-  function safeDealText(value){
-    return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
+  function syncShopLoggedHeaderFinal(){
+    var logged = false;
+    try { logged = !!(typeof sessionGet === 'function' && sessionGet()); } catch(e) { logged = false; }
+    document.body.classList.toggle('shop-user-logged-in', logged);
+    document.body.classList.toggle('shop-user-logged-out', !logged);
+    if (logged) document.body.classList.remove('shop-entry-locked');
+
+    var topAuth = document.getElementById('shopTopAuth');
+    if (topAuth) topAuth.style.display = logged ? 'none' : '';
+
+    var noLoginHint = document.getElementById('shopNoLoginHint');
+    if (noLoginHint) noLoginHint.style.display = logged ? 'none' : '';
   }
 
-  function safeWeekdayList(value){
-    if (!value) return '';
-    try {
-      if (typeof localizeWeekdayList === 'function') return localizeWeekdayList(value);
-    } catch(e) {}
-    if (Array.isArray(value)) return value.filter(Boolean).join(', ');
-    return String(value).trim();
-  }
-
-  var _microOrigBuildDealCard = typeof buildDealCard === 'function' ? buildDealCard : null;
-  if (_microOrigBuildDealCard) {
-    buildDealCard = function(deal){
-      var card = _microOrigBuildDealCard(deal);
-      try {
-        if (!card) return card;
-        var content = card.querySelector('.deal-content');
-        var bar = card.querySelector('.deal-bar');
-        if (content && bar) {
-          var descText = safeDealText(deal && deal.description);
-          var descEl = card.querySelector('.deal-desc');
-          if (descText) {
-            if (!descEl) {
-              descEl = document.createElement('div');
-              descEl.className = 'deal-desc';
-              bar.insertAdjacentElement('afterend', descEl);
-            }
-            descEl.textContent = descText;
-            descEl.title = descText;
-            descEl.style.display = '';
-          } else if (descEl) {
-            descEl.remove();
-          }
-        }
-
-        var validityEl = card.querySelector('.deal-validity');
-        var weekdayText = safeWeekdayList(deal && deal.valid_weekdays);
-        var timeText = (deal && deal.valid_from_time && deal.valid_to_time) ? (String(deal.valid_from_time).trim() + '–' + String(deal.valid_to_time).trim()) : '';
-        var parts = [];
-        if (weekdayText) parts.push('📅 ' + weekdayText);
-        if (timeText) parts.push('🕐 ' + timeText);
-        if (parts.length) {
-          if (!validityEl) {
-            validityEl = document.createElement('div');
-            validityEl.className = 'deal-validity';
-            content.appendChild(validityEl);
-          }
-          validityEl.textContent = parts.join(' • ');
-          validityEl.style.display = '';
-        }
-      } catch(e) {}
-      return card;
+  var _finalOrigSessionSet = typeof sessionSet === 'function' ? sessionSet : null;
+  if (_finalOrigSessionSet) {
+    sessionSet = function(){
+      var result = _finalOrigSessionSet.apply(this, arguments);
+      setTimeout(syncShopLoggedHeaderFinal, 0);
+      setTimeout(syncShopLoggedHeaderFinal, 180);
+      return result;
     };
   }
 
-  doLogin = async function() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    if (!email || !password) {
-      showToast(st('emailPasswordRequired') || 'Bitte Email und Passwort eingeben', true);
-      return;
-    }
-    var loginBtn = document.getElementById('btnLoginSubmit');
-    var defaultLabel = shopT('loginSubmitBtn') || 'Einloggen';
-    var waitingLabel = shopT('bitteWarten') || 'Bitte warten...';
-    if (loginBtn) {
-      loginBtn.disabled = true;
-      loginBtn.textContent = waitingLabel;
-    }
-    if (typeof showShopLoading === 'function') showShopLoading(waitingLabel);
-    try {
-      const r = await api({ action: 'customerLogin', email, password });
-      if (r.success) {
-        var uiLang = (r.customer && r.customer.lang) || _shopLang || localStorage.getItem('barsclusive_lang') || 'de';
-        sessionSet(r.token, r.customer.name, r.customer.email, 'customer', uiLang);
-        closeModal('loginModal');
-        document.getElementById('loginPassword').value = '';
-        if (typeof syncShopSafeHeader === 'function') syncShopSafeHeader();
-        if (typeof applySubviewLayout === 'function') {
-          var activeView = (typeof currentShopView === 'function') ? currentShopView() : 'deals';
-          applySubviewLayout(activeView || 'deals');
-        }
-        showToast('✅ ' + (st('loginSuccess') || 'Eingeloggt!'));
-        Promise.resolve().then(loadFavorites).catch(function(){});
-        if (document.getElementById('ordersView') && document.getElementById('ordersView').style.display === 'block') {
-          Promise.resolve().then(loadOrders).catch(function(){});
-        }
-      } else {
-        showToast(r.error || (st('invalidCredentials') || 'Ungültige Zugangsdaten'), true);
-        document.getElementById('loginPassword').value = '';
-      }
-    } catch (e) {
-      showToast(st('networkError') || 'Verbindungsfehler', true);
-    } finally {
-      if (typeof hideShopLoading === 'function') hideShopLoading();
-      if (loginBtn) {
-        loginBtn.disabled = false;
-        loginBtn.textContent = defaultLabel;
-      }
-    }
-  };
+  var _finalOrigSessionClear = typeof sessionClear === 'function' ? sessionClear : null;
+  if (_finalOrigSessionClear) {
+    sessionClear = function(){
+      var result = _finalOrigSessionClear.apply(this, arguments);
+      setTimeout(syncShopLoggedHeaderFinal, 0);
+      return result;
+    };
+  }
+
+  var _finalOrigDoLogin = typeof doLogin === 'function' ? doLogin : null;
+  if (_finalOrigDoLogin) {
+    doLogin = async function(){
+      var result = await _finalOrigDoLogin.apply(this, arguments);
+      setTimeout(syncShopLoggedHeaderFinal, 0);
+      setTimeout(syncShopLoggedHeaderFinal, 180);
+      return result;
+    };
+  }
+
+  var _finalOrigDoRegister = typeof doRegister === 'function' ? doRegister : null;
+  if (_finalOrigDoRegister) {
+    doRegister = async function(){
+      var result = await _finalOrigDoRegister.apply(this, arguments);
+      setTimeout(syncShopLoggedHeaderFinal, 0);
+      setTimeout(syncShopLoggedHeaderFinal, 180);
+      return result;
+    };
+  }
+
+  var _finalOrigShowView = typeof showView === 'function' ? showView : null;
+  if (_finalOrigShowView) {
+    showView = function(){
+      var result = _finalOrigShowView.apply(this, arguments);
+      setTimeout(syncShopLoggedHeaderFinal, 0);
+      return result;
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    syncShopLoggedHeaderFinal();
+    setTimeout(syncShopLoggedHeaderFinal, 120);
+    setTimeout(syncShopLoggedHeaderFinal, 420);
+  });
 })();
