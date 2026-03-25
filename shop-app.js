@@ -3686,14 +3686,14 @@ bindSafeClick('geoPermBtn', function(ev){
 });
 })();
 
-// ===== FINAL SAFE PATCH 2026-03-25b — recursion guard + subview fix + loading overlay =====
+// ===== FINAL FIX 2026-03-25d — subview, loading, desc/weekdays =====
 (function(){
 
 // — Loading overlay helpers —
-Object.assign(SHOP_TRANSLATIONS.de, { bitteWarten:‘Bitte warten…’, loadingOrders:‘Bestellungen werden geladen…’, loadingFavorites:‘Favoriten werden geladen…’ });
-Object.assign(SHOP_TRANSLATIONS.en, { bitteWarten:‘Please wait…’, loadingOrders:‘Loading orders…’, loadingFavorites:‘Loading favorites…’ });
-Object.assign(SHOP_TRANSLATIONS.it, { bitteWarten:‘Attendere prego…’, loadingOrders:‘Caricamento ordini…’, loadingFavorites:‘Caricamento preferiti…’ });
-Object.assign(SHOP_TRANSLATIONS.fr, { bitteWarten:‘Veuillez patienter…’, loadingOrders:‘Chargement des commandes…’, loadingFavorites:‘Chargement des favoris…’ });
+Object.assign(SHOP_TRANSLATIONS.de, { bitteWarten:‘Bitte warten…’, loadingOrders:‘Bestellungen werden geladen…’ });
+Object.assign(SHOP_TRANSLATIONS.en, { bitteWarten:‘Please wait…’, loadingOrders:‘Loading orders…’ });
+Object.assign(SHOP_TRANSLATIONS.it, { bitteWarten:‘Attendere prego…’, loadingOrders:‘Caricamento ordini…’ });
+Object.assign(SHOP_TRANSLATIONS.fr, { bitteWarten:‘Veuillez patienter…’, loadingOrders:‘Chargement des commandes…’ });
 
 function showShopLoading(msg){
 var overlay = document.getElementById(‘shopLoadingOverlay’);
@@ -3709,25 +3709,23 @@ window.showShopLoading = showShopLoading;
 window.hideShopLoading = hideShopLoading;
 
 // — Wrap loadOrders with loading indicator —
-var _origLoadOrdersForLoading = loadOrders;
+var _origLoadOrdersFix = loadOrders;
 loadOrders = async function(){
 showShopLoading(shopT(‘loadingOrders’) || ‘Bestellungen werden geladen…’);
-try {
-await _origLoadOrdersForLoading.apply(this, arguments);
-} finally {
-hideShopLoading();
-}
+try { await _origLoadOrdersFix.apply(this, arguments); }
+finally { hideShopLoading(); }
 };
 
-// — showView recursion guard + subview force-correct —
-var _showViewBeforeGuard = showView;
-var _inShowView = false;
+// — Wrap doLogin with loading indicator —
+var _origDoLoginFix = doLogin;
+doLogin = async function(){
+showShopLoading(shopT(‘bitteWarten’) || ‘Bitte warten…’);
+try { await _origDoLoginFix.apply(this, arguments); }
+finally { hideShopLoading(); }
+};
 
-showView = function(view){
-if (_inShowView) return;
-_inShowView = true;
-try {
-// Remove entry lock directly (prevents unlockShopEntry→showView recursion)
+// — FIX: Override unlockShopEntry to NOT call showView (prevents recursion) —
+window.unlockShopEntry = function(scrollToDiscovery){
 document.body.classList.remove(‘shop-entry-locked’);
 var section = document.getElementById(‘shopDiscoverySection’);
 if (section) section.style.display = ‘’;
@@ -3742,48 +3740,42 @@ var topAuth = document.getElementById(‘shopTopAuth’);
 if (topAuth) topAuth.style.display = logged ? ‘none’ : ‘’;
 var noLoginHint = document.getElementById(‘shopNoLoginHint’);
 if (noLoginHint) noLoginHint.style.display = ‘none’;
+// NOTE: intentionally NOT calling showView here — that caused the recursion
+if (scrollToDiscovery) {
+var target = document.getElementById(‘shopFocusArea’) || section;
+if (target) {
+var top = Math.max((target.getBoundingClientRect().top + window.scrollY) - 88, 0);
+window.scrollTo({ top: top, behavior: ‘smooth’ });
+}
+}
+};
+
+// — FIX: Wrap showView to force-correct subview layout AFTER all wrappers —
+var _showViewFinal = showView;
+showView = function(view){
+// Let the full wrapper chain run (entry-lock → safe-patch → original)
+// unlockShopEntry no longer calls showView, so no recursion
+_showViewFinal(view);
 
 ```
-  // Call the full wrapper chain (recursion is blocked by _inShowView)
-  _showViewBeforeGuard(view);
-
-  // AFTER all wrappers ran, force-correct subview layout
-  var subview = view === 'favorites' || view === 'orders';
-  document.body.setAttribute('data-shop-view', view || 'deals');
-  document.body.classList.toggle('shop-is-subview', subview);
-  var filterWrap = document.querySelector('#shopDiscoverySection .filter-wrap');
-  var viewToggle = document.getElementById('shopViewToggle');
-  var mapWrap = document.getElementById('shopMapWrap');
-  if (filterWrap) filterWrap.style.display = subview ? 'none' : '';
-  if (viewToggle) viewToggle.style.display = subview ? 'none' : '';
-  if (mapWrap && subview) mapWrap.style.display = 'none';
-} finally {
-  _inShowView = false;
-}
+// After all wrappers ran, force-correct subview state
+var subview = view === 'favorites' || view === 'orders';
+document.body.setAttribute('data-shop-view', view || 'deals');
+document.body.classList.toggle('shop-is-subview', subview);
+var filterWrap = document.querySelector('#shopDiscoverySection .filter-wrap');
+var viewToggle = document.getElementById('shopViewToggle');
+var mapWrap = document.getElementById('shopMapWrap');
+if (filterWrap) filterWrap.style.display = subview ? 'none' : '';
+if (viewToggle) viewToggle.style.display = subview ? 'none' : '';
+if (mapWrap && subview) mapWrap.style.display = 'none';
 ```
 
 };
 
-})();
-
-// ===== PATCH 2026-03-25c — login loading + deal card desc/weekdays =====
-(function(){
-
-// — Fix 1: Wrap doLogin with full-screen loading overlay —
-var _doLoginBeforeLoading = doLogin;
-doLogin = async function(){
-if (typeof showShopLoading === ‘function’) showShopLoading(shopT(‘bitteWarten’) || ‘Bitte warten…’);
-try {
-await _doLoginBeforeLoading.apply(this, arguments);
-} finally {
-if (typeof hideShopLoading === ‘function’) hideShopLoading();
-}
-};
-
-// — Fix 3: Patch buildDealCard to add description + weekdays —
-var _buildDealCardBeforeDesc = buildDealCard;
+// — Patch buildDealCard: add description + weekdays —
+var _buildDealCardFix = buildDealCard;
 buildDealCard = function(deal){
-var card = _buildDealCardBeforeDesc(deal);
+var card = _buildDealCardFix(deal);
 if (!card) return card;
 try {
 var content = card.querySelector(’.deal-content’);
@@ -3801,7 +3793,7 @@ if (!content) return card;
     barEl.after(descDiv);
   }
 
-  // Add weekdays before validity/price area
+  // Add weekdays before the price/button row
   var weekdays = deal.valid_weekdays;
   if (weekdays && (Array.isArray(weekdays) ? weekdays.length : String(weekdays).trim())) {
     var wdList = Array.isArray(weekdays) ? weekdays : String(weekdays).split(',').map(function(s){ return s.trim(); }).filter(Boolean);
@@ -3818,7 +3810,6 @@ if (!content) return card;
         chip.textContent = day;
         wdDiv.appendChild(chip);
       });
-      // Insert before the price/button row
       var priceRow = content.querySelector('div[style*="display:flex"][style*="align-items:center"][style*="gap:10px"]');
       if (priceRow) content.insertBefore(wdDiv, priceRow);
       else content.appendChild(wdDiv);
@@ -3829,5 +3820,21 @@ return card;
 ```
 
 };
+
+// — Re-bind entry buttons (in case earlier wrappers broke them) —
+document.addEventListener(‘DOMContentLoaded’, function(){
+var discover = document.getElementById(‘btnDiscoverDeals’);
+if (discover) discover.addEventListener(‘click’, function(ev){
+ev.preventDefault();
+window.unlockShopEntry(true);
+showView(‘deals’);
+});
+var headerDeals = document.getElementById(‘headerDealsBtn’);
+if (headerDeals) headerDeals.addEventListener(‘click’, function(ev){
+ev.preventDefault();
+window.unlockShopEntry(true);
+showView(‘deals’);
+});
+});
 
 })();
