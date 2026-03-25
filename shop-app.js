@@ -3833,3 +3833,214 @@ try {
     setTimeout(syncShopLoggedHeaderFinal, 420);
   });
 })();
+
+
+// ===== CUSTOMER CORRESPONDENCE LANGUAGE PATCH (frontend only, backend already supports updateCorrespondenceLanguage) =====
+(function(){
+  function currentUiLang(){
+    try { return String((_shopLang || shopLang || localStorage.getItem('barsclusive_lang') || 'de')).toLowerCase(); } catch(e) { return 'de'; }
+  }
+  function langPrefText(key){
+    var map = {
+      de: {
+        dropdown: '🌐 Korrespondenzsprache',
+        title: '🌐 Korrespondenzsprache',
+        subtitle: 'Diese Sprache wird für künftige E-Mails und beim nächsten Login als Standardsprache im Shop verwendet.',
+        save: 'Speichern',
+        cancel: 'Abbrechen',
+        wait: 'Bitte warten...',
+        saved: '✅ Korrespondenzsprache gespeichert',
+        error: 'Sprache konnte nicht gespeichert werden'
+      },
+      en: {
+        dropdown: '🌐 Correspondence language',
+        title: '🌐 Correspondence language',
+        subtitle: 'This language will be used for future emails and as the default shop language at your next login.',
+        save: 'Save',
+        cancel: 'Cancel',
+        wait: 'Please wait...',
+        saved: '✅ Correspondence language saved',
+        error: 'Language could not be saved'
+      },
+      it: {
+        dropdown: '🌐 Lingua di corrispondenza',
+        title: '🌐 Lingua di corrispondenza',
+        subtitle: 'Questa lingua verrà usata per le email future e come lingua predefinita del negozio al prossimo accesso.',
+        save: 'Salva',
+        cancel: 'Annulla',
+        wait: 'Attendere...',
+        saved: '✅ Lingua di corrispondenza salvata',
+        error: 'Impossibile salvare la lingua'
+      },
+      fr: {
+        dropdown: '🌐 Langue de correspondance',
+        title: '🌐 Langue de correspondance',
+        subtitle: 'Cette langue sera utilisée pour les futurs e-mails et comme langue par défaut de la boutique lors de votre prochaine connexion.',
+        save: 'Enregistrer',
+        cancel: 'Annuler',
+        wait: 'Veuillez patienter...',
+        saved: '✅ Langue de correspondance enregistrée',
+        error: 'La langue n’a pas pu être enregistrée'
+      }
+    };
+    var lang = currentUiLang();
+    return ((map[lang] || map.de)[key]) || (map.de[key] || '');
+  }
+
+  function ensureCustomerLangModal(){
+    if (document.getElementById('customerLangModal')) return;
+    var html = ''
+      + '<div id="customerLangModal" class="modal" role="dialog" aria-modal="true" aria-label="Language settings">'
+      + '  <div class="modal-box">'
+      + '    <div class="modal-title" id="customerLangModalTitle"></div>'
+      + '    <p id="customerLangModalSub" style="color:#999;margin-bottom:16px;line-height:1.5"></p>'
+      + '    <div class="form-group">'
+      + '      <label class="form-label" for="customerLangSelect" id="customerLangLabel"></label>'
+      + '      <select class="form-input" id="customerLangSelect">'
+      + '        <option value="de">Deutsch</option>'
+      + '        <option value="en">English</option>'
+      + '        <option value="it">Italiano</option>'
+      + '        <option value="fr">Français</option>'
+      + '      </select>'
+      + '    </div>'
+      + '    <button class="btn-pink" id="btnSaveCustomerLang"></button>'
+      + '    <button class="btn-ghost" id="btnCancelCustomerLang"></button>'
+      + '  </div>'
+      + '</div>';
+    document.body.insertAdjacentHTML('beforeend', html);
+
+    var modal = document.getElementById('customerLangModal');
+    if (modal) {
+      modal.addEventListener('click', function(ev){
+        if (ev.target === modal) closeCustomerLangModal();
+      });
+    }
+    var cancelBtn = document.getElementById('btnCancelCustomerLang');
+    if (cancelBtn) cancelBtn.addEventListener('click', closeCustomerLangModal);
+    var saveBtn = document.getElementById('btnSaveCustomerLang');
+    if (saveBtn) saveBtn.addEventListener('click', saveCustomerCorrespondenceLanguage);
+
+    refreshCustomerLangUi();
+  }
+
+  function refreshCustomerLangUi(){
+    var item = document.getElementById('dropdownCustomerLang');
+    if (item) item.textContent = langPrefText('dropdown');
+    var title = document.getElementById('customerLangModalTitle');
+    if (title) title.textContent = langPrefText('title');
+    var sub = document.getElementById('customerLangModalSub');
+    if (sub) sub.textContent = langPrefText('subtitle');
+    var label = document.getElementById('customerLangLabel');
+    if (label) label.textContent = (typeof st === 'function' ? st('correspondenceLang') : '') || langPrefText('title');
+    var save = document.getElementById('btnSaveCustomerLang');
+    if (save && !save.disabled) save.textContent = langPrefText('save');
+    var cancel = document.getElementById('btnCancelCustomerLang');
+    if (cancel) cancel.textContent = langPrefText('cancel');
+  }
+
+  function ensureCustomerLangTrigger(){
+    var logout = document.getElementById('dropdownLogout');
+    var existing = document.getElementById('dropdownCustomerLang');
+    if (!logout || existing) return;
+    var item = document.createElement('div');
+    item.className = 'dropdown-item';
+    item.id = 'dropdownCustomerLang';
+    item.textContent = langPrefText('dropdown');
+    item.addEventListener('click', function(){
+      openCustomerLangModal();
+      var dd = document.getElementById('userDropdown');
+      if (dd) dd.classList.remove('active');
+    });
+    logout.parentNode.insertBefore(item, logout);
+  }
+
+  function openCustomerLangModal(){
+    ensureCustomerLangModal();
+    var s = (typeof sessionGet === 'function') ? sessionGet() : null;
+    if (!s || !s.token) {
+      if (typeof showToast === 'function') showToast('Bitte zuerst einloggen', true);
+      return;
+    }
+    var select = document.getElementById('customerLangSelect');
+    if (select) select.value = String((s.lang || currentUiLang() || 'de')).toLowerCase();
+    refreshCustomerLangUi();
+    var modal = document.getElementById('customerLangModal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeCustomerLangModal(){
+    var modal = document.getElementById('customerLangModal');
+    if (modal) modal.classList.remove('active');
+    refreshCustomerLangUi();
+  }
+
+  async function saveCustomerCorrespondenceLanguage(){
+    var s = (typeof sessionGet === 'function') ? sessionGet() : null;
+    var select = document.getElementById('customerLangSelect');
+    var btn = document.getElementById('btnSaveCustomerLang');
+    if (!s || !s.token || !select || !btn) return;
+    var lang = String(select.value || 'de').toLowerCase();
+    var defaultLabel = langPrefText('save');
+    btn.disabled = true;
+    btn.textContent = langPrefText('wait');
+    try {
+      var r = await api({ action: 'updateCorrespondenceLanguage', token: s.token, lang: lang });
+      if (r && r.success) {
+        try {
+          s.lang = r.lang || lang;
+          localStorage.setItem('barsclusive_customer_session', JSON.stringify(s));
+        } catch(e) {}
+        try {
+          if (typeof _session !== 'undefined' && _session) _session.lang = r.lang || lang;
+        } catch(e) {}
+        if (typeof setShopLang === 'function') setShopLang(r.lang || lang);
+        refreshCustomerLangUi();
+        closeCustomerLangModal();
+        if (typeof showToast === 'function') showToast(langPrefText('saved'));
+      } else {
+        if (typeof showToast === 'function') showToast((r && r.error) || langPrefText('error'), true);
+      }
+    } catch (e) {
+      if (typeof showToast === 'function') showToast(langPrefText('error'), true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = defaultLabel;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    ensureCustomerLangTrigger();
+    ensureCustomerLangModal();
+    refreshCustomerLangUi();
+  });
+
+  if (typeof applyShopTranslations === 'function') {
+    var _prevApplyShopTranslationsCustomerLang = applyShopTranslations;
+    applyShopTranslations = function(){
+      _prevApplyShopTranslationsCustomerLang.apply(this, arguments);
+      ensureCustomerLangTrigger();
+      refreshCustomerLangUi();
+    };
+  }
+
+  if (typeof sessionSet === 'function') {
+    var _prevSessionSetCustomerLang = sessionSet;
+    sessionSet = function(){
+      var result = _prevSessionSetCustomerLang.apply(this, arguments);
+      ensureCustomerLangTrigger();
+      refreshCustomerLangUi();
+      return result;
+    };
+  }
+
+  if (typeof sessionClear === 'function') {
+    var _prevSessionClearCustomerLang = sessionClear;
+    sessionClear = function(){
+      var result = _prevSessionClearCustomerLang.apply(this, arguments);
+      var modal = document.getElementById('customerLangModal');
+      if (modal) modal.classList.remove('active');
+      refreshCustomerLangUi();
+      return result;
+    };
+  }
+})();
