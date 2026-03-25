@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -13,16 +12,14 @@
     with no nonce-injection capability. Ideal fix: move to a server that
     can inject nonces. Current CSP still blocks external script injection.
   -->
-
-<meta http-equiv="Content-Security-Policy"
-content="default-src 'self';
-script-src 'self' 'unsafe-inline' https://unpkg.com;
-style-src 'self' 'unsafe-inline' https://unpkg.com;
-connect-src https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org;
-img-src 'self' data: https:;
-frame-src 'none';
-object-src 'none';">
-
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 script-src 'self' 'unsafe-inline' https://unpkg.com;
+                 style-src 'self' 'unsafe-inline' https://unpkg.com;
+                 connect-src https://script.google.com https://script.googleusercontent.com https://nominatim.openstreetmap.org;
+                 img-src 'self' data: https:;
+                 frame-src 'none';
+                 object-src 'none';">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -414,7 +411,6 @@ object-src 'none';">
       }
     }
   </style>
-
   <link rel="icon" type="image/png" href="logo.png">
 
   <style id="bs-shop-refresh-style">
@@ -926,6 +922,7 @@ object-src 'none';">
     }
   </style>
 
+
   <style id="shop-entry-lock-fix">
     body.shop-entry-locked #shopDiscoverySection,
     body.shop-entry-locked .footer{display:none}
@@ -1114,58 +1111,54 @@ object-src 'none';">
     }
   </style>
 
+
   <style id="shop-final-safe-fixes">
     body.shop-is-subview #shopDiscoverySection .filter-wrap,
     body.shop-is-subview #shopViewToggle,
     body.shop-is-subview #shopMapWrap{display:none !important}
 
     @media(max-width:768px){
-      /* logged-in mobile: single-row with logo, lang, cart, user, menu */
-      body.shop-user-logged-in:not(.shop-entry-locked) .header{padding:10px 10px 8px !important;z-index:101 !important}
+      /* logged-in mobile: mirror logged-out layout, just show user-menu instead of auth buttons */
+      body.shop-user-logged-in:not(.shop-entry-locked) .header{padding:10px 12px 4px !important;z-index:101 !important}
       body.shop-user-logged-in:not(.shop-entry-locked) .nav{
         display:grid !important;
-        grid-template-columns:auto minmax(0,1fr) auto auto auto !important;
-        grid-template-areas:"logo lang cart user menu" !important;
+        grid-template-columns:minmax(0,1fr) auto auto auto !important;
+        grid-template-areas:"lang cart user menu" !important;
         align-items:center !important;
-        gap:5px !important;
+        gap:8px 8px !important;
       }
-      body.shop-user-logged-in:not(.shop-entry-locked) .shop-header-logo{
-        display:flex !important;grid-area:logo !important;
-      }
-      body.shop-user-logged-in:not(.shop-entry-locked) .shop-header-logo img{
-        height:30px !important;width:auto !important;
-      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .shop-header-logo{display:none !important}
       body.shop-user-logged-in:not(.shop-entry-locked) .nav-links{display:contents !important}
       body.shop-user-logged-in:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
         grid-area:lang !important;
         display:flex !important;
-        flex-wrap:nowrap !important;
-        gap:3px !important;
+        gap:6px !important;
         align-items:center !important;
         min-width:0 !important;
-        overflow:hidden !important;
+        overflow-x:auto !important;
+        padding-bottom:1px !important;
+        scrollbar-width:none;
       }
+      body.shop-user-logged-in:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{display:none}
       body.shop-user-logged-in:not(.shop-entry-locked) .shop-lang-btn{
-        min-width:28px !important;padding:5px 6px !important;font-size:10px !important;
-        line-height:1 !important;border-radius:8px !important;flex-shrink:0 !important;
+        min-width:38px !important;padding:6px 7px !important;font-size:11px !important;line-height:1 !important;border-radius:10px !important;
       }
       body.shop-user-logged-in:not(.shop-entry-locked) #cartOpenBtn{
-        grid-area:cart !important;
-        min-width:38px !important;width:38px !important;height:38px !important;padding:0 !important;
-        display:inline-flex !important;align-items:center !important;justify-content:center !important;
+        grid-area:cart !important;justify-self:center !important;
+        min-width:44px !important;width:44px !important;height:44px !important;padding:0 !important;
       }
       body.shop-user-logged-in:not(.shop-entry-locked) .user-menu{
-        grid-area:user !important;width:auto !important;min-width:0 !important;
+        grid-area:user !important;justify-self:center !important;width:auto !important;
       }
       body.shop-user-logged-in:not(.shop-entry-locked) #userBtn{
-        min-height:38px !important;padding:0 10px !important;border-radius:999px !important;
-        max-width:110px !important;white-space:nowrap !important;overflow:hidden !important;
-        text-overflow:ellipsis !important;font-size:12px !important;
+        min-height:44px !important;padding:0 12px !important;border-radius:999px !important;
+        max-width:140px !important;white-space:nowrap !important;overflow:hidden !important;
+        text-overflow:ellipsis !important;font-size:13px !important;
         display:inline-flex !important;align-items:center !important;justify-content:center !important;
       }
       body.shop-user-logged-in:not(.shop-entry-locked) #shopMenuBtn{
         grid-area:menu !important;justify-self:end !important;
-        width:38px !important;min-width:38px !important;height:38px !important;padding:0 !important;
+        width:44px !important;min-width:44px !important;height:44px !important;padding:0 !important;
       }
       body.shop-user-logged-in:not(.shop-entry-locked) .search-wrap{display:none !important}
       body.shop-user-logged-in:not(.shop-entry-locked) #btnDeals,
@@ -1175,13 +1168,135 @@ object-src 'none';">
     }
   </style>
 
+
+  <style id="shop-final-microfixes-20260325">
+    @media(max-width:768px){
+      body.shop-user-logged-in:not(.shop-entry-locked) .header{
+        padding:10px 12px 8px !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .nav{
+        display:grid !important;
+        grid-template-columns:auto minmax(0,1fr) auto !important;
+        grid-template-areas:
+          "logo lang menu"
+          "logo cart user" !important;
+        gap:8px 10px !important;
+        align-items:center !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .shop-header-logo{
+        grid-area:logo !important;
+        display:flex !important;
+        align-self:center !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .shop-header-logo img{
+        height:44px !important;
+        width:auto !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .nav-links{
+        display:contents !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]{
+        grid-area:lang !important;
+        display:flex !important;
+        justify-content:flex-start !important;
+        align-items:center !important;
+        gap:6px !important;
+        flex-wrap:nowrap !important;
+        overflow-x:auto !important;
+        min-width:0 !important;
+        padding-bottom:1px !important;
+        scrollbar-width:none;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .nav-links > div[style*="display:flex;align-items:center;gap:8px"]::-webkit-scrollbar{
+        display:none;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .shop-lang-btn{
+        flex:0 0 auto !important;
+        min-width:40px !important;
+        width:40px !important;
+        height:40px !important;
+        min-height:40px !important;
+        padding:0 !important;
+        border-radius:12px !important;
+        font-size:11px !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) #cartOpenBtn{
+        grid-area:cart !important;
+        justify-self:start !important;
+        width:44px !important;
+        min-width:44px !important;
+        height:44px !important;
+        min-height:44px !important;
+        padding:0 !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .user-menu{
+        grid-area:user !important;
+        justify-self:stretch !important;
+        min-width:0 !important;
+        width:100% !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) #userBtn{
+        width:100% !important;
+        max-width:none !important;
+        min-height:44px !important;
+        padding:0 12px !important;
+        border-radius:999px !important;
+        font-size:14px !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        white-space:nowrap !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) #shopMenuBtn{
+        grid-area:menu !important;
+        justify-self:end !important;
+        width:44px !important;
+        min-width:44px !important;
+        height:44px !important;
+        min-height:44px !important;
+        padding:0 !important;
+        margin-left:0 !important;
+      }
+      body.shop-user-logged-in:not(.shop-entry-locked) .search-wrap,
+      body.shop-user-logged-in:not(.shop-entry-locked) #btnDeals,
+      body.shop-user-logged-in:not(.shop-entry-locked) #btnFavorites,
+      body.shop-user-logged-in:not(.shop-entry-locked) #btnOrders,
+      body.shop-user-logged-in:not(.shop-entry-locked) .header-deals-btn{
+        display:none !important;
+      }
+    }
+
+    .deal-desc{
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+      line-height:1.45;
+      min-height:2.9em;
+      color:#c8c8cf !important;
+    }
+    .deal-validity{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      color:#a9a9b2 !important;
+      font-size:12.5px !important;
+      line-height:1.45;
+    }
+  </style>
+
 </head>
 <body class="shop-page shop-entry-locked">
 
 <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
 
 <!-- Global Loading Overlay -->
-
 <div id="shopLoadingOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2001;align-items:center;justify-content:center">
   <div style="background:#1a1a1a;padding:24px 32px;border-radius:16px;text-align:center;border:1px solid #2a2a2a;box-shadow:0 12px 40px rgba(0,0,0,.5)">
     <div style="font-size:28px;margin-bottom:10px;animation:pulse 1.5s ease infinite">⏳</div>
@@ -1190,7 +1305,6 @@ object-src 'none';">
 </div>
 
 <!-- NAVIGATION -->
-
 <div class="header">
   <div class="nav">
     <a class="logo shop-header-logo" href="shop.html"><img src="logo.png" alt="BarSclusive" style="height:40px"></a>
@@ -1255,7 +1369,6 @@ object-src 'none';">
 <div id="shopDrawerOverlay" class="cart-overlay"></div>
 
 <!-- HERO -->
-
 <div class="hero">
   <div class="hero-shell">
     <div class="hero-brand">
@@ -1279,7 +1392,6 @@ object-src 'none';">
 </div>
 
 <!-- FILTER BAR -->
-
 <div id="shopDiscoverySection">
 <div class="filter-wrap" id="shopFocusArea">
   <div class="filter-bar">
@@ -1322,7 +1434,6 @@ object-src 'none';">
 </div>
 
 <!-- MAIN -->
-
 <div class="container">
   <div style="display:flex;gap:10px;margin-bottom:16px" id="shopViewToggle">
     <button id="viewGrid" data-shop-i18n="viewDeals" style="background:#FF3366;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">🏠 Deals</button>
@@ -1365,7 +1476,6 @@ object-src 'none';">
 </div>
 
 <!-- FOOTER -->
-
 <div class="footer">
   <p>© 2026 BarSclusive</p>
   <p style="margin-top:12px">
@@ -1380,7 +1490,6 @@ object-src 'none';">
 </div>
 
 <!-- LOGIN MODAL -->
-
 <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-label="Anmelden">
   <div class="modal-box">
     <div class="modal-title" id="loginModalTitle">🔐 Anmelden</div>
@@ -1400,44 +1509,39 @@ object-src 'none';">
 </div>
 
 <!-- PASSWORD RESET MODAL -->
-
 <div id="resetPasswordModal" class="modal" role="dialog" aria-modal="true" aria-label="Passwort zurücksetzen">
   <div class="modal-box">
     <div class="modal-title" id="resetModalTitle">🔑 Passwort zurücksetzen</div>
-
-```
-<!-- Step 1: Email eingeben -->
-<div id="resetStep1">
-  <p style="color:#999;margin-bottom:16px" id="resetInfo1" data-shop-i18n="resetInfo1">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
-  <div class="form-group">
-    <label class="form-label" for="resetEmail" data-shop-i18n="emailLbl">Email</label>
-    <input type="email" class="form-input" id="resetEmail" autocomplete="email">
-  </div>
-  <button class="btn-pink" id="btnSendResetCode" data-shop-i18n="sendCode">Code senden</button>
-  <button class="btn-ghost" data-close-modal="resetPasswordModal" data-shop-i18n="cancelBtn">Abbrechen</button>
-</div>
-
-<!-- Step 2: Code + neues Passwort -->
-<div id="resetStep2" style="display:none">
-  <p style="color:#999;margin-bottom:16px" id="resetInfo2" data-shop-i18n="resetInfo2">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
-  <div class="form-group">
-    <label class="form-label" for="resetCode" data-shop-i18n="code6">Code (6-stellig)</label>
-    <input type="text" class="form-input" id="resetCode" maxlength="6" placeholder="123456">
-  </div>
-  <div class="form-group">
-    <label class="form-label" for="resetNewPassword" id="resetNewPasswordLabel" data-shop-i18n="neuesPw">Neues Passwort (mind. 8 Zeichen)</label>
-    <input type="password" class="form-input" id="resetNewPassword" autocomplete="new-password">
-  </div>
-  <button class="btn-pink" id="btnResetPassword" data-shop-i18n="pwAendern">Passwort ändern</button>
-  <button class="btn-ghost" id="btnBackToStep1" data-shop-i18n="backBtn">Zurück</button>
-</div>
-```
-
+    
+    <!-- Step 1: Email eingeben -->
+    <div id="resetStep1">
+      <p style="color:#999;margin-bottom:16px" id="resetInfo1" data-shop-i18n="resetInfo1">Gib deine Email-Adresse ein. Wir senden dir einen 6-stelligen Code.</p>
+      <div class="form-group">
+        <label class="form-label" for="resetEmail" data-shop-i18n="emailLbl">Email</label>
+        <input type="email" class="form-input" id="resetEmail" autocomplete="email">
+      </div>
+      <button class="btn-pink" id="btnSendResetCode" data-shop-i18n="sendCode">Code senden</button>
+      <button class="btn-ghost" data-close-modal="resetPasswordModal" data-shop-i18n="cancelBtn">Abbrechen</button>
+    </div>
+    
+    <!-- Step 2: Code + neues Passwort -->
+    <div id="resetStep2" style="display:none">
+      <p style="color:#999;margin-bottom:16px" id="resetInfo2" data-shop-i18n="resetInfo2">Gib den 6-stelligen Code aus deiner Email ein und wähle ein neues Passwort.</p>
+      <div class="form-group">
+        <label class="form-label" for="resetCode" data-shop-i18n="code6">Code (6-stellig)</label>
+        <input type="text" class="form-input" id="resetCode" maxlength="6" placeholder="123456">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="resetNewPassword" id="resetNewPasswordLabel" data-shop-i18n="neuesPw">Neues Passwort (mind. 8 Zeichen)</label>
+        <input type="password" class="form-input" id="resetNewPassword" autocomplete="new-password">
+      </div>
+      <button class="btn-pink" id="btnResetPassword" data-shop-i18n="pwAendern">Passwort ändern</button>
+      <button class="btn-ghost" id="btnBackToStep1" data-shop-i18n="backBtn">Zurück</button>
+    </div>
   </div>
 </div>
 
 <!-- REGISTER MODAL -->
-
 <div id="registerModal" class="modal" role="dialog" aria-modal="true" aria-label="Registrieren">
   <div class="modal-box">
     <div class="modal-title" id="registerModalTitle" data-shop-i18n="registerModalTitle">✨ Registrieren</div>
@@ -1477,7 +1581,6 @@ object-src 'none';">
 </div>
 
 <!-- BUY MODAL -->
-
 <div id="buyModal" class="modal" role="dialog" aria-modal="true" aria-label="Deal kaufen">
   <div class="modal-box">
     <div class="modal-title" id="buyModalTitle" data-shop-i18n="buyDealTitle">Deal kaufen</div>
@@ -1500,7 +1603,6 @@ object-src 'none';">
 </div>
 
 <!-- CHANGE PASSWORD MODAL -->
-
 <div id="changePwModal" class="modal" role="dialog" aria-modal="true">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
@@ -1526,7 +1628,6 @@ object-src 'none';">
 </div>
 
 <!-- Deal Detail Modal -->
-
 <div id="dealDetailModal" class="deal-modal">
   <div class="deal-modal-box">
     <div class="deal-modal-img" id="ddImg">
@@ -1549,7 +1650,6 @@ object-src 'none';">
 </div>
 
 <!-- Cart Panel -->
-
 <div id="cartPanel" class="cart-panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
     <h2 style="font-size:18px" id="cartTitle" data-shop-i18n="cartTitle">🛒 Warenkorb</h2>
