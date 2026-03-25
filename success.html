@@ -22,6 +22,8 @@
     .lang-switch button{background:#333;color:#ccc;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
     .lang-switch button.active{background:#FF3366;color:#fff}
     .receipt-note{background:#111;border:1px solid #2f2f2f;border-radius:12px;padding:14px;margin-top:18px;color:#b3b3b3;font-size:12px;line-height:1.6}
+    #voucherLinks{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+    #voucherLinks .btn{margin-top:0}
     .footer{background:#1a1a1a;padding:40px 20px;text-align:center;color:#999;font-size:13px;margin-top:auto;border-top:1px solid #333;width:100%;max-width:460px}
     .footer a{color:#FF3366;text-decoration:none;margin:0 12px}
   </style>
@@ -53,7 +55,7 @@
     <div class="icon">🎉</div>
     <h1 data-i18n="successTitle">Zahlung erfolgreich!</h1>
     <p data-i18n="successText">Dein Gutschein wurde erstellt und per Email gesendet.<br>Du kannst ihn auch direkt hier anzeigen:</p>
-    <a class="btn" id="linkVoucher" href="#" data-i18n="voucherBtn">🎫 Gutschein anzeigen</a>
+    <div id="voucherLinks"><a class="btn" id="linkVoucher" href="#" data-i18n="voucherBtn">🎫 Gutschein anzeigen</a></div>
     <div class="receipt-note" data-i18n="legalNote">Bei Gutscheinen für konkrete Bar-Leistungen erbringt die Partnerbar die Leistung vor Ort. Pauschalrabattgutscheine sind ein eigenes Produkt von BarSclusive.</div>
     <br>
     <a class="btn-ghost" href="shop.html" id="backShopLink" data-i18n="backShop">← Zurück zum Shop</a>
@@ -104,6 +106,23 @@ function showError(keyOrMsg, raw){
   document.getElementById('stateError').style.display = 'block';
   document.getElementById('errorMsg').textContent = raw ? keyOrMsg : tt(keyOrMsg);
 }
+function renderVoucherLinks(codes){
+  var wrap = document.getElementById('voucherLinks');
+  var template = document.getElementById('linkVoucher');
+  if (!wrap || !template) return;
+  var base = window.location.pathname.replace(/\/[^\/]*$/, '');
+  var cleanCodes = (codes || []).map(function(code){ return String(code || '').trim(); }).filter(Boolean);
+  if (!cleanCodes.length) { cleanCodes = [template.dataset.code || ''].filter(Boolean); }
+  wrap.innerHTML = '';
+  cleanCodes.forEach(function(code, idx){
+    var link = template.cloneNode(true);
+    link.id = idx === 0 ? 'linkVoucher' : ('linkVoucher' + idx);
+    link.href = base + '/voucher.html?code=' + encodeURIComponent(code) + '&lang=' + encodeURIComponent(currentLang);
+    link.dataset.code = code;
+    link.textContent = cleanCodes.length > 1 ? (tt('voucherBtn') + ' ' + (idx + 1)) : tt('voucherBtn');
+    wrap.appendChild(link);
+  });
+}
 async function confirmPayment() {
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get('session_id');
@@ -117,10 +136,9 @@ async function confirmPayment() {
     }
     document.getElementById('stateLoading').style.display = 'none';
     document.getElementById('stateSuccess').style.display = 'block';
-    if (data.voucher_code) {
-      const base = window.location.pathname.replace(/\/[^\/]*$/, '');
-      document.getElementById('linkVoucher').href = base + '/voucher.html?code=' + encodeURIComponent(data.voucher_code) + '&lang=' + encodeURIComponent(currentLang);
-    }
+    var voucherCodes = Array.isArray(data.voucher_codes) ? data.voucher_codes : [];
+    if (!voucherCodes.length && data.voucher_code) voucherCodes = [data.voucher_code];
+    renderVoucherLinks(voucherCodes);
   } catch (e) {
     showError('errorConn');
   }
