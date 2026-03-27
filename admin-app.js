@@ -170,12 +170,13 @@ async function loadOrders(force) {
     if (vR.success && vR.vouchers) vR.vouchers.forEach(function(v) {
       vMap[v.id] = v;
       if (v.order_id) {
-        if (!vouchersByOrder[v.order_id]) vouchersByOrder[v.order_id] = [];
-        vouchersByOrder[v.order_id].push(v);
+        var oKey = String(v.order_id);
+        if (!vouchersByOrder[oKey]) vouchersByOrder[oKey] = [];
+        vouchersByOrder[oKey].push(v);
       }
     });
     _ordersData = (oR.orders||[]).map(function(o) {
-      var linkedVouchers = vouchersByOrder[o.id] || [];
+      var linkedVouchers = vouchersByOrder[String(o.id)] || [];
       var grossCommission = 0, barPayoutTotal = 0;
       linkedVouchers.forEach(function(v) {
         grossCommission += Number(v.platform_fee || 0);
@@ -690,6 +691,10 @@ async function loadStats(force) {
       bars:(bR.success?bR.bars:[])||[],
       deals:(dR.success?dR.deals:[])||[]
     };
+    // Link vouchers to orders for financial calculations
+    var _svByOrder={};
+    _statsData.vouchers.forEach(function(v){if(v.order_id){var k=String(v.order_id);if(!_svByOrder[k])_svByOrder[k]=[];_svByOrder[k].push(v);}});
+    _statsData.orders.forEach(function(o){o._vouchers=_svByOrder[String(o.id)]||[];});
     try{_statsData.customerCount=(await api({action:'getCustomers',token:_token})).customers.length;}catch(e){_statsData.customerCount=0;}
     // Populate bar filter
     var sel=document.getElementById('statsBarFilter');
@@ -781,15 +786,13 @@ function renderStats(period) {
   });
   var paidOrders=0,totalRefunds=0;
   filtO.forEach(function(o){
-    var fin = getOrderFinancials(o, barId);
-    if (!fin.included) return;
     if(o.status==='paid'){
       paidOrders++;
-      totalStripeFees += Number(fin.stripeFee)||0;
-      totalPlatformNet += Number(fin.platformNet)||0;
+      totalStripeFees += Number(o.stripe_fee || 0);
     }
     if(o.refund_status==='completed') totalRefunds+=Number(o.price)||0;
   });
+  totalPlatformNet = totalFees - totalStripeFees;
   var activeBars=0;d.bars.forEach(function(b){if(b.status==='active')activeBars++;});
   var activeDeals=barId?d.deals.filter(function(dl){return String(dl.bar_id)===barId&&dl.active;}).length:d.deals.filter(function(dl){return dl.active;}).length;
 
@@ -971,7 +974,7 @@ var _customFrom='',_customTo='';
     return { included: fin.included, sales: sales, grossCommission: gross, stripeFee: allocatedStripe, platformNet: gross - allocatedStripe, barPayout: payout };
   };
   var _origLoadOrdersFinal = loadOrders;
-  loadOrders = async function(force) { await _origLoadOrdersFinal(force); _ordersData = (_ordersData || []).map(function(o){ var fin = getOrderFinancials(o); o._grossCommission = fin.grossCommission; o._stripeFee = fin.stripeFee; o._platformNet = fin.platformNet; return o; }); };
+  loadOrders = async function(force) { await _origLoadOrdersFinal(force); _ordersData = (_ordersData || []).map(function(o){ var fin = getOrderFinancials(o); o._grossCommission = fin.grossCommission; o._stripeFee = fin.stripeFee; o._platformNet = fin.platformNet; return o; }); renderOrders(); };
 })();
 
 
