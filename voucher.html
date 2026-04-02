@@ -406,7 +406,8 @@
       if (v.code) {
         const img = document.createElement('img');
         img.alt = 'QR';
-        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(v.code);
+        var redeemUrl = 'https://barsclusive.github.io/barsclusive-public/redeem.html?code=' + encodeURIComponent(v.code) + '&lang=' + encodeURIComponent(currentLang);
+        img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(redeemUrl);
         qrEl.appendChild(img);
       }
 
