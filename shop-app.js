@@ -4044,3 +4044,26 @@ try {
     };
   }
 })();
+
+
+// =============================================
+// PATCH: Fix deal deep-link from share URLs
+// Problem: window.load fires before allDeals is populated from API
+// Fix: Re-check ?deal= parameter after every renderDeals() call
+// =============================================
+(function(){
+  var _deepLinkHandled = false;
+  var _origRenderDealsDeepLink = renderDeals;
+  renderDeals = function() {
+    _origRenderDealsDeepLink.apply(this, arguments);
+    if (_deepLinkHandled) return;
+    var params = new URLSearchParams(window.location.search);
+    var dealId = params.get('deal');
+    if (!dealId || !allDeals || !allDeals.length) return;
+    var d = allDeals.find(function(x) { return String(x.id) === String(dealId); });
+    if (d) {
+      _deepLinkHandled = true;
+      setTimeout(function() { openDealDetail(d); }, 350);
+    }
+  };
+})();
